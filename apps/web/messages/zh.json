@@ -1,0 +1,33 @@
+{
+  "app": {
+    "title": "Lulu CRM",
+    "module": "CRM"
+  },
+  "nav": {
+    "overview": "概览",
+    "contacts": "联系人",
+    "companies": "公司",
+    "leads": "潜在客户",
+    "deals": "交易与销售管道",
+    "activities": "活动与任务",
+    "notes": "笔记",
+    "segments": "客户分组",
+    "import": "导入联系人",
+    "ai": "AI 分析",
+    "settings": "CRM 设置"
+  },
+  "common": {
+    "save": "保存",
+    "cancel": "取消",
+    "delete": "删除",
+    "edit": "编辑",
+    "add": "添加",
+    "search": "搜索",
+    "close": "关闭",
+    "loading": "加载中…",
+    "comingSoon": "此页面即将推出",
+    "language": "语言",
+    "error": "出了点问题",
+    "retry": "重试"
+  }
+}

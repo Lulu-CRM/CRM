@@ -1,0 +1,33 @@
+{
+  "app": {
+    "title": "Lulu CRM",
+    "module": "CRM"
+  },
+  "nav": {
+    "overview": "Übersicht",
+    "contacts": "Kontakte",
+    "companies": "Unternehmen",
+    "leads": "Leads",
+    "deals": "Deals & Pipeline",
+    "activities": "Aktivitäten & Aufgaben",
+    "notes": "Notizen",
+    "segments": "Segmente",
+    "import": "Kontakte importieren",
+    "ai": "KI-Analyse",
+    "settings": "CRM-Einstellungen"
+  },
+  "common": {
+    "save": "Speichern",
+    "cancel": "Abbrechen",
+    "delete": "Löschen",
+    "edit": "Bearbeiten",
+    "add": "Hinzufügen",
+    "search": "Suchen",
+    "close": "Schließen",
+    "loading": "Wird geladen…",
+    "comingSoon": "Diese Seite folgt in Kürze",
+    "language": "Sprache",
+    "error": "Etwas ist schiefgelaufen",
+    "retry": "Erneut versuchen"
+  }
+}

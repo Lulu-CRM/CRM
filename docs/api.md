@@ -1,0 +1,141 @@
+# API (draft)
+
+Base path: `/api/v1`. JSON only. Authenticated with a bearer token. The workspace comes from the token, never from the request body. Response format is in `AGENTS.md`.
+
+This list is the contract for the frontend and the backend. Add or change an endpoint here in the same pull request as the code.
+
+## Common list parameters
+
+`q` (search text), `sort` (for example `-lastTouchAt`), `page`, `pageSize` (max 100), plus filters named in each section.
+
+## Auth and workspace
+
+| Method | Path | Purpose |
+| --- | --- | --- |
+| POST | `/auth/login` | Email and password, returns a token. Replaced if the shared app shell provides login |
+| POST | `/auth/logout` | End the session |
+| GET | `/me` | Current user, workspace, role, language |
+| PATCH | `/me` | Update language and profile |
+| GET | `/users` | People in the workspace (for owner pickers) |
+
+## Overview
+
+| Method | Path | Purpose |
+| --- | --- | --- |
+| GET | `/overview` | Contact count, open pipeline value, follow-ups due, AI signal count, pipeline value by stage, recent contacts, recent activity |
+
+## Contacts
+
+| Method | Path | Purpose |
+| --- | --- | --- |
+| GET | `/contacts` | List. Filters: `stage`, `ownerId`, `companyId`, `tag`, `needsFollowUp`, `createdSince`, `segmentId` |
+| POST | `/contacts` | Create |
+| GET | `/contacts/:id` | Profile, with company and counts |
+| PATCH | `/contacts/:id` | Edit |
+| DELETE | `/contacts/:id` | Soft delete |
+| POST | `/contacts/:id/convert` | Lead to customer |
+| GET | `/contacts/:id/timeline` | Activities, notes and tasks for this contact |
+
+## Companies
+
+| Method | Path | Purpose |
+| --- | --- | --- |
+| GET | `/companies` | List, with contact count and open deal value |
+| POST | `/companies` | Create |
+| GET | `/companies/:id` | Detail with people and deals |
+| PATCH | `/companies/:id` | Edit |
+| DELETE | `/companies/:id` | Soft delete |
+
+## Deals and pipeline
+
+| Method | Path | Purpose |
+| --- | --- | --- |
+| GET | `/pipelines` | Pipelines with their stages |
+| GET | `/deals` | List. Filters: `stageId`, `ownerId`, `companyId`, `contactId`, `status` (`open`, `won`, `lost`) |
+| POST | `/deals` | Create |
+| GET | `/deals/:id` | Detail |
+| PATCH | `/deals/:id` | Edit |
+| POST | `/deals/:id/move` | Move to another stage, body `{ stageId }`. Updates probability and closedAt |
+| DELETE | `/deals/:id` | Soft delete |
+| GET | `/deals/summary` | Open value, weighted value, win rate, active deals, average days to close |
+
+## Tasks, notes, activities
+
+| Method | Path | Purpose |
+| --- | --- | --- |
+| GET | `/tasks` | List. Filters: `ownerId`, `done`, `dueBefore`, `recordType`, `recordId` |
+| POST | `/tasks` | Create |
+| PATCH | `/tasks/:id` | Edit or mark done |
+| DELETE | `/tasks/:id` | Soft delete |
+| GET | `/notes` | List. Filters: `recordType`, `recordId`, `visibility`. Private notes only for their author |
+| POST | `/notes` | Create |
+| PATCH | `/notes/:id` | Edit |
+| DELETE | `/notes/:id` | Soft delete |
+| GET | `/activities` | Timeline. Filters: `recordType`, `recordId`, `type` |
+| POST | `/activities` | Log an activity by hand |
+| POST | `/events` | Other modules post an event (see below) |
+
+## Segments
+
+| Method | Path | Purpose |
+| --- | --- | --- |
+| GET | `/segments` | List with live member count |
+| POST | `/segments` | Create with filter rules |
+| PATCH | `/segments/:id` | Edit |
+| DELETE | `/segments/:id` | Delete |
+| GET | `/segments/:id/contacts` | Contacts in the segment |
+
+## Import
+
+| Method | Path | Purpose |
+| --- | --- | --- |
+| POST | `/imports` | Upload a CSV or XLSX (max 10,000 rows). Returns the job and detected columns |
+| GET | `/imports/:id` | Status, counts, mapping |
+| PUT | `/imports/:id/mapping` | Save the field mapping |
+| GET | `/imports/:id/preview` | First rows as they will be imported, and duplicates found |
+| POST | `/imports/:id/confirm` | Start the background import. Options: default owner, tag, duplicate handling (`hold`, `skip`, `update`) |
+| GET | `/imports/:id/held` | Held duplicates to review |
+| POST | `/imports/:id/held/:rowId/resolve` | `skip`, `create`, or `merge` |
+
+## AI analysis
+
+| Method | Path | Purpose |
+| --- | --- | --- |
+| POST | `/contacts/:id/ai-analysis` | Run analysis as a background job, returns the job |
+| GET | `/contacts/:id/ai-insights` | Latest insight: summary, next step, data quality |
+| POST | `/ai-insights/:id/accept` | The user confirms. Only then are changes saved |
+| POST | `/ai-insights/:id/dismiss` | Dismiss |
+
+AI runs behind one provider interface. A simulated provider answers until a model key is available.
+
+## Settings
+
+| Method | Path | Purpose |
+| --- | --- | --- |
+| GET, POST, PATCH, DELETE | `/settings/custom-fields` | Custom contact fields |
+| GET, POST, PATCH, DELETE | `/settings/pipelines` and `/settings/stages` | Pipelines and stages |
+| GET, PUT | `/settings/roles` | Roles and permissions |
+| GET, PUT | `/settings/consent` | Consent and privacy rules |
+| GET, PUT | `/settings/notifications` | Notification rules |
+| GET, PUT | `/settings/ai` | AI switches (analyze new activity, suggest follow-ups, auto-update fields) |
+
+## Events from other modules
+
+Email, Calendar and other modules tell the CRM something happened with `POST /events`:
+
+```json
+{
+  "type": "email.received",
+  "sourceModule": "email",
+  "occurredAt": "2026-10-17T09:42:00Z",
+  "contact": { "email": "sophie@northstar.studio" },
+  "summary": "Reply received from Sophie Laurent",
+  "payload": { }
+}
+```
+
+The CRM finds the contact by email, creates an `Activity`, and updates `lastTouchAt`. Event types start with `email.`, `calendar.` or `marketplace.`. The CRM can send events the other way (for example "prepare a follow-up in Email") through the same format.
+
+## Background jobs (BullMQ)
+
+`import.process`, `ai.analyze`, `segments.refresh`, `notifications.send`.

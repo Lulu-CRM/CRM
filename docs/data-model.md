@@ -26,7 +26,7 @@ The prototype in `design/` stores money, dates and links as text. This model rep
 | Setting | key, value (JSON): consent rules, notification rules, AI switches |
 | Permission | role, resource, actions |
 
-"Linked record" on Task, Note and Activity means `recordType` (`contact`, `company`, `deal`) plus `recordId`.
+"Linked record" on Task, Note and Activity means `recordType` (`contact`, `company`, `deal`) plus `recordId`. Both are set or both are `null`: a task can stand on its own, but a half link is rejected.
 
 ## Enums
 
@@ -47,6 +47,9 @@ The prototype in `design/` stores money, dates and links as text. This model rep
 - **Duplicates.** A possible duplicate of a contact is matched on email first, then on name plus company. Duplicates are held for review, never merged automatically.
 - **Consent.** `marketingConsent` and its timestamp are stored on the contact, and imported contacts inherit the workspace rules.
 - **Activity feed from other modules.** Email, Calendar and others create `Activity` rows through the event format in `docs/api.md`.
+- **Due dates.** A due date picked without a time is stored at 12:00 UTC, so it stays on the same calendar day in every time zone we serve. Chips (`overdue`, `today`, `tomorrow`, `this_week`, `later`, `done`) are worked out by calendar day in the user's time zone (`dueKind` in `packages/shared`).
+- **Activities store facts, not sentences.** An activity has a `type` and a `payload` (for example `{ "taskId": "...", "action": "completed" }`). The UI builds the line from the translation files, so the timeline reads in the user's language. Only `summary` from other modules' events is free text.
+- **Ticking a task** sets `done` and `doneAt` and adds a `task` activity to the timeline (`action: completed`); unticking clears `doneAt` and adds `action: reopened`.
 - **Delete.** Soft delete everywhere. Permanent deletion is a later feature.
 
 ## Indexes to add early

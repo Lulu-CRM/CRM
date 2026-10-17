@@ -84,9 +84,9 @@ Schemas: `packages/shared/src/pipeline.ts` and `deal.ts`.
 
 | Method | Path | Purpose |
 | --- | --- | --- |
-| GET | `/tasks` | List. Filters: `ownerId`, `done`, `dueBefore`, `recordType`, `recordId` |
+| GET | `/tasks` | List. Filters: `ownerId`, `done` (`true` or `false`), `dueBefore`, `recordType`, `recordId` |
 | POST | `/tasks` | Create |
-| PATCH | `/tasks/:id` | Edit or mark done |
+| PATCH | `/tasks/:id` | Edit or mark done. Changing `done` sets `doneAt` and logs a `task` activity |
 | DELETE | `/tasks/:id` | Soft delete |
 | GET | `/notes` | List. Filters: `recordType`, `recordId`, `visibility`. Private notes only for their author |
 | POST | `/notes` | Create |
@@ -142,7 +142,7 @@ AI runs behind one provider interface. A simulated provider answers until a mode
 
 ## Events from other modules
 
-Email, Calendar and other modules tell the CRM something happened with `POST /events`:
+Email, Calendar and other modules tell the CRM something happened with `POST /events` (schema: `moduleEventSchema` in `packages/shared/src/activity.ts`):
 
 ```json
 {

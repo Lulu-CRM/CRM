@@ -1,23 +1,10 @@
-# Dependencies
 node_modules/
-
-# Build output
-dist/
-build/
 .next/
 out/
+dist/
 coverage/
-
-# Environment (commit .env.example only)
 .env
-.env.*
-!.env.example
-
-# Logs and OS files
-*.log
+.env.local
+.env.*.local
+*.tsbuildinfo
 .DS_Store
-Thumbs.db
-
-# Editors
-.vscode/
-.idea/

@@ -7,7 +7,7 @@ import { useStageName } from "@/components/deals/stages";
 import { useFormat } from "@/i18n/format";
 import { api } from "@/lib/api";
 import { useErrorMessage } from "@/lib/errors";
-import { initials, toneFor } from "@/lib/initials";
+import { avatarTone, initials } from "@/lib/initials";
 import { useApi } from "@/lib/useApi";
 import { stageTone } from "@/features/contacts/options";
 import type { Lookups } from "@/features/contacts/useLookups";
@@ -124,7 +124,7 @@ export function CompanyDrawer({
               <ul className="mt-2">
                 {full.contacts.map((contact) => (
                   <li key={contact.id} className="flex items-center gap-2.5 border-b border-surface-muted py-3">
-                    <Avatar initials={initials(contact.name)} tone={toneFor(contact.id)} small />
+                    <Avatar initials={initials(contact.name)} tone={avatarTone(contact.id)} small />
                     <span className="min-w-0 flex-1">
                       <strong className="block truncate text-[11px] text-text-strong">{contact.name}</strong>
                       <small className="mt-0.5 block truncate text-[10px] text-text-faint">{contact.jobRole ?? contact.email ?? ""}</small>

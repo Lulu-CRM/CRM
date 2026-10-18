@@ -17,7 +17,8 @@ import { useTranslations } from "next-intl";
 import type { Contact, LifecycleStage } from "@lulu/shared";
 import { Avatar, CardMenu, Pill } from "@/components/ui";
 import { useFormat } from "@/i18n/format";
-import { avatarTone, initials, knownSources, lifecycleStages, stageTone } from "@/features/contacts/options";
+import { knownSources, lifecycleStages, stageTone } from "@/features/contacts/options";
+import { avatarTone, initials } from "@/lib/initials";
 
 type Props = {
   contacts: Contact[];

@@ -356,6 +356,41 @@
       "cancelled": "已取消移动 {name}。"
     }
   },
+  "overview": {
+    "import": "导入",
+    "addContact": "添加联系人",
+    "viewAll": "查看全部",
+    "stats": {
+      "contacts": "全部联系人",
+      "contactsNoChange": "暂无上月数据",
+      "vsLastMonth": "较上月",
+      "pipeline": "在途商机",
+      "weighted": "加权价值",
+      "followUps": "待跟进",
+      "dueToday": "今天到期",
+      "signals": "AI 信号",
+      "sinceMonday": "自周一以来"
+    },
+    "recent": {
+      "eyebrow": "最近联系人",
+      "title": "让客户关系持续推进。",
+      "empty": "还没有联系人"
+    },
+    "pipeline": {
+      "eyebrow": "销售管道概览",
+      "title": "需要关注的事项。",
+      "open": "打开交易与销售管道",
+      "empty": "没有进行中的交易",
+      "active": "{count} 个进行中的商机",
+      "addDeal": "添加交易"
+    },
+    "activity": {
+      "eyebrow": "动态流",
+      "title": "团队正在推进。",
+      "open": "打开活动",
+      "empty": "暂无动态"
+    }
+  },
   "leads": {
     "eyebrow": "潜在客户工作区",
     "title": "少些猜测，更好地筛选。",

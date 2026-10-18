@@ -231,7 +231,8 @@
   "due": {
     "overdue": "Overdue",
     "today": "Today",
-    "tomorrow": "Tomorrow"
+    "tomorrow": "Tomorrow",
+    "done": "Done"
   },
   "activities": {
     "someone": "Someone",
@@ -242,7 +243,9 @@
       "note": "Note added",
       "ai_signal": "AI signal",
       "created": "Contact created",
-      "stage_changed": "Status changed"
+      "stage_changed": "Status changed",
+      "task_completed": "Task completed",
+      "task_reopened": "Task reopened"
     },
     "details": {
       "task": "{actor} updated a follow-up.",
@@ -251,7 +254,9 @@
       "created": "Added by {actor}.",
       "stage_changed": "Changed by {actor}.",
       "email": "A reply came in through Email.",
-      "meeting": "The call is on the calendar."
+      "meeting": "The call is on the calendar.",
+      "task_completed": "{actor} completed a follow-up.",
+      "task_reopened": "{actor} reopened a follow-up."
     }
   },
   "time": {
@@ -372,6 +377,60 @@
       "over": "{name} is over {stage}.",
       "dropped": "{name} moved to {stage}.",
       "cancelled": "Moving {name} was cancelled."
+    }
+  },
+  "tasks": {
+    "eyebrow": "Tasks",
+    "title": "Follow-through stays visible.",
+    "newTask": "New task",
+    "edit": "Edit {title}",
+    "filters": {
+      "label": "Filter by due date",
+      "all": "All",
+      "overdue": "Overdue",
+      "today": "Today",
+      "this_week": "This week",
+      "owner": "Owner",
+      "anyOwner": "All owners",
+      "showDone": "Show completed"
+    },
+    "empty": "No tasks yet",
+    "emptyHint": "Create a follow-up so nothing slips.",
+    "noMatches": "No tasks match these filters",
+    "noMatchesHint": "Try another owner or due date.",
+    "timeline": {
+      "eyebrow": "Activity timeline",
+      "title": "Every touchpoint, together.",
+      "empty": "No activity yet"
+    },
+    "priority": {
+      "high": "High",
+      "normal": "Normal",
+      "low": "Low"
+    },
+    "form": {
+      "newEyebrow": "New task",
+      "newTitle": "Create a follow-up",
+      "editEyebrow": "Edit task",
+      "editTitle": "Update this follow-up",
+      "title": "Task title",
+      "titlePlaceholder": "What needs to happen?",
+      "related": "Related to",
+      "none": "Nothing",
+      "contacts": "Contacts",
+      "companies": "Companies",
+      "deals": "Deals",
+      "due": "Due date",
+      "owner": "Owner",
+      "priority": "Priority",
+      "hint": "Every follow-up has an owner and a date.",
+      "create": "Create task",
+      "created": "Task added to Activities.",
+      "saved": "Task updated.",
+      "errors": {
+        "titleRequired": "Give the task a title",
+        "ownerRequired": "Choose an owner"
+      }
     }
   }
 }

@@ -9,6 +9,15 @@ import {
   demoTasks,
   demoNotes,
   demoSegments,
+  aiSettingsSchema,
+  consentSettingsSchema,
+  customFieldCreateSchema,
+  defaultAiSettings,
+  defaultConsentSettings,
+  defaultNotificationSettings,
+  defaultPermissions,
+  notificationSettingsSchema,
+  rolePermissionsSchema,
   guessMapping,
   importConfirmSchema,
   mergeIntoContact,
@@ -59,6 +68,16 @@ import {
   type ImportMapping,
   type ImportPreview,
   type ImportResolveAction,
+  type AiSettings,
+  type ConsentSettings,
+  type CustomField,
+  type CustomFieldCreateInput,
+  type CustomFieldUpdateInput,
+  type NotificationSettings,
+  type RolePermissions,
+  type Stage,
+  type StageCreateInput,
+  type StageUpdateInput,
 } from "@lulu/shared";
 import { ApiError, type ListResult } from "./types";
 
@@ -71,6 +90,12 @@ const db = {
   activities: demoActivities(),
   notes: demoNotes(),
   segments: structuredClone(demoSegments),
+  pipeline: structuredClone(demoPipeline),
+  customFields: [] as CustomField[],
+  permissions: structuredClone(defaultPermissions),
+  consent: { ...defaultConsentSettings },
+  notifications: structuredClone(defaultNotificationSettings),
+  ai: { ...defaultAiSettings },
   imports: new Map<string, { job: ImportJob; rows: Record<string, string>[]; held: HeldRow[] }>(),
 };
 
@@ -110,7 +135,7 @@ function findCompany(id: string) {
 }
 
 const summarize = (company: Company) =>
-  summarizeCompany(company, alive(db.contacts), alive(db.deals), demoPipeline.stages, CURRENCY);
+  summarizeCompany(company, alive(db.contacts), alive(db.deals), liveStages(), CURRENCY);
 
 function findDealIndex(id: string) {
   const index = db.deals.findIndex((d) => d.id === id && !d.deletedAt);
@@ -145,7 +170,7 @@ function members(segment: Segment) {
     timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
     tasks: alive(db.tasks).filter((t) => !t.done),
     deals: alive(db.deals),
-    stages: demoPipeline.stages,
+    stages: liveStages(),
   });
 }
 
@@ -257,6 +282,38 @@ function runImport(id: string) {
   job.updatedAt = new Date().toISOString();
 }
 
+// ---------- Settings ----------
+
+const now = () => new Date().toISOString();
+
+// Stages in order, without deleted ones.
+function liveStages() {
+  return alive(db.pipeline.stages).sort((a, b) => a.order - b.order);
+}
+
+// Open stages first in their order, then won, then lost; numbered from 0 again.
+function renumberStages() {
+  const live = liveStages();
+  const open = live.filter((s) => s.type === "open");
+  const rank = (type: string) => (type === "won" ? 0 : 1);
+  const closed = live.filter((s) => s.type !== "open").sort((a, b) => rank(a.type) - rank(b.type));
+  [...open, ...closed].forEach((stage, index) => {
+    stage.order = index;
+  });
+}
+
+function findStage(id: string) {
+  const stage = liveStages().find((s) => s.id === id);
+  if (!stage) throw new ApiError("STAGE_NOT_FOUND", 404);
+  return stage;
+}
+
+function findField(id: string) {
+  const field = alive(db.customFields).find((f) => f.id === id);
+  if (!field) throw new ApiError("CUSTOM_FIELD_NOT_FOUND", 404);
+  return field;
+}
+
 export const mockApi = {
   me: () => delay(demoUsers.find((u) => u.id === CURRENT_USER_ID)!),
   users: () => delay(paginate(demoUsers)),
@@ -340,7 +397,7 @@ export const mockApi = {
       return delay(paginate(rows, query.page, query.pageSize));
     },
     get: async (id: string) =>
-      delay(companyDetail(findCompany(id), alive(db.contacts), alive(db.deals), demoPipeline.stages, CURRENCY)),
+      delay(companyDetail(findCompany(id), alive(db.contacts), alive(db.deals), liveStages(), CURRENCY)),
     create(input: CompanyCreateInput) {
       const now = new Date().toISOString();
       const company: Company = {
@@ -481,7 +538,7 @@ export const mockApi = {
           contacts: db.contacts,
           companies: db.companies,
           deals: db.deals,
-          stages: demoPipeline.stages,
+          stages: liveStages(),
           tasks: db.tasks,
           activities: db.activities,
           currency: CURRENCY,
@@ -620,13 +677,120 @@ export const mockApi = {
     },
   },
 
-  pipelines: () => delay([demoPipeline]),
+  settings: {
+    customFields: {
+      list: () => delay(paginate(alive(db.customFields), 1, 100)),
+      async create(input: CustomFieldCreateInput) {
+        const parsed = customFieldCreateSchema.parse(input);
+        if (alive(db.customFields).some((f) => f.key === parsed.key)) throw new ApiError("CUSTOM_FIELD_KEY_TAKEN", 409);
+        const field: CustomField = {
+          id: newId("field"),
+          workspaceId: DEMO_WORKSPACE_ID,
+          createdAt: now(),
+          updatedAt: now(),
+          deletedAt: null,
+          entity: "contact",
+          ...parsed,
+        };
+        db.customFields.push(field);
+        return delay(field);
+      },
+      async update(id: string, input: CustomFieldUpdateInput) {
+        const field = findField(id);
+        Object.assign(field, input, { updatedAt: now() });
+        return delay({ ...field });
+      },
+      async remove(id: string) {
+        findField(id).deletedAt = now();
+        return delay(undefined);
+      },
+    },
+    stages: {
+      async create(input: StageCreateInput) {
+        const stage: Stage = {
+          id: newId("stage"),
+          workspaceId: DEMO_WORKSPACE_ID,
+          createdAt: now(),
+          updatedAt: now(),
+          deletedAt: null,
+          pipelineId: input.pipelineId,
+          key: null,
+          name: input.name,
+          // After the last open stage; renumberStages keeps won and lost at the end.
+          order: liveStages().filter((s) => s.type === "open").length - 0.5,
+          probability: input.probability,
+          type: "open",
+        };
+        db.pipeline.stages.push(stage);
+        renumberStages();
+        return delay({ ...stage });
+      },
+      async update(id: string, input: StageUpdateInput) {
+        const stage = findStage(id);
+        if (input.name !== undefined && input.name !== stage.name) {
+          stage.name = input.name;
+          // A renamed default stage shows the new name in every language.
+          stage.key = null;
+        }
+        if (input.probability !== undefined) stage.probability = input.probability;
+        if (input.order !== undefined && stage.type === "open") {
+          const open = liveStages().filter((s) => s.type === "open" && s.id !== id);
+          open.splice(Math.min(input.order, open.length), 0, stage);
+          open.forEach((s, index) => {
+            s.order = index;
+          });
+          renumberStages();
+        }
+        stage.updatedAt = now();
+        return delay({ ...stage });
+      },
+      async remove(id: string) {
+        const stage = findStage(id);
+        // Every pipeline keeps its won and lost stage, and a stage with deals cannot go.
+        if (stage.type !== "open") throw new ApiError("STAGE_LOCKED", 409);
+        if (alive(db.deals).some((d) => d.stageId === id)) throw new ApiError("STAGE_IN_USE", 409);
+        stage.deletedAt = now();
+        renumberStages();
+        return delay(undefined);
+      },
+    },
+    roles: {
+      get: () => delay(structuredClone(db.permissions)),
+      async put(input: RolePermissions) {
+        db.permissions = rolePermissionsSchema.parse(input);
+        return delay(structuredClone(db.permissions));
+      },
+    },
+    consent: {
+      get: () => delay({ ...db.consent }),
+      async put(input: ConsentSettings) {
+        db.consent = consentSettingsSchema.parse(input);
+        return delay({ ...db.consent });
+      },
+    },
+    notifications: {
+      get: () => delay(structuredClone(db.notifications)),
+      async put(input: NotificationSettings) {
+        db.notifications = notificationSettingsSchema.parse(input);
+        return delay(structuredClone(db.notifications));
+      },
+    },
+    ai: {
+      get: () => delay({ ...db.ai }),
+      async put(input: AiSettings) {
+        db.ai = aiSettingsSchema.parse(input);
+        return delay({ ...db.ai });
+      },
+    },
+  },
+
+  pipelines: () => delay([{ ...db.pipeline, stages: liveStages() }]),
 
   deals: {
     list: () => delay(paginate(alive(db.deals), 1, 100)),
-    summary: () => delay(summarizeDeals(alive(db.deals), demoPipeline.stages, CURRENCY)),
+    summary: () => delay(summarizeDeals(alive(db.deals), liveStages(), CURRENCY)),
     async create(input: DealCreateInput) {
-      const stage = demoPipeline.stages.find((s) => s.id === input.stageId);
+      const stage = liveStages().find((s) => s.id === input.stageId);
       if (!stage) throw new ApiError("STAGE_NOT_FOUND", 422);
       const now = new Date().toISOString();
       const deal: Deal = {
@@ -660,7 +824,7 @@ export const mockApi = {
     },
     async move(id: string, stageId: string) {
       const index = findDealIndex(id);
-      const moved: Deal = moveDeal(db.deals[index], stageId, demoPipeline.stages);
+      const moved: Deal = moveDeal(db.deals[index], stageId, liveStages());
       db.deals[index] = moved;
       return delay(moved);
     },

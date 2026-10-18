@@ -2,27 +2,16 @@
 
 import { useState } from "react";
 import { useTranslations } from "next-intl";
-import { dueKind, type Activity, type ActivityType, type Contact, type Task } from "@lulu/shared";
+import type { Contact, Task } from "@lulu/shared";
 import { Avatar, Button, Drawer, Pill, Skeleton, useToast } from "@/components/ui";
 import { useFormat } from "@/i18n/format";
 import { api } from "@/lib/api";
 import { useErrorMessage } from "@/lib/errors";
 import { useApi } from "@/lib/useApi";
+import { ActivityItem } from "@/features/activities/ActivityItem";
+import { DueChip } from "@/features/activities/DueChip";
 import { avatarTone, initials, knownSources, stageTone } from "./options";
 import type { Lookups } from "./useLookups";
-
-const activityIcon: Record<ActivityType, string> = {
-  email: "✉",
-  meeting: "◷",
-  task: "✓",
-  note: "▤",
-  ai_signal: "✦",
-  created: "＋",
-  stage_changed: "↗",
-};
-
-// Within the last hours the design says "12 min ago", later "Yesterday, 16:18".
-const HOURS_12 = 12 * 60 * 60 * 1000;
 
 const textButton = "text-[11px] font-extrabold text-primary-hover hover:underline";
 
@@ -144,7 +133,7 @@ export function ContactDrawer({
         ) : timeline.data?.data.length ? (
           <ol className="mt-2">
             {timeline.data.data.map((activity) => (
-              <TimelineItem key={activity.id} activity={activity} lookups={lookups} />
+              <ActivityItem key={activity.id} activity={activity} actorName={lookups.userName(activity.actorId)} />
             ))}
           </ol>
         ) : (
@@ -197,14 +186,11 @@ function TasksSection({
   onTimelineChanged: () => void;
 }) {
   const t = useTranslations("contacts.drawer");
-  const tDue = useTranslations("due");
   const toast = useToast();
   const errorMessage = useErrorMessage();
-  const format = useFormat();
   const [title, setTitle] = useState("");
   const [due, setDue] = useState("");
   const [saving, setSaving] = useState(false);
-  const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
   const addTask = async (event: React.FormEvent) => {
     event.preventDefault();
@@ -286,7 +272,6 @@ function TasksSection({
       ) : list.length ? (
         <ul className="mt-2">
           {list.map((task) => {
-            const kind = dueKind(task, new Date(), timeZone);
             return (
               <li key={task.id} className="flex items-center gap-2.5 border-b border-surface-muted py-3">
                 <input
@@ -299,11 +284,7 @@ function TasksSection({
                 <span className={`flex-1 text-[10px] font-semibold ${task.done ? "text-text-faint line-through" : "text-text-strong"}`}>
                   {task.title}
                 </span>
-                {task.dueAt && kind !== "none" && (
-                  <Pill tone={kind === "overdue" ? "warning" : kind === "today" ? "violet" : "neutral"}>
-                    {kind === "overdue" || kind === "today" || kind === "tomorrow" ? tDue(kind) : format.date(task.dueAt)}
-                  </Pill>
-                )}
+                <DueChip task={task} />
               </li>
             );
           })}
@@ -312,29 +293,5 @@ function TasksSection({
         !adding && <p className="py-4 text-[11px] text-text-subtle">{t("noTasks")}</p>
       )}
     </section>
-  );
-}
-
-function TimelineItem({ activity, lookups }: { activity: Activity; lookups: Lookups }) {
-  const t = useTranslations("activities");
-  const format = useFormat();
-  const actor = lookups.userName(activity.actorId) ?? t("someone");
-  const detailKey = `details.${activity.type}`;
-
-  return (
-    <li className="flex items-start gap-2.5 border-b border-surface-muted py-3">
-      <b className="grid size-[22px] flex-none place-items-center rounded-[7px] bg-primary-soft text-[10px] text-[#5d54c5]" aria-hidden>
-        {activityIcon[activity.type]}
-      </b>
-      <span className="min-w-0 flex-1">
-        <strong className="block text-[10px] text-text-strong">{t(`titles.${activity.type}`)}</strong>
-        {t.has(detailKey) && (
-          <small className="mt-1 block text-[9px] leading-snug text-text-subtle">{t(detailKey, { actor })}</small>
-        )}
-      </span>
-      <time dateTime={activity.occurredAt} className="text-[9px] whitespace-nowrap text-text-faint">
-        {Date.now() - Date.parse(activity.occurredAt) < HOURS_12 ? format.relative(activity.occurredAt) : format.recent(activity.occurredAt)}
-      </time>
-    </li>
   );
 }

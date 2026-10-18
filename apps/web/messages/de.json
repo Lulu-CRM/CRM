@@ -231,7 +231,8 @@
   "due": {
     "overdue": "Überfällig",
     "today": "Heute",
-    "tomorrow": "Morgen"
+    "tomorrow": "Morgen",
+    "done": "Erledigt"
   },
   "activities": {
     "someone": "Jemand",
@@ -242,7 +243,9 @@
       "note": "Notiz hinzugefügt",
       "ai_signal": "KI-Signal",
       "created": "Kontakt angelegt",
-      "stage_changed": "Status geändert"
+      "stage_changed": "Status geändert",
+      "task_completed": "Aufgabe erledigt",
+      "task_reopened": "Aufgabe wieder geöffnet"
     },
     "details": {
       "task": "{actor} hat eine Nachfassaktion aktualisiert.",
@@ -251,7 +254,9 @@
       "created": "Angelegt von {actor}.",
       "stage_changed": "Geändert von {actor}.",
       "email": "Eine Antwort ist per E-Mail eingegangen.",
-      "meeting": "Der Termin steht im Kalender."
+      "meeting": "Der Termin steht im Kalender.",
+      "task_completed": "{actor} hat eine Nachfassaktion erledigt.",
+      "task_reopened": "{actor} hat eine Nachfassaktion wieder geöffnet."
     }
   },
   "time": {
@@ -348,6 +353,60 @@
       "over": "{name} ist über {stage}.",
       "dropped": "{name} nach {stage} verschoben.",
       "cancelled": "Verschieben von {name} abgebrochen."
+    }
+  },
+  "tasks": {
+    "eyebrow": "Aufgaben",
+    "title": "Nachverfolgung bleibt sichtbar.",
+    "newTask": "Neue Aufgabe",
+    "edit": "{title} bearbeiten",
+    "filters": {
+      "label": "Nach Fälligkeit filtern",
+      "all": "Alle",
+      "overdue": "Überfällig",
+      "today": "Heute",
+      "this_week": "Diese Woche",
+      "owner": "Verantwortlich",
+      "anyOwner": "Alle Verantwortlichen",
+      "showDone": "Erledigte anzeigen"
+    },
+    "empty": "Noch keine Aufgaben",
+    "emptyHint": "Lege eine Nachfassaktion an, damit nichts verloren geht.",
+    "noMatches": "Keine Aufgaben passen zu diesen Filtern",
+    "noMatchesHint": "Versuche einen anderen Verantwortlichen oder ein anderes Datum.",
+    "timeline": {
+      "eyebrow": "Aktivitätsverlauf",
+      "title": "Jeder Kontaktpunkt an einem Ort.",
+      "empty": "Noch keine Aktivität"
+    },
+    "priority": {
+      "high": "Hoch",
+      "normal": "Normal",
+      "low": "Niedrig"
+    },
+    "form": {
+      "newEyebrow": "Neue Aufgabe",
+      "newTitle": "Nachfassaktion anlegen",
+      "editEyebrow": "Aufgabe bearbeiten",
+      "editTitle": "Nachfassaktion aktualisieren",
+      "title": "Titel der Aufgabe",
+      "titlePlaceholder": "Was muss passieren?",
+      "related": "Bezogen auf",
+      "none": "Nichts",
+      "contacts": "Kontakte",
+      "companies": "Unternehmen",
+      "deals": "Deals",
+      "due": "Fällig am",
+      "owner": "Verantwortlich",
+      "priority": "Priorität",
+      "hint": "Jede Nachfassaktion hat einen Verantwortlichen und ein Datum.",
+      "create": "Aufgabe anlegen",
+      "created": "Aufgabe zu Aktivitäten hinzugefügt.",
+      "saved": "Aufgabe aktualisiert.",
+      "errors": {
+        "titleRequired": "Gib der Aufgabe einen Titel",
+        "ownerRequired": "Wähle einen Verantwortlichen"
+      }
     }
   }
 }

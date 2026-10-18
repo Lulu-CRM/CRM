@@ -127,7 +127,7 @@ describe("Contacts page", () => {
     fireEvent.click(screen.getByText("Sophie Laurent"));
     const drawer = await screen.findByRole("dialog", { name: "Sophie Laurent" });
     fireEvent.click(await within(drawer).findByRole("checkbox", { name: "Send proposal to Sophie Laurent" }));
-    expect(await within(drawer).findByText("Jamie Morgan updated a follow-up.", {}, { timeout: 2000 })).toBeTruthy();
+    expect(await within(drawer).findByText("Jamie Morgan completed a follow-up.", {}, { timeout: 2000 })).toBeTruthy();
   });
 
   it("adds a task from the drawer", async () => {

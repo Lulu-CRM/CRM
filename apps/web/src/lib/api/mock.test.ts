@@ -1,0 +1,69 @@
+import { beforeEach, describe, expect, it, vi } from "vitest";
+import { contactSchema, dealSummarySchema } from "@lulu/shared";
+
+// Fresh copy of the in-memory data for every test.
+let mockApi: typeof import("./mock").mockApi;
+beforeEach(async () => {
+  vi.resetModules();
+  ({ mockApi } = await import("./mock"));
+});
+
+describe("mock contacts", () => {
+  it("lists the design's sample contacts, newest touch first", async () => {
+    const result = await mockApi.contacts.list();
+    expect(result.meta).toEqual({ page: 1, pageSize: 25, total: 5 });
+    expect(result.data[0].name).toBe("Sophie Laurent");
+    result.data.forEach((c) => contactSchema.parse(c));
+  });
+
+  it("searches name, email, company and tags", async () => {
+    expect((await mockApi.contacts.list({ q: "atlas" })).data.map((c) => c.name)).toEqual(["Daniel Chen"]);
+    expect((await mockApi.contacts.list({ q: "vip" })).meta.total).toBe(1);
+    expect((await mockApi.contacts.list({ q: "nobody" })).meta.total).toBe(0);
+  });
+
+  it("filters by stage, owner and follow-up", async () => {
+    expect((await mockApi.contacts.list({ stage: "qualified" })).meta.total).toBe(2);
+    expect((await mockApi.contacts.list({ ownerId: "user_alex" })).meta.total).toBe(2);
+    expect((await mockApi.contacts.list({ needsFollowUp: true })).data[0].name).toBe("Tobias Klein");
+  });
+
+  it("pages", async () => {
+    const page2 = await mockApi.contacts.list({ page: 2, pageSize: 2 });
+    expect(page2.data).toHaveLength(2);
+    expect(page2.meta).toEqual({ page: 2, pageSize: 2, total: 5 });
+  });
+
+  it("creates, edits, converts and soft deletes", async () => {
+    const created = await mockApi.contacts.create({ name: "Ada Lovelace", email: "ada@example.com" });
+    expect(contactSchema.parse(created).lifecycleStage).toBe("new");
+    expect((await mockApi.contacts.update(created.id, { jobRole: "Engineer" })).jobRole).toBe("Engineer");
+    expect((await mockApi.contacts.convert(created.id)).lifecycleStage).toBe("customer");
+    await mockApi.contacts.remove(created.id);
+    await expect(mockApi.contacts.get(created.id)).rejects.toMatchObject({ code: "CONTACT_NOT_FOUND" });
+    expect((await mockApi.contacts.list()).meta.total).toBe(5);
+  });
+});
+
+describe("mock deals", () => {
+  it("moving a deal changes the summary", async () => {
+    const before = dealSummarySchema.parse(await mockApi.deals.summary());
+    const deal = (await mockApi.deals.list()).data.find((d) => !d.closedAt)!;
+    await mockApi.deals.move(deal.id, "stage_won");
+    const after = await mockApi.deals.summary();
+    expect(after.activeDeals).toBe(before.activeDeals - 1);
+    expect(after.openValue.amount).toBe(before.openValue.amount - deal.value);
+  });
+
+  it("rejects an unknown deal", async () => {
+    await expect(mockApi.deals.move("deal_nope", "stage_won")).rejects.toMatchObject({ code: "DEAL_NOT_FOUND" });
+  });
+});
+
+describe("mock companies", () => {
+  it("adds contact counts and open deal value", async () => {
+    const atlas = (await mockApi.companies.list()).data.find((c) => c.id === "company_atlas")!;
+    expect(atlas.contactCount).toBe(1);
+    expect(atlas.openDealValue.currency).toBe("EUR");
+  });
+});

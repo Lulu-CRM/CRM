@@ -3,3 +3,7 @@ export * from "./pipeline";
 export * from "./deal";
 export * from "./pipeline-logic";
 export * from "./fixtures/pipeline";
+export * from "./user";
+export * from "./contact";
+export * from "./company";
+export * from "./fixtures/contacts";

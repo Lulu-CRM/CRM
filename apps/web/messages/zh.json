@@ -28,7 +28,13 @@
     "comingSoon": "此页面即将推出",
     "language": "语言",
     "error": "出了点问题",
-    "retry": "重试"
+    "retry": "重试",
+    "previous": "上一页",
+    "next": "下一页",
+    "selectAll": "全选",
+    "selectRow": "选择 {name}",
+    "confirm": "确认",
+    "noResults": "没有结果"
   },
   "layout": {
     "tagline": "智能工作区",
@@ -94,5 +100,14 @@
     "settings": {
       "description": "根据你的工作区设置字段、状态、角色和授权规则。"
     }
+  },
+  "errors": {
+    "NETWORK_ERROR": "无法连接服务器，请检查网络。",
+    "UNKNOWN_ERROR": "出了点问题，请重试。",
+    "CONTACT_NOT_FOUND": "未找到联系人",
+    "DEAL_NOT_FOUND": "未找到交易",
+    "VALIDATION_ERROR": "部分字段需要修改",
+    "UNAUTHORIZED": "请重新登录",
+    "FORBIDDEN": "你没有执行此操作的权限"
   }
 }

@@ -28,7 +28,13 @@
     "comingSoon": "This page is coming soon",
     "language": "Language",
     "error": "Something went wrong",
-    "retry": "Try again"
+    "retry": "Try again",
+    "previous": "Previous page",
+    "next": "Next page",
+    "selectAll": "Select all",
+    "selectRow": "Select {name}",
+    "confirm": "Confirm",
+    "noResults": "No results"
   },
   "layout": {
     "tagline": "Intelligence workspace",
@@ -94,5 +100,14 @@
     "settings": {
       "description": "Shape fields, statuses, roles and consent rules around your workspace."
     }
+  },
+  "errors": {
+    "NETWORK_ERROR": "Can't reach the server. Check your connection.",
+    "UNKNOWN_ERROR": "Something went wrong. Please try again.",
+    "CONTACT_NOT_FOUND": "Contact not found",
+    "DEAL_NOT_FOUND": "Deal not found",
+    "VALIDATION_ERROR": "Some fields need attention",
+    "UNAUTHORIZED": "Please sign in again",
+    "FORBIDDEN": "You don't have permission to do this"
   }
 }

@@ -4,6 +4,7 @@ import { useTranslations } from "next-intl";
 import { usePathname } from "@/i18n/navigation";
 import { findCrmPage } from "@/config/navigation";
 import { Avatar } from "@/components/ui/Avatar";
+import { LanguageSwitcher } from "./LanguageSwitcher";
 
 export function TopBar({ onOpenMenu }: { onOpenMenu: () => void }) {
   const t = useTranslations("layout");
@@ -44,6 +45,7 @@ export function TopBar({ onOpenMenu }: { onOpenMenu: () => void }) {
             className="w-full min-w-0 bg-transparent text-[11px] text-text outline-none"
           />
         </label>
+        <LanguageSwitcher />
         <button type="button" className="hidden text-[11px] text-text-muted sm:block">
           ? {t("help")}
         </button>

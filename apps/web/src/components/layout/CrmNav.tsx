@@ -1,6 +1,8 @@
 "use client";
 
-import { useTranslations } from "next-intl";
+import { useEffect, useState } from "react";
+import { useFormatter, useTranslations } from "next-intl";
+import { api } from "@/lib/api";
 import { Link, usePathname } from "@/i18n/navigation";
 import { crmHref, crmPages, findCrmPage } from "@/config/navigation";
 
@@ -8,6 +10,8 @@ export function CrmNav() {
   const t = useTranslations("nav");
   const tLayout = useTranslations("layout");
   const active = findCrmPage(usePathname());
+  const contactCount = useContactCount();
+  const format = useFormatter();
 
   return (
     <aside className="hidden w-[220px] flex-none border-r border-border bg-surface px-3 py-5.5 md:block">
@@ -43,6 +47,11 @@ export function CrmNav() {
             >
               <span className="w-4 text-center text-xs">{page.icon}</span>
               {t(page.key)}
+              {page.key === "contacts" && contactCount !== null && (
+                <b className="ml-auto rounded-[9px] border border-[#dedbf4] bg-surface px-1.5 py-0.5 text-[8px] text-[#6459c5]">
+                  {format.number(contactCount)}
+                </b>
+              )}
             </Link>
           );
         })}
@@ -59,6 +68,21 @@ export function CrmNav() {
       </div>
     </aside>
   );
+}
+
+function useContactCount() {
+  const [count, setCount] = useState<number | null>(null);
+  useEffect(() => {
+    let cancelled = false;
+    api.contacts
+      .list({ pageSize: 1 })
+      .then((result) => !cancelled && setCount(result.meta.total))
+      .catch(() => {}); // The badge is optional, so a failed count just hides it.
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+  return count;
 }
 
 // Below md the side nav is hidden, so the pages scroll as tabs above the content.

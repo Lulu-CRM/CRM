@@ -28,7 +28,13 @@
     "comingSoon": "Diese Seite folgt in Kürze",
     "language": "Sprache",
     "error": "Etwas ist schiefgelaufen",
-    "retry": "Erneut versuchen"
+    "retry": "Erneut versuchen",
+    "previous": "Vorherige Seite",
+    "next": "Nächste Seite",
+    "selectAll": "Alle auswählen",
+    "selectRow": "{name} auswählen",
+    "confirm": "Bestätigen",
+    "noResults": "Keine Ergebnisse"
   },
   "layout": {
     "tagline": "Intelligenter Arbeitsbereich",
@@ -94,5 +100,14 @@
     "settings": {
       "description": "Felder, Status, Rollen und Einwilligungsregeln für Ihren Arbeitsbereich festlegen."
     }
+  },
+  "errors": {
+    "NETWORK_ERROR": "Server nicht erreichbar. Bitte Verbindung prüfen.",
+    "UNKNOWN_ERROR": "Etwas ist schiefgelaufen. Bitte erneut versuchen.",
+    "CONTACT_NOT_FOUND": "Kontakt nicht gefunden",
+    "DEAL_NOT_FOUND": "Deal nicht gefunden",
+    "VALIDATION_ERROR": "Einige Felder müssen geprüft werden",
+    "UNAUTHORIZED": "Bitte melden Sie sich erneut an",
+    "FORBIDDEN": "Dafür fehlt Ihnen die Berechtigung"
   }
 }

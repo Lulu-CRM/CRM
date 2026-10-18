@@ -349,5 +349,29 @@
       "dropped": "{name} moved to {stage}.",
       "cancelled": "Moving {name} was cancelled."
     }
+  },
+  "leads": {
+    "eyebrow": "Lead workspace",
+    "title": "Qualify with less guesswork.",
+    "intro": "Move a lead when the context changes. Every card keeps its next action visible.",
+    "addLead": "Add lead",
+    "column": {
+      "add": "Add lead",
+      "addLead": "Add lead to {stage}",
+      "empty": "No leads here"
+    },
+    "card": {
+      "actions": "Actions for {name}",
+      "open": "Open profile",
+      "moveTo": "Move to",
+      "noTouch": "No contact yet"
+    },
+    "dnd": {
+      "instructions": "Drag a lead to another stage, or use its menu to move it.",
+      "picked": "Picked up {name}.",
+      "over": "{name} is over {stage}.",
+      "dropped": "{name} moved to {stage}.",
+      "cancelled": "Moving {name} was cancelled."
+    }
   }
 }

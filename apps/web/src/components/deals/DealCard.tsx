@@ -1,9 +1,9 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
 import { useDraggable } from "@dnd-kit/core";
 import { useTranslations } from "next-intl";
 import type { Deal, Stage } from "@lulu/shared";
+import { CardMenu } from "@/components/ui";
 import { useFormat } from "@/i18n/format";
 import { stageColour, useStageName } from "./stages";
 
@@ -50,6 +50,8 @@ export function DealCardView({
   floating = false,
 }: DealCardDetails & Partial<Actions> & { floating?: boolean }) {
   const t = useTranslations("deals.card");
+  const tCommon = useTranslations("common");
+  const stageName = useStageName();
   const format = useFormat();
   const related = [companyName, contactName].filter(Boolean).join(" · ");
 
@@ -74,7 +76,24 @@ export function DealCardView({
           <strong className="min-w-0 flex-1 truncate text-[10px] font-semibold text-[#454253]">{deal.name}</strong>
         )}
         {stages && onMove && onDelete && onOpen && (
-          <DealMenu deal={deal} stages={stages} onOpen={onOpen} onMove={onMove} onDelete={onDelete} />
+          <CardMenu
+            label={t("actions", { name: deal.name })}
+            entries={[
+              { kind: "item", key: "edit", label: tCommon("edit"), onSelect: () => onOpen(deal) },
+              { kind: "separator", key: "sep-move" },
+              { kind: "heading", key: "move", label: t("moveTo") },
+              ...stages
+                .filter((stage) => stage.id !== deal.stageId)
+                .map((stage) => ({
+                  kind: "item" as const,
+                  key: stage.id,
+                  label: stageName(stage),
+                  onSelect: () => onMove(deal, stage.id),
+                })),
+              { kind: "separator", key: "sep-delete" },
+              { kind: "item", key: "delete", label: tCommon("delete"), onSelect: () => onDelete(deal), danger: true },
+            ]}
+          />
         )}
       </div>
       {related && <small className="mt-2 block truncate text-[8px] text-[#9b98a8]">{related}</small>}
@@ -91,87 +110,5 @@ export function DealCardView({
         </span>
       </footer>
     </article>
-  );
-}
-
-function DealMenu({ deal, stages, onOpen, onMove, onDelete }: { deal: Deal } & Actions) {
-  const t = useTranslations("deals.card");
-  const tCommon = useTranslations("common");
-  const stageName = useStageName();
-  const [open, setOpen] = useState(false);
-  const root = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    if (!open) return;
-    const close = (event: Event) => {
-      if (event instanceof KeyboardEvent ? event.key === "Escape" : !root.current?.contains(event.target as Node)) {
-        setOpen(false);
-      }
-    };
-    document.addEventListener("pointerdown", close);
-    document.addEventListener("keydown", close);
-    return () => {
-      document.removeEventListener("pointerdown", close);
-      document.removeEventListener("keydown", close);
-    };
-  }, [open]);
-
-  const run = (action: () => void) => () => {
-    setOpen(false);
-    action();
-  };
-
-  const item = "block w-full rounded-md px-2.5 py-1.5 text-left text-[10px] text-text-strong hover:bg-surface-muted";
-
-  return (
-    // Stop the pointer here so opening the menu never starts a drag.
-    <div ref={root} className="relative z-10" onPointerDown={(event) => event.stopPropagation()}>
-      <button
-        type="button"
-        aria-haspopup="menu"
-        aria-expanded={open}
-        aria-label={t("actions", { name: deal.name })}
-        onClick={() => setOpen((value) => !value)}
-        className="rounded px-1 text-[#9e9aaa] hover:bg-surface-muted"
-      >
-        •••
-      </button>
-      {open && (
-        <div
-          role="menu"
-          className="absolute top-6 right-0 w-48 rounded-lg border border-border bg-surface p-1 shadow-[0_12px_30px_#201c4b1f]"
-        >
-          <button type="button" role="menuitem" className={item} onClick={run(() => onOpen(deal))}>
-            {tCommon("edit")}
-          </button>
-          <div className="my-1 border-t border-border" role="separator" />
-          <span className="block px-2.5 pt-1 pb-0.5 text-[8px] font-black tracking-[0.12em] text-rail-label uppercase">
-            {t("moveTo")}
-          </span>
-          {stages
-            .filter((stage) => stage.id !== deal.stageId)
-            .map((stage) => (
-              <button
-                key={stage.id}
-                type="button"
-                role="menuitem"
-                className={item}
-                onClick={run(() => onMove(deal, stage.id))}
-              >
-                {stageName(stage)}
-              </button>
-            ))}
-          <div className="my-1 border-t border-border" role="separator" />
-          <button
-            type="button"
-            role="menuitem"
-            className={`${item} text-[#c2413d]`}
-            onClick={run(() => onDelete(deal))}
-          >
-            {tCommon("delete")}
-          </button>
-        </div>
-      )}
-    </div>
   );
 }

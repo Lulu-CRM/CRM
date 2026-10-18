@@ -48,6 +48,8 @@ Response (`overviewSchema` in `packages/shared/src/overview.ts`, computed by `bu
 | POST | `/contacts/:id/convert` | Lead to customer |
 | GET | `/contacts/:id/timeline` | Activities, notes and tasks for this contact |
 
+`GET /contacts/:id/timeline` returns a list of `TimelineItem` (see `packages/shared/src/timeline.ts`), newest first: activities, notes (private ones only for their author) and open tasks.
+
 ## Companies
 
 | Method | Path | Purpose |

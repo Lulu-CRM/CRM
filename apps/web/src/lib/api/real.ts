@@ -8,6 +8,7 @@ import {
   dealSummarySchema,
   overviewSchema,
   pipelineWithStagesSchema,
+  noteSchema,
   taskSchema,
   userSchema,
   type ActivityListQuery,
@@ -17,6 +18,9 @@ import {
   type ContactCreateInput,
   type ContactListQuery,
   type ContactUpdateInput,
+  type NoteCreateInput,
+  type NoteListQuery,
+  type NoteUpdateInput,
   type TaskCreateInput,
   type TaskListQuery,
   type TaskUpdateInput,
@@ -53,6 +57,13 @@ export const realApi = {
     list: (query: Partial<TaskListQuery> = {}) => getList(taskSchema, "/tasks", query),
     create: (input: TaskCreateInput) => write(taskSchema, "POST", "/tasks", input),
     update: (id: string, input: TaskUpdateInput) => write(taskSchema, "PATCH", `/tasks/${id}`, input),
+  },
+
+  notes: {
+    list: (query: Partial<NoteListQuery> = {}) => getList(noteSchema, "/notes", query),
+    create: (input: NoteCreateInput) => write(noteSchema, "POST", "/notes", input),
+    update: (id: string, input: NoteUpdateInput) => write(noteSchema, "PATCH", `/notes/${id}`, input),
+    remove: (id: string) => remove(`/notes/${id}`),
   },
 
   activities: {

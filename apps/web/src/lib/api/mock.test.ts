@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { contactSchema, dealSchema, dealSummarySchema } from "@lulu/shared";
+import { contactSchema, dealSchema, dealSummarySchema, noteSchema } from "@lulu/shared";
 
 // Fresh copy of the in-memory data for every test.
 let mockApi: typeof import("./mock").mockApi;
@@ -114,6 +114,37 @@ describe("mock companies", () => {
     const detail = await mockApi.companies.get("company_northstar");
     expect(detail.contacts.map((c) => c.name)).toEqual(["Sophie Laurent"]);
     expect(detail.deals.map((d) => d.id)).toEqual(["deal_northstar"]);
+  });
+});
+
+describe("mock notes", () => {
+  it("lists the shared sample notes and hides Alex's private one from Jamie", async () => {
+    const result = await mockApi.notes.list();
+    expect(result.data.map((n) => n.title)).toEqual(["Northstar decision criteria", "Roam & Root context"]);
+    result.data.forEach((n) => noteSchema.parse(n));
+  });
+
+  it("creates, edits, relinks and soft deletes", async () => {
+    const created = await mockApi.notes.create({ title: "Pricing", visibility: "private", recordType: "deal", recordId: "deal_atlas" });
+    expect(noteSchema.parse(created)).toMatchObject({ authorId: "user_jamie", body: "", visibility: "private" });
+    expect((await mockApi.notes.list({ visibility: "private" })).data.map((n) => n.id)).toEqual([created.id]);
+
+    const edited = await mockApi.notes.update(created.id, { body: "Ten seats", recordType: null, recordId: null });
+    expect(edited).toMatchObject({ body: "Ten seats", recordType: null, recordId: null });
+
+    await mockApi.notes.remove(created.id);
+    expect((await mockApi.notes.list()).meta.total).toBe(2);
+  });
+
+  it("answers NOTE_NOT_FOUND for someone else's private note", async () => {
+    await expect(mockApi.notes.update("note_klarwerk_next_step", { title: "x" })).rejects.toMatchObject({ code: "NOTE_NOT_FOUND" });
+    await expect(mockApi.notes.remove("note_klarwerk_next_step")).rejects.toMatchObject({ code: "NOTE_NOT_FOUND" });
+  });
+
+  it("rejects a link to a record that does not exist", async () => {
+    await expect(mockApi.notes.create({ title: "x", recordType: "contact", recordId: "contact_nobody" })).rejects.toMatchObject({
+      code: "RECORD_NOT_FOUND",
+    });
   });
 });
 

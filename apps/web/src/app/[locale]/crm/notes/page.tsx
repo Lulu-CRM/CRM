@@ -1,5 +1,5 @@
-import { ComingSoon } from "@/components/layout/ComingSoon";
+import { NotesPage } from "@/features/notes/NotesPage";
 
-export default function NotesPage() {
-  return <ComingSoon page="notes" />;
+export default function Notes() {
+  return <NotesPage />;
 }

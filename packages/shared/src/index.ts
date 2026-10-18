@@ -13,5 +13,8 @@ export * from "./contact";
 export * from "./company";
 export * from "./company-logic";
 export * from "./fixtures/contacts";
+export * from "./note";
+export * from "./note-logic";
+export * from "./fixtures/notes";
 export * from "./overview";
 export * from "./overview-logic";

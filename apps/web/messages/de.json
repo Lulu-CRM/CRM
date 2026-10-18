@@ -113,7 +113,9 @@
     "STAGE_NOT_FOUND": "Phase nicht gefunden",
     "STAGE_IN_OTHER_PIPELINE": "Diese Phase gehört zu einer anderen Pipeline",
     "PIPELINE_NOT_FOUND": "Keine Pipeline gefunden",
-    "COMPANY_NOT_FOUND": "Unternehmen nicht gefunden"
+    "COMPANY_NOT_FOUND": "Unternehmen nicht gefunden",
+    "NOTE_NOT_FOUND": "Notiz nicht gefunden",
+    "RECORD_NOT_FOUND": "Der verknüpfte Datensatz existiert nicht mehr"
   },
   "contacts": {
     "import": "Importieren",
@@ -547,6 +549,62 @@
       "edit": "Unternehmen bearbeiten",
       "delete": "Unternehmen löschen",
       "website": "Website"
+    }
+  },
+  "notes": {
+    "add": "Notiz hinzufügen",
+    "eyebrow": "Notizen im Workspace",
+    "title": "Kontext, der nicht verloren geht.",
+    "intro": "Gemeinsame Entscheidungen und private Erinnerungen direkt bei den Beziehungen, zu denen sie gehören.",
+    "searchPlaceholder": "Notizen durchsuchen",
+    "open": "Notiz {title} öffnen",
+    "filters": {
+      "label": "Notizen anzeigen",
+      "all": "Alle",
+      "shared": "Geteilt",
+      "private": "Privat"
+    },
+    "visibility": {
+      "shared": "Geteilt",
+      "private": "Privat"
+    },
+    "linked": {
+      "contact": "Kontakt: {name}",
+      "company": "Firma: {name}",
+      "deal": "Deal: {name}"
+    },
+    "empty": "Noch keine Notizen",
+    "emptyHint": "Halte eine Entscheidung, Übergabe oder einen nächsten Schritt fest, damit das Team ihn später findet.",
+    "noMatches": "Keine passenden Notizen",
+    "noMatchesHint": "Versuche eine andere Suche oder zeige alle Notizen.",
+    "deleteTitle": "Diese Notiz löschen?",
+    "deleteMessage": "„{title}“ wird für alle entfernt, die sie sehen können.",
+    "deleted": "Notiz gelöscht.",
+    "form": {
+      "newEyebrow": "Neue Notiz",
+      "newTitle": "Kontext griffbereit halten",
+      "editEyebrow": "Notiz bearbeiten",
+      "editTitle": "Diese Notiz aktualisieren",
+      "title": "Titel",
+      "titlePlaceholder": "Was soll sich das Team merken?",
+      "body": "Notiz",
+      "bodyPlaceholder": "Entscheidung, Übergabe oder nächsten Schritt ergänzen",
+      "visibility": "Sichtbarkeit",
+      "related": "Verknüpft mit",
+      "none": "Nichts",
+      "contacts": "Kontakte",
+      "companies": "Firmen",
+      "deals": "Deals",
+      "hint": "Private Notizen siehst nur du.",
+      "create": "Notiz speichern",
+      "delete": "Notiz löschen",
+      "created": "Notiz im CRM-Workspace gespeichert.",
+      "saved": "Notiz aktualisiert.",
+      "errors": {
+        "titleRequired": "Gib der Notiz einen Titel",
+        "titleTooLong": "Der Titel darf höchstens 200 Zeichen haben",
+        "bodyTooLong": "Die Notiz darf höchstens 10.000 Zeichen haben"
+      }
     }
   }
 }

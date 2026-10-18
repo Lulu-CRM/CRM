@@ -113,7 +113,9 @@
     "STAGE_NOT_FOUND": "Stage not found",
     "STAGE_IN_OTHER_PIPELINE": "That stage belongs to another pipeline",
     "PIPELINE_NOT_FOUND": "No pipeline found",
-    "COMPANY_NOT_FOUND": "Company not found"
+    "COMPANY_NOT_FOUND": "Company not found",
+    "NOTE_NOT_FOUND": "Note not found",
+    "RECORD_NOT_FOUND": "The linked record no longer exists"
   },
   "contacts": {
     "import": "Import",
@@ -547,6 +549,62 @@
       "edit": "Edit company",
       "delete": "Delete company",
       "website": "Website"
+    }
+  },
+  "notes": {
+    "add": "Add note",
+    "eyebrow": "Workspace notes",
+    "title": "Context that does not get lost.",
+    "intro": "Keep shared decisions and private reminders next to the relationships they belong to.",
+    "searchPlaceholder": "Search notes",
+    "open": "Open note {title}",
+    "filters": {
+      "label": "Show notes",
+      "all": "All",
+      "shared": "Shared",
+      "private": "Private"
+    },
+    "visibility": {
+      "shared": "Shared",
+      "private": "Private"
+    },
+    "linked": {
+      "contact": "Contact: {name}",
+      "company": "Company: {name}",
+      "deal": "Deal: {name}"
+    },
+    "empty": "No notes yet",
+    "emptyHint": "Write down a decision, handoff or next step so the team can find it later.",
+    "noMatches": "No notes match",
+    "noMatchesHint": "Try another search or show all notes.",
+    "deleteTitle": "Delete this note?",
+    "deleteMessage": "“{title}” will be removed for everyone who can see it.",
+    "deleted": "Note deleted.",
+    "form": {
+      "newEyebrow": "New note",
+      "newTitle": "Keep the context close",
+      "editEyebrow": "Edit note",
+      "editTitle": "Update this note",
+      "title": "Title",
+      "titlePlaceholder": "What should the team remember?",
+      "body": "Note",
+      "bodyPlaceholder": "Add a decision, handoff or next action",
+      "visibility": "Visibility",
+      "related": "Linked to",
+      "none": "Nothing",
+      "contacts": "Contacts",
+      "companies": "Companies",
+      "deals": "Deals",
+      "hint": "Private notes are only visible to you.",
+      "create": "Save note",
+      "delete": "Delete note",
+      "created": "Note saved to the CRM workspace.",
+      "saved": "Note updated.",
+      "errors": {
+        "titleRequired": "Give the note a title",
+        "titleTooLong": "Keep the title under 200 characters",
+        "bodyTooLong": "Keep the note under 10,000 characters"
+      }
     }
   }
 }

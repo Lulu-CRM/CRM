@@ -54,10 +54,31 @@ This list is the contract for the frontend and the backend. Add or change an end
 | GET | `/deals` | List. Filters: `stageId`, `ownerId`, `companyId`, `contactId`, `status` (`open`, `won`, `lost`) |
 | POST | `/deals` | Create |
 | GET | `/deals/:id` | Detail |
-| PATCH | `/deals/:id` | Edit |
+| PATCH | `/deals/:id` | Edit. Cannot change the stage: use `/move` |
 | POST | `/deals/:id/move` | Move to another stage, body `{ stageId }`. Updates probability and closedAt |
 | DELETE | `/deals/:id` | Soft delete |
 | GET | `/deals/summary` | Open value, weighted value, win rate, active deals, average days to close |
+
+`GET /deals/summary` takes an optional `pipelineId` (default pipeline if left out) and returns:
+
+```json
+{
+  "data": {
+    "openValue": { "amount": 97900, "currency": "EUR" },
+    "weightedValue": { "amount": 61765, "currency": "EUR" },
+    "winRate": 0.63,
+    "activeDeals": 4,
+    "averageDaysToClose": 14,
+    "otherCurrencyDeals": 0
+  }
+}
+```
+
+- Money is in the workspace's default currency. `otherCurrencyDeals` counts open deals in another currency that are left out of the totals.
+- `winRate` is won / (won + lost); `averageDaysToClose` is the mean of `closedAt - createdAt` for won deals. Both are `null` when there are no closed deals yet.
+- Errors from `/move`: `STAGE_NOT_FOUND`, `STAGE_IN_OTHER_PIPELINE`.
+
+Schemas: `packages/shared/src/pipeline.ts` and `deal.ts`.
 
 ## Tasks, notes, activities
 

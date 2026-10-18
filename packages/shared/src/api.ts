@@ -1,6 +1,6 @@
 import { z } from 'zod';
-import { ERROR_CODES } from './errors';
-import type { PaginationMeta } from './common';
+import { ERROR_CODES } from './errors.js';
+import type { PaginationMeta } from './common.js';
 
 export const errorSchema = z.object({
   error: z.object({

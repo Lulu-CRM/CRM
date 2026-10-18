@@ -28,9 +28,6 @@ describe('health routes (unit)', () => {
     const res = await request(app).get('/health');
     expect(res.status).toBe(503);
     expect(res.body).toEqual({ data: { status: 'degraded', checks: { database: 'down', redis: 'ok' } } });
-    expect(res.body.error).toBeUndefined();
-    const b = res.body;
-    expect(b.error).toBeUndefined();
   });
 
   it('GET /health returns 503 when redis is down', async () => {

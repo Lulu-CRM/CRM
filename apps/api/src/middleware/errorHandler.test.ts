@@ -7,6 +7,10 @@ import { errorHandler, toAppError } from './errorHandler';
 import { notFound } from './notFound';
 import { requestId } from './requestId';
 
+interface ErrorBody {
+  error: { code: string; message: string; details: unknown };
+}
+
 const app = express();
 app.use(requestId);
 app.use(express.json());
@@ -49,7 +53,7 @@ describe('errorHandler', () => {
   it('maps AppError to its status, code and message key', async () => {
     const res = await request(app).get('/throw-app-error');
     expect(res.status).toBe(404);
-    const b = res.body;
+    const b = res.body as ErrorBody;
     expect(b.error.code).toBe('CONTACT_NOT_FOUND');
     expect(b.error.message).toBe('errors.contact_not_found');
     expect(b.error.details).toBeNull();
@@ -58,7 +62,8 @@ describe('errorHandler', () => {
   it('passes AppError details through', async () => {
     const res = await request(app).get('/throw-app-error-details');
     expect(res.status).toBe(400);
-    expect((res.body).error.details).toEqual([
+    const b = res.body as ErrorBody;
+    expect(b.error.details).toEqual([
       { path: 'email', code: 'invalid_format', message: 'errors.validation.invalid_format' },
     ]);
   });
@@ -69,9 +74,10 @@ describe('errorHandler', () => {
       .set('Content-Type', 'application/json')
       .send({ email: 'not-an-email' });
     expect(res.status).toBe(400);
-    expect((res.body).error.code).toBe('VALIDATION_ERROR');
-    expect((res.body).error.message).toBe('errors.validation_error');
-    expect((res.body).error.details).toEqual([
+    const b = res.body as ErrorBody;
+    expect(b.error.code).toBe('VALIDATION_ERROR');
+    expect(b.error.message).toBe('errors.validation_error');
+    expect(b.error.details).toEqual([
       expect.objectContaining({ path: 'email', code: 'invalid_format', message: 'errors.validation.invalid_format' }),
     ]);
   });
@@ -82,7 +88,7 @@ describe('errorHandler', () => {
       .set('Content-Type', 'application/json')
       .send('{');
     expect(res.status).toBe(400);
-    expect((res.body).error).toEqual({
+    expect((res.body as ErrorBody).error).toEqual({
       code: 'VALIDATION_ERROR',
       message: 'errors.validation_error',
       details: [{ path: 'body', code: 'invalid_json', message: 'errors.validation.invalid_json' }],
@@ -92,23 +98,25 @@ describe('errorHandler', () => {
   it('maps Prisma P2002 to 409 CONFLICT', async () => {
     const res = await request(app).get('/throw-prisma-conflict');
     expect(res.status).toBe(409);
-    expect((res.body).error.code).toBe('CONFLICT');
-    expect((res.body).error.message).toBe('errors.conflict');
+    const b = res.body as ErrorBody;
+    expect(b.error.code).toBe('CONFLICT');
+    expect(b.error.message).toBe('errors.conflict');
   });
 
   it('maps Prisma P2025 to 404 NOT_FOUND', async () => {
     const res = await request(app).get('/throw-prisma-not-found');
     expect(res.status).toBe(404);
-    expect((res.body).error.code).toBe('NOT_FOUND');
+    expect((res.body as ErrorBody).error.code).toBe('NOT_FOUND');
   });
 
   it('maps unknown errors to 500 INTERNAL_ERROR without leaking details, and logs server-side', async () => {
     const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => undefined);
     const res = await request(app).get('/throw-unknown');
     expect(res.status).toBe(500);
-    expect((res.body).error.code).toBe('INTERNAL_ERROR');
-    expect((res.body).error.message).toBe('errors.internal_error');
-    expect((res.body).error.details).toBeNull();
+    const b = res.body as ErrorBody;
+    expect(b.error.code).toBe('INTERNAL_ERROR');
+    expect(b.error.message).toBe('errors.internal_error');
+    expect(b.error.details).toBeNull();
     expect(JSON.stringify(res.body)).not.toContain('hunter2');
     expect(JSON.stringify(res.body)).not.toContain('stack');
     expect(consoleSpy).toHaveBeenCalledOnce();

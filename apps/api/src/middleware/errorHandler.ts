@@ -55,7 +55,8 @@ export function toAppError(err: unknown): AppError {
   return new AppError(ERROR_CODES.INTERNAL_ERROR, 500);
 }
 
-export const errorHandler: ErrorRequestHandler = (err, req, res) => {
+// Express only treats a middleware as an error handler when it declares 4 parameters.
+export const errorHandler: ErrorRequestHandler = (err, req, res, _next) => {
   if (res.headersSent) {
     return;
   }

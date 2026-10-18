@@ -37,8 +37,8 @@ Express API for the Lulu CRM module. PostgreSQL through Prisma 7 (driver adapter
 | `src/routes`  | Express routers, mounted under `/api/v1` by `routes/index.ts` |
 | `src/services`| Business logic used by routes                        |
 | `src/middleware` | Express middleware (auth, errors, etc.)           |
-| `src/jobs`    | BullMQ background jobs (import, AI analysis)         |
-| `src/lib`     | Small shared helpers                                 |
+| `src/jobs`    | BullMQ queues (`queues.ts`: import.process, ai.analyze, segments.refresh, notifications.send) and enqueue helpers; no workers yet |
+| `src/lib`     | Small shared helpers, including `redis.ts` (`createRedisConnection()` for health ping and queue connections) |
 | `src/db`      | Prisma client (`prisma.ts`) and workspace-scoped client (`scoped.ts`) |
 | `src/generated` | Generated Prisma client, gitignored, rebuilt by `db:generate` |
 
@@ -48,4 +48,4 @@ Express API for the Lulu CRM module. PostgreSQL through Prisma 7 (driver adapter
 - **All application queries go through `scopedDb(workspaceId)`** (`src/db/scoped.ts`) — it enforces workspace scoping and soft delete. The base client (`src/db/prisma.ts`) is only for the `Workspace` table, migrations, and infrastructure. To scope a new model, add its delegate name to `SCOPED_MODELS` in `src/db/scoped.ts`.
 - Health endpoints: `GET /health`, `GET /api/v1/health` return `{ data: { status: 'ok'|'degraded', checks: { database: 'ok'|'down', redis: 'ok'|'down' } } }`; `GET /health/live` returns `{ data: { status: 'ok' } }` without touching dependencies.
 
-- Unit-test env vars are injected by `vitest.config.ts` (`test.env`); unit tests need no `.env`. Integration tests (`test:int`) read `DATABASE_URL` from `.env` and need a migrated database.
+- Unit-test env vars are injected by `vitest.config.mts` (`test.env`); unit tests need no `.env`. Integration tests (`test:int`) read `DATABASE_URL` from `.env` and need a migrated database and a reachable Redis.

@@ -7,8 +7,8 @@ import {
   listQuerySchema,
   moneySchema,
   timestampSchema,
-} from "./common";
-import { stageTypeSchema } from "./pipeline";
+} from "./common.js";
+import { stageTypeSchema } from "./pipeline.js";
 
 export const dealSchema = baseRecordSchema.extend({
   name: z.string().trim().min(1),

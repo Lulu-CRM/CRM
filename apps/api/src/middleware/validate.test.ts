@@ -5,6 +5,10 @@ import { z } from 'zod';
 import { errorHandler } from './errorHandler';
 import { TypedRequest, validate } from './validate';
 
+interface ErrorBody {
+  error: { code: string; message: string; details: Array<{ path: string; code: string; message: string }> };
+}
+
 const bodySchema = z.object({
   name: z.string().min(1),
   age: z.number().int().min(0),
@@ -67,9 +71,9 @@ describe('validate middleware', () => {
   it('rejects an invalid body with 400 VALIDATION_ERROR details', async () => {
     const badRes = await request(app).post('/body').send({ name: '', age: -1 });
     expect(badRes.status).toBe(400);
-    const b = badRes.body;
+    const b = badRes.body as ErrorBody;
     expect(b.error.code).toBe('VALIDATION_ERROR');
-    const paths = b.error.details.map((d: { path: string }) => d.path);
+    const paths = b.error.details.map((d) => d.path);
     expect(paths).toEqual(['name', 'age']);
   });
 
@@ -86,7 +90,7 @@ describe('validate middleware', () => {
   it('rejects an invalid query value', async () => {
     const res = await request(app).get('/query?page=0');
     expect(res.status).toBe(400);
-    const b = res.body;
+    const b = res.body as ErrorBody;
     expect(b.error.details[0]).toEqual(
       expect.objectContaining({ path: 'page', code: 'too_small' }),
     );
@@ -100,7 +104,7 @@ describe('validate middleware', () => {
 
     const bad = await request(app).get('/params/not-a-uuid');
     expect(bad.status).toBe(400);
-    const b = bad.body;
+    const b = bad.body as ErrorBody;
     expect(b.error.details[0]).toEqual(
       expect.objectContaining({ path: 'id', code: 'invalid_format' }),
     );

@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { baseRecordSchema, fractionSchema, idSchema } from "./common";
+import { baseRecordSchema, fractionSchema, idSchema } from "./common.js";
 
 export const stageTypeSchema = z.enum(["open", "won", "lost"]);
 

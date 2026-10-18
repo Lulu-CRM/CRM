@@ -15,6 +15,8 @@ import {
   type TaskCreateInput,
   type TaskListQuery,
   type TaskUpdateInput,
+  type DealCreateInput,
+  type DealUpdateInput,
 } from "@lulu/shared";
 import { getList, getOne, remove, write } from "./http";
 
@@ -52,6 +54,9 @@ export const realApi = {
   deals: {
     list: () => getList(dealSchema, "/deals", { pageSize: 100 }),
     summary: () => getOne(dealSummarySchema, "/deals/summary"),
+    create: (input: DealCreateInput) => write(dealSchema, "POST", "/deals", input),
+    update: (id: string, input: DealUpdateInput) => write(dealSchema, "PATCH", `/deals/${id}`, input),
+    remove: (id: string) => remove(`/deals/${id}`),
     move: (id: string, stageId: string) => write(dealSchema, "POST", `/deals/${id}/move`, { stageId }),
   },
 };

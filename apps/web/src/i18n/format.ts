@@ -32,5 +32,8 @@ export function useFormat() {
       if (days > 1 && days < 7) return t("weekdayAt", { day: format.dateTime(date, { weekday: "short" }), time });
       return format.dateTime(date, { dateStyle: "medium" });
     },
+    // Short day and month for cards ("28 Oct", "28. Okt.", "10月28日").
+    dayMonth: (value: Date | string) =>
+      format.dateTime(new Date(value), { day: "numeric", month: "short" }),
   };
 }

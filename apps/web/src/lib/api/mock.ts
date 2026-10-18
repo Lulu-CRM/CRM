@@ -23,6 +23,8 @@ import {
   type TaskCreateInput,
   type TaskListQuery,
   type TaskUpdateInput,
+  type DealCreateInput,
+  type DealUpdateInput,
 } from "@lulu/shared";
 import { ApiError, type ListResult } from "./types";
 
@@ -62,6 +64,12 @@ function findContact(id: string) {
   const contact = alive(db.contacts).find((c) => c.id === id);
   if (!contact) throw new ApiError("CONTACT_NOT_FOUND", 404);
   return contact;
+}
+
+function findDealIndex(id: string) {
+  const index = db.deals.findIndex((d) => d.id === id && !d.deletedAt);
+  if (index < 0) throw new ApiError("DEAL_NOT_FOUND", 404);
+  return index;
 }
 
 export const mockApi = {
@@ -218,9 +226,41 @@ export const mockApi = {
   deals: {
     list: () => delay(paginate(alive(db.deals), 1, 100)),
     summary: () => delay(summarizeDeals(alive(db.deals), demoPipeline.stages, CURRENCY)),
+    async create(input: DealCreateInput) {
+      const stage = demoPipeline.stages.find((s) => s.id === input.stageId);
+      if (!stage) throw new ApiError("STAGE_NOT_FOUND", 422);
+      const now = new Date().toISOString();
+      const deal: Deal = {
+        id: newId("deal"),
+        workspaceId: DEMO_WORKSPACE_ID,
+        createdAt: now,
+        updatedAt: now,
+        deletedAt: null,
+        name: input.name,
+        value: input.value,
+        currency: input.currency ?? CURRENCY,
+        stageId: stage.id,
+        probability: input.probability ?? stage.probability,
+        expectedCloseAt: input.expectedCloseAt ?? null,
+        contactId: input.contactId ?? null,
+        companyId: input.companyId ?? null,
+        ownerId: input.ownerId ?? CURRENT_USER_ID,
+        closedAt: stage.type === "open" ? null : now,
+      };
+      db.deals.push(deal);
+      return delay(deal);
+    },
+    async update(id: string, input: DealUpdateInput) {
+      const index = findDealIndex(id);
+      db.deals[index] = { ...db.deals[index], ...input, updatedAt: new Date().toISOString() };
+      return delay(db.deals[index]);
+    },
+    async remove(id: string) {
+      db.deals[findDealIndex(id)].deletedAt = new Date().toISOString();
+      return delay(undefined);
+    },
     async move(id: string, stageId: string) {
-      const index = db.deals.findIndex((d) => d.id === id && !d.deletedAt);
-      if (index < 0) throw new ApiError("DEAL_NOT_FOUND", 404);
+      const index = findDealIndex(id);
       const moved: Deal = moveDeal(db.deals[index], stageId, demoPipeline.stages);
       db.deals[index] = moved;
       return delay(moved);

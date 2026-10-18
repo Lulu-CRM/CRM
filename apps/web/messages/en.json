@@ -109,7 +109,10 @@
     "VALIDATION_ERROR": "Some fields need attention",
     "UNAUTHORIZED": "Please sign in again",
     "FORBIDDEN": "You don't have permission to do this",
-    "TASK_NOT_FOUND": "Task not found"
+    "TASK_NOT_FOUND": "Task not found",
+    "STAGE_NOT_FOUND": "Stage not found",
+    "STAGE_IN_OTHER_PIPELINE": "That stage belongs to another pipeline",
+    "PIPELINE_NOT_FOUND": "No pipeline found"
   },
   "contacts": {
     "import": "Import",
@@ -255,5 +258,96 @@
     "todayAt": "Today, {time}",
     "yesterdayAt": "Yesterday, {time}",
     "weekdayAt": "{day}, {time}"
+  },
+  "deals": {
+    "eyebrow": "Deal pipeline",
+    "title": "Move opportunities forward.",
+    "intro": "Every deal has an owner, a value and a next step.",
+    "addDeal": "Add deal",
+    "boardView": "Board view",
+    "tableView": "Table view",
+    "stages": {
+      "new": "New",
+      "qualified": "Qualified",
+      "proposal": "Proposal",
+      "negotiation": "Negotiation",
+      "won": "Won",
+      "lost": "Lost"
+    },
+    "summary": {
+      "openValue": "open value",
+      "weightedValue": "weighted value",
+      "winRate": "win rate",
+      "activeDeals": "active deals",
+      "averageClose": "average close",
+      "days": "{count, plural, one {# day} other {# days}}",
+      "otherCurrencies": "{count, plural, one {# open deal} other {# open deals}} in other currencies not included"
+    },
+    "column": {
+      "add": "Add deal",
+      "addDeal": "Add deal to {stage}",
+      "empty": "No deals yet"
+    },
+    "card": {
+      "likely": "{percent} likely",
+      "close": "Close {date}",
+      "noCloseDate": "No close date",
+      "actions": "Actions for {name}",
+      "moveTo": "Move to"
+    },
+    "table": {
+      "deal": "Deal",
+      "contact": "Contact",
+      "stage": "Stage",
+      "value": "Value",
+      "probability": "Probability",
+      "close": "Expected close",
+      "owner": "Owner",
+      "empty": "No deals yet",
+      "emptyHint": "Add your first deal to start your pipeline."
+    },
+    "form": {
+      "newEyebrow": "New deal",
+      "newTitle": "Add an opportunity",
+      "editEyebrow": "Edit deal",
+      "editTitle": "Update this opportunity",
+      "name": "Deal name",
+      "namePlaceholder": "e.g. Northstar annual workspace",
+      "company": "Company",
+      "contact": "Contact",
+      "none": "None",
+      "value": "Value",
+      "currency": "Currency",
+      "expectedClose": "Expected close",
+      "stage": "Stage",
+      "owner": "Owner",
+      "hint": "Every deal keeps the next step visible.",
+      "create": "Create deal",
+      "save": "Save changes",
+      "errors": {
+        "name": "Give the deal a name",
+        "value": "Enter a value of 0 or more",
+        "date": "Pick a valid date",
+        "invalid": "Check this field"
+      }
+    },
+    "delete": {
+      "eyebrow": "Delete deal",
+      "title": "Delete {name}?",
+      "body": "The deal will be removed from the pipeline and the totals.",
+      "confirm": "Delete deal"
+    },
+    "toast": {
+      "created": "Deal added to the pipeline.",
+      "saved": "Deal updated.",
+      "deleted": "Deal deleted."
+    },
+    "dnd": {
+      "instructions": "Drag a deal to another stage, or use its menu to move it.",
+      "picked": "Picked up {name}.",
+      "over": "{name} is over {stage}.",
+      "dropped": "{name} moved to {stage}.",
+      "cancelled": "Moving {name} was cancelled."
+    }
   }
 }

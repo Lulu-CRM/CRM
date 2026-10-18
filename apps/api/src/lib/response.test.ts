@@ -1,3 +1,4 @@
+import { Decimal } from '@prisma/client/runtime/client';
 import express from 'express';
 import request from 'supertest';
 import { describe, expect, it } from 'vitest';
@@ -19,6 +20,16 @@ app.get('/no-content', (_req, res) => {
 });
 app.get('/paginated', (_req, res) => {
   paginated(res, [{ id: '1' }], { page: 1, pageSize: 10, total: 1 });
+});
+app.get('/decimals', (_req, res) => {
+  ok(res, {
+    value: new Decimal('24000.00'),
+    probability: new Decimal('0.7000'),
+    deals: [{ value: new Decimal('0.10'), stage: 'open' }],
+  });
+});
+app.get('/decimals-paginated', (_req, res) => {
+  paginated(res, [{ value: new Decimal('12.50') }], { page: 1, pageSize: 10, total: 1 });
 });
 
 describe('response helpers', () => {
@@ -51,5 +62,28 @@ describe('response helpers', () => {
     const res = await request(app).get('/paginated');
     expect(res.status).toBe(200);
     expect(res.body).toEqual({ data: [{ id: '1' }], meta: { page: 1, pageSize: 10, total: 1 } });
+  });
+
+  it('serializes Prisma Decimals as JSON numbers, not strings', async () => {
+    const res = await request(app).get('/decimals');
+    expect(res.status).toBe(200);
+    const body = res.body as {
+      data: { value: number; probability: number; deals: Array<{ value: number; stage: string }> };
+    };
+    expect(body.data.value).toBe(24000);
+    expect(typeof body.data.value).toBe('number');
+    expect(body.data.probability).toBe(0.7);
+    expect(typeof body.data.probability).toBe('number');
+    expect(body.data.deals[0]?.value).toBe(0.1);
+    expect(typeof body.data.deals[0]?.value).toBe('number');
+    expect(body.data.deals[0]?.stage).toBe('open');
+  });
+
+  it('serializes Decimals inside paginated lists', async () => {
+    const res = await request(app).get('/decimals-paginated');
+    expect(res.status).toBe(200);
+    const body = res.body as { data: Array<{ value: number }> };
+    expect(body.data[0]?.value).toBe(12.5);
+    expect(typeof body.data[0]?.value).toBe('number');
   });
 });

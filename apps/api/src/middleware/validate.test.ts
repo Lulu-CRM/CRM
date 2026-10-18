@@ -2,6 +2,7 @@ import express from 'express';
 import request from 'supertest';
 import { describe, expect, it } from 'vitest';
 import { z } from 'zod';
+import { idSchema } from '@lulu/shared';
 import { errorHandler } from './errorHandler';
 import { TypedRequest, validate } from './validate';
 
@@ -18,7 +19,7 @@ const querySchema = z.object({
   q: z.string().trim().optional(),
 });
 const paramsSchema = z.object({
-  id: z.uuid(),
+  id: idSchema,
 });
 
 const app = express();
@@ -96,18 +97,15 @@ describe('validate middleware', () => {
     );
   });
 
-  it('validates params as uuid', async () => {
+  it('accepts any non-empty id, uuid or not', async () => {
     const uuid = '550e8400-e29b-41d4-a716-446655440000';
     const res = await request(app).get(`/params/${uuid}`);
     expect(res.status).toBe(200);
     expect(res.body).toEqual({ data: uuid });
 
-    const bad = await request(app).get('/params/not-a-uuid');
-    expect(bad.status).toBe(400);
-    const b = bad.body as ErrorBody;
-    expect(b.error.details[0]).toEqual(
-      expect.objectContaining({ path: 'id', code: 'invalid_format' }),
-    );
+    const res2 = await request(app).get('/params/row-17');
+    expect(res2.status).toBe(200);
+    expect(res2.body).toEqual({ data: 'row-17' });
   });
 
   it('supports TypedRequest generics on handlers', async () => {

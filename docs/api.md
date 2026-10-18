@@ -24,6 +24,18 @@ This list is the contract for the frontend and the backend. Add or change an end
 | --- | --- | --- |
 | GET | `/overview` | Contact count, open pipeline value, follow-ups due, AI signal count, pipeline value by stage, recent contacts, recent activity |
 
+Response (`overviewSchema` in `packages/shared/src/overview.ts`, computed by `buildOverview`):
+
+| Field | Meaning |
+| --- | --- |
+| `contactCount`, `contactChange` | Live contacts, and the change against the same day last month as a fraction (`null` if there were none) |
+| `openPipeline`, `weightedPipeline`, `activeDeals` | From `summarizeDeals` on the default pipeline, in the workspace currency |
+| `followUpsDue`, `dueToday` | Open tasks overdue or due in the next 7 days, and how many are due today (workspace time zone) |
+| `aiSignals`, `aiSignalsThisWeek` | `ai_signal` activities in the last 30 days, and since Monday |
+| `pipelineByStage` | `{ stageId, value, dealCount }` per open stage, in pipeline order |
+| `recentContacts` | 4 contacts touched most recently |
+| `recentActivity` | 5 newest activities, each with `recordName` |
+
 ## Contacts
 
 | Method | Path | Purpose |

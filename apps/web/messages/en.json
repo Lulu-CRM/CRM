@@ -349,5 +349,40 @@
       "dropped": "{name} moved to {stage}.",
       "cancelled": "Moving {name} was cancelled."
     }
+  },
+  "overview": {
+    "import": "Import",
+    "addContact": "Add contact",
+    "viewAll": "View all",
+    "stats": {
+      "contacts": "All contacts",
+      "contactsNoChange": "No data from last month yet",
+      "vsLastMonth": "vs last month",
+      "pipeline": "Open pipeline",
+      "weighted": "weighted value",
+      "followUps": "Follow-ups due",
+      "dueToday": "due today",
+      "signals": "AI signals",
+      "sinceMonday": "since Monday"
+    },
+    "recent": {
+      "eyebrow": "Recent contacts",
+      "title": "Keep relationships moving.",
+      "empty": "No contacts yet"
+    },
+    "pipeline": {
+      "eyebrow": "Pipeline snapshot",
+      "title": "What needs attention.",
+      "open": "Open Deals & Pipeline",
+      "empty": "No open deals",
+      "active": "{count, plural, one {# active opportunity} other {# active opportunities}}",
+      "addDeal": "Add deal"
+    },
+    "activity": {
+      "eyebrow": "Activity stream",
+      "title": "The team is in motion.",
+      "open": "Open activities",
+      "empty": "No activity yet"
+    }
   }
 }

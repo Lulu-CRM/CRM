@@ -18,6 +18,9 @@ export function useFormat() {
       }),
     number: (value: number) => format.number(value),
     percent: (value: number) => format.number(value, { style: "percent" }),
+    // "+12%" / "-3%" for changes.
+    signedPercent: (value: number) =>
+      format.number(value, { style: "percent", signDisplay: "exceptZero", maximumFractionDigits: 1 }),
     date: (value: Date | string) =>
       format.dateTime(new Date(value), { dateStyle: "medium" }),
     relative: (value: Date | string) => format.relativeTime(new Date(value), new Date()),

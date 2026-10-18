@@ -91,3 +91,12 @@ describe("mock companies", () => {
     expect(atlas.openDealValue.currency).toBe("EUR");
   });
 });
+
+describe("mock overview", () => {
+  it("matches the schema and follows changes to the data", async () => {
+    const { overviewSchema } = await import("@lulu/shared");
+    const before = overviewSchema.parse(await mockApi.overview());
+    await mockApi.contacts.create({ name: "New Person" });
+    expect((await mockApi.overview()).contactCount).toBe(before.contactCount + 1);
+  });
+});

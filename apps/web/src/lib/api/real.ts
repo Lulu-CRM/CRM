@@ -5,6 +5,7 @@ import {
   contactSchema,
   dealSchema,
   dealSummarySchema,
+  overviewSchema,
   pipelineWithStagesSchema,
   taskSchema,
   userSchema,
@@ -48,6 +49,8 @@ export const realApi = {
   activities: {
     list: (query: Partial<ActivityListQuery> = {}) => getList(activitySchema, "/activities", query),
   },
+
+  overview: () => getOne(overviewSchema, "/overview"),
 
   pipelines: () => getOne(z.array(pipelineWithStagesSchema), "/pipelines"),
 

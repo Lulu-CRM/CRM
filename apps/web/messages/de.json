@@ -349,5 +349,40 @@
       "dropped": "{name} nach {stage} verschoben.",
       "cancelled": "Verschieben von {name} abgebrochen."
     }
+  },
+  "overview": {
+    "import": "Importieren",
+    "addContact": "Kontakt hinzufügen",
+    "viewAll": "Alle anzeigen",
+    "stats": {
+      "contacts": "Alle Kontakte",
+      "contactsNoChange": "Noch keine Daten vom Vormonat",
+      "vsLastMonth": "ggü. Vormonat",
+      "pipeline": "Offene Pipeline",
+      "weighted": "gewichteter Wert",
+      "followUps": "Fällige Nachfassaktionen",
+      "dueToday": "heute fällig",
+      "signals": "KI-Signale",
+      "sinceMonday": "seit Montag"
+    },
+    "recent": {
+      "eyebrow": "Neueste Kontakte",
+      "title": "Beziehungen in Bewegung halten.",
+      "empty": "Noch keine Kontakte"
+    },
+    "pipeline": {
+      "eyebrow": "Pipeline-Überblick",
+      "title": "Was Aufmerksamkeit braucht.",
+      "open": "Deals & Pipeline öffnen",
+      "empty": "Keine offenen Deals",
+      "active": "{count, plural, one {# aktive Chance} other {# aktive Chancen}}",
+      "addDeal": "Deal hinzufügen"
+    },
+    "activity": {
+      "eyebrow": "Aktivitäten",
+      "title": "Das Team ist in Bewegung.",
+      "open": "Aktivitäten öffnen",
+      "empty": "Noch keine Aktivität"
+    }
   }
 }

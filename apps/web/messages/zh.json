@@ -390,6 +390,30 @@
       "empty": "暂无动态"
     }
   },
+  "leads": {
+    "eyebrow": "潜在客户工作区",
+    "title": "少些猜测，更好地筛选。",
+    "intro": "情况变化时移动潜在客户。每张卡片都清楚显示下一步。",
+    "addLead": "添加潜在客户",
+    "column": {
+      "add": "添加潜在客户",
+      "addLead": "添加潜在客户到{stage}",
+      "empty": "这里还没有潜在客户"
+    },
+    "card": {
+      "actions": "{name} 的操作",
+      "open": "打开资料",
+      "moveTo": "移动到",
+      "noTouch": "尚未联系"
+    },
+    "dnd": {
+      "instructions": "将潜在客户拖到其他阶段，或通过它的菜单移动。",
+      "picked": "已拿起 {name}。",
+      "over": "{name} 位于 {stage} 上方。",
+      "dropped": "{name} 已移动到 {stage}。",
+      "cancelled": "已取消移动 {name}。"
+    }
+  },
   "tasks": {
     "eyebrow": "任务",
     "title": "跟进进度一目了然。",

@@ -5,8 +5,13 @@ import {
   demoDeals,
   demoPipeline,
   demoUsers,
+  demoActivities,
+  demoTasks,
   moveDeal,
+  setTaskDone,
+  sortTimeline,
   summarizeDeals,
+  type ActivityListQuery,
   type Company,
   type CompanyListItem,
   type Contact,
@@ -14,6 +19,10 @@ import {
   type ContactListQuery,
   type ContactUpdateInput,
   type Deal,
+  type Task,
+  type TaskCreateInput,
+  type TaskListQuery,
+  type TaskUpdateInput,
 } from "@lulu/shared";
 import { ApiError, type ListResult } from "./types";
 
@@ -22,6 +31,8 @@ const db = {
   contacts: structuredClone(demoContacts),
   companies: structuredClone(demoCompanies),
   deals: structuredClone(demoDeals),
+  tasks: demoTasks(),
+  activities: demoActivities(),
 };
 
 const CURRENCY = "EUR";
@@ -108,7 +119,8 @@ export const mockApi = {
       return delay(contact);
     },
     async remove(id: string) {
-      findContact(id).deletedAt = new Date().toISOString();
+      const contact = findContact(id);
+      contact.deletedAt = new Date().toISOString();
       return delay(undefined);
     },
     convert(id: string) {
@@ -129,6 +141,75 @@ export const mockApi = {
         },
       }));
       return delay(paginate(rows));
+    },
+  },
+
+  tasks: {
+    list(query: Partial<TaskListQuery> = {}) {
+      const rows = alive(db.tasks).filter(
+        (t) =>
+          (!query.ownerId || t.ownerId === query.ownerId) &&
+          (query.done === undefined || t.done === query.done) &&
+          (!query.recordType || t.recordType === query.recordType) &&
+          (!query.recordId || t.recordId === query.recordId),
+      );
+      return delay(paginate(sortBy(rows, "dueAt"), query.page, query.pageSize ?? 100));
+    },
+    create(input: TaskCreateInput) {
+      const now = new Date().toISOString();
+      const task: Task = {
+        id: newId("task"),
+        workspaceId: DEMO_WORKSPACE_ID,
+        createdAt: now,
+        updatedAt: now,
+        deletedAt: null,
+        title: input.title,
+        dueAt: input.dueAt ?? null,
+        priority: input.priority ?? "normal",
+        ownerId: input.ownerId ?? CURRENT_USER_ID,
+        done: false,
+        doneAt: null,
+        recordType: input.recordType ?? null,
+        recordId: input.recordId ?? null,
+      };
+      db.tasks.push(task);
+      return delay(task);
+    },
+    async update(id: string, input: TaskUpdateInput) {
+      const index = db.tasks.findIndex((t) => t.id === id && !t.deletedAt);
+      if (index < 0) throw new ApiError("TASK_NOT_FOUND", 404);
+      const { done, ...rest } = input;
+      let task: Task = { ...db.tasks[index], ...rest, updatedAt: new Date().toISOString() };
+      if (done !== undefined && done !== task.done) {
+        // Same rule as the server: ticking a task sets doneAt and logs an activity.
+        const result = setTaskDone(task, done, CURRENT_USER_ID, new Date());
+        task = result.task;
+        const now = new Date().toISOString();
+        if (result.activity) {
+          db.activities.push({
+            ...result.activity,
+            id: newId("activity"),
+            workspaceId: DEMO_WORKSPACE_ID,
+            createdAt: now,
+            updatedAt: now,
+            deletedAt: null,
+          });
+        }
+      }
+      db.tasks[index] = task;
+      return delay(task);
+    },
+  },
+
+  activities: {
+    list(query: Partial<ActivityListQuery> = {}) {
+      const rows = db.activities.filter(
+        (a) =>
+          (!query.recordType || a.recordType === query.recordType) &&
+          (!query.recordId || a.recordId === query.recordId) &&
+          (!query.type || a.type === query.type),
+      );
+      return delay(paginate(sortTimeline(rows), query.page, query.pageSize ?? 50));
     },
   },
 

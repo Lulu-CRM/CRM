@@ -1,14 +1,20 @@
 import { z } from "zod";
 import {
+  activitySchema,
   companyListItemSchema,
   contactSchema,
   dealSchema,
   dealSummarySchema,
   pipelineWithStagesSchema,
+  taskSchema,
   userSchema,
+  type ActivityListQuery,
   type ContactCreateInput,
   type ContactListQuery,
   type ContactUpdateInput,
+  type TaskCreateInput,
+  type TaskListQuery,
+  type TaskUpdateInput,
 } from "@lulu/shared";
 import { getList, getOne, remove, write } from "./http";
 
@@ -29,6 +35,16 @@ export const realApi = {
 
   companies: {
     list: () => getList(companyListItemSchema, "/companies"),
+  },
+
+  tasks: {
+    list: (query: Partial<TaskListQuery> = {}) => getList(taskSchema, "/tasks", query),
+    create: (input: TaskCreateInput) => write(taskSchema, "POST", "/tasks", input),
+    update: (id: string, input: TaskUpdateInput) => write(taskSchema, "PATCH", `/tasks/${id}`, input),
+  },
+
+  activities: {
+    list: (query: Partial<ActivityListQuery> = {}) => getList(activitySchema, "/activities", query),
   },
 
   pipelines: () => getOne(z.array(pipelineWithStagesSchema), "/pipelines"),

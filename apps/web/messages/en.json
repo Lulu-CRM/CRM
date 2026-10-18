@@ -28,6 +28,86 @@
     "comingSoon": "This page is coming soon",
     "language": "Language",
     "error": "Something went wrong",
-    "retry": "Try again"
+    "retry": "Try again",
+    "previous": "Previous page",
+    "next": "Next page",
+    "selectAll": "Select all",
+    "selectRow": "Select {name}",
+    "confirm": "Confirm",
+    "noResults": "No results"
+  },
+  "layout": {
+    "tagline": "Intelligence workspace",
+    "workspace": "Workspace",
+    "modules": "Modules",
+    "active": "Active",
+    "workspaceOwner": "Workspace owner",
+    "crm": "CRM",
+    "relationships": "Relationships",
+    "crmWorkspace": "CRM workspace",
+    "aiTipTitle": "AI-ready context",
+    "aiTipBody": "Every record can carry the full story.",
+    "searchWorkspace": "Search workspace",
+    "help": "Help",
+    "notifications": "Notifications",
+    "menu": "Menu",
+    "openMenu": "Open menu",
+    "closeMenu": "Close menu",
+    "breadcrumb": "Breadcrumb",
+    "profileMenu": "Profile menu"
+  },
+  "modules": {
+    "onlinePresence": "Online Presence",
+    "accounting": "Accounting",
+    "email": "Email",
+    "calendar": "Calendar",
+    "crm": "CRM",
+    "marketplace": "Marketplace",
+    "workspaceSettings": "Settings"
+  },
+  "pages": {
+    "eyebrow": "Lulu CRM · {page}",
+    "overview": {
+      "description": "Keep every relationship, follow-up and opportunity in one calm workspace."
+    },
+    "contacts": {
+      "description": "Build a complete, usable source of truth for every relationship."
+    },
+    "companies": {
+      "description": "Understand the people, context and commercial value behind every account."
+    },
+    "leads": {
+      "description": "Qualify interest and move the right conversations forward."
+    },
+    "deals": {
+      "description": "See every opportunity, owner and next step without losing context."
+    },
+    "activities": {
+      "description": "Turn conversations into visible follow-through for the whole team."
+    },
+    "notes": {
+      "description": "Capture decisions and context where the team can actually use them."
+    },
+    "segments": {
+      "description": "Create focused audiences from the data already in your workspace."
+    },
+    "import": {
+      "description": "Bring existing relationships into Lulu with a safe, reviewable import."
+    },
+    "ai": {
+      "description": "Let Lulu surface context and next actions while people stay in control."
+    },
+    "settings": {
+      "description": "Shape fields, statuses, roles and consent rules around your workspace."
+    }
+  },
+  "errors": {
+    "NETWORK_ERROR": "Can't reach the server. Check your connection.",
+    "UNKNOWN_ERROR": "Something went wrong. Please try again.",
+    "CONTACT_NOT_FOUND": "Contact not found",
+    "DEAL_NOT_FOUND": "Deal not found",
+    "VALIDATION_ERROR": "Some fields need attention",
+    "UNAUTHORIZED": "Please sign in again",
+    "FORBIDDEN": "You don't have permission to do this"
   }
 }

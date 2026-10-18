@@ -28,6 +28,86 @@
     "comingSoon": "此页面即将推出",
     "language": "语言",
     "error": "出了点问题",
-    "retry": "重试"
+    "retry": "重试",
+    "previous": "上一页",
+    "next": "下一页",
+    "selectAll": "全选",
+    "selectRow": "选择 {name}",
+    "confirm": "确认",
+    "noResults": "没有结果"
+  },
+  "layout": {
+    "tagline": "智能工作区",
+    "workspace": "工作区",
+    "modules": "模块",
+    "active": "当前",
+    "workspaceOwner": "工作区所有者",
+    "crm": "CRM",
+    "relationships": "客户关系",
+    "crmWorkspace": "CRM 工作区",
+    "aiTipTitle": "AI 就绪的上下文",
+    "aiTipBody": "每条记录都能保存完整的来龙去脉。",
+    "searchWorkspace": "搜索工作区",
+    "help": "帮助",
+    "notifications": "通知",
+    "menu": "菜单",
+    "openMenu": "打开菜单",
+    "closeMenu": "关闭菜单",
+    "breadcrumb": "导航路径",
+    "profileMenu": "个人菜单"
+  },
+  "modules": {
+    "onlinePresence": "线上形象",
+    "accounting": "财务",
+    "email": "邮件",
+    "calendar": "日历",
+    "crm": "CRM",
+    "marketplace": "应用市场",
+    "workspaceSettings": "设置"
+  },
+  "pages": {
+    "eyebrow": "Lulu CRM · {page}",
+    "overview": {
+      "description": "在一个清晰的工作区中管理所有关系、跟进和商机。"
+    },
+    "contacts": {
+      "description": "为每一段客户关系建立完整、可用的数据来源。"
+    },
+    "companies": {
+      "description": "了解每个客户背后的人员、背景和商业价值。"
+    },
+    "leads": {
+      "description": "筛选意向，推进正确的对话。"
+    },
+    "deals": {
+      "description": "清楚看到每个商机、负责人和下一步，不丢失上下文。"
+    },
+    "activities": {
+      "description": "把对话变成整个团队都能看到的跟进行动。"
+    },
+    "notes": {
+      "description": "在团队真正能用到的地方记录决策和背景。"
+    },
+    "segments": {
+      "description": "利用工作区中已有的数据创建精准受众。"
+    },
+    "import": {
+      "description": "通过安全、可审核的导入，把现有客户关系带入 Lulu。"
+    },
+    "ai": {
+      "description": "让 Lulu 提供背景信息和下一步建议，决定权始终在你。"
+    },
+    "settings": {
+      "description": "根据你的工作区设置字段、状态、角色和授权规则。"
+    }
+  },
+  "errors": {
+    "NETWORK_ERROR": "无法连接服务器，请检查网络。",
+    "UNKNOWN_ERROR": "出了点问题，请重试。",
+    "CONTACT_NOT_FOUND": "未找到联系人",
+    "DEAL_NOT_FOUND": "未找到交易",
+    "VALIDATION_ERROR": "部分字段需要修改",
+    "UNAUTHORIZED": "请重新登录",
+    "FORBIDDEN": "你没有执行此操作的权限"
   }
 }

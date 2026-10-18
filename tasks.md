@@ -14,12 +14,12 @@ Status values: `open`, `in progress`, `in review`, `done`.
 | 1 | API base and database | Tobi | open | |
 | 2 | Auth, workspace, roles | Tobi | open | 1 |
 | 3 | Contacts and Companies API | Tobi | open | 1, 2 |
-| 4 | Deals and pipeline API | second backend dev | open | 1 |
-| 5 | Tasks, Notes, Activities API | second backend dev | open | 1 |
-| 6 | Segments API | second backend dev | open | 3 |
-| 7 | Contact import | second backend dev | open | 3 |
-| 8 | AI analysis | second backend dev | open | 3 |
-| 9 | CRM settings API | second backend dev | open | 2 |
+| 4 | Deals and pipeline API | Brobot | open | 1 |
+| 5 | Tasks, Notes, Activities API | Brobot | open | 1 |
+| 6 | Segments API | Brobot | open | 3 |
+| 7 | Contact import | Brobot | open | 3 |
+| 8 | AI analysis | Brobot | open | 3 |
+| 9 | CRM settings API | Brobot | open | 2 |
 | A1 | App shell and i18n | Abdul | in progress | |
 | A2 | Contacts page and profile drawer | Abdul | open | A1 |
 | B1 | Deals and pipeline board | Sudais | open | A1 |
@@ -28,7 +28,7 @@ Status values: `open`, `in progress`, `in review`, `done`.
 | C | Overview, Companies, Notes | open | open | A1 |
 | D | Segments, Import wizard, AI Analysis, Settings | open | open | A1 |
 
-Until the second backend dev joins, Tobi continues with 4 and 5 after 3.
+Brobot joined as the second backend dev and starts on 4 and 5 once 1 is merged, while Tobi continues with 2 and 3.
 
 ## PM: Sudais
 

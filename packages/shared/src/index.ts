@@ -8,3 +8,7 @@ export * from "./activity";
 export * from "./task-logic";
 export * from "./fixtures/pipeline";
 export * from "./fixtures/tasks";
+export * from "./user";
+export * from "./contact";
+export * from "./company";
+export * from "./fixtures/contacts";

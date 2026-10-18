@@ -210,6 +210,14 @@ Import details (schemas: `packages/shared/src/import.ts`, rules: `import-logic.t
 
 AI runs behind one provider interface. A simulated provider answers until a model key is available.
 
+AI details (schemas: `packages/shared/src/ai.ts`, provider interface and the simulated provider: `ai-logic.ts`):
+
+- **Run:** `POST /contacts/:id/ai-analysis` queues `ai.analyze` and returns `{ jobId, status }`. The web app polls `GET /contacts/:id/ai-insights` (the newest insight, or `null`) until one newer than the run appears.
+- **Insight:** `summary`, `nextStep { title, detail }`, `suggestedTask { title, dueAt }` or `null`, `suggestedStage` or `null`, `dataQualityScore` (0 to 1 over email, phone, company, role, source), `missingFields`, `status` (`suggested`, `accepted`, `dismissed`), `provider` (`simulated` or `model`).
+- **AI text:** either `{ key, params }` (the simulated provider; the web app shows `aiAnalysis.generated.<key>`) or `{ text, language }` (a real model, asked to write in the user's language). The server never sends one-language text for the simulated provider.
+- **Accept:** `POST /ai-insights/:id/accept` with `{ createTask, taskTitle, applyStage }`. Only the ticked changes are saved; the task title is the text the user confirmed. This is the only way an insight changes a record. Errors: `AI_INSIGHT_NOT_FOUND`, `AI_INSIGHT_CLOSED`.
+- **Switches:** `autoUpdateFields` only pre-ticks field changes in the confirm step. Nothing is ever saved without confirmation.
+
 ## Settings
 
 | Method | Path | Purpose |

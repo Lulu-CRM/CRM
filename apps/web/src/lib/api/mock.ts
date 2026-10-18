@@ -9,6 +9,8 @@ import {
   demoTasks,
   demoNotes,
   demoSegments,
+  aiAcceptSchema,
+  simulateInsight,
   aiSettingsSchema,
   consentSettingsSchema,
   customFieldCreateSchema,
@@ -68,6 +70,9 @@ import {
   type ImportMapping,
   type ImportPreview,
   type ImportResolveAction,
+  type AiAcceptInput,
+  type AiInsight,
+  type AiRun,
   type AiSettings,
   type ConsentSettings,
   type CustomField,
@@ -96,6 +101,7 @@ const db = {
   consent: { ...defaultConsentSettings },
   notifications: structuredClone(defaultNotificationSettings),
   ai: { ...defaultAiSettings },
+  aiInsights: [] as AiInsight[],
   imports: new Map<string, { job: ImportJob; rows: Record<string, string>[]; held: HeldRow[] }>(),
 };
 
@@ -312,6 +318,17 @@ function findField(id: string) {
   const field = alive(db.customFields).find((f) => f.id === id);
   if (!field) throw new ApiError("CUSTOM_FIELD_NOT_FOUND", 404);
   return field;
+}
+
+// ---------- AI analysis (stands in for the API's ai.analyze job and the simulated provider) ----------
+
+export const MOCK_AI_DELAY_MS = 500;
+
+function findInsight(id: string) {
+  const insight = alive(db.aiInsights).find((i) => i.id === id);
+  if (!insight) throw new ApiError("AI_INSIGHT_NOT_FOUND", 404);
+  if (insight.status !== "suggested") throw new ApiError("AI_INSIGHT_CLOSED", 409);
+  return insight;
 }
 
 export const mockApi = {
@@ -781,6 +798,65 @@ export const mockApi = {
         db.ai = aiSettingsSchema.parse(input);
         return delay({ ...db.ai });
       },
+    },
+  },
+
+  ai: {
+    async run(contactId: string): Promise<AiRun> {
+      const contact = findContact(contactId);
+      const jobId = newId("job");
+      setTimeout(() => {
+        const content = simulateInsight({
+          contact,
+          company: alive(db.companies).find((c) => c.id === contact.companyId) ?? null,
+          tasks: alive(db.tasks),
+          deals: alive(db.deals),
+          stages: liveStages(),
+          now: new Date(),
+          language: "en",
+        });
+        db.aiInsights.push({
+          id: newId("insight"),
+          workspaceId: DEMO_WORKSPACE_ID,
+          createdAt: now(),
+          updatedAt: now(),
+          deletedAt: null,
+          contactId,
+          status: "suggested",
+          ...content,
+        });
+      }, MOCK_AI_DELAY_MS);
+      return delay({ jobId, status: "queued" });
+    },
+    // The newest insight for a contact, or null.
+    async latest(contactId: string): Promise<AiInsight | null> {
+      findContact(contactId);
+      const insights = alive(db.aiInsights).filter((i) => i.contactId === contactId);
+      return delay(insights.length ? { ...insights[insights.length - 1] } : null);
+    },
+    // Saves only what the user ticked. This is the only way an insight changes a record.
+    async accept(id: string, input: AiAcceptInput) {
+      const insight = findInsight(id);
+      const options = aiAcceptSchema.parse(input);
+      const contact = findContact(insight.contactId);
+      if (options.createTask && insight.suggestedTask) {
+        await mockApi.tasks.create({
+          title: options.taskTitle!,
+          dueAt: insight.suggestedTask.dueAt,
+          ownerId: contact.ownerId,
+          recordType: "contact",
+          recordId: contact.id,
+        });
+      }
+      if (options.applyStage && insight.suggestedStage) {
+        Object.assign(contact, { lifecycleStage: insight.suggestedStage, updatedAt: now() });
+      }
+      Object.assign(insight, { status: "accepted", updatedAt: now() });
+      return delay({ ...insight });
+    },
+    async dismiss(id: string) {
+      Object.assign(findInsight(id), { status: "dismissed", updatedAt: now() });
+      return delay(undefined);
     },
   },
 

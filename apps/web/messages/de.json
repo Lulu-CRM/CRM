@@ -127,7 +127,9 @@
     "CUSTOM_FIELD_NOT_FOUND": "Feld nicht gefunden",
     "CUSTOM_FIELD_KEY_TAKEN": "Ein Feld mit diesem Namen gibt es bereits",
     "STAGE_LOCKED": "Die Phasen Gewonnen und Verloren können nicht gelöscht werden",
-    "STAGE_IN_USE": "Verschiebe zuerst die Deals aus dieser Phase"
+    "STAGE_IN_USE": "Verschiebe zuerst die Deals aus dieser Phase",
+    "AI_INSIGHT_NOT_FOUND": "Vorschlag nicht gefunden",
+    "AI_INSIGHT_CLOSED": "Dieser Vorschlag wurde bereits übernommen oder verworfen"
   },
   "contacts": {
     "import": "Importieren",
@@ -1013,6 +1015,88 @@
         "leadAssigned": "Mir wird ein Lead zugewiesen",
         "importFinished": "Mein Import ist fertig"
       }
+    }
+  },
+  "aiAnalysis": {
+    "eyebrow": "Kontakt-Intelligenz",
+    "title": "Den besten nächsten Schritt verstehen.",
+    "intro": "Lulu prüft den Kontext in deinem Arbeitsbereich und hält Vorschläge nachvollziehbar.",
+    "badge": "KI-gestützt",
+    "pickContact": "Kontakt analysieren",
+    "run": "Analyse starten",
+    "running": "Wird analysiert…",
+    "noContacts": "Füge einen Kontakt hinzu, um ihn zu analysieren.",
+    "empty": "Noch keine Analyse",
+    "emptyHint": "Starte eine Analyse für eine Zusammenfassung, einen nächsten Schritt und eine Datenprüfung.",
+    "summary": "Beziehungsübersicht",
+    "nextStep": "Empfohlener nächster Schritt",
+    "quality": "Datenqualität",
+    "qualityScore": "{filled} von {total} Feldern ausgefüllt",
+    "missing": "Es fehlt: {fields}. Ergänze es im Kontaktprofil.",
+    "complete": "Alle wichtigen Felder sind ausgefüllt.",
+    "generatedAt": "Vorgeschlagen {time}. Nichts wird gespeichert, bevor du bestätigst.",
+    "status": {
+      "accepted": "Übernommen. Die gewählten Änderungen wurden gespeichert.",
+      "dismissed": "Verworfen. Nichts wurde gespeichert."
+    },
+    "dismiss": "Verwerfen",
+    "review": "Prüfen und speichern",
+    "dismissed": "Vorschlag verworfen",
+    "fields": {
+      "email": "E-Mail",
+      "phone": "Telefon",
+      "company": "Unternehmen",
+      "jobRole": "Rolle",
+      "source": "Quelle"
+    },
+    "accept": {
+      "eyebrow": "Bestätigen",
+      "title": "Vorschläge für {name} speichern?",
+      "intro": "Wähle, was gespeichert wird. Sonst ändert sich nichts.",
+      "createTask": "Nachfass-Aufgabe anlegen, fällig am {date}",
+      "taskTitle": "Titel der Aufgabe",
+      "applyStage": "Phase auf {stage} ändern",
+      "confirm": "Auswahl speichern",
+      "saved": "Gespeichert"
+    },
+    "controls": {
+      "eyebrow": "KI-Steuerung",
+      "title": "Menschen behalten die Kontrolle.",
+      "intro": "KI kann vorschlagen, zusammenfassen und priorisieren. Änderungen werden immer erst nach Bestätigung gespeichert.",
+      "analyzeNewActivity": {
+        "label": "Neue Aktivität analysieren",
+        "hint": "Hinweise vorschlagen, wenn neuer Kontext eintrifft"
+      },
+      "suggestFollowUps": {
+        "label": "Nachfassaktionen vorschlagen",
+        "hint": "Nächste Schritte in Kontakten anzeigen"
+      },
+      "autoUpdateFields": {
+        "label": "Feldänderungen vorauswählen",
+        "hint": "Feldänderungen sind im Bestätigungsschritt angehakt. Du bestätigst trotzdem jede."
+      },
+      "saved": "KI-Einstellung gespeichert",
+      "footnote": "Vorschläge kommen von einer simulierten KI, bis ein Modell angebunden ist."
+    },
+    "generated": {
+      "summaryCustomer": "{name} ist Kunde. Halte die Beziehung warm und achte auf die nächste Gelegenheit.",
+      "summaryDeal": "{name} arbeitet mit dir an {deal}. Der Deal ist noch offen, also zählt der Schwung.",
+      "summaryQuiet": "{name} ist still geworden: seit über 30 Tagen gab es keinen Kontakt.",
+      "summaryActive": "{name} ist aktiv: der letzte Kontakt war {days, plural, =0 {heute} one {gestern} other {vor # Tagen}}.",
+      "nextFinishTask": "Offene Nachfassaktion erledigen",
+      "nextFinishTaskDetail": "„{task}“ ist fällig. Schließe sie ab, bevor du den nächsten Schritt planst.",
+      "nextFollowUpDeal": "Beim Deal nachfassen",
+      "nextFollowUpDealDetail": "Prüfe den Stand von {deal} und vereinbart diese Woche den nächsten Schritt.",
+      "nextQualify": "Diesen Lead qualifizieren",
+      "nextQualifyDetail": "{name} war kürzlich in Kontakt. Ein kurzer Anruf klärt Bedarf, Budget und Zeitplan.",
+      "nextReconnect": "Wieder Kontakt aufnehmen",
+      "nextReconnectDetail": "Schicke {name} eine kurze, persönliche Nachricht, um das Gespräch wieder aufzunehmen.",
+      "nextCheckIn": "Kurzen Austausch planen",
+      "nextCheckInDetail": "Vereinbare einen kurzen Austausch mit {name}, damit es weitergeht.",
+      "taskFollowUpDeal": "Bei {name} zu {deal} nachfassen",
+      "taskQualify": "Qualifizierungsgespräch mit {name}",
+      "taskReconnect": "Wieder Kontakt mit {name} aufnehmen",
+      "taskCheckIn": "Kurzer Austausch mit {name}"
     }
   }
 }

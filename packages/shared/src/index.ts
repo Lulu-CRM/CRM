@@ -12,3 +12,5 @@ export * from "./user";
 export * from "./contact";
 export * from "./company";
 export * from "./fixtures/contacts";
+export * from "./note";
+export * from "./timeline";

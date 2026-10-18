@@ -90,6 +90,31 @@ describe("mock companies", () => {
     expect(atlas.contactCount).toBe(1);
     expect(atlas.openDealValue.currency).toBe("EUR");
   });
+
+  it("sorts by open deal value and searches name, domain and industry", async () => {
+    const all = await mockApi.companies.list();
+    expect(all.data.map((c) => c.id).slice(0, 2)).toEqual(["company_atlas", "company_northstar"]);
+    expect((await mockApi.companies.list({ q: "klarwerk.de" })).data.map((c) => c.id)).toEqual(["company_klarwerk"]);
+    expect((await mockApi.companies.list({ q: "hospitality" })).meta.total).toBe(1);
+    expect((await mockApi.companies.list({ sort: "name" })).data[0].name).toBe("Atlas Logistics");
+    expect((await mockApi.companies.list({ ownerId: "user_alex" })).meta.total).toBe(2);
+  });
+
+  it("creates, edits, shows and deletes a company", async () => {
+    const created = await mockApi.companies.create({ name: "Acme", domain: "acme.com", size: "1-10" });
+    expect(created).toMatchObject({ contactCount: 0, health: "new", ownerId: "user_jamie" });
+    await mockApi.companies.update(created.id, { industry: "Retail" });
+    const detail = await mockApi.companies.get(created.id);
+    expect(detail).toMatchObject({ industry: "Retail", contacts: [], deals: [] });
+    await mockApi.companies.remove(created.id);
+    await expect(mockApi.companies.get(created.id)).rejects.toMatchObject({ code: "COMPANY_NOT_FOUND" });
+  });
+
+  it("returns a company's people and deals", async () => {
+    const detail = await mockApi.companies.get("company_northstar");
+    expect(detail.contacts.map((c) => c.name)).toEqual(["Sophie Laurent"]);
+    expect(detail.deals.map((d) => d.id)).toEqual(["deal_northstar"]);
+  });
 });
 
 describe("mock overview", () => {

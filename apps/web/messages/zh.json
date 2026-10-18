@@ -112,7 +112,8 @@
     "TASK_NOT_FOUND": "未找到任务",
     "STAGE_NOT_FOUND": "未找到阶段",
     "STAGE_IN_OTHER_PIPELINE": "该阶段属于其他管道",
-    "PIPELINE_NOT_FOUND": "未找到管道"
+    "PIPELINE_NOT_FOUND": "未找到管道",
+    "COMPANY_NOT_FOUND": "未找到公司"
   },
   "contacts": {
     "import": "导入",
@@ -466,6 +467,86 @@
         "titleRequired": "请输入任务标题",
         "ownerRequired": "请选择负责人"
       }
+    }
+  },
+  "companies": {
+    "add": "添加公司",
+    "eyebrow": "公司目录",
+    "title": "有背景的客户。",
+    "intro": "将人员、销售管道和商业历史与每家公司关联起来。",
+    "searchPlaceholder": "搜索公司、域名或行业",
+    "filtersLabel": "公司筛选",
+    "filters": {
+      "all": "全部公司",
+      "mine": "我的公司"
+    },
+    "noMatches": "没有匹配的公司",
+    "noMatchesHint": "请尝试其他搜索或筛选条件。",
+    "empty": "还没有公司",
+    "emptyHint": "添加第一家公司，关联其联系人和交易。",
+    "showing": "显示 {count} / {total} 家公司",
+    "people": "{count} 位联系人",
+    "pipelineValue": "管道价值",
+    "otherCurrency": "另有 {count} 笔其他币种交易",
+    "open": "打开 {name}",
+    "sizeValue": "{size} 名员工",
+    "sortLabel": "公司排序",
+    "sort": {
+      "openDealValue": "管道价值最高",
+      "name": "名称",
+      "contactCount": "联系人最多",
+      "lastTouchAt": "最近联系"
+    },
+    "health": {
+      "strong": "良好",
+      "watch": "关注",
+      "new": "新客户"
+    },
+    "deleted": "公司已删除",
+    "deleteTitle": "删除公司？",
+    "deleteOne": "{name} 将被移除。其联系人和交易仍保留在 CRM 中。",
+    "form": {
+      "eyebrow": "新公司",
+      "editEyebrow": "公司",
+      "addTitle": "添加客户公司",
+      "editTitle": "编辑公司",
+      "name": "公司名称",
+      "namePlaceholder": "例如 Northstar Studio",
+      "domain": "域名",
+      "domainPlaceholder": "company.com",
+      "industry": "行业",
+      "industryPlaceholder": "例如 零售",
+      "size": "公司规模",
+      "noSize": "未设置",
+      "owner": "负责人",
+      "requiredHint": "标有 * 的字段为必填项。",
+      "submit": "创建公司",
+      "created": "公司已添加",
+      "updated": "公司已保存",
+      "errors": {
+        "nameRequired": "请输入公司名称",
+        "domainInvalid": "请输入类似 company.com 的域名",
+        "ownerRequired": "请选择负责人"
+      }
+    },
+    "drawer": {
+      "eyebrow": "公司资料",
+      "domain": "域名",
+      "industry": "行业",
+      "size": "公司规模",
+      "owner": "负责人",
+      "lastTouch": "最近联系",
+      "pipelineValue": "未结管道",
+      "openDeals": "{count} 笔进行中的交易",
+      "peopleEyebrow": "人员",
+      "people": "该公司的联系人",
+      "noPeople": "尚未关联联系人",
+      "dealsEyebrow": "管道",
+      "deals": "交易",
+      "noDeals": "还没有交易",
+      "edit": "编辑公司",
+      "delete": "删除公司",
+      "website": "网站"
     }
   }
 }

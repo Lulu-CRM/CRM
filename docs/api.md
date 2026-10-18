@@ -221,6 +221,15 @@ AI runs behind one provider interface. A simulated provider answers until a mode
 | GET, PUT | `/settings/notifications` | Notification rules |
 | GET, PUT | `/settings/ai` | AI switches (analyze new activity, suggest follow-ups, auto-update fields) |
 
+Settings details (schemas: `packages/shared/src/settings.ts`, defaults and the permission check: `settings-logic.ts`):
+
+- **Who:** only roles with `settings: edit` may change settings (owners always). The web app shows the screens read-only to everyone else.
+- **Custom fields:** `key` (lowercase, set once from the label with `fieldKeyFromLabel`), `label`, `type` (`text`, `number`, `date`, `select`, `checkbox`), `options` (required for `select`). PATCH changes only `label` and `options`. Errors: `CUSTOM_FIELD_NOT_FOUND`, `CUSTOM_FIELD_KEY_TAKEN`.
+- **Stages:** `POST /settings/stages` adds an open stage after the other open stages (Won and Lost stay last). PATCH takes `name`, `probability` and `order` (position among open stages). Renaming a default stage sets its `key` to `null`. Changing a probability does not change existing deals. Errors: `STAGE_LOCKED` (Won and Lost cannot be deleted), `STAGE_IN_USE` (the stage still has deals).
+- **Roles:** `{ admin: { contacts: ["view", ...], ... }, member: { ... } }`. Resources: `contacts`, `companies`, `deals`, `tasks`, `notes`, `segments`, `imports`, `settings`; actions: `view`, `create`, `edit`, `delete`. Owners are not stored. The API's role guard uses `can()`.
+- **Consent:** `requireConsentForMarketing`, `requireConsentEvidence`, `importedContactsConsent` (`not_granted` by default).
+- **Notifications:** per event (`taskAssigned`, `taskDue`, `dealAssigned`, `dealStageChanged`, `leadAssigned`, `importFinished`) `{ inApp, email }`.
+
 ## Events from other modules
 
 Email, Calendar and other modules tell the CRM something happened with `POST /events` (schema: `moduleEventSchema` in `packages/shared/src/activity.ts`):

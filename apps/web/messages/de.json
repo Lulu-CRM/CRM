@@ -123,7 +123,11 @@
     "IMPORT_ALREADY_STARTED": "Dieser Import wurde bereits gestartet",
     "IMPORT_ROW_NOT_FOUND": "Diese Zeile wurde bereits erledigt",
     "IMPORT_MOCK_CSV_ONLY": "Excel-Dateien liest der Server. Speichere die Tabelle im Mock-Modus zuerst als CSV.",
-    "IMPORT_FILE_UNREADABLE": "Diese Datei konnte nicht gelesen werden. Verwende eine CSV- oder XLSX-Datei."
+    "IMPORT_FILE_UNREADABLE": "Diese Datei konnte nicht gelesen werden. Verwende eine CSV- oder XLSX-Datei.",
+    "CUSTOM_FIELD_NOT_FOUND": "Feld nicht gefunden",
+    "CUSTOM_FIELD_KEY_TAKEN": "Ein Feld mit diesem Namen gibt es bereits",
+    "STAGE_LOCKED": "Die Phasen Gewonnen und Verloren können nicht gelöscht werden",
+    "STAGE_IN_USE": "Verschiebe zuerst die Deals aus dieser Phase"
   },
   "contacts": {
     "import": "Importieren",
@@ -864,6 +868,151 @@
       "source": "Ursprüngliche Quelle behalten",
       "owner": "Verantwortliche und Tags vergeben",
       "consent": "Importierte Kontakte übernehmen die Datenschutz- und Einwilligungsregeln deines Arbeitsbereichs."
+    }
+  },
+  "settings": {
+    "eyebrow": "CRM-Einstellungen",
+    "title": "Der Arbeitsbereich, wie dein Team ihn braucht.",
+    "intro": "Die CRM-Konfiguration bleibt hier, die Datensätze bleiben für alle einfach.",
+    "protected": "Arbeitsbereich geschützt",
+    "back": "Alle Einstellungen",
+    "saved": "Einstellungen gespeichert",
+    "unsaved": "Du hast ungespeicherte Änderungen",
+    "readOnly": "Nur Inhaber und Admins können diese Einstellungen ändern. Du kannst sie ansehen.",
+    "sections": {
+      "fields": {
+        "title": "Eigene Kontaktfelder",
+        "copy": "Füge Felder hinzu wie bevorzugte Sprache, Kundenstufe oder Verlängerungsdatum.",
+        "action": "Felder verwalten"
+      },
+      "pipelines": {
+        "title": "Status und Pipelines",
+        "copy": "Passe Lebenszyklus-, Lead- und Deal-Phasen an die Arbeitsweise deines Teams an.",
+        "action": "Status konfigurieren"
+      },
+      "roles": {
+        "title": "Rollen und Berechtigungen",
+        "copy": "Lege fest, wer CRM-Datensätze sehen, bearbeiten, zuweisen oder löschen darf.",
+        "action": "Zugriff verwalten"
+      },
+      "consent": {
+        "title": "Einwilligung und Datenschutz",
+        "copy": "Kommunikationswünsche und Einwilligungsnachweise klar festhalten.",
+        "action": "Einwilligung prüfen"
+      },
+      "notifications": {
+        "title": "Benachrichtigungen",
+        "copy": "Lege fest, wer Hinweise zu Nachfassaktionen und Zuweisungen erhält.",
+        "action": "Benachrichtigungen festlegen"
+      }
+    },
+    "fields": {
+      "add": "Feld hinzufügen",
+      "empty": "Noch keine eigenen Felder",
+      "emptyHint": "Füge ein Feld hinzu, dann erscheint es bei jedem Kontakt.",
+      "eyebrow": "Eigenes Feld",
+      "addTitle": "Kontaktfeld hinzufügen",
+      "editTitle": "Feld bearbeiten",
+      "label": "Bezeichnung",
+      "labelPlaceholder": "z. B. Bevorzugte Sprache",
+      "type": "Typ",
+      "options": "Auswahlwerte",
+      "optionsPlaceholder": "Einer pro Zeile",
+      "types": {
+        "text": "Text",
+        "number": "Zahl",
+        "date": "Datum",
+        "select": "Auswahlliste",
+        "checkbox": "Ja / Nein"
+      },
+      "created": "Feld hinzugefügt",
+      "saved": "Feld gespeichert",
+      "deleted": "Feld gelöscht",
+      "editLabel": "{label} bearbeiten",
+      "deleteLabel": "{label} löschen",
+      "deleteTitle": "{label} löschen?",
+      "deleteBody": "Das Feld verschwindet bei den Kontakten. Bereits gespeicherte Werte bleiben im Verlauf erhalten.",
+      "errors": {
+        "label": "Gib dem Feld eine Bezeichnung",
+        "options": "Füge mindestens einen Auswahlwert hinzu"
+      }
+    },
+    "pipelines": {
+      "dealStages": "Deal-Phasen",
+      "dealStagesHint": "Benenne Phasen um, ordne sie neu oder füge welche hinzu. Jede Pipeline behält eine Phase Gewonnen und Verloren.",
+      "newStage": "Neue Phase",
+      "namePlaceholder": "z. B. Demo gebucht",
+      "probability": "Wahrscheinlichkeit %",
+      "add": "Phase hinzufügen",
+      "nameFor": "Name von {stage}",
+      "probabilityFor": "Wahrscheinlichkeit von {stage}",
+      "save": "Speichern",
+      "moveUp": "{stage} nach oben",
+      "moveDown": "{stage} nach unten",
+      "delete": "{stage} löschen",
+      "types": {
+        "won": "Gewonnen",
+        "lost": "Verloren"
+      },
+      "added": "Phase hinzugefügt",
+      "saved": "Phase gespeichert",
+      "moved": "Phase verschoben",
+      "deleted": "Phase gelöscht",
+      "lifecycle": "Lebenszyklus-Phasen",
+      "lifecycleHint": "Lead- und Kontaktphasen sind in jedem Arbeitsbereich gleich, damit Berichte und Importe vergleichbar bleiben."
+    },
+    "roles": {
+      "ownerNote": "Inhaber dürfen immer alles.",
+      "resource": "Datensätze",
+      "role": {
+        "admin": "Admin",
+        "member": "Mitglied"
+      },
+      "action": {
+        "view": "Ansehen",
+        "create": "Anlegen",
+        "edit": "Bearbeiten",
+        "delete": "Löschen"
+      },
+      "resources": {
+        "contacts": "Kontakte",
+        "companies": "Unternehmen",
+        "deals": "Deals",
+        "tasks": "Aufgaben",
+        "notes": "Notizen",
+        "segments": "Segmente",
+        "imports": "Importe",
+        "settings": "Einstellungen"
+      },
+      "cell": "{role} darf {resource} {action}"
+    },
+    "consent": {
+      "marketing": "Marketing braucht Einwilligung",
+      "marketingHint": "Marketing-E-Mails gehen nur an Kontakte, die zugestimmt haben.",
+      "evidence": "Herkunft der Einwilligung festhalten",
+      "evidenceHint": "Eine Änderung der Einwilligung fragt nach einer kurzen Notiz, z. B. Formular oder Anruf.",
+      "imported": "Importierte Kontakte",
+      "importedHint": "Was Kontakte aus einem Import erhalten.",
+      "importedOptions": {
+        "not_granted": "Keine Marketing-Einwilligung",
+        "granted": "Einwilligung erteilt (nur wenn deine Datei sie belegt)"
+      }
+    },
+    "notifications": {
+      "event": "Wann",
+      "channels": {
+        "inApp": "In der App",
+        "email": "E-Mail"
+      },
+      "cell": "{event}: {channel}",
+      "events": {
+        "taskAssigned": "Mir wird eine Aufgabe zugewiesen",
+        "taskDue": "Eine meiner Aufgaben ist fällig",
+        "dealAssigned": "Mir wird ein Deal zugewiesen",
+        "dealStageChanged": "Einer meiner Deals wechselt die Phase",
+        "leadAssigned": "Mir wird ein Lead zugewiesen",
+        "importFinished": "Mein Import ist fertig"
+      }
     }
   }
 }

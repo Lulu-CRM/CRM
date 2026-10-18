@@ -123,7 +123,11 @@
     "IMPORT_ALREADY_STARTED": "此导入已经开始",
     "IMPORT_ROW_NOT_FOUND": "该行已处理",
     "IMPORT_MOCK_CSV_ONLY": "Excel 文件由服务器读取。在模拟模式下，请先另存为 CSV。",
-    "IMPORT_FILE_UNREADABLE": "无法读取此文件。请使用 CSV 或 XLSX 文件。"
+    "IMPORT_FILE_UNREADABLE": "无法读取此文件。请使用 CSV 或 XLSX 文件。",
+    "CUSTOM_FIELD_NOT_FOUND": "未找到字段",
+    "CUSTOM_FIELD_KEY_TAKEN": "已存在同名字段",
+    "STAGE_LOCKED": "赢单和输单阶段不能删除",
+    "STAGE_IN_USE": "请先把交易移出此阶段再删除"
   },
   "contacts": {
     "import": "导入",
@@ -864,6 +868,151 @@
       "source": "保留原始来源",
       "owner": "分配负责人和标签",
       "consent": "导入的联系人沿用工作区的隐私和授权规则。"
+    }
+  },
+  "settings": {
+    "eyebrow": "CRM 设置",
+    "title": "让工作区适合你的团队。",
+    "intro": "CRM 配置集中在这里，记录对每个人都保持简单易用。",
+    "protected": "工作区已受保护",
+    "back": "全部设置",
+    "saved": "设置已保存",
+    "unsaved": "你有未保存的更改",
+    "readOnly": "只有所有者和管理员可以更改这些设置。你可以查看，但不能编辑。",
+    "sections": {
+      "fields": {
+        "title": "自定义联系人字段",
+        "copy": "添加首选语言、客户等级或续约日期等字段。",
+        "action": "管理字段"
+      },
+      "pipelines": {
+        "title": "状态与销售管道",
+        "copy": "根据团队的工作方式调整生命周期、潜在客户和交易阶段。",
+        "action": "配置状态"
+      },
+      "roles": {
+        "title": "角色与权限",
+        "copy": "决定谁可以查看、编辑、分配或删除 CRM 记录。",
+        "action": "管理权限"
+      },
+      "consent": {
+        "title": "授权与隐私",
+        "copy": "清楚记录沟通偏好和授权凭证。",
+        "action": "查看授权"
+      },
+      "notifications": {
+        "title": "通知",
+        "copy": "选择哪些负责人接收跟进和分配提醒。",
+        "action": "设置通知"
+      }
+    },
+    "fields": {
+      "add": "添加字段",
+      "empty": "还没有自定义字段",
+      "emptyHint": "添加字段后，它会出现在每个联系人上。",
+      "eyebrow": "自定义字段",
+      "addTitle": "添加联系人字段",
+      "editTitle": "编辑字段",
+      "label": "名称",
+      "labelPlaceholder": "例如：首选语言",
+      "type": "类型",
+      "options": "选项",
+      "optionsPlaceholder": "每行一个",
+      "types": {
+        "text": "文本",
+        "number": "数字",
+        "date": "日期",
+        "select": "选项列表",
+        "checkbox": "是 / 否"
+      },
+      "created": "字段已添加",
+      "saved": "字段已保存",
+      "deleted": "字段已删除",
+      "editLabel": "编辑 {label}",
+      "deleteLabel": "删除 {label}",
+      "deleteTitle": "删除 {label}？",
+      "deleteBody": "该字段将不再显示在联系人上，已保存的值仍保留在记录历史中。",
+      "errors": {
+        "label": "请输入字段名称",
+        "options": "请至少添加一个选项"
+      }
+    },
+    "pipelines": {
+      "dealStages": "交易阶段",
+      "dealStagesHint": "重命名、排序或添加阶段。每个管道都保留赢单和输单阶段。",
+      "newStage": "新阶段",
+      "namePlaceholder": "例如：已预约演示",
+      "probability": "可能性 %",
+      "add": "添加阶段",
+      "nameFor": "{stage} 的名称",
+      "probabilityFor": "{stage} 的可能性",
+      "save": "保存",
+      "moveUp": "上移 {stage}",
+      "moveDown": "下移 {stage}",
+      "delete": "删除 {stage}",
+      "types": {
+        "won": "赢单",
+        "lost": "输单"
+      },
+      "added": "阶段已添加",
+      "saved": "阶段已保存",
+      "moved": "阶段已移动",
+      "deleted": "阶段已删除",
+      "lifecycle": "生命周期阶段",
+      "lifecycleHint": "潜在客户和联系人阶段在所有工作区中相同，便于比较报表和导入。"
+    },
+    "roles": {
+      "ownerNote": "所有者始终拥有全部权限。",
+      "resource": "记录",
+      "role": {
+        "admin": "管理员",
+        "member": "成员"
+      },
+      "action": {
+        "view": "查看",
+        "create": "创建",
+        "edit": "编辑",
+        "delete": "删除"
+      },
+      "resources": {
+        "contacts": "联系人",
+        "companies": "公司",
+        "deals": "交易",
+        "tasks": "任务",
+        "notes": "笔记",
+        "segments": "客户分组",
+        "imports": "导入",
+        "settings": "设置"
+      },
+      "cell": "{role}可以{action}{resource}"
+    },
+    "consent": {
+      "marketing": "营销需要授权",
+      "marketingHint": "营销邮件只发送给已同意的联系人。",
+      "evidence": "记录授权来源",
+      "evidenceHint": "更改授权时需要填写简短说明，例如表单或电话。",
+      "imported": "导入的联系人",
+      "importedHint": "通过导入添加的联系人获得的授权状态。",
+      "importedOptions": {
+        "not_granted": "未授权营销",
+        "granted": "已授权（仅当文件中有记录时）"
+      }
+    },
+    "notifications": {
+      "event": "何时",
+      "channels": {
+        "inApp": "应用内",
+        "email": "邮件"
+      },
+      "cell": "{event}：{channel}",
+      "events": {
+        "taskAssigned": "有任务分配给我",
+        "taskDue": "我的任务到期",
+        "dealAssigned": "有交易分配给我",
+        "dealStageChanged": "我的交易阶段变化",
+        "leadAssigned": "有潜在客户分配给我",
+        "importFinished": "我的导入已完成"
+      }
     }
   }
 }

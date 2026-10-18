@@ -123,7 +123,11 @@
     "IMPORT_ALREADY_STARTED": "This import has already started",
     "IMPORT_ROW_NOT_FOUND": "That row was already resolved",
     "IMPORT_MOCK_CSV_ONLY": "Excel files are read by the server. In mock mode, save the sheet as CSV first.",
-    "IMPORT_FILE_UNREADABLE": "This file could not be read. Use a CSV or XLSX file."
+    "IMPORT_FILE_UNREADABLE": "This file could not be read. Use a CSV or XLSX file.",
+    "CUSTOM_FIELD_NOT_FOUND": "Field not found",
+    "CUSTOM_FIELD_KEY_TAKEN": "A field with this name already exists",
+    "STAGE_LOCKED": "Won and Lost stages cannot be deleted",
+    "STAGE_IN_USE": "Move the deals out of this stage before deleting it"
   },
   "contacts": {
     "import": "Import",
@@ -864,6 +868,151 @@
       "source": "Keep the original source",
       "owner": "Assign owners and tags",
       "consent": "Imported contacts inherit your workspace privacy and consent rules."
+    }
+  },
+  "settings": {
+    "eyebrow": "CRM settings",
+    "title": "Make the workspace fit your team.",
+    "intro": "CRM configuration stays here, while records remain easy to use for everyone.",
+    "protected": "Workspace protected",
+    "back": "All settings",
+    "saved": "Settings saved",
+    "unsaved": "You have unsaved changes",
+    "readOnly": "Only owners and admins can change these settings. You can look, not edit.",
+    "sections": {
+      "fields": {
+        "title": "Custom contact fields",
+        "copy": "Add fields such as preferred language, customer tier or renewal date.",
+        "action": "Manage fields"
+      },
+      "pipelines": {
+        "title": "Statuses and pipelines",
+        "copy": "Shape lifecycle, lead and deal stages around how your team works.",
+        "action": "Configure statuses"
+      },
+      "roles": {
+        "title": "Roles and permissions",
+        "copy": "Choose who can see, edit, assign or delete CRM records.",
+        "action": "Manage access"
+      },
+      "consent": {
+        "title": "Consent and privacy",
+        "copy": "Keep communication preferences and consent evidence explicit.",
+        "action": "Review consent"
+      },
+      "notifications": {
+        "title": "Notifications",
+        "copy": "Choose which owners receive follow-up and assignment alerts.",
+        "action": "Set notifications"
+      }
+    },
+    "fields": {
+      "add": "Add field",
+      "empty": "No custom fields yet",
+      "emptyHint": "Add a field and it appears on every contact.",
+      "eyebrow": "Custom field",
+      "addTitle": "Add a contact field",
+      "editTitle": "Edit field",
+      "label": "Label",
+      "labelPlaceholder": "e.g. Preferred language",
+      "type": "Type",
+      "options": "Choices",
+      "optionsPlaceholder": "One per line",
+      "types": {
+        "text": "Text",
+        "number": "Number",
+        "date": "Date",
+        "select": "Choice list",
+        "checkbox": "Yes / no"
+      },
+      "created": "Field added",
+      "saved": "Field saved",
+      "deleted": "Field deleted",
+      "editLabel": "Edit {label}",
+      "deleteLabel": "Delete {label}",
+      "deleteTitle": "Delete {label}?",
+      "deleteBody": "The field disappears from contacts. Values already saved stay in the record history.",
+      "errors": {
+        "label": "Give the field a label",
+        "options": "Add at least one choice"
+      }
+    },
+    "pipelines": {
+      "dealStages": "Deal stages",
+      "dealStagesHint": "Rename, reorder or add stages. Every pipeline keeps a Won and a Lost stage.",
+      "newStage": "New stage",
+      "namePlaceholder": "e.g. Demo booked",
+      "probability": "Probability %",
+      "add": "Add stage",
+      "nameFor": "Name of {stage}",
+      "probabilityFor": "Probability of {stage}",
+      "save": "Save",
+      "moveUp": "Move {stage} up",
+      "moveDown": "Move {stage} down",
+      "delete": "Delete {stage}",
+      "types": {
+        "won": "Won",
+        "lost": "Lost"
+      },
+      "added": "Stage added",
+      "saved": "Stage saved",
+      "moved": "Stage moved",
+      "deleted": "Stage deleted",
+      "lifecycle": "Lifecycle stages",
+      "lifecycleHint": "Lead and contact stages are the same for every workspace, so reports and imports stay comparable."
+    },
+    "roles": {
+      "ownerNote": "Owners can always do everything.",
+      "resource": "Records",
+      "role": {
+        "admin": "Admin",
+        "member": "Member"
+      },
+      "action": {
+        "view": "View",
+        "create": "Create",
+        "edit": "Edit",
+        "delete": "Delete"
+      },
+      "resources": {
+        "contacts": "Contacts",
+        "companies": "Companies",
+        "deals": "Deals",
+        "tasks": "Tasks",
+        "notes": "Notes",
+        "segments": "Segments",
+        "imports": "Imports",
+        "settings": "Settings"
+      },
+      "cell": "{role} can {action} {resource}"
+    },
+    "consent": {
+      "marketing": "Marketing needs consent",
+      "marketingHint": "Marketing email goes only to contacts who opted in.",
+      "evidence": "Record where consent came from",
+      "evidenceHint": "Changing consent asks for a short note, for example the form or call.",
+      "imported": "Imported contacts",
+      "importedHint": "What contacts brought in by an import get.",
+      "importedOptions": {
+        "not_granted": "No marketing consent",
+        "granted": "Consent granted (only if your file records it)"
+      }
+    },
+    "notifications": {
+      "event": "When",
+      "channels": {
+        "inApp": "In app",
+        "email": "Email"
+      },
+      "cell": "{event}: {channel}",
+      "events": {
+        "taskAssigned": "A task is assigned to me",
+        "taskDue": "One of my tasks is due",
+        "dealAssigned": "A deal is assigned to me",
+        "dealStageChanged": "One of my deals changes stage",
+        "leadAssigned": "A lead is assigned to me",
+        "importFinished": "My import is finished"
+      }
     }
   }
 }

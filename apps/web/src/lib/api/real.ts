@@ -27,6 +27,20 @@ import {
   type DealCreateInput,
   type DealUpdateInput,
   segmentListItemSchema,
+  aiSettingsSchema,
+  consentSettingsSchema,
+  customFieldSchema,
+  notificationSettingsSchema,
+  rolePermissionsSchema,
+  stageSchema,
+  type AiSettings,
+  type ConsentSettings,
+  type CustomFieldCreateInput,
+  type CustomFieldUpdateInput,
+  type NotificationSettings,
+  type RolePermissions,
+  type StageCreateInput,
+  type StageUpdateInput,
   heldRowSchema,
   importJobSchema,
   importPreviewSchema,
@@ -100,6 +114,37 @@ export const realApi = {
     held: (id: string) => getList(heldRowSchema, `/imports/${id}/held`, { pageSize: 100 }),
     resolve: (id: string, rowId: string, action: ImportResolveAction) =>
       write(heldRowSchema, "POST", `/imports/${id}/held/${rowId}/resolve`, { action }),
+  },
+
+  settings: {
+    customFields: {
+      list: () => getList(customFieldSchema, "/settings/custom-fields", { pageSize: 100 }),
+      create: (input: CustomFieldCreateInput) => write(customFieldSchema, "POST", "/settings/custom-fields", input),
+      update: (id: string, input: CustomFieldUpdateInput) =>
+        write(customFieldSchema, "PATCH", `/settings/custom-fields/${id}`, input),
+      remove: (id: string) => remove(`/settings/custom-fields/${id}`),
+    },
+    stages: {
+      create: (input: StageCreateInput) => write(stageSchema, "POST", "/settings/stages", input),
+      update: (id: string, input: StageUpdateInput) => write(stageSchema, "PATCH", `/settings/stages/${id}`, input),
+      remove: (id: string) => remove(`/settings/stages/${id}`),
+    },
+    roles: {
+      get: () => getOne(rolePermissionsSchema, "/settings/roles"),
+      put: (input: RolePermissions) => write(rolePermissionsSchema, "PUT", "/settings/roles", input),
+    },
+    consent: {
+      get: () => getOne(consentSettingsSchema, "/settings/consent"),
+      put: (input: ConsentSettings) => write(consentSettingsSchema, "PUT", "/settings/consent", input),
+    },
+    notifications: {
+      get: () => getOne(notificationSettingsSchema, "/settings/notifications"),
+      put: (input: NotificationSettings) => write(notificationSettingsSchema, "PUT", "/settings/notifications", input),
+    },
+    ai: {
+      get: () => getOne(aiSettingsSchema, "/settings/ai"),
+      put: (input: AiSettings) => write(aiSettingsSchema, "PUT", "/settings/ai", input),
+    },
   },
 
   pipelines: () => getOne(z.array(pipelineWithStagesSchema), "/pipelines"),

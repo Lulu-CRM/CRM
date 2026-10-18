@@ -23,3 +23,5 @@ export * from "./segment-logic";
 export * from "./fixtures/segments";
 export * from "./import";
 export * from "./import-logic";
+export * from "./settings";
+export * from "./settings-logic";

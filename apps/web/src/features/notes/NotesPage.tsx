@@ -7,7 +7,7 @@ import { PageHeader } from "@/components/layout/PageHeader";
 import { Avatar, Button, Card, ConfirmDialog, EmptyState, Pill, Skeleton, useToast } from "@/components/ui";
 import { useFormat } from "@/i18n/format";
 import { useErrorMessage } from "@/lib/errors";
-import { initials, toneFor } from "@/lib/initials";
+import { initials, avatarTone } from "@/lib/initials";
 import { NoteFormModal } from "./NoteFormModal";
 import { useNotesPage } from "./useNotesPage";
 
@@ -198,7 +198,7 @@ function NoteCard({
         </span>
       )}
       <span className="mt-auto flex w-full items-center gap-[7px] border-t border-[#f0eff5] pt-[11px]">
-        {authorName && <Avatar initials={initials(authorName)} tone={toneFor(note.authorId)} small />}
+        {authorName && <Avatar initials={initials(authorName)} tone={avatarTone(note.authorId)} small />}
         <span className="text-[9px] text-[#777487]">
           {authorName}
           <small className="mt-0.5 block text-[#aaa8b7]">{format.recent(note.updatedAt)}</small>

@@ -356,6 +356,30 @@
       "cancelled": "Verschieben von {name} abgebrochen."
     }
   },
+  "leads": {
+    "eyebrow": "Lead-Bereich",
+    "title": "Mit weniger Rätselraten qualifizieren.",
+    "intro": "Verschiebe einen Lead, wenn sich der Kontext ändert. Jede Karte zeigt den nächsten Schritt.",
+    "addLead": "Lead hinzufügen",
+    "column": {
+      "add": "Lead hinzufügen",
+      "addLead": "Lead zu {stage} hinzufügen",
+      "empty": "Keine Leads hier"
+    },
+    "card": {
+      "actions": "Aktionen für {name}",
+      "open": "Profil öffnen",
+      "moveTo": "Verschieben nach",
+      "noTouch": "Noch kein Kontakt"
+    },
+    "dnd": {
+      "instructions": "Ziehe einen Lead in eine andere Phase oder verschiebe ihn über sein Menü.",
+      "picked": "{name} aufgenommen.",
+      "over": "{name} ist über {stage}.",
+      "dropped": "{name} nach {stage} verschoben.",
+      "cancelled": "Verschieben von {name} abgebrochen."
+    }
+  },
   "tasks": {
     "eyebrow": "Aufgaben",
     "title": "Nachverfolgung bleibt sichtbar.",

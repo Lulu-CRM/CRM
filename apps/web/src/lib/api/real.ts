@@ -27,12 +27,18 @@ import {
   type DealCreateInput,
   type DealUpdateInput,
   segmentListItemSchema,
+  heldRowSchema,
+  importJobSchema,
+  importPreviewSchema,
+  type ImportConfirmInput,
+  type ImportMapping,
+  type ImportResolveAction,
   segmentSchema,
   type ListQuery,
   type SegmentCreateInput,
   type SegmentUpdateInput,
 } from "@lulu/shared";
-import { getList, getOne, remove, write } from "./http";
+import { getList, getOne, remove, upload, write } from "./http";
 
 // Endpoints from docs/api.md. Keep the same shape as mock.ts.
 export const realApi = {
@@ -83,6 +89,17 @@ export const realApi = {
     update: (id: string, input: SegmentUpdateInput) => write(segmentSchema, "PATCH", `/segments/${id}`, input),
     remove: (id: string) => remove(`/segments/${id}`),
     contacts: (id: string, query: Partial<ListQuery> = {}) => getList(contactSchema, `/segments/${id}/contacts`, query),
+  },
+
+  imports: {
+    create: (file: File) => upload(importJobSchema, "/imports", file),
+    get: (id: string) => getOne(importJobSchema, `/imports/${id}`),
+    saveMapping: (id: string, mapping: ImportMapping) => write(importJobSchema, "PUT", `/imports/${id}/mapping`, { mapping }),
+    preview: (id: string) => getOne(importPreviewSchema, `/imports/${id}/preview`),
+    confirm: (id: string, input: ImportConfirmInput) => write(importJobSchema, "POST", `/imports/${id}/confirm`, input),
+    held: (id: string) => getList(heldRowSchema, `/imports/${id}/held`, { pageSize: 100 }),
+    resolve: (id: string, rowId: string, action: ImportResolveAction) =>
+      write(heldRowSchema, "POST", `/imports/${id}/held/${rowId}/resolve`, { action }),
   },
 
   pipelines: () => getOne(z.array(pipelineWithStagesSchema), "/pipelines"),

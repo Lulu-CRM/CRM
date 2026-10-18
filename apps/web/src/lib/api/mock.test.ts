@@ -192,3 +192,30 @@ describe("mock segments", () => {
     expect(await count()).toBe(before + 1);
   });
 });
+
+describe("mock import", () => {
+  it("with duplicate handling 'update', overwrites the existing contact in the background", async () => {
+    vi.useFakeTimers({ toFake: ["setTimeout"] });
+    try {
+      const csv = ["name,email,title", "Sophie L.,sophie@northstar.studio,CEO", "New Person,new@example.com,"].join("\n");
+      const file = new File([csv], "update.csv");
+      const job = await runWithTimers(mockApi.imports.create(file));
+      const confirmed = await runWithTimers(mockApi.imports.confirm(job.id, { duplicateHandling: "update" }));
+      expect(confirmed.status).toBe("processing");
+
+      await vi.advanceTimersByTimeAsync(1000);
+      const done = await runWithTimers(mockApi.imports.get(job.id));
+      expect(done).toMatchObject({ status: "done", rowsAdded: 1, rowsUpdated: 1, rowsHeld: 0 });
+      expect(await runWithTimers(mockApi.contacts.get("contact_sophie"))).toMatchObject({ name: "Sophie L.", jobRole: "CEO" });
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+});
+
+// The mock answers after a short timeout; with fake timers, move time on until the answer arrives.
+async function runWithTimers<T>(promise: Promise<T>) {
+  await vi.advanceTimersByTimeAsync(200);
+  return promise;
+}
+

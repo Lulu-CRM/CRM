@@ -9,6 +9,12 @@ import {
   demoTasks,
   demoNotes,
   demoSegments,
+  guessMapping,
+  importConfirmSchema,
+  mergeIntoContact,
+  parseCsv,
+  planImport,
+  MAX_IMPORT_ROWS,
   segmentMembers,
   canSeeNote,
   filterNotes,
@@ -46,6 +52,13 @@ import {
   type SegmentCreateInput,
   type SegmentListItem,
   type SegmentUpdateInput,
+  type HeldRow,
+  type ImportConfirmInput,
+  type ImportedContact,
+  type ImportJob,
+  type ImportMapping,
+  type ImportPreview,
+  type ImportResolveAction,
 } from "@lulu/shared";
 import { ApiError, type ListResult } from "./types";
 
@@ -58,6 +71,7 @@ const db = {
   activities: demoActivities(),
   notes: demoNotes(),
   segments: structuredClone(demoSegments),
+  imports: new Map<string, { job: ImportJob; rows: Record<string, string>[]; held: HeldRow[] }>(),
 };
 
 const CURRENCY = "EUR";
@@ -133,6 +147,114 @@ function members(segment: Segment) {
     deals: alive(db.deals),
     stages: demoPipeline.stages,
   });
+}
+
+// ---------- Import (stands in for the API's import.process background job) ----------
+
+// How long the pretend background job takes, so the page has to wait for it like the real one.
+export const MOCK_IMPORT_DELAY_MS = 600;
+
+// Browsers and Node have file.text(); the jsdom test environment only has FileReader.
+function readText(file: File) {
+  if (typeof file.text === "function") return file.text();
+  return new Promise<string>((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(String(reader.result ?? ""));
+    reader.onerror = () => reject(new ApiError("IMPORT_FILE_UNREADABLE", 422));
+    reader.readAsText(file);
+  });
+}
+
+function findImport(id: string) {
+  const entry = db.imports.get(id);
+  if (!entry || entry.job.deletedAt) throw new ApiError("IMPORT_NOT_FOUND", 404);
+  return entry;
+}
+
+function companyIdFor(name: string | null, ownerId: string) {
+  if (!name) return null;
+  const existing = alive(db.companies).find((c) => c.name.toLocaleLowerCase() === name.toLocaleLowerCase());
+  if (existing) return existing.id;
+  const now = new Date().toISOString();
+  const company: Company = {
+    id: newId("company"),
+    workspaceId: DEMO_WORKSPACE_ID,
+    createdAt: now,
+    updatedAt: now,
+    deletedAt: null,
+    name,
+    domain: null,
+    industry: null,
+    size: null,
+    ownerId,
+  };
+  db.companies.push(company);
+  return company.id;
+}
+
+function addImportedContact(incoming: ImportedContact, ownerId: string, tag: string | null) {
+  const now = new Date().toISOString();
+  db.contacts.push({
+    id: newId("contact"),
+    workspaceId: DEMO_WORKSPACE_ID,
+    createdAt: now,
+    updatedAt: now,
+    deletedAt: null,
+    name: incoming.name,
+    email: incoming.email,
+    phone: incoming.phone,
+    companyId: companyIdFor(incoming.companyName, ownerId),
+    jobRole: incoming.jobRole,
+    source: incoming.source ?? "import",
+    lifecycleStage: incoming.lifecycleStage ?? "new",
+    ownerId,
+    tags: [...new Set([...incoming.tags, ...(tag ? [tag] : [])])],
+    // Imported contacts follow the workspace consent rules; without a rule, no marketing consent.
+    marketingConsent: false,
+    consentUpdatedAt: null,
+    lastTouchAt: null,
+  });
+}
+
+function mergeImported(contactId: string, incoming: ImportedContact, mode: "fill" | "overwrite", tag: string | null) {
+  const contact = findContact(contactId);
+  const withTag = { ...incoming, tags: [...incoming.tags, ...(tag ? [tag] : [])] };
+  Object.assign(contact, mergeIntoContact(contact, withTag, mode, companyIdFor(incoming.companyName, contact.ownerId)), {
+    updatedAt: new Date().toISOString(),
+  });
+}
+
+function runImport(id: string) {
+  const entry = findImport(id);
+  const { job } = entry;
+  const ownerId = job.ownerId ?? CURRENT_USER_ID;
+  for (const row of planImport(entry.rows, job.mapping, alive(db.contacts), alive(db.companies))) {
+    if (row.problems.length > 0) {
+      job.rowsSkipped++;
+    } else if (row.duplicateOfContactId) {
+      if (job.duplicateHandling === "skip") job.rowsSkipped++;
+      else if (job.duplicateHandling === "update") {
+        mergeImported(row.duplicateOfContactId, row.contact, "overwrite", job.tag);
+        job.rowsUpdated++;
+      } else {
+        entry.held.push({
+          id: newId("row"),
+          importJobId: job.id,
+          rowNumber: row.rowNumber,
+          contact: row.contact,
+          duplicateOfContactId: row.duplicateOfContactId,
+          duplicateMatch: row.duplicateMatch!,
+          status: "held",
+        });
+        job.rowsHeld++;
+      }
+    } else {
+      addImportedContact(row.contact, ownerId, job.tag);
+      job.rowsAdded++;
+    }
+  }
+  job.status = "done";
+  job.updatedAt = new Date().toISOString();
 }
 
 export const mockApi = {
@@ -402,6 +524,99 @@ export const mockApi = {
     async contacts(id: string, query: Partial<ListQuery> = {}) {
       const rows = sortBy(members(db.segments[findSegmentIndex(id)]), "-lastTouchAt");
       return delay(paginate(rows, query.page, query.pageSize));
+    },
+  },
+
+  imports: {
+    async create(file: File) {
+      // The server reads CSV and XLSX. The mock reads CSV only.
+      if (!/\.csv$/i.test(file.name)) throw new ApiError("IMPORT_MOCK_CSV_ONLY", 422);
+      const { columns, rows } = parseCsv(await readText(file));
+      if (rows.length === 0) throw new ApiError("IMPORT_EMPTY", 422);
+      if (rows.length > MAX_IMPORT_ROWS) throw new ApiError("IMPORT_TOO_MANY_ROWS", 422);
+      const now = new Date().toISOString();
+      const job: ImportJob = {
+        id: newId("import"),
+        workspaceId: DEMO_WORKSPACE_ID,
+        createdAt: now,
+        updatedAt: now,
+        deletedAt: null,
+        fileName: file.name,
+        status: "uploaded",
+        columns,
+        sampleRow: rows[0] ?? null,
+        mapping: guessMapping(columns),
+        rowsTotal: rows.length,
+        rowsAdded: 0,
+        rowsUpdated: 0,
+        rowsHeld: 0,
+        rowsSkipped: 0,
+        ownerId: null,
+        tag: null,
+        duplicateHandling: null,
+        error: null,
+      };
+      db.imports.set(job.id, { job, rows, held: [] });
+      return delay({ ...job });
+    },
+    async get(id: string) {
+      return delay({ ...findImport(id).job });
+    },
+    async saveMapping(id: string, mapping: ImportMapping) {
+      const { job } = findImport(id);
+      job.mapping = { ...mapping };
+      job.updatedAt = new Date().toISOString();
+      return delay({ ...job });
+    },
+    // The first rows, with every row counted.
+    async preview(id: string): Promise<ImportPreview> {
+      const entry = findImport(id);
+      const plan = planImport(entry.rows, entry.job.mapping, alive(db.contacts), alive(db.companies));
+      const problems = plan.filter((r) => r.problems.length > 0).length;
+      const duplicates = plan.filter((r) => r.duplicateOfContactId).length;
+      return delay({
+        rowsTotal: plan.length,
+        newCount: plan.length - problems - duplicates,
+        duplicateCount: duplicates,
+        problemCount: problems,
+        rows: plan.slice(0, 20),
+      });
+    },
+    async confirm(id: string, input: ImportConfirmInput) {
+      const { job } = findImport(id);
+      if (job.status !== "uploaded") throw new ApiError("IMPORT_ALREADY_STARTED", 409);
+      const options = importConfirmSchema.parse(input);
+      Object.assign(job, {
+        status: "processing",
+        ownerId: options.ownerId ?? CURRENT_USER_ID,
+        tag: options.tag ?? null,
+        duplicateHandling: options.duplicateHandling,
+        updatedAt: new Date().toISOString(),
+      });
+      setTimeout(() => runImport(id), MOCK_IMPORT_DELAY_MS);
+      return delay({ ...job });
+    },
+    async held(id: string) {
+      return delay(paginate(findImport(id).held.filter((r) => r.status === "held"), 1, 100));
+    },
+    async resolve(id: string, rowId: string, action: ImportResolveAction) {
+      const entry = findImport(id);
+      const row = entry.held.find((r) => r.id === rowId && r.status === "held");
+      if (!row) throw new ApiError("IMPORT_ROW_NOT_FOUND", 404);
+      if (action === "create") {
+        addImportedContact(row.contact, entry.job.ownerId ?? CURRENT_USER_ID, entry.job.tag);
+        row.status = "added";
+        entry.job.rowsAdded++;
+      } else if (action === "merge") {
+        mergeImported(row.duplicateOfContactId, row.contact, "fill", entry.job.tag);
+        row.status = "merged";
+        entry.job.rowsUpdated++;
+      } else {
+        row.status = "skipped";
+        entry.job.rowsSkipped++;
+      }
+      entry.job.rowsHeld--;
+      return delay({ ...row });
     },
   },
 

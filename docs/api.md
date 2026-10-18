@@ -189,6 +189,16 @@ A segment's `rules` (schema: `segmentRulesSchema` in `packages/shared/src/segmen
 | GET | `/imports/:id/held` | Held duplicates to review |
 | POST | `/imports/:id/held/:rowId/resolve` | `skip`, `create`, or `merge` |
 
+Import details (schemas: `packages/shared/src/import.ts`, rules: `import-logic.ts`):
+
+- **Upload:** `POST /imports` takes `multipart/form-data` with the file in the field `file`. It returns the job with `status: "uploaded"`, `columns`, `sampleRow` (the first data row) and a guessed `mapping` (`guessMapping`).
+- **Mapping:** source column to Lulu field: `name`, `firstName`, `lastName`, `email`, `phone`, `company`, `jobRole`, `source`, `lifecycleStage`, `tags` or `ignore`. Each field takes one column at most.
+- **Preview:** `GET /imports/:id/preview` returns counts for the whole file (`newCount`, `duplicateCount`, `problemCount`) and the first 20 rows, each with `problems` (`nameMissing`, `emailInvalid`, `stageUnknown`) and `duplicateOfContactId` / `duplicateMatch` (`email` or `nameAndCompany`).
+- **Confirm:** `POST /imports/:id/confirm` starts the `import.process` job and returns at once with `status: "processing"`. The web app polls `GET /imports/:id` until `done` or `failed`. Rows with problems are skipped. Duplicates are held, skipped or used to update the existing contact (`mergeIntoContact`, mode `overwrite`). New contacts get the default owner, the tag, source `import` when the file has none, and the workspace consent rules.
+- **Held rows:** `merge` fills empty fields of the existing contact and adds tags (`mergeIntoContact`, mode `fill`); `create` adds the row as a new contact; `skip` drops it.
+- **Companies:** a company name that matches an existing company (ignoring case) links to it; otherwise a company is created.
+- **Errors:** `IMPORT_NOT_FOUND`, `IMPORT_EMPTY`, `IMPORT_TOO_MANY_ROWS` (over 10,000 rows), `IMPORT_FILE_UNREADABLE`, `IMPORT_ALREADY_STARTED`, `IMPORT_ROW_NOT_FOUND`.
+
 ## AI analysis
 
 | Method | Path | Purpose |

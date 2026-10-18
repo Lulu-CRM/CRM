@@ -116,7 +116,14 @@
     "COMPANY_NOT_FOUND": "未找到公司",
     "NOTE_NOT_FOUND": "未找到笔记",
     "RECORD_NOT_FOUND": "关联的记录已不存在",
-    "SEGMENT_NOT_FOUND": "未找到分组"
+    "SEGMENT_NOT_FOUND": "未找到分组",
+    "IMPORT_NOT_FOUND": "未找到导入任务",
+    "IMPORT_EMPTY": "文件中没有可导入的行",
+    "IMPORT_TOO_MANY_ROWS": "文件超过 10,000 行。请拆分后分别导入。",
+    "IMPORT_ALREADY_STARTED": "此导入已经开始",
+    "IMPORT_ROW_NOT_FOUND": "该行已处理",
+    "IMPORT_MOCK_CSV_ONLY": "Excel 文件由服务器读取。在模拟模式下，请先另存为 CSV。",
+    "IMPORT_FILE_UNREADABLE": "无法读取此文件。请使用 CSV 或 XLSX 文件。"
   },
   "contacts": {
     "import": "导入",
@@ -716,6 +723,147 @@
         "name": "请输入分组名称",
         "condition": "请完善或移除标出的条件"
       }
+    }
+  },
+  "import": {
+    "eyebrow": "联系人导入",
+    "title": "把你的客户关系带入 Lulu。",
+    "intro": "上传 CSV 或 Excel 文件，映射字段，检查重复项，确认无误后再导入。",
+    "stepsLabel": "导入步骤",
+    "steps": {
+      "upload": {
+        "title": "上传",
+        "hint": "CSV 或 XLSX"
+      },
+      "map": {
+        "title": "映射字段",
+        "hint": "检查匹配"
+      },
+      "check": {
+        "title": "检查质量",
+        "hint": "查找重复项"
+      },
+      "confirm": {
+        "title": "确认",
+        "hint": "保存联系人"
+      }
+    },
+    "upload": {
+      "drop": "把 CSV 或 Excel 文件拖到这里",
+      "limits": "支持最多 {max} 行的 CSV 和 XLSX 文件",
+      "choose": "选择文件",
+      "owner": "默认负责人",
+      "tag": "添加标签",
+      "tagPlaceholder": "例如：2026 导入",
+      "duplicates": "重复项处理",
+      "handling": {
+        "hold": "暂存待审核",
+        "skip": "跳过重复项",
+        "update": "更新现有记录"
+      },
+      "hint": "导入前你可以检查字段匹配。"
+    },
+    "map": {
+      "summary": "{rows} 行 · 已识别 {fields} 个字段",
+      "ready": "可以检查",
+      "source": "源列",
+      "field": "Lulu 字段",
+      "example": "示例",
+      "fieldFor": "{column} 对应的 Lulu 字段",
+      "next": "检查质量",
+      "problems": {
+        "noName": "请把一列映射到姓名，或映射到名和姓。",
+        "fieldTwice": "每个 Lulu 字段只能对应一列。"
+      }
+    },
+    "fields": {
+      "name": "姓名",
+      "firstName": "名",
+      "lastName": "姓",
+      "email": "邮箱",
+      "phone": "电话",
+      "company": "公司",
+      "jobRole": "职位",
+      "source": "来源",
+      "lifecycleStage": "生命周期阶段",
+      "tags": "标签",
+      "ignore": "忽略此列"
+    },
+    "check": {
+      "tiles": {
+        "new": "新联系人",
+        "duplicates": "可能的重复项",
+        "problems": "有问题的行"
+      },
+      "duplicates": {
+        "hold": "{count} 条可能的重复项将被暂存",
+        "skip": "{count} 条可能的重复项将被跳过",
+        "update": "{count} 个现有联系人将被更新"
+      },
+      "duplicatesHint": {
+        "hold": "导入后再审核，不会覆盖任何现有数据。",
+        "skip": "这些行不会导入，现有联系人保持不变。",
+        "update": "文件中的字段将替换现有值，标签会被追加。"
+      },
+      "firstRows": "前 {count} 行",
+      "rowNew": "新",
+      "match": {
+        "email": "邮箱相同",
+        "nameAndCompany": "姓名和公司相同"
+      },
+      "footer": "{count, plural, =0 {不会添加新联系人。} other {将添加 # 个新联系人。}}",
+      "back": "返回",
+      "confirm": "确认导入"
+    },
+    "problems": {
+      "nameMissing": "缺少姓名",
+      "emailInvalid": "邮箱无效",
+      "stageUnknown": "未知阶段"
+    },
+    "running": "正在导入 {count} 行。你可以离开此页面，导入会继续进行。",
+    "done": {
+      "title": "导入完成。",
+      "failed": "导入已中止。",
+      "counts": {
+        "added": "已添加",
+        "updated": "已更新",
+        "held": "待审核",
+        "skipped": "已跳过"
+      },
+      "again": "导入另一个文件",
+      "viewContacts": "查看联系人",
+      "review": "审核 {count} 条暂存的重复项"
+    },
+    "held": {
+      "title": "暂存的重复项",
+      "intro": "逐行决定。在你选择之前不会有任何更改。",
+      "empty": "所有暂存的重复项都已处理。",
+      "rowLabel": "第 {row} 行：{name}",
+      "imported": "来自文件，第 {row} 行",
+      "existing": "Lulu 中已有",
+      "match": {
+        "email": "与现有联系人邮箱相同",
+        "nameAndCompany": "与现有联系人姓名和公司相同"
+      },
+      "actions": {
+        "skip": "跳过",
+        "create": "添加为新联系人",
+        "merge": "合并到现有联系人"
+      },
+      "resolved": {
+        "skip": "已跳过该行",
+        "create": "已添加为新联系人",
+        "merge": "已合并到现有联系人"
+      }
+    },
+    "safe": {
+      "eyebrow": "默认安全",
+      "title": "审核之前不会有任何更改。",
+      "preview": "预览每个映射的字段",
+      "hold": "暂存可能的重复项",
+      "source": "保留原始来源",
+      "owner": "分配负责人和标签",
+      "consent": "导入的联系人沿用工作区的隐私和授权规则。"
     }
   }
 }

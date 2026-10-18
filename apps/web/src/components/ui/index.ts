@@ -1,6 +1,7 @@
 export { Avatar, type AvatarTone } from "./Avatar";
 export { Button } from "./Button";
 export { Card } from "./Card";
+export { ConfirmDialog } from "./ConfirmDialog";
 export { Drawer } from "./Drawer";
 export { EmptyState } from "./EmptyState";
 export { Modal } from "./Modal";

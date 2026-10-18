@@ -3,6 +3,10 @@
 import { useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
 
+// Open overlays, newest last. Only the top one reacts to Escape and Tab,
+// so a confirm dialog opened from a drawer closes on its own.
+const stack: symbol[] = [];
+
 const FOCUSABLE =
   'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
 
@@ -29,12 +33,15 @@ export function Overlay({
 
   useEffect(() => {
     if (!open) return;
+    const id = Symbol();
+    stack.push(id);
     const trigger = document.activeElement as HTMLElement | null;
     const overflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
     (panel.current?.querySelector<HTMLElement>(FOCUSABLE) ?? panel.current)?.focus();
 
     const onKey = (event: KeyboardEvent) => {
+      if (stack[stack.length - 1] !== id) return;
       if (event.key === "Escape") onCloseRef.current();
       if (event.key !== "Tab" || !panel.current) return;
       const items = [...panel.current.querySelectorAll<HTMLElement>(FOCUSABLE)];
@@ -52,6 +59,7 @@ export function Overlay({
     document.addEventListener("keydown", onKey);
     return () => {
       document.removeEventListener("keydown", onKey);
+      stack.splice(stack.indexOf(id), 1);
       document.body.style.overflow = overflow;
       trigger?.focus();
     };

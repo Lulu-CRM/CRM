@@ -38,5 +38,7 @@ export function useFormat() {
     // Short day and month for cards ("28 Oct", "28. Okt.", "10月28日").
     dayMonth: (value: Date | string) =>
       format.dateTime(new Date(value), { day: "numeric", month: "short" }),
+    // Weekday name for dates later this week ("Friday", "Freitag", "星期五").
+    weekday: (value: Date | string) => format.dateTime(new Date(value), { weekday: "long" }),
   };
 }

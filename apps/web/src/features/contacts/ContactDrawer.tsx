@@ -2,17 +2,17 @@
 
 import { useState } from "react";
 import { useTranslations } from "next-intl";
-import { dueKind, type Contact, type Task } from "@lulu/shared";
+import type { Contact, Task } from "@lulu/shared";
 import { Avatar, Button, Drawer, Pill, Skeleton, useToast } from "@/components/ui";
 import { useFormat } from "@/i18n/format";
 import { api } from "@/lib/api";
 import { useErrorMessage } from "@/lib/errors";
 import { useApi } from "@/lib/useApi";
-import { ActivityItem } from "@/components/activity/ActivityItem";
+import { ActivityItem } from "@/features/activities/ActivityItem";
+import { DueChip } from "@/features/activities/DueChip";
 import { knownSources, stageTone } from "./options";
 import { avatarTone, initials } from "@/lib/initials";
 import type { Lookups } from "./useLookups";
-
 
 const textButton = "text-[11px] font-extrabold text-primary-hover hover:underline";
 
@@ -187,14 +187,11 @@ function TasksSection({
   onTimelineChanged: () => void;
 }) {
   const t = useTranslations("contacts.drawer");
-  const tDue = useTranslations("due");
   const toast = useToast();
   const errorMessage = useErrorMessage();
-  const format = useFormat();
   const [title, setTitle] = useState("");
   const [due, setDue] = useState("");
   const [saving, setSaving] = useState(false);
-  const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
   const addTask = async (event: React.FormEvent) => {
     event.preventDefault();
@@ -276,7 +273,6 @@ function TasksSection({
       ) : list.length ? (
         <ul className="mt-2">
           {list.map((task) => {
-            const kind = dueKind(task, new Date(), timeZone);
             return (
               <li key={task.id} className="flex items-center gap-2.5 border-b border-surface-muted py-3">
                 <input
@@ -289,11 +285,7 @@ function TasksSection({
                 <span className={`flex-1 text-[10px] font-semibold ${task.done ? "text-text-faint line-through" : "text-text-strong"}`}>
                   {task.title}
                 </span>
-                {task.dueAt && kind !== "none" && (
-                  <Pill tone={kind === "overdue" ? "warning" : kind === "today" ? "violet" : "neutral"}>
-                    {kind === "overdue" || kind === "today" || kind === "tomorrow" ? tDue(kind) : format.date(task.dueAt)}
-                  </Pill>
-                )}
+                <DueChip task={task} />
               </li>
             );
           })}

@@ -2,7 +2,7 @@
 
 import { useTranslations } from "next-intl";
 import type { Stage } from "@lulu/shared";
-import { ActivityItem } from "@/components/activity/ActivityItem";
+import { ActivityItem } from "@/features/activities/ActivityItem";
 import { stageColour, useStageName } from "@/components/deals/stages";
 import { PageHeader } from "@/components/layout/PageHeader";
 import { Avatar, Button, Card, EmptyState, Pill, Skeleton } from "@/components/ui";
@@ -208,7 +208,7 @@ export function OverviewPage() {
         {overview.recentActivity.length ? (
           <ul className="mt-2">
             {overview.recentActivity.map((activity) => (
-              <ActivityItem key={activity.id} activity={activity} actorName={lookups.userName(activity.actorId)} context={activity.recordName ?? undefined} />
+              <ActivityItem key={activity.id} activity={activity} actorName={lookups.userName(activity.actorId)} recordName={activity.recordName ?? undefined} />
             ))}
           </ul>
         ) : (

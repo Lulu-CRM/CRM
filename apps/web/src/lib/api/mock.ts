@@ -10,13 +10,18 @@ import {
   demoNotes,
   canSeeNote,
   filterNotes,
+  companyDetail,
+  summarizeCompany,
   moveDeal,
   setTaskDone,
   sortTimeline,
   summarizeDeals,
   type ActivityListQuery,
   type Company,
+  type CompanyCreateInput,
   type CompanyListItem,
+  type CompanyListQuery,
+  type CompanyUpdateInput,
   type Contact,
   type ContactCreateInput,
   type ContactListQuery,
@@ -74,6 +79,15 @@ function findContact(id: string) {
   if (!contact) throw new ApiError("CONTACT_NOT_FOUND", 404);
   return contact;
 }
+
+function findCompany(id: string) {
+  const company = alive(db.companies).find((c) => c.id === id);
+  if (!company) throw new ApiError("COMPANY_NOT_FOUND", 404);
+  return company;
+}
+
+const summarize = (company: Company) =>
+  summarizeCompany(company, alive(db.contacts), alive(db.deals), demoPipeline.stages, CURRENCY);
 
 function findDealIndex(id: string) {
   const index = db.deals.findIndex((d) => d.id === id && !d.deletedAt);
@@ -160,18 +174,50 @@ export const mockApi = {
   },
 
   companies: {
-    list(): Promise<ListResult<CompanyListItem>> {
-      const rows = alive(db.companies).map((company: Company) => ({
-        ...company,
-        contactCount: alive(db.contacts).filter((c) => c.companyId === company.id).length,
-        openDealValue: {
-          amount: alive(db.deals)
-            .filter((d) => d.companyId === company.id && d.currency === CURRENCY && !d.closedAt)
-            .reduce((sum, d) => sum + d.value, 0),
-          currency: CURRENCY,
-        },
-      }));
-      return delay(paginate(rows));
+    list(query: Partial<CompanyListQuery> = {}): Promise<ListResult<CompanyListItem>> {
+      const q = query.q?.toLowerCase();
+      let rows = alive(db.companies)
+        .map(summarize)
+        .filter((c) => {
+          if (q && ![c.name, c.domain, c.industry].join(" ").toLowerCase().includes(q)) return false;
+          if (query.ownerId && c.ownerId !== query.ownerId) return false;
+          if (query.industry && c.industry !== query.industry) return false;
+          if (query.health && c.health !== query.health) return false;
+          return true;
+        });
+      // openDealValue sorts by amount, like the server.
+      const sort = query.sort ?? "-openDealValue";
+      const byAmount = rows.map((c) => ({ row: c, openDealValue: c.openDealValue.amount, name: c.name, contactCount: c.contactCount, lastTouchAt: c.lastTouchAt }));
+      rows = sortBy(byAmount, sort).map((entry) => entry.row);
+      return delay(paginate(rows, query.page, query.pageSize));
+    },
+    get: async (id: string) =>
+      delay(companyDetail(findCompany(id), alive(db.contacts), alive(db.deals), demoPipeline.stages, CURRENCY)),
+    create(input: CompanyCreateInput) {
+      const now = new Date().toISOString();
+      const company: Company = {
+        id: newId("company"),
+        workspaceId: DEMO_WORKSPACE_ID,
+        createdAt: now,
+        updatedAt: now,
+        deletedAt: null,
+        name: input.name,
+        domain: input.domain ?? null,
+        industry: input.industry ?? null,
+        size: input.size ?? null,
+        ownerId: input.ownerId ?? CURRENT_USER_ID,
+      };
+      db.companies.push(company);
+      return delay(summarize(company));
+    },
+    async update(id: string, input: CompanyUpdateInput) {
+      const company = findCompany(id);
+      Object.assign(company, input, { updatedAt: new Date().toISOString() });
+      return delay(summarize(company));
+    },
+    async remove(id: string) {
+      findCompany(id).deletedAt = new Date().toISOString();
+      return delay(undefined);
     },
   },
 

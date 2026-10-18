@@ -11,7 +11,7 @@ The prototype in `design/` stores money, dates and links as text. This model rep
 | Workspace | name, defaultCurrency, defaultLanguage |
 | User | name, email, language, role (`owner`, `admin`, `member`), workspaceId |
 | Contact | name, email, phone, companyId, jobRole, source, lifecycleStage, ownerId, tags, marketingConsent, consentUpdatedAt, lastTouchAt |
-| Company | name, domain, industry, size, ownerId |
+| Company | name, domain (bare host name, lower case), industry, size (`1-10`, `11-50`, `51-200`, `201+`), ownerId. Contact count, open deal value, last touch and health are computed, not stored |
 | Pipeline | key, name, isDefault |
 | Stage | pipelineId, key, name, order, probability, type (`open`, `won`, `lost`) |
 | Deal | name, value (number), currency, stageId, probability, expectedCloseAt, contactId, companyId, ownerId, closedAt |

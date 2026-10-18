@@ -44,7 +44,33 @@ This list is the contract for the frontend and the backend. Add or change an end
 | POST | `/companies` | Create |
 | GET | `/companies/:id` | Detail with people and deals |
 | PATCH | `/companies/:id` | Edit |
-| DELETE | `/companies/:id` | Soft delete |
+| DELETE | `/companies/:id` | Soft delete. The company's contacts and deals keep their link |
+
+`GET /companies` filters: `ownerId`, `industry`, `health` (`strong`, `watch`, `new`). `q` searches name, domain and industry. `sort`: `name`, `contactCount`, `openDealValue` or `lastTouchAt`, default `-openDealValue`. Each item is the company plus numbers computed from its records (`summarizeCompany` in `packages/shared`):
+
+```json
+{
+  "id": "company_atlas",
+  "name": "Atlas Logistics",
+  "domain": "atlaslogistics.co",
+  "industry": "Logistics",
+  "size": "11-50",
+  "ownerId": "user_jamie",
+  "contactCount": 1,
+  "openDealValue": { "amount": 42500, "currency": "EUR" },
+  "openDealCount": 1,
+  "otherCurrencyDeals": 0,
+  "lastTouchAt": "2026-10-16T16:18:00.000Z",
+  "health": "strong"
+}
+```
+
+- `openDealValue` is in the workspace's default currency. `otherCurrencyDeals` counts open deals in another currency that are left out of it.
+- `lastTouchAt` is the latest `lastTouchAt` of the company's contacts.
+- `health` follows `companyHealth` in `packages/shared`: `strong` when a deal is won or an open deal is at 70% or more and a contact was touched in the last 30 days; `new` when no deal has moved past the first stage; `watch` otherwise.
+- `GET /companies/:id` returns the same fields plus `contacts` (most recent touch first) and `deals`.
+- `domain` is a bare host name (`northstar.studio`), stored in lower case. `size` is one of `1-10`, `11-50`, `51-200`, `201+`.
+- Errors: `COMPANY_NOT_FOUND`.
 
 ## Deals and pipeline
 

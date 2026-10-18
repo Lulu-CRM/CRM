@@ -1,6 +1,7 @@
 import { z } from "zod";
 import {
   activitySchema,
+  companyDetailSchema,
   companyListItemSchema,
   contactSchema,
   dealSchema,
@@ -9,6 +10,9 @@ import {
   taskSchema,
   userSchema,
   type ActivityListQuery,
+  type CompanyCreateInput,
+  type CompanyListQuery,
+  type CompanyUpdateInput,
   type ContactCreateInput,
   type ContactListQuery,
   type ContactUpdateInput,
@@ -36,7 +40,12 @@ export const realApi = {
   },
 
   companies: {
-    list: () => getList(companyListItemSchema, "/companies"),
+    list: (query: Partial<CompanyListQuery> = {}) => getList(companyListItemSchema, "/companies", query),
+    get: (id: string) => getOne(companyDetailSchema, `/companies/${id}`),
+    create: (input: CompanyCreateInput) => write(companyListItemSchema, "POST", "/companies", input),
+    update: (id: string, input: CompanyUpdateInput) =>
+      write(companyListItemSchema, "PATCH", `/companies/${id}`, input),
+    remove: (id: string) => remove(`/companies/${id}`),
   },
 
   tasks: {

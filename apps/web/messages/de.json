@@ -112,7 +112,8 @@
     "TASK_NOT_FOUND": "Aufgabe nicht gefunden",
     "STAGE_NOT_FOUND": "Phase nicht gefunden",
     "STAGE_IN_OTHER_PIPELINE": "Diese Phase gehört zu einer anderen Pipeline",
-    "PIPELINE_NOT_FOUND": "Keine Pipeline gefunden"
+    "PIPELINE_NOT_FOUND": "Keine Pipeline gefunden",
+    "COMPANY_NOT_FOUND": "Unternehmen nicht gefunden"
   },
   "contacts": {
     "import": "Importieren",
@@ -407,6 +408,86 @@
         "titleRequired": "Gib der Aufgabe einen Titel",
         "ownerRequired": "Wähle einen Verantwortlichen"
       }
+    }
+  },
+  "companies": {
+    "add": "Unternehmen hinzufügen",
+    "eyebrow": "Unternehmensverzeichnis",
+    "title": "Kunden mit Kontext.",
+    "intro": "Verbinden Sie Menschen, Pipeline und Geschäftshistorie mit jedem Unternehmen.",
+    "searchPlaceholder": "Unternehmen, Domains oder Branchen suchen",
+    "filtersLabel": "Unternehmensfilter",
+    "filters": {
+      "all": "Alle Unternehmen",
+      "mine": "Meine Unternehmen"
+    },
+    "noMatches": "Keine passenden Unternehmen",
+    "noMatchesHint": "Versuchen Sie eine andere Suche oder einen anderen Filter.",
+    "empty": "Noch keine Unternehmen",
+    "emptyHint": "Fügen Sie Ihr erstes Unternehmen hinzu, um Kontakte und Deals zu verbinden.",
+    "showing": "{count} von {total, plural, one {# Unternehmen} other {# Unternehmen}}",
+    "people": "{count, plural, one {# Kontakt} other {# Kontakte}}",
+    "pipelineValue": "Pipeline-Wert",
+    "otherCurrency": "+{count, plural, one {# Deal} other {# Deals}} in anderen Währungen",
+    "open": "{name} öffnen",
+    "sizeValue": "{size} Mitarbeitende",
+    "sortLabel": "Unternehmen sortieren",
+    "sort": {
+      "openDealValue": "Höchster Pipeline-Wert",
+      "name": "Name",
+      "contactCount": "Meiste Kontakte",
+      "lastTouchAt": "Zuletzt kontaktiert"
+    },
+    "health": {
+      "strong": "Stark",
+      "watch": "Beobachten",
+      "new": "Neu"
+    },
+    "deleted": "Unternehmen gelöscht",
+    "deleteTitle": "Unternehmen löschen?",
+    "deleteOne": "{name} wird entfernt. Kontakte und Deals bleiben im CRM.",
+    "form": {
+      "eyebrow": "Neues Unternehmen",
+      "editEyebrow": "Unternehmen",
+      "addTitle": "Unternehmen hinzufügen",
+      "editTitle": "Unternehmen bearbeiten",
+      "name": "Name des Unternehmens",
+      "namePlaceholder": "z. B. Northstar Studio",
+      "domain": "Domain",
+      "domainPlaceholder": "firma.de",
+      "industry": "Branche",
+      "industryPlaceholder": "z. B. Einzelhandel",
+      "size": "Unternehmensgröße",
+      "noSize": "Nicht festgelegt",
+      "owner": "Verantwortlich",
+      "requiredHint": "Mit * markierte Felder sind Pflichtfelder.",
+      "submit": "Unternehmen anlegen",
+      "created": "Unternehmen hinzugefügt",
+      "updated": "Unternehmen gespeichert",
+      "errors": {
+        "nameRequired": "Geben Sie einen Namen ein",
+        "domainInvalid": "Geben Sie eine Domain wie firma.de ein",
+        "ownerRequired": "Wählen Sie eine verantwortliche Person"
+      }
+    },
+    "drawer": {
+      "eyebrow": "Unternehmensprofil",
+      "domain": "Domain",
+      "industry": "Branche",
+      "size": "Unternehmensgröße",
+      "owner": "Verantwortlich",
+      "lastTouch": "Letzter Kontakt",
+      "pipelineValue": "Offene Pipeline",
+      "openDeals": "{count, plural, one {# offener Deal} other {# offene Deals}}",
+      "peopleEyebrow": "Personen",
+      "people": "Kontakte in diesem Unternehmen",
+      "noPeople": "Noch keine Kontakte verknüpft",
+      "dealsEyebrow": "Pipeline",
+      "deals": "Deals",
+      "noDeals": "Noch keine Deals",
+      "edit": "Unternehmen bearbeiten",
+      "delete": "Unternehmen löschen",
+      "website": "Website"
     }
   }
 }

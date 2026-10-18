@@ -12,7 +12,24 @@
 import { Prisma } from '../generated/prisma/client';
 import { db, type Db } from './prisma';
 
-export const SCOPED_MODELS = ['user'] as const;
+export const SCOPED_MODELS = [
+  'user',
+  'contact',
+  'company',
+  'pipeline',
+  'stage',
+  'deal',
+  'task',
+  'note',
+  'activity',
+  'segment',
+  'importJob',
+  'importRow',
+  'aiInsight',
+  'customField',
+  'setting',
+  'permission',
+] as const;
 
 type WhereArg = Record<string, unknown>;
 

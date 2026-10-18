@@ -105,4 +105,23 @@ describe('scopedDb', () => {
 
     await db.user.delete({ where: { id: inB.id } });
   });
+
+  it('keeps contacts isolated between workspaces', async () => {
+    const scopedA = scopedDb(workspaceA);
+    const scopedB = scopedDb(workspaceB);
+
+    const contactA = await scopedA.contact.create({
+      data: { workspaceId: workspaceA, name: 'Alice A', email: `alice-${randomUUID()}@a.test` },
+    });
+
+    const viaBUnique = await scopedB.contact.findUnique({ where: { id: contactA.id } });
+    const viaBList = await scopedB.contact.findMany({ where: { name: 'Alice A' } });
+    const viaA = await scopedA.contact.findUnique({ where: { id: contactA.id } });
+
+    expect(viaBUnique).toBeNull();
+    expect(viaBList).toEqual([]);
+    expect(viaA?.id).toBe(contactA.id);
+
+    await db.contact.delete({ where: { id: contactA.id } });
+  });
 });

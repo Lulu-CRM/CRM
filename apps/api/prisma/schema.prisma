@@ -13,6 +13,94 @@ enum Role {
   member
 }
 
+enum LifecycleStage {
+  new
+  qualified
+  follow_up
+  customer
+
+  @@map("lifecycle_stage")
+}
+
+enum StageType {
+  open
+  won
+  lost
+
+  @@map("stage_type")
+}
+
+enum TaskPriority {
+  high
+  normal
+  low
+
+  @@map("task_priority")
+}
+
+enum NoteVisibility {
+  shared
+  private
+
+  @@map("note_visibility")
+}
+
+enum RecordType {
+  contact
+  company
+  deal
+
+  @@map("record_type")
+}
+
+enum ActivityType {
+  email
+  meeting
+  task
+  note
+  ai_signal
+  created
+  stage_changed
+
+  @@map("activity_type")
+}
+
+enum SourceModule {
+  crm
+  email
+  calendar
+  online_presence
+  marketplace
+
+  @@map("source_module")
+}
+
+enum ImportJobStatus {
+  uploaded
+  mapped
+  processing
+  completed
+  failed
+
+  @@map("import_job_status")
+}
+
+enum ImportRowStatus {
+  added
+  held
+  skipped
+
+  @@map("import_row_status")
+}
+
+enum AiInsightStatus {
+  suggested
+  accepted
+  dismissed
+
+  @@map("ai_insight_status")
+}
+
 model Workspace {
   id              String    @id @default(uuid())
   name            String
@@ -22,7 +110,22 @@ model Workspace {
   updatedAt       DateTime  @updatedAt
   deletedAt       DateTime?
 
-  users User[]
+  users        User[]
+  contacts     Contact[]
+  companies    Company[]
+  pipelines    Pipeline[]
+  stages       Stage[]
+  deals        Deal[]
+  tasks        Task[]
+  notes        Note[]
+  activities   Activity[]
+  segments     Segment[]
+  importJobs   ImportJob[]
+  importRows   ImportRow[]
+  aiInsights   AiInsight[]
+  customFields CustomField[]
+  settings     Setting[]
+  permissions  Permission[]
 
   @@map("workspaces")
 }
@@ -39,8 +142,338 @@ model User {
   updatedAt    DateTime @updatedAt
   deletedAt    DateTime?
 
-  workspace Workspace @relation(fields: [workspaceId], references: [id])
+  workspace           Workspace  @relation(fields: [workspaceId], references: [id], onDelete: Restrict)
+  ownedContacts       Contact[]  @relation("ContactOwner")
+  ownedCompanies      Company[]  @relation("CompanyOwner")
+  ownedDeals          Deal[]     @relation("DealOwner")
+  ownedTasks          Task[]     @relation("TaskOwner")
+  authoredNotes       Note[]     @relation("NoteAuthor")
+  activities          Activity[] @relation("ActivityActor")
+  ownedImportJobs     ImportJob[] @relation("ImportJobOwner")
 
   @@index([workspaceId])
   @@map("users")
+}
+
+model Contact {
+  id               String         @id @default(uuid())
+  workspaceId      String
+  name             String
+  email            String?
+  phone            String?
+  companyId        String?
+  jobRole          String?
+  source           String?
+  lifecycleStage   LifecycleStage @default(new)
+  ownerId          String?
+  tags             String[]       @default([])
+  marketingConsent Boolean        @default(false)
+  consentUpdatedAt DateTime?
+  lastTouchAt      DateTime?
+  customFields     Json           @default("{}")
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @updatedAt
+  deletedAt        DateTime?
+
+  workspace      Workspace      @relation(fields: [workspaceId], references: [id], onDelete: Restrict)
+  company        Company?       @relation(fields: [companyId], references: [id], onDelete: Restrict)
+  owner          User?          @relation("ContactOwner", fields: [ownerId], references: [id], onDelete: Restrict)
+  deals          Deal[]
+  importRows     ImportRow[]
+  aiInsights     AiInsight[]
+
+  @@index([workspaceId])
+  @@index([workspaceId, email])
+  @@index([workspaceId, companyId])
+  @@index([workspaceId, lastTouchAt])
+  @@map("contacts")
+}
+
+model Company {
+  id          String    @id @default(uuid())
+  workspaceId String
+  name        String
+  domain      String?
+  industry    String?
+  size        String?
+  ownerId     String?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  deletedAt   DateTime?
+
+  workspace  Workspace  @relation(fields: [workspaceId], references: [id], onDelete: Restrict)
+  owner      User?      @relation("CompanyOwner", fields: [ownerId], references: [id], onDelete: Restrict)
+  contacts   Contact[]
+  deals      Deal[]
+
+  @@index([workspaceId])
+  @@map("companies")
+}
+
+model Pipeline {
+  id          String    @id @default(uuid())
+  workspaceId String
+  key         String?
+  name        String
+  isDefault   Boolean   @default(false)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  deletedAt   DateTime?
+
+  workspace Workspace @relation(fields: [workspaceId], references: [id], onDelete: Restrict)
+  stages    Stage[]
+
+  @@unique([workspaceId, key])
+  @@index([workspaceId])
+  @@map("pipelines")
+}
+
+model Stage {
+  id          String    @id @default(uuid())
+  workspaceId String
+  pipelineId  String
+  key         String?
+  name        String
+  order       Int
+  probability Decimal   @db.Decimal(5, 4)
+  type        StageType
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  deletedAt   DateTime?
+
+  workspace Workspace @relation(fields: [workspaceId], references: [id], onDelete: Restrict)
+  pipeline  Pipeline  @relation(fields: [pipelineId], references: [id], onDelete: Restrict)
+  deals     Deal[]
+
+  @@unique([pipelineId, key])
+  @@index([workspaceId])
+  @@map("stages")
+}
+
+model Deal {
+  id              String    @id @default(uuid())
+  workspaceId     String
+  name            String
+  value           Decimal   @db.Decimal(14, 2)
+  currency        String
+  stageId         String
+  probability     Decimal   @db.Decimal(5, 4)
+  expectedCloseAt DateTime?
+  contactId       String?
+  companyId       String?
+  ownerId         String?
+  closedAt        DateTime?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  deletedAt       DateTime?
+
+  workspace Workspace @relation(fields: [workspaceId], references: [id], onDelete: Restrict)
+  stage     Stage     @relation(fields: [stageId], references: [id], onDelete: Restrict)
+  contact   Contact?  @relation(fields: [contactId], references: [id], onDelete: Restrict)
+  company   Company?  @relation(fields: [companyId], references: [id], onDelete: Restrict)
+  owner     User?     @relation("DealOwner", fields: [ownerId], references: [id], onDelete: Restrict)
+
+  @@index([workspaceId])
+  @@index([workspaceId, companyId])
+  @@index([workspaceId, stageId])
+  @@map("deals")
+}
+
+model Task {
+  id          String        @id @default(uuid())
+  workspaceId String
+  title       String
+  dueAt       DateTime?
+  priority    TaskPriority  @default(normal)
+  ownerId     String?
+  done        Boolean       @default(false)
+  doneAt      DateTime?
+  recordType  RecordType?
+  recordId    String?
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  deletedAt   DateTime?
+
+  workspace Workspace @relation(fields: [workspaceId], references: [id], onDelete: Restrict)
+  owner     User?     @relation("TaskOwner", fields: [ownerId], references: [id], onDelete: Restrict)
+
+  @@index([workspaceId])
+  @@index([workspaceId, ownerId, done, dueAt])
+  @@index([workspaceId, recordType, recordId])
+  @@map("tasks")
+}
+
+model Note {
+  id          String         @id @default(uuid())
+  workspaceId String
+  title       String
+  body        String         @db.Text
+  visibility  NoteVisibility @default(shared)
+  authorId    String
+  recordType  RecordType
+  recordId    String
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+  deletedAt   DateTime?
+
+  workspace Workspace @relation(fields: [workspaceId], references: [id], onDelete: Restrict)
+  author    User      @relation("NoteAuthor", fields: [authorId], references: [id], onDelete: Restrict)
+
+  @@index([workspaceId])
+  @@index([workspaceId, recordType, recordId])
+  @@map("notes")
+}
+
+model Activity {
+  id            String       @id @default(uuid())
+  workspaceId   String
+  type          ActivityType
+  recordType    RecordType
+  recordId      String
+  occurredAt    DateTime     @default(now())
+  sourceModule  SourceModule @default(crm)
+  actorId       String?
+  payload       Json         @default("{}")
+  summary       String?
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+  deletedAt     DateTime?
+
+  workspace Workspace @relation(fields: [workspaceId], references: [id], onDelete: Restrict)
+  actor     User?     @relation("ActivityActor", fields: [actorId], references: [id], onDelete: Restrict)
+
+  @@index([workspaceId])
+  @@index([workspaceId, recordType, recordId])
+  @@map("activities")
+}
+
+model Segment {
+  id          String    @id @default(uuid())
+  workspaceId String
+  name        String
+  description String?
+  rules       Json
+  color       String?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  deletedAt   DateTime?
+
+  workspace Workspace @relation(fields: [workspaceId], references: [id], onDelete: Restrict)
+
+  @@index([workspaceId])
+  @@map("segments")
+}
+
+model ImportJob {
+  id          String          @id @default(uuid())
+  workspaceId String
+  fileName    String
+  status      ImportJobStatus @default(uploaded)
+  mapping     Json?
+  rowsTotal   Int             @default(0)
+  rowsAdded   Int             @default(0)
+  rowsHeld    Int             @default(0)
+  ownerId     String?
+  tag         String?
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @updatedAt
+  deletedAt   DateTime?
+
+  workspace Workspace    @relation(fields: [workspaceId], references: [id], onDelete: Restrict)
+  owner     User?        @relation("ImportJobOwner", fields: [ownerId], references: [id], onDelete: Restrict)
+  rows      ImportRow[]
+
+  @@index([workspaceId])
+  @@map("import_jobs")
+}
+
+model ImportRow {
+  id                  String         @id @default(uuid())
+  workspaceId         String
+  importJobId         String
+  rowNumber           Int
+  raw                 Json
+  status              ImportRowStatus
+  duplicateOfContactId String?
+  createdAt           DateTime       @default(now())
+  updatedAt           DateTime       @updatedAt
+  deletedAt           DateTime?
+
+  workspace          Workspace @relation(fields: [workspaceId], references: [id], onDelete: Restrict)
+  importJob          ImportJob @relation(fields: [importJobId], references: [id], onDelete: Restrict)
+  duplicateOfContact Contact?  @relation(fields: [duplicateOfContactId], references: [id], onDelete: Restrict)
+
+  @@index([workspaceId])
+  @@index([workspaceId, importJobId])
+  @@map("import_rows")
+}
+
+model AiInsight {
+  id                String         @id @default(uuid())
+  workspaceId       String
+  contactId         String
+  summary           String         @db.Text
+  nextStep          String         @db.Text
+  dataQualityScore  Decimal        @db.Decimal(5, 4)
+  missingFields     String[]       @default([])
+  status            AiInsightStatus @default(suggested)
+  createdAt         DateTime       @default(now())
+  updatedAt         DateTime       @updatedAt
+  deletedAt         DateTime?
+
+  workspace Workspace @relation(fields: [workspaceId], references: [id], onDelete: Restrict)
+  contact   Contact   @relation(fields: [contactId], references: [id], onDelete: Restrict)
+
+  @@index([workspaceId])
+  @@index([workspaceId, contactId])
+  @@map("ai_insights")
+}
+
+model CustomField {
+  id          String    @id @default(uuid())
+  workspaceId String
+  entity      String
+  key         String
+  label       String
+  type        String
+  options     Json?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  deletedAt   DateTime?
+
+  workspace Workspace @relation(fields: [workspaceId], references: [id], onDelete: Restrict)
+
+  @@unique([workspaceId, entity, key])
+  @@map("custom_fields")
+}
+
+model Setting {
+  id          String    @id @default(uuid())
+  workspaceId String
+  key         String
+  value       Json
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  deletedAt   DateTime?
+
+  workspace Workspace @relation(fields: [workspaceId], references: [id], onDelete: Restrict)
+
+  @@unique([workspaceId, key])
+  @@map("settings")
+}
+
+model Permission {
+  id          String    @id @default(uuid())
+  workspaceId String
+  role        Role
+  resource    String
+  actions     String[]
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  deletedAt   DateTime?
+
+  workspace Workspace @relation(fields: [workspaceId], references: [id], onDelete: Restrict)
+
+  @@unique([workspaceId, role, resource])
+  @@map("permissions")
 }

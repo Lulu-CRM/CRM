@@ -35,16 +35,16 @@ Rules: `@@map` uses snake_case plural table names, model names are PascalCase si
 | --- | --- |
 | Workspace | name, defaultCurrency, defaultLanguage |
 | User | name, email, language, role (`owner`, `admin`, `member`), workspaceId |
-| Contact | name, email, phone, companyId, jobRole, source, lifecycleStage, ownerId, tags, marketingConsent, consentUpdatedAt, lastTouchAt |
+| Contact | name, email, phone, companyId, jobRole, source, lifecycleStage, ownerId, tags, marketingConsent, consentUpdatedAt, lastTouchAt, customFields (JSON) |
 | Company | name, domain, industry, size, ownerId |
 | Pipeline | key, name, isDefault |
 | Stage | pipelineId, key, name, order, probability, type (`open`, `won`, `lost`) |
 | Deal | name, value (number), currency, stageId, probability, expectedCloseAt, contactId, companyId, ownerId, closedAt |
 | Task | title, dueAt, priority (`high`, `normal`, `low`), ownerId, done, doneAt, linked record |
 | Note | title, body, visibility (`shared`, `private`), authorId, linked record |
-| Activity | type, linked record, occurredAt, sourceModule, actorId, payload |
+| Activity | type, linked record, occurredAt, sourceModule, actorId, payload, summary |
 | Segment | name, description, rules (JSON), color |
-| ImportJob | fileName, status, mapping (JSON), rowsTotal, rowsAdded, rowsHeld, ownerId, tag |
+| ImportJob | fileName, status (`uploaded`, `mapped`, `processing`, `completed`, `failed`), mapping (JSON), rowsTotal, rowsAdded, rowsHeld, ownerId, tag |
 | ImportRow | importJobId, rowNumber, raw (JSON), status (`added`, `held`, `skipped`), duplicateOfContactId |
 | AiInsight | contactId, summary, nextStep, dataQualityScore, missingFields, status (`suggested`, `accepted`, `dismissed`) |
 | CustomField | entity, key, label, type, options |
@@ -73,7 +73,14 @@ Rules: `@@map` uses snake_case plural table names, model names are PascalCase si
 - **Consent.** `marketingConsent` and its timestamp are stored on the contact, and imported contacts inherit the workspace rules.
 - **Activity feed from other modules.** Email, Calendar and others create `Activity` rows through the event format in `docs/api.md`.
 - **User table exists now.** Created in `init_base` migration with `passwordHash String?` (nullable) so the login task needs no extra migration. `User.email` is **globally unique** (`@unique`, not per-workspace): login uses email alone, and a user belongs to exactly one workspace.
-- **Delete.** Soft delete everywhere. Permanent deletion is a later feature. The API enforces this: `scopedDb` converts every `delete` into `deletedAt = now()`.
+- **Delete.** Soft delete everywhere. Permanent deletion is a later feature. The API enforces this: `scopedDb` converts every `delete` into `deletedAt = now()`. All foreign keys are `onDelete: Restrict` in the schema, so a hard cascade can never remove rows behind the soft delete.
+- **Contact.customFields.** `Json` column defaulting to `{}` on Contact, so ST-1 custom field values have a place to live before the CustomField definition UI maps keys to types. The `CustomField` model defines the definitions; this column holds the values.
+- **Contact.source is a nullable String with no default.** Source values are open (`website_form`, `referral`, `email`, `import`, `marketplace`, `instagram`, plus custom), so the database assumes nothing; the API validates known values.
+- **ImportJobStatus enum values:** `uploaded`, `mapped`, `processing`, `completed`, `failed` — the import pipeline's five states (doc was silent).
+- **Decimal precision.** `Stage.probability` and `Deal.probability` are `Decimal(5,4)` (0 to 1, four decimals); `Deal.value` is `Decimal(14,2)`. The 0–1 range is validated in the API (Zod), not by a DB `CHECK` constraint — Prisma Migrate treats unknown checks as drift and would drop them in a later migration. Prisma returns `Decimal` columns as JS Decimal objects; the API serializes them per the money rule.
+- **Trigram search.** The migration creates `pg_trgm` and GIN trigram indexes on `lower(contacts.name)`, `lower(contacts.email)` and `lower(companies.name)` for case-insensitive search (the "text index" from the indexes section). Creating the extension needs a database user allowed to `CREATE EXTENSION`.
+- **Enum naming.** `Role` keeps its original DB type name (already migrated). New enums are mapped to snake_case DB type names with `@@map` (`lifecycle_stage`, `stage_type`, …).
+- **Linked record is polymorphic.** Task, Note and Activity store `recordType` + `recordId` (string id), not foreign keys — so there is no `ON DELETE` behavior to define and rows from other modules (Email, Calendar) can be linked without shared tables. `(workspaceId, recordType, recordId)` indexes back these lookups.
 
 ## Indexes to add early
 

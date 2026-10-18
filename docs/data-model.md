@@ -36,14 +36,14 @@ Rules: `@@map` uses snake_case plural table names, model names are PascalCase si
 | Workspace | name, defaultCurrency, defaultLanguage |
 | User | name, email, language, role (`owner`, `admin`, `member`), workspaceId |
 | Contact | name, email, phone, companyId, jobRole, source, lifecycleStage, ownerId, tags, marketingConsent, consentUpdatedAt, lastTouchAt, customFields (JSON) |
-| Company | name, domain, industry, size, ownerId |
+| Company | name, domain (bare host name, lower case), industry, size (`1-10`, `11-50`, `51-200`, `201+`), ownerId. Contact count, open deal value, last touch and health are computed, not stored |
 | Pipeline | key, name, isDefault |
 | Stage | pipelineId, key, name, order, probability, type (`open`, `won`, `lost`) |
 | Deal | name, value (number), currency, stageId, probability, expectedCloseAt, contactId, companyId, ownerId, closedAt |
 | Task | title, dueAt, priority (`high`, `normal`, `low`), ownerId, done, doneAt, linked record |
 | Note | title, body, visibility (`shared`, `private`), authorId, linked record |
 | Activity | type, linked record, occurredAt, sourceModule, actorId, payload, summary |
-| Segment | name, description, rules (JSON), color |
+| Segment | name, description, rules (JSON, format in `docs/api.md`), color (`violet`, `coral`, `blue`, `mint`, `peach`) |
 | ImportJob | fileName, status (`uploaded`, `mapped`, `processing`, `completed`, `failed`), mapping (JSON), rowsTotal, rowsAdded, rowsHeld, ownerId, tag |
 | ImportRow | importJobId, rowNumber, raw (JSON), status (`added`, `held`, `skipped`), duplicateOfContactId |
 | AiInsight | contactId, summary, nextStep, dataQualityScore, missingFields, status (`suggested`, `accepted`, `dismissed`) |
@@ -51,7 +51,7 @@ Rules: `@@map` uses snake_case plural table names, model names are PascalCase si
 | Setting | key, value (JSON): consent rules, notification rules, AI switches |
 | Permission | role, resource, actions |
 
-"Linked record" on Task, Note and Activity means `recordType` (`contact`, `company`, `deal`) plus `recordId`.
+"Linked record" on Task, Note and Activity means `recordType` (`contact`, `company`, `deal`) plus `recordId`. Both are set or both are `null`: a task can stand on its own, but a half link is rejected.
 
 ## Enums
 
@@ -81,6 +81,11 @@ Rules: `@@map` uses snake_case plural table names, model names are PascalCase si
 - **Trigram search.** The migration creates `pg_trgm` and GIN trigram indexes on `lower(contacts.name)`, `lower(contacts.email)` and `lower(companies.name)` for case-insensitive search (the "text index" from the indexes section). Creating the extension needs a database user allowed to `CREATE EXTENSION`.
 - **Enum naming.** `Role` keeps its original DB type name (already migrated). New enums are mapped to snake_case DB type names with `@@map` (`lifecycle_stage`, `stage_type`, …).
 - **Linked record is polymorphic.** Task, Note and Activity store `recordType` + `recordId` (string id), not foreign keys — so there is no `ON DELETE` behavior to define and rows from other modules (Email, Calendar) can be linked without shared tables. `(workspaceId, recordType, recordId)` indexes back these lookups.
+- **Due dates.** A due date picked without a time is stored at 12:00 UTC, so it stays on the same calendar day in every time zone we serve. Chips (`overdue`, `today`, `tomorrow`, `this_week`, `later`, `done`) are worked out by calendar day in the user's time zone (`dueKind` in `packages/shared`).
+- **Activities store facts, not sentences.** An activity has a `type` and a `payload` (for example `{ "taskId": "...", "action": "completed" }`). The UI builds the line from the translation files, so the timeline reads in the user's language. Only `summary` from other modules' events is free text.
+- **Ticking a task** sets `done` and `doneAt` and adds a `task` activity to the timeline (`action: completed`); unticking clears `doneAt` and adds `action: reopened`.
+- **Private notes.** A private note is seen, edited and deleted only by its author. Shared notes are seen and edited by everyone in the workspace. A note's link to a contact, company or deal can be changed after saving.
+- **Segments are rules, not lists.** A segment stores filter rules; its members are worked out when asked (`segmentMembers` in `packages/shared`). "Due today" for follow-ups uses UTC on the server until workspaces have a time zone.
 
 ## Indexes to add early
 

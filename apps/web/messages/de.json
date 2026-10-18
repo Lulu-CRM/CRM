@@ -28,6 +28,1075 @@
     "comingSoon": "Diese Seite folgt in Kürze",
     "language": "Sprache",
     "error": "Etwas ist schiefgelaufen",
-    "retry": "Erneut versuchen"
+    "retry": "Erneut versuchen",
+    "previous": "Vorherige Seite",
+    "next": "Nächste Seite",
+    "selectAll": "Alle auswählen",
+    "selectRow": "{name} auswählen",
+    "confirm": "Bestätigen",
+    "noResults": "Keine Ergebnisse"
+  },
+  "layout": {
+    "tagline": "Intelligenter Arbeitsbereich",
+    "workspace": "Arbeitsbereich",
+    "modules": "Module",
+    "active": "Aktiv",
+    "workspaceOwner": "Inhaber des Arbeitsbereichs",
+    "crm": "CRM",
+    "relationships": "Beziehungen",
+    "crmWorkspace": "CRM-Arbeitsbereich",
+    "aiTipTitle": "KI-bereiter Kontext",
+    "aiTipBody": "Jeder Datensatz kann die ganze Geschichte enthalten.",
+    "searchWorkspace": "Arbeitsbereich durchsuchen",
+    "help": "Hilfe",
+    "notifications": "Benachrichtigungen",
+    "menu": "Menü",
+    "openMenu": "Menü öffnen",
+    "closeMenu": "Menü schließen",
+    "breadcrumb": "Navigationspfad",
+    "profileMenu": "Profilmenü"
+  },
+  "modules": {
+    "onlinePresence": "Online-Präsenz",
+    "accounting": "Buchhaltung",
+    "email": "E-Mail",
+    "calendar": "Kalender",
+    "crm": "CRM",
+    "marketplace": "Marktplatz",
+    "workspaceSettings": "Einstellungen"
+  },
+  "pages": {
+    "eyebrow": "Lulu CRM · {page}",
+    "overview": {
+      "description": "Alle Beziehungen, Nachfassaktionen und Chancen an einem ruhigen Ort."
+    },
+    "contacts": {
+      "description": "Eine vollständige, nutzbare Quelle der Wahrheit für jede Beziehung."
+    },
+    "companies": {
+      "description": "Verstehen Sie die Menschen, den Kontext und den Wert hinter jedem Kunden."
+    },
+    "leads": {
+      "description": "Interesse qualifizieren und die richtigen Gespräche voranbringen."
+    },
+    "deals": {
+      "description": "Jede Chance, jeden Verantwortlichen und jeden nächsten Schritt im Blick."
+    },
+    "activities": {
+      "description": "Gespräche in sichtbare Nachverfolgung für das ganze Team verwandeln."
+    },
+    "notes": {
+      "description": "Entscheidungen und Kontext dort festhalten, wo das Team sie nutzen kann."
+    },
+    "segments": {
+      "description": "Gezielte Zielgruppen aus den Daten Ihres Arbeitsbereichs erstellen."
+    },
+    "import": {
+      "description": "Bestehende Beziehungen sicher und überprüfbar in Lulu importieren."
+    },
+    "ai": {
+      "description": "Lulu zeigt Kontext und nächste Schritte – die Kontrolle bleibt bei Ihnen."
+    },
+    "settings": {
+      "description": "Felder, Status, Rollen und Einwilligungsregeln für Ihren Arbeitsbereich festlegen."
+    }
+  },
+  "errors": {
+    "NETWORK_ERROR": "Server nicht erreichbar. Bitte Verbindung prüfen.",
+    "UNKNOWN_ERROR": "Etwas ist schiefgelaufen. Bitte erneut versuchen.",
+    "CONTACT_NOT_FOUND": "Kontakt nicht gefunden",
+    "DEAL_NOT_FOUND": "Deal nicht gefunden",
+    "VALIDATION_ERROR": "Einige Felder müssen geprüft werden",
+    "UNAUTHORIZED": "Bitte melden Sie sich erneut an",
+    "FORBIDDEN": "Dafür fehlt Ihnen die Berechtigung",
+    "TASK_NOT_FOUND": "Aufgabe nicht gefunden",
+    "STAGE_NOT_FOUND": "Phase nicht gefunden",
+    "STAGE_IN_OTHER_PIPELINE": "Diese Phase gehört zu einer anderen Pipeline",
+    "PIPELINE_NOT_FOUND": "Keine Pipeline gefunden",
+    "COMPANY_NOT_FOUND": "Unternehmen nicht gefunden",
+    "NOTE_NOT_FOUND": "Notiz nicht gefunden",
+    "RECORD_NOT_FOUND": "Der verknüpfte Datensatz existiert nicht mehr",
+    "SEGMENT_NOT_FOUND": "Segment nicht gefunden",
+    "IMPORT_NOT_FOUND": "Import nicht gefunden",
+    "IMPORT_EMPTY": "Die Datei enthält keine Zeilen zum Importieren",
+    "IMPORT_TOO_MANY_ROWS": "Die Datei hat mehr als 10.000 Zeilen. Teile sie auf und importiere die Teile.",
+    "IMPORT_ALREADY_STARTED": "Dieser Import wurde bereits gestartet",
+    "IMPORT_ROW_NOT_FOUND": "Diese Zeile wurde bereits erledigt",
+    "IMPORT_MOCK_CSV_ONLY": "Excel-Dateien liest der Server. Speichere die Tabelle im Mock-Modus zuerst als CSV.",
+    "IMPORT_FILE_UNREADABLE": "Diese Datei konnte nicht gelesen werden. Verwende eine CSV- oder XLSX-Datei.",
+    "CUSTOM_FIELD_NOT_FOUND": "Feld nicht gefunden",
+    "CUSTOM_FIELD_KEY_TAKEN": "Ein Feld mit diesem Namen gibt es bereits",
+    "STAGE_LOCKED": "Die Phasen Gewonnen und Verloren können nicht gelöscht werden",
+    "STAGE_IN_USE": "Verschiebe zuerst die Deals aus dieser Phase",
+    "AI_INSIGHT_NOT_FOUND": "Vorschlag nicht gefunden",
+    "AI_INSIGHT_CLOSED": "Dieser Vorschlag wurde bereits übernommen oder verworfen"
+  },
+  "contacts": {
+    "import": "Importieren",
+    "add": "Kontakt hinzufügen",
+    "searchPlaceholder": "Kontakte, Unternehmen oder Tags suchen",
+    "selected": "{count} ausgewählt",
+    "deleteSelected": "Auswahl löschen",
+    "filtersLabel": "Kontaktfilter",
+    "filters": {
+      "all": "Alle Kontakte",
+      "mine": "Meine Kontakte",
+      "followUp": "Nachfassen nötig",
+      "newThisMonth": "Neu in diesem Monat"
+    },
+    "noMatches": "Keine passenden Kontakte",
+    "noMatchesHint": "Versuchen Sie eine andere Suche oder einen anderen Filter.",
+    "empty": "Noch keine Kontakte",
+    "emptyHint": "Fügen Sie Ihren ersten Kontakt hinzu oder importieren Sie eine Liste.",
+    "showing": "{count} von {total, plural, one {# Kontakt} other {# Kontakten}}",
+    "deleted": "{count, plural, one {Kontakt gelöscht} other {# Kontakte gelöscht}}",
+    "deleteTitle": "{count, plural, one {Kontakt löschen?} other {# Kontakte löschen?}}",
+    "deleteOne": "{name} wird aus Ihren Kontakten entfernt.",
+    "deleteMany": "{count} Kontakte werden aus Ihren Kontakten entfernt.",
+    "columns": {
+      "contact": "Kontakt",
+      "company": "Unternehmen",
+      "status": "Status",
+      "owner": "Verantwortlich",
+      "lastTouch": "Letzter Kontakt",
+      "actions": "Aktionen"
+    },
+    "form": {
+      "eyebrow": "Neuer Kontakt",
+      "addTitle": "Eine Beziehung zu Lulu hinzufügen",
+      "editTitle": "Kontakt bearbeiten",
+      "name": "Vollständiger Name",
+      "email": "Geschäftliche E-Mail",
+      "phone": "Telefon",
+      "company": "Unternehmen",
+      "noCompany": "Kein Unternehmen",
+      "jobRole": "Rolle",
+      "stage": "Lebenszyklus-Phase",
+      "source": "Quelle",
+      "noSource": "Nicht festgelegt",
+      "owner": "Verantwortlich",
+      "tags": "Tags",
+      "tagsHint": "Tags mit Kommas trennen",
+      "created": "Kontakt hinzugefügt",
+      "updated": "Kontakt gespeichert",
+      "errors": {
+        "nameRequired": "Bitte einen Namen eingeben",
+        "emailInvalid": "Bitte eine gültige E-Mail-Adresse eingeben",
+        "ownerRequired": "Bitte einen Verantwortlichen wählen"
+      },
+      "editEyebrow": "Kontakt",
+      "namePlaceholder": "z. B. Jamie Morgan",
+      "emailPlaceholder": "name@firma.de",
+      "phonePlaceholder": "+49 ...",
+      "jobRolePlaceholder": "Rolle oder Abteilung",
+      "requiredHint": "Mit * markierte Felder sind Pflicht.",
+      "submit": "Kontakt anlegen"
+    },
+    "drawer": {
+      "eyebrow": "Kontaktprofil",
+      "email": "E-Mail",
+      "phone": "Telefon",
+      "owner": "Verantwortlich",
+      "source": "Quelle",
+      "tags": "Tags",
+      "converted": "Zum Kunden gemacht",
+      "sendEmail": "E-Mail",
+      "edit": "Kontakt bearbeiten",
+      "convert": "Zum Kunden machen",
+      "delete": "Kontakt löschen",
+      "timeline": "Beziehungskontext",
+      "noActivity": "Noch keine Aktivität",
+      "notes": "Geteilte Notizen",
+      "noNotes": "Noch keine Notizen",
+      "tasks": "Aufgaben",
+      "taskTitle": "Was ist zu tun?",
+      "taskDue": "Fällig am",
+      "cancel": "Abbrechen",
+      "saveTask": "Aufgabe hinzufügen",
+      "taskAdded": "Aufgabe hinzugefügt",
+      "noTasks": "Keine offenen Aufgaben",
+      "task": "Aufgabe",
+      "lastTouch": "Letzter Kontakt",
+      "timelineEyebrow": "Verlauf",
+      "tasksEyebrow": "Nachfassen",
+      "notesEyebrow": "Notizen"
+    },
+    "importContacts": "Kontakte importieren",
+    "openProfile": "{name} öffnen",
+    "moreFilters": {
+      "button": "Filter",
+      "status": "Status",
+      "owner": "Verantwortlich",
+      "any": "Alle",
+      "remove": "Filter {filter} entfernen"
+    }
+  },
+  "lifecycleStages": {
+    "new": "Neu",
+    "qualified": "Qualifiziert",
+    "follow_up": "Nachfassen",
+    "customer": "Kunde"
+  },
+  "sources": {
+    "website_form": "Website-Formular",
+    "referral": "Empfehlung",
+    "email": "E-Mail",
+    "import": "Import",
+    "marketplace": "Marktplatz",
+    "instagram": "Instagram"
+  },
+  "due": {
+    "overdue": "Überfällig",
+    "today": "Heute",
+    "tomorrow": "Morgen",
+    "done": "Erledigt"
+  },
+  "activities": {
+    "someone": "Jemand",
+    "titles": {
+      "email": "E-Mail erhalten",
+      "meeting": "Termin geplant",
+      "task": "Aufgabe aktualisiert",
+      "note": "Notiz hinzugefügt",
+      "ai_signal": "KI-Signal",
+      "created": "Kontakt angelegt",
+      "stage_changed": "Status geändert",
+      "task_completed": "Aufgabe erledigt",
+      "task_reopened": "Aufgabe wieder geöffnet"
+    },
+    "details": {
+      "task": "{actor} hat eine Nachfassaktion aktualisiert.",
+      "note": "{actor} hat eine Notiz hinzugefügt.",
+      "ai_signal": "Die Kaufabsicht ist gestiegen.",
+      "created": "Angelegt von {actor}.",
+      "stage_changed": "Geändert von {actor}.",
+      "email": "Eine Antwort ist per E-Mail eingegangen.",
+      "meeting": "Der Termin steht im Kalender.",
+      "task_completed": "{actor} hat eine Nachfassaktion erledigt.",
+      "task_reopened": "{actor} hat eine Nachfassaktion wieder geöffnet."
+    }
+  },
+  "time": {
+    "todayAt": "Heute, {time}",
+    "yesterdayAt": "Gestern, {time}",
+    "weekdayAt": "{day}, {time}"
+  },
+  "deals": {
+    "eyebrow": "Deal-Pipeline",
+    "title": "Chancen voranbringen.",
+    "intro": "Jeder Deal hat einen Verantwortlichen, einen Wert und einen nächsten Schritt.",
+    "addDeal": "Deal hinzufügen",
+    "boardView": "Board-Ansicht",
+    "tableView": "Tabellenansicht",
+    "stages": {
+      "new": "Neu",
+      "qualified": "Qualifiziert",
+      "proposal": "Angebot",
+      "negotiation": "Verhandlung",
+      "won": "Gewonnen",
+      "lost": "Verloren"
+    },
+    "summary": {
+      "openValue": "offener Wert",
+      "weightedValue": "gewichteter Wert",
+      "winRate": "Abschlussquote",
+      "activeDeals": "aktive Deals",
+      "averageClose": "bis zum Abschluss (Ø)",
+      "days": "{count, plural, one {# Tag} other {# Tage}}",
+      "otherCurrencies": "{count, plural, one {# offener Deal} other {# offene Deals}} in anderen Währungen nicht enthalten"
+    },
+    "column": {
+      "add": "Deal hinzufügen",
+      "addDeal": "Deal zu {stage} hinzufügen",
+      "empty": "Noch keine Deals"
+    },
+    "card": {
+      "likely": "{percent} wahrscheinlich",
+      "close": "Abschluss {date}",
+      "noCloseDate": "Kein Abschlussdatum",
+      "actions": "Aktionen für {name}",
+      "moveTo": "Verschieben nach"
+    },
+    "table": {
+      "deal": "Deal",
+      "contact": "Kontakt",
+      "stage": "Phase",
+      "value": "Wert",
+      "probability": "Wahrscheinlichkeit",
+      "close": "Erwarteter Abschluss",
+      "owner": "Verantwortlich",
+      "empty": "Noch keine Deals",
+      "emptyHint": "Füge deinen ersten Deal hinzu, um deine Pipeline zu starten."
+    },
+    "form": {
+      "newEyebrow": "Neuer Deal",
+      "newTitle": "Verkaufschance hinzufügen",
+      "editEyebrow": "Deal bearbeiten",
+      "editTitle": "Verkaufschance aktualisieren",
+      "name": "Name des Deals",
+      "namePlaceholder": "z. B. Northstar Jahres-Workspace",
+      "company": "Unternehmen",
+      "contact": "Kontakt",
+      "none": "Keine Angabe",
+      "value": "Wert",
+      "currency": "Währung",
+      "expectedClose": "Erwarteter Abschluss",
+      "stage": "Phase",
+      "owner": "Verantwortlich",
+      "hint": "Bei jedem Deal bleibt der nächste Schritt sichtbar.",
+      "create": "Deal anlegen",
+      "save": "Änderungen speichern",
+      "errors": {
+        "name": "Gib dem Deal einen Namen",
+        "value": "Gib einen Wert von 0 oder mehr ein",
+        "date": "Wähle ein gültiges Datum",
+        "invalid": "Prüfe dieses Feld"
+      }
+    },
+    "delete": {
+      "eyebrow": "Deal löschen",
+      "title": "{name} löschen?",
+      "body": "Der Deal wird aus der Pipeline und den Summen entfernt.",
+      "confirm": "Deal löschen"
+    },
+    "toast": {
+      "created": "Deal zur Pipeline hinzugefügt.",
+      "saved": "Deal aktualisiert.",
+      "deleted": "Deal gelöscht."
+    },
+    "dnd": {
+      "instructions": "Ziehe einen Deal in eine andere Phase oder verschiebe ihn über sein Menü.",
+      "picked": "{name} aufgenommen.",
+      "over": "{name} ist über {stage}.",
+      "dropped": "{name} nach {stage} verschoben.",
+      "cancelled": "Verschieben von {name} abgebrochen."
+    }
+  },
+  "overview": {
+    "import": "Importieren",
+    "addContact": "Kontakt hinzufügen",
+    "viewAll": "Alle anzeigen",
+    "stats": {
+      "contacts": "Alle Kontakte",
+      "contactsNoChange": "Noch keine Daten vom Vormonat",
+      "vsLastMonth": "ggü. Vormonat",
+      "pipeline": "Offene Pipeline",
+      "weighted": "gewichteter Wert",
+      "followUps": "Fällige Nachfassaktionen",
+      "dueToday": "heute fällig",
+      "signals": "KI-Signale",
+      "sinceMonday": "seit Montag"
+    },
+    "recent": {
+      "eyebrow": "Neueste Kontakte",
+      "title": "Beziehungen in Bewegung halten.",
+      "empty": "Noch keine Kontakte"
+    },
+    "pipeline": {
+      "eyebrow": "Pipeline-Überblick",
+      "title": "Was Aufmerksamkeit braucht.",
+      "open": "Deals & Pipeline öffnen",
+      "empty": "Keine offenen Deals",
+      "active": "{count, plural, one {# aktive Chance} other {# aktive Chancen}}",
+      "addDeal": "Deal hinzufügen"
+    },
+    "activity": {
+      "eyebrow": "Aktivitäten",
+      "title": "Das Team ist in Bewegung.",
+      "open": "Aktivitäten öffnen",
+      "empty": "Noch keine Aktivität"
+    }
+  },
+  "leads": {
+    "eyebrow": "Lead-Bereich",
+    "title": "Mit weniger Rätselraten qualifizieren.",
+    "intro": "Verschiebe einen Lead, wenn sich der Kontext ändert. Jede Karte zeigt den nächsten Schritt.",
+    "addLead": "Lead hinzufügen",
+    "column": {
+      "add": "Lead hinzufügen",
+      "addLead": "Lead zu {stage} hinzufügen",
+      "empty": "Keine Leads hier"
+    },
+    "card": {
+      "actions": "Aktionen für {name}",
+      "open": "Profil öffnen",
+      "moveTo": "Verschieben nach",
+      "noTouch": "Noch kein Kontakt"
+    },
+    "dnd": {
+      "instructions": "Ziehe einen Lead in eine andere Phase oder verschiebe ihn über sein Menü.",
+      "picked": "{name} aufgenommen.",
+      "over": "{name} ist über {stage}.",
+      "dropped": "{name} nach {stage} verschoben.",
+      "cancelled": "Verschieben von {name} abgebrochen."
+    }
+  },
+  "tasks": {
+    "eyebrow": "Aufgaben",
+    "title": "Nachverfolgung bleibt sichtbar.",
+    "newTask": "Neue Aufgabe",
+    "edit": "{title} bearbeiten",
+    "filters": {
+      "label": "Nach Fälligkeit filtern",
+      "all": "Alle",
+      "overdue": "Überfällig",
+      "today": "Heute",
+      "this_week": "Diese Woche",
+      "owner": "Verantwortlich",
+      "anyOwner": "Alle Verantwortlichen",
+      "showDone": "Erledigte anzeigen"
+    },
+    "empty": "Noch keine Aufgaben",
+    "emptyHint": "Lege eine Nachfassaktion an, damit nichts verloren geht.",
+    "noMatches": "Keine Aufgaben passen zu diesen Filtern",
+    "noMatchesHint": "Versuche einen anderen Verantwortlichen oder ein anderes Datum.",
+    "timeline": {
+      "eyebrow": "Aktivitätsverlauf",
+      "title": "Jeder Kontaktpunkt an einem Ort.",
+      "empty": "Noch keine Aktivität"
+    },
+    "priority": {
+      "high": "Hoch",
+      "normal": "Normal",
+      "low": "Niedrig"
+    },
+    "form": {
+      "newEyebrow": "Neue Aufgabe",
+      "newTitle": "Nachfassaktion anlegen",
+      "editEyebrow": "Aufgabe bearbeiten",
+      "editTitle": "Nachfassaktion aktualisieren",
+      "title": "Titel der Aufgabe",
+      "titlePlaceholder": "Was muss passieren?",
+      "related": "Bezogen auf",
+      "none": "Nichts",
+      "contacts": "Kontakte",
+      "companies": "Unternehmen",
+      "deals": "Deals",
+      "due": "Fällig am",
+      "owner": "Verantwortlich",
+      "priority": "Priorität",
+      "hint": "Jede Nachfassaktion hat einen Verantwortlichen und ein Datum.",
+      "create": "Aufgabe anlegen",
+      "created": "Aufgabe zu Aktivitäten hinzugefügt.",
+      "saved": "Aufgabe aktualisiert.",
+      "errors": {
+        "titleRequired": "Gib der Aufgabe einen Titel",
+        "ownerRequired": "Wähle einen Verantwortlichen"
+      }
+    }
+  },
+  "companies": {
+    "add": "Unternehmen hinzufügen",
+    "eyebrow": "Unternehmensverzeichnis",
+    "title": "Kunden mit Kontext.",
+    "intro": "Verbinden Sie Menschen, Pipeline und Geschäftshistorie mit jedem Unternehmen.",
+    "searchPlaceholder": "Unternehmen, Domains oder Branchen suchen",
+    "filtersLabel": "Unternehmensfilter",
+    "filters": {
+      "all": "Alle Unternehmen",
+      "mine": "Meine Unternehmen"
+    },
+    "noMatches": "Keine passenden Unternehmen",
+    "noMatchesHint": "Versuchen Sie eine andere Suche oder einen anderen Filter.",
+    "empty": "Noch keine Unternehmen",
+    "emptyHint": "Fügen Sie Ihr erstes Unternehmen hinzu, um Kontakte und Deals zu verbinden.",
+    "showing": "{count} von {total, plural, one {# Unternehmen} other {# Unternehmen}}",
+    "people": "{count, plural, one {# Kontakt} other {# Kontakte}}",
+    "pipelineValue": "Pipeline-Wert",
+    "otherCurrency": "+{count, plural, one {# Deal} other {# Deals}} in anderen Währungen",
+    "open": "{name} öffnen",
+    "sizeValue": "{size} Mitarbeitende",
+    "sortLabel": "Unternehmen sortieren",
+    "sort": {
+      "openDealValue": "Höchster Pipeline-Wert",
+      "name": "Name",
+      "contactCount": "Meiste Kontakte",
+      "lastTouchAt": "Zuletzt kontaktiert"
+    },
+    "health": {
+      "strong": "Stark",
+      "watch": "Beobachten",
+      "new": "Neu"
+    },
+    "deleted": "Unternehmen gelöscht",
+    "deleteTitle": "Unternehmen löschen?",
+    "deleteOne": "{name} wird entfernt. Kontakte und Deals bleiben im CRM.",
+    "form": {
+      "eyebrow": "Neues Unternehmen",
+      "editEyebrow": "Unternehmen",
+      "addTitle": "Unternehmen hinzufügen",
+      "editTitle": "Unternehmen bearbeiten",
+      "name": "Name des Unternehmens",
+      "namePlaceholder": "z. B. Northstar Studio",
+      "domain": "Domain",
+      "domainPlaceholder": "firma.de",
+      "industry": "Branche",
+      "industryPlaceholder": "z. B. Einzelhandel",
+      "size": "Unternehmensgröße",
+      "noSize": "Nicht festgelegt",
+      "owner": "Verantwortlich",
+      "requiredHint": "Mit * markierte Felder sind Pflichtfelder.",
+      "submit": "Unternehmen anlegen",
+      "created": "Unternehmen hinzugefügt",
+      "updated": "Unternehmen gespeichert",
+      "errors": {
+        "nameRequired": "Geben Sie einen Namen ein",
+        "domainInvalid": "Geben Sie eine Domain wie firma.de ein",
+        "ownerRequired": "Wählen Sie eine verantwortliche Person"
+      }
+    },
+    "drawer": {
+      "eyebrow": "Unternehmensprofil",
+      "domain": "Domain",
+      "industry": "Branche",
+      "size": "Unternehmensgröße",
+      "owner": "Verantwortlich",
+      "lastTouch": "Letzter Kontakt",
+      "pipelineValue": "Offene Pipeline",
+      "openDeals": "{count, plural, one {# offener Deal} other {# offene Deals}}",
+      "peopleEyebrow": "Personen",
+      "people": "Kontakte in diesem Unternehmen",
+      "noPeople": "Noch keine Kontakte verknüpft",
+      "dealsEyebrow": "Pipeline",
+      "deals": "Deals",
+      "noDeals": "Noch keine Deals",
+      "edit": "Unternehmen bearbeiten",
+      "delete": "Unternehmen löschen",
+      "website": "Website"
+    }
+  },
+  "notes": {
+    "add": "Notiz hinzufügen",
+    "eyebrow": "Notizen im Workspace",
+    "title": "Kontext, der nicht verloren geht.",
+    "intro": "Gemeinsame Entscheidungen und private Erinnerungen direkt bei den Beziehungen, zu denen sie gehören.",
+    "searchPlaceholder": "Notizen durchsuchen",
+    "open": "Notiz {title} öffnen",
+    "filters": {
+      "label": "Notizen anzeigen",
+      "all": "Alle",
+      "shared": "Geteilt",
+      "private": "Privat"
+    },
+    "visibility": {
+      "shared": "Geteilt",
+      "private": "Privat"
+    },
+    "linked": {
+      "contact": "Kontakt: {name}",
+      "company": "Firma: {name}",
+      "deal": "Deal: {name}"
+    },
+    "empty": "Noch keine Notizen",
+    "emptyHint": "Halte eine Entscheidung, Übergabe oder einen nächsten Schritt fest, damit das Team ihn später findet.",
+    "noMatches": "Keine passenden Notizen",
+    "noMatchesHint": "Versuche eine andere Suche oder zeige alle Notizen.",
+    "deleteTitle": "Diese Notiz löschen?",
+    "deleteMessage": "„{title}“ wird für alle entfernt, die sie sehen können.",
+    "deleted": "Notiz gelöscht.",
+    "form": {
+      "newEyebrow": "Neue Notiz",
+      "newTitle": "Kontext griffbereit halten",
+      "editEyebrow": "Notiz bearbeiten",
+      "editTitle": "Diese Notiz aktualisieren",
+      "title": "Titel",
+      "titlePlaceholder": "Was soll sich das Team merken?",
+      "body": "Notiz",
+      "bodyPlaceholder": "Entscheidung, Übergabe oder nächsten Schritt ergänzen",
+      "visibility": "Sichtbarkeit",
+      "related": "Verknüpft mit",
+      "none": "Nichts",
+      "contacts": "Kontakte",
+      "companies": "Firmen",
+      "deals": "Deals",
+      "hint": "Private Notizen siehst nur du.",
+      "create": "Notiz speichern",
+      "delete": "Notiz löschen",
+      "created": "Notiz im CRM-Workspace gespeichert.",
+      "saved": "Notiz aktualisiert.",
+      "errors": {
+        "titleRequired": "Gib der Notiz einen Titel",
+        "titleTooLong": "Der Titel darf höchstens 200 Zeichen haben",
+        "bodyTooLong": "Die Notiz darf höchstens 10.000 Zeichen haben"
+      }
+    }
+  },
+  "segments": {
+    "eyebrow": "Segmente",
+    "title": "Aus Daten wird Fokus.",
+    "intro": "Gespeicherte Zielgruppen bleiben aktuell, während sich dein Arbeitsbereich ändert.",
+    "create": "Segment erstellen",
+    "edit": "{name} bearbeiten",
+    "live": "{name} wird automatisch aktualisiert",
+    "viewContacts": "Kontakte ansehen",
+    "members": "{count, plural, one {# Kontakt} other {# Kontakte}}",
+    "empty": "Noch keine Segmente",
+    "emptyHint": "Erstelle ein Segment, damit eine Zielgruppe aktuell bleibt.",
+    "deleted": "Segment gelöscht",
+    "created": "Segment erstellt",
+    "saved": "Segment gespeichert",
+    "drawerEyebrow": "Segment",
+    "drawerEmpty": "Derzeit keine Kontakte in diesem Segment",
+    "rules": {
+      "or": "oder",
+      "lifecycleStage": {
+        "is": "Phase ist {value}",
+        "is_not": "Phase ist nicht {value}"
+      },
+      "ownerId": {
+        "is": "Verantwortlich ist {value}",
+        "is_not": "Verantwortlich ist nicht {value}"
+      },
+      "tag": {
+        "has": "Mit Tag {value}",
+        "has_not": "Ohne Tag {value}"
+      },
+      "marketingConsent": {
+        "granted": "Marketing-Einwilligung erteilt",
+        "notGranted": "Keine Marketing-Einwilligung"
+      },
+      "lastTouch": {
+        "within_days": "Letzter Kontakt in den letzten {days, plural, one {# Tag} other {# Tagen}}",
+        "older_than_days": "Letzter Kontakt vor mehr als {days, plural, one {# Tag} other {# Tagen}}",
+        "never": "Nie kontaktiert"
+      },
+      "followUp": {
+        "due": "Nachfassen heute oder früher fällig"
+      },
+      "openDeal": {
+        "exists": "Hat einen offenen Deal",
+        "none": "Kein offener Deal"
+      }
+    },
+    "fields": {
+      "lifecycleStage": "Phase",
+      "ownerId": "Verantwortlich",
+      "tag": "Tag",
+      "marketingConsent": "Marketing-Einwilligung",
+      "lastTouch": "Letzter Kontakt",
+      "followUp": "Nachfassen",
+      "openDeal": "Offener Deal"
+    },
+    "operators": {
+      "is": "ist",
+      "is_not": "ist nicht",
+      "has": "hat",
+      "has_not": "hat nicht",
+      "within_days": "in den letzten",
+      "older_than_days": "vor mehr als",
+      "never": "nie",
+      "due": "ist heute oder früher fällig",
+      "exists": "vorhanden",
+      "none": "nicht vorhanden"
+    },
+    "colours": {
+      "violet": "Violett",
+      "coral": "Koralle",
+      "blue": "Blau",
+      "mint": "Mint",
+      "peach": "Pfirsich"
+    },
+    "form": {
+      "newEyebrow": "Neues Segment",
+      "newTitle": "Segment erstellen",
+      "editEyebrow": "Segment bearbeiten",
+      "editTitle": "Segment aktualisieren",
+      "name": "Name",
+      "namePlaceholder": "z. B. Leads mit hoher Kaufabsicht",
+      "description": "Beschreibung",
+      "descriptionPlaceholder": "Wer gehört dazu und warum",
+      "colour": "Farbe",
+      "conditions": "Bedingungen",
+      "matchLabel": "Kontakte müssen",
+      "matchAll": "alle Bedingungen erfüllen",
+      "matchAny": "eine Bedingung erfüllen",
+      "field": "Feld",
+      "operator": "Bedingung",
+      "value": "Wert",
+      "days": "Tage",
+      "tagPlaceholder": "Tag-Name",
+      "consentGranted": "erteilt",
+      "consentNotGranted": "nicht erteilt",
+      "addCondition": "Bedingung hinzufügen",
+      "removeCondition": "Bedingung {number} entfernen",
+      "preview": "{count, plural, =0 {Noch keine passenden Kontakte} one {# Kontakt passt} other {# Kontakte passen}}",
+      "hint": "Segmente aktualisieren sich automatisch, wenn sich Kontakte ändern.",
+      "create": "Segment erstellen",
+      "delete": "Segment löschen",
+      "deleteTitle": "{name} löschen?",
+      "deleteBody": "Das Segment wird entfernt. Die Kontakte bleiben unverändert.",
+      "errors": {
+        "name": "Gib dem Segment einen Namen",
+        "condition": "Vervollständige oder entferne die markierte Bedingung"
+      }
+    }
+  },
+  "import": {
+    "eyebrow": "Kontaktimport",
+    "title": "Bringe deine Beziehungen zu Lulu.",
+    "intro": "Lade eine CSV- oder Excel-Datei hoch, ordne die Felder zu, prüfe Duplikate und bestätige erst, wenn alles stimmt.",
+    "stepsLabel": "Importschritte",
+    "steps": {
+      "upload": {
+        "title": "Hochladen",
+        "hint": "CSV oder XLSX"
+      },
+      "map": {
+        "title": "Felder zuordnen",
+        "hint": "Zuordnung prüfen"
+      },
+      "check": {
+        "title": "Qualität prüfen",
+        "hint": "Duplikate finden"
+      },
+      "confirm": {
+        "title": "Bestätigen",
+        "hint": "Kontakte speichern"
+      }
+    },
+    "upload": {
+      "drop": "CSV- oder Excel-Datei hier ablegen",
+      "limits": "CSV- und XLSX-Dateien bis {max} Zeilen",
+      "choose": "Datei auswählen",
+      "owner": "Standard-Verantwortlicher",
+      "tag": "Tag vergeben",
+      "tagPlaceholder": "z. B. Import 2026",
+      "duplicates": "Umgang mit Duplikaten",
+      "handling": {
+        "hold": "Zur Prüfung zurückhalten",
+        "skip": "Duplikate überspringen",
+        "update": "Bestehende Einträge aktualisieren"
+      },
+      "hint": "Du kannst die Feldzuordnung vor dem Import prüfen."
+    },
+    "map": {
+      "summary": "{rows, plural, one {# Zeile} other {# Zeilen}} · {fields, plural, one {# Feld} other {# Felder}} erkannt",
+      "ready": "Bereit zur Prüfung",
+      "source": "Quellspalte",
+      "field": "Lulu-Feld",
+      "example": "Beispiel",
+      "fieldFor": "Lulu-Feld für {column}",
+      "next": "Qualität prüfen",
+      "problems": {
+        "noName": "Ordne eine Spalte dem vollständigen Namen zu oder Vor- und Nachname.",
+        "fieldTwice": "Jedes Lulu-Feld kann nur eine Spalte aufnehmen."
+      }
+    },
+    "fields": {
+      "name": "Vollständiger Name",
+      "firstName": "Vorname",
+      "lastName": "Nachname",
+      "email": "E-Mail",
+      "phone": "Telefon",
+      "company": "Unternehmen",
+      "jobRole": "Rolle",
+      "source": "Quelle",
+      "lifecycleStage": "Lebenszyklus-Phase",
+      "tags": "Tags",
+      "ignore": "Spalte ignorieren"
+    },
+    "check": {
+      "tiles": {
+        "new": "Neue Kontakte",
+        "duplicates": "Mögliche Duplikate",
+        "problems": "Zeilen mit Problemen"
+      },
+      "duplicates": {
+        "hold": "{count, plural, one {# mögliches Duplikat wird zurückgehalten} other {# mögliche Duplikate werden zurückgehalten}}",
+        "skip": "{count, plural, one {# mögliches Duplikat wird übersprungen} other {# mögliche Duplikate werden übersprungen}}",
+        "update": "{count, plural, one {# bestehender Kontakt wird aktualisiert} other {# bestehende Kontakte werden aktualisiert}}"
+      },
+      "duplicatesHint": {
+        "hold": "Prüfe sie nach dem Import, ohne bestehende Daten zu überschreiben.",
+        "skip": "Sie werden ausgelassen. Bestehende Kontakte bleiben unverändert.",
+        "update": "Felder aus der Datei ersetzen die bestehenden Werte. Tags werden ergänzt."
+      },
+      "firstRows": "{count, plural, one {Erste Zeile} other {Erste # Zeilen}}",
+      "rowNew": "Neu",
+      "match": {
+        "email": "Gleiche E-Mail",
+        "nameAndCompany": "Gleicher Name und Firma"
+      },
+      "footer": "{count, plural, =0 {Es werden keine neuen Kontakte hinzugefügt.} one {# neuer Kontakt wird hinzugefügt.} other {# neue Kontakte werden hinzugefügt.}}",
+      "back": "Zurück",
+      "confirm": "Import bestätigen"
+    },
+    "problems": {
+      "nameMissing": "Kein Name",
+      "emailInvalid": "Ungültige E-Mail",
+      "stageUnknown": "Unbekannte Phase"
+    },
+    "running": "{count, plural, one {# Zeile wird} other {# Zeilen werden}} importiert. Du kannst die Seite verlassen; der Import läuft weiter.",
+    "done": {
+      "title": "Import abgeschlossen.",
+      "failed": "Der Import wurde abgebrochen.",
+      "counts": {
+        "added": "Hinzugefügt",
+        "updated": "Aktualisiert",
+        "held": "Zur Prüfung",
+        "skipped": "Übersprungen"
+      },
+      "again": "Weitere Datei importieren",
+      "viewContacts": "Kontakte ansehen",
+      "review": "{count, plural, one {# zurückgehaltenes Duplikat prüfen} other {# zurückgehaltene Duplikate prüfen}}"
+    },
+    "held": {
+      "title": "Zurückgehaltene Duplikate",
+      "intro": "Entscheide für jede Zeile. Nichts ändert sich, bevor du wählst.",
+      "empty": "Alle zurückgehaltenen Duplikate sind erledigt.",
+      "rowLabel": "Zeile {row}: {name}",
+      "imported": "Aus der Datei, Zeile {row}",
+      "existing": "Bereits in Lulu",
+      "match": {
+        "email": "Gleiche E-Mail wie ein bestehender Kontakt",
+        "nameAndCompany": "Gleicher Name und gleiche Firma wie ein bestehender Kontakt"
+      },
+      "actions": {
+        "skip": "Überspringen",
+        "create": "Als neuen Kontakt anlegen",
+        "merge": "Mit bestehendem zusammenführen"
+      },
+      "resolved": {
+        "skip": "Zeile übersprungen",
+        "create": "Als neuer Kontakt angelegt",
+        "merge": "Mit dem bestehenden Kontakt zusammengeführt"
+      }
+    },
+    "safe": {
+      "eyebrow": "Sicher von Anfang an",
+      "title": "Nichts ändert sich vor der Prüfung.",
+      "preview": "Jedes zugeordnete Feld vorab ansehen",
+      "hold": "Mögliche Duplikate zurückhalten",
+      "source": "Ursprüngliche Quelle behalten",
+      "owner": "Verantwortliche und Tags vergeben",
+      "consent": "Importierte Kontakte übernehmen die Datenschutz- und Einwilligungsregeln deines Arbeitsbereichs."
+    }
+  },
+  "settings": {
+    "eyebrow": "CRM-Einstellungen",
+    "title": "Der Arbeitsbereich, wie dein Team ihn braucht.",
+    "intro": "Die CRM-Konfiguration bleibt hier, die Datensätze bleiben für alle einfach.",
+    "protected": "Arbeitsbereich geschützt",
+    "back": "Alle Einstellungen",
+    "saved": "Einstellungen gespeichert",
+    "unsaved": "Du hast ungespeicherte Änderungen",
+    "readOnly": "Nur Inhaber und Admins können diese Einstellungen ändern. Du kannst sie ansehen.",
+    "sections": {
+      "fields": {
+        "title": "Eigene Kontaktfelder",
+        "copy": "Füge Felder hinzu wie bevorzugte Sprache, Kundenstufe oder Verlängerungsdatum.",
+        "action": "Felder verwalten"
+      },
+      "pipelines": {
+        "title": "Status und Pipelines",
+        "copy": "Passe Lebenszyklus-, Lead- und Deal-Phasen an die Arbeitsweise deines Teams an.",
+        "action": "Status konfigurieren"
+      },
+      "roles": {
+        "title": "Rollen und Berechtigungen",
+        "copy": "Lege fest, wer CRM-Datensätze sehen, bearbeiten, zuweisen oder löschen darf.",
+        "action": "Zugriff verwalten"
+      },
+      "consent": {
+        "title": "Einwilligung und Datenschutz",
+        "copy": "Kommunikationswünsche und Einwilligungsnachweise klar festhalten.",
+        "action": "Einwilligung prüfen"
+      },
+      "notifications": {
+        "title": "Benachrichtigungen",
+        "copy": "Lege fest, wer Hinweise zu Nachfassaktionen und Zuweisungen erhält.",
+        "action": "Benachrichtigungen festlegen"
+      }
+    },
+    "fields": {
+      "add": "Feld hinzufügen",
+      "empty": "Noch keine eigenen Felder",
+      "emptyHint": "Füge ein Feld hinzu, dann erscheint es bei jedem Kontakt.",
+      "eyebrow": "Eigenes Feld",
+      "addTitle": "Kontaktfeld hinzufügen",
+      "editTitle": "Feld bearbeiten",
+      "label": "Bezeichnung",
+      "labelPlaceholder": "z. B. Bevorzugte Sprache",
+      "type": "Typ",
+      "options": "Auswahlwerte",
+      "optionsPlaceholder": "Einer pro Zeile",
+      "types": {
+        "text": "Text",
+        "number": "Zahl",
+        "date": "Datum",
+        "select": "Auswahlliste",
+        "checkbox": "Ja / Nein"
+      },
+      "created": "Feld hinzugefügt",
+      "saved": "Feld gespeichert",
+      "deleted": "Feld gelöscht",
+      "editLabel": "{label} bearbeiten",
+      "deleteLabel": "{label} löschen",
+      "deleteTitle": "{label} löschen?",
+      "deleteBody": "Das Feld verschwindet bei den Kontakten. Bereits gespeicherte Werte bleiben im Verlauf erhalten.",
+      "errors": {
+        "label": "Gib dem Feld eine Bezeichnung",
+        "options": "Füge mindestens einen Auswahlwert hinzu"
+      }
+    },
+    "pipelines": {
+      "dealStages": "Deal-Phasen",
+      "dealStagesHint": "Benenne Phasen um, ordne sie neu oder füge welche hinzu. Jede Pipeline behält eine Phase Gewonnen und Verloren.",
+      "newStage": "Neue Phase",
+      "namePlaceholder": "z. B. Demo gebucht",
+      "probability": "Wahrscheinlichkeit %",
+      "add": "Phase hinzufügen",
+      "nameFor": "Name von {stage}",
+      "probabilityFor": "Wahrscheinlichkeit von {stage}",
+      "save": "Speichern",
+      "moveUp": "{stage} nach oben",
+      "moveDown": "{stage} nach unten",
+      "delete": "{stage} löschen",
+      "types": {
+        "won": "Gewonnen",
+        "lost": "Verloren"
+      },
+      "added": "Phase hinzugefügt",
+      "saved": "Phase gespeichert",
+      "moved": "Phase verschoben",
+      "deleted": "Phase gelöscht",
+      "lifecycle": "Lebenszyklus-Phasen",
+      "lifecycleHint": "Lead- und Kontaktphasen sind in jedem Arbeitsbereich gleich, damit Berichte und Importe vergleichbar bleiben."
+    },
+    "roles": {
+      "ownerNote": "Inhaber dürfen immer alles.",
+      "resource": "Datensätze",
+      "role": {
+        "admin": "Admin",
+        "member": "Mitglied"
+      },
+      "action": {
+        "view": "Ansehen",
+        "create": "Anlegen",
+        "edit": "Bearbeiten",
+        "delete": "Löschen"
+      },
+      "resources": {
+        "contacts": "Kontakte",
+        "companies": "Unternehmen",
+        "deals": "Deals",
+        "tasks": "Aufgaben",
+        "notes": "Notizen",
+        "segments": "Segmente",
+        "imports": "Importe",
+        "settings": "Einstellungen"
+      },
+      "cell": "{role} darf {resource} {action}"
+    },
+    "consent": {
+      "marketing": "Marketing braucht Einwilligung",
+      "marketingHint": "Marketing-E-Mails gehen nur an Kontakte, die zugestimmt haben.",
+      "evidence": "Herkunft der Einwilligung festhalten",
+      "evidenceHint": "Eine Änderung der Einwilligung fragt nach einer kurzen Notiz, z. B. Formular oder Anruf.",
+      "imported": "Importierte Kontakte",
+      "importedHint": "Was Kontakte aus einem Import erhalten.",
+      "importedOptions": {
+        "not_granted": "Keine Marketing-Einwilligung",
+        "granted": "Einwilligung erteilt (nur wenn deine Datei sie belegt)"
+      }
+    },
+    "notifications": {
+      "event": "Wann",
+      "channels": {
+        "inApp": "In der App",
+        "email": "E-Mail"
+      },
+      "cell": "{event}: {channel}",
+      "events": {
+        "taskAssigned": "Mir wird eine Aufgabe zugewiesen",
+        "taskDue": "Eine meiner Aufgaben ist fällig",
+        "dealAssigned": "Mir wird ein Deal zugewiesen",
+        "dealStageChanged": "Einer meiner Deals wechselt die Phase",
+        "leadAssigned": "Mir wird ein Lead zugewiesen",
+        "importFinished": "Mein Import ist fertig"
+      }
+    }
+  },
+  "aiAnalysis": {
+    "eyebrow": "Kontakt-Intelligenz",
+    "title": "Den besten nächsten Schritt verstehen.",
+    "intro": "Lulu prüft den Kontext in deinem Arbeitsbereich und hält Vorschläge nachvollziehbar.",
+    "badge": "KI-gestützt",
+    "pickContact": "Kontakt analysieren",
+    "run": "Analyse starten",
+    "running": "Wird analysiert…",
+    "noContacts": "Füge einen Kontakt hinzu, um ihn zu analysieren.",
+    "empty": "Noch keine Analyse",
+    "emptyHint": "Starte eine Analyse für eine Zusammenfassung, einen nächsten Schritt und eine Datenprüfung.",
+    "summary": "Beziehungsübersicht",
+    "nextStep": "Empfohlener nächster Schritt",
+    "quality": "Datenqualität",
+    "qualityScore": "{filled} von {total} Feldern ausgefüllt",
+    "missing": "Es fehlt: {fields}. Ergänze es im Kontaktprofil.",
+    "complete": "Alle wichtigen Felder sind ausgefüllt.",
+    "generatedAt": "Vorgeschlagen {time}. Nichts wird gespeichert, bevor du bestätigst.",
+    "status": {
+      "accepted": "Übernommen. Die gewählten Änderungen wurden gespeichert.",
+      "dismissed": "Verworfen. Nichts wurde gespeichert."
+    },
+    "dismiss": "Verwerfen",
+    "review": "Prüfen und speichern",
+    "dismissed": "Vorschlag verworfen",
+    "fields": {
+      "email": "E-Mail",
+      "phone": "Telefon",
+      "company": "Unternehmen",
+      "jobRole": "Rolle",
+      "source": "Quelle"
+    },
+    "accept": {
+      "eyebrow": "Bestätigen",
+      "title": "Vorschläge für {name} speichern?",
+      "intro": "Wähle, was gespeichert wird. Sonst ändert sich nichts.",
+      "createTask": "Nachfass-Aufgabe anlegen, fällig am {date}",
+      "taskTitle": "Titel der Aufgabe",
+      "applyStage": "Phase auf {stage} ändern",
+      "confirm": "Auswahl speichern",
+      "saved": "Gespeichert"
+    },
+    "controls": {
+      "eyebrow": "KI-Steuerung",
+      "title": "Menschen behalten die Kontrolle.",
+      "intro": "KI kann vorschlagen, zusammenfassen und priorisieren. Änderungen werden immer erst nach Bestätigung gespeichert.",
+      "analyzeNewActivity": {
+        "label": "Neue Aktivität analysieren",
+        "hint": "Hinweise vorschlagen, wenn neuer Kontext eintrifft"
+      },
+      "suggestFollowUps": {
+        "label": "Nachfassaktionen vorschlagen",
+        "hint": "Nächste Schritte in Kontakten anzeigen"
+      },
+      "autoUpdateFields": {
+        "label": "Feldänderungen vorauswählen",
+        "hint": "Feldänderungen sind im Bestätigungsschritt angehakt. Du bestätigst trotzdem jede."
+      },
+      "saved": "KI-Einstellung gespeichert",
+      "footnote": "Vorschläge kommen von einer simulierten KI, bis ein Modell angebunden ist."
+    },
+    "generated": {
+      "summaryCustomer": "{name} ist Kunde. Halte die Beziehung warm und achte auf die nächste Gelegenheit.",
+      "summaryDeal": "{name} arbeitet mit dir an {deal}. Der Deal ist noch offen, also zählt der Schwung.",
+      "summaryQuiet": "{name} ist still geworden: seit über 30 Tagen gab es keinen Kontakt.",
+      "summaryActive": "{name} ist aktiv: der letzte Kontakt war {days, plural, =0 {heute} one {gestern} other {vor # Tagen}}.",
+      "nextFinishTask": "Offene Nachfassaktion erledigen",
+      "nextFinishTaskDetail": "„{task}“ ist fällig. Schließe sie ab, bevor du den nächsten Schritt planst.",
+      "nextFollowUpDeal": "Beim Deal nachfassen",
+      "nextFollowUpDealDetail": "Prüfe den Stand von {deal} und vereinbart diese Woche den nächsten Schritt.",
+      "nextQualify": "Diesen Lead qualifizieren",
+      "nextQualifyDetail": "{name} war kürzlich in Kontakt. Ein kurzer Anruf klärt Bedarf, Budget und Zeitplan.",
+      "nextReconnect": "Wieder Kontakt aufnehmen",
+      "nextReconnectDetail": "Schicke {name} eine kurze, persönliche Nachricht, um das Gespräch wieder aufzunehmen.",
+      "nextCheckIn": "Kurzen Austausch planen",
+      "nextCheckInDetail": "Vereinbare einen kurzen Austausch mit {name}, damit es weitergeht.",
+      "taskFollowUpDeal": "Bei {name} zu {deal} nachfassen",
+      "taskQualify": "Qualifizierungsgespräch mit {name}",
+      "taskReconnect": "Wieder Kontakt mit {name} aufnehmen",
+      "taskCheckIn": "Kurzer Austausch mit {name}"
+    }
   }
 }

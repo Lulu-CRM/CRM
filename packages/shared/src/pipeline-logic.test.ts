@@ -52,7 +52,7 @@ describe("moveDeal", () => {
   });
 
   it("does not change the original deal", () => {
-    const before = structuredClone(demoDeals[0]);
+    const before = { ...demoDeals[0] };
     moveDeal(demoDeals[0], "stage_won", demoStages, NOW);
     expect(demoDeals[0]).toEqual(before);
   });

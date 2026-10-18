@@ -70,7 +70,7 @@ We plan with the devs who are active and have given their GitHub handle, and add
 | Sudais Jr. | Project manager, frontend | Create the GitHub organisation and repo, write `AGENTS.md`, then the Pipeline and Leads boards with drag and drop, Deals and Tasks | A deal moves between stages on the board in mock mode |
 | Abdul Samad | Frontend, supports the PM | App shell, routing, design tokens and i18n setup, then the Contacts page | Everyone can clone and run `apps/web` with mock data |
 | Tobi | Backend (Express) | API base, database schema with workspace id, login, then the Contacts and Companies endpoints | Others can run the API, log in with a test user and create a contact |
-| Second backend dev (waiting for one to join) | Backend | Deals, pipeline stages, Tasks and Activities endpoints | Moving a deal updates the pipeline totals |
+| Brobot | Backend | Deals, pipeline stages, Tasks and Activities endpoints | Moving a deal updates the pipeline totals |
 
 Task numbers for the backend (1 to 9) and frontend (A to D) are in the group message.
 
@@ -84,7 +84,7 @@ Task numbers for the backend (1 to 9) and frontend (A to D) are in the group mes
 
 ## Risks
 
-The biggest risk is a thin team: we are waiting for one more backend developer, and the CRM is the most important module, so we start now with the people we have.
+The biggest risk is a thin team: four devs for 11 pages, and the CRM is the most important module, so we ship the core first.
 
 | Risk | What we do |
 | --- | --- |
@@ -98,9 +98,15 @@ The biggest risk is a thin team: we are waiting for one more backend developer, 
 
 We keep building on the default below while we ask:
 
-- [ ] **Second backend dev:** we are waiting for one more to join. Until then Tobi starts backend tasks 1 to 5, and the rest are shared out when the new dev arrives.
+- [x] **Second backend dev:** Brobot joined and takes backend tasks 4 to 9; Tobi keeps 1 to 3.
 - [ ] **AI provider and key:** Sudais asks Dave. Until then AI Analysis runs on a simulated reply, so nothing is blocked.
 - [ ] **App shell:** ask Satyam whether his shell (login, sign-up, settings, language switch) is the base the CRM plugs into. Until then Tobi builds a simple login that can be swapped out.
+
+## Decisions from Dave (18 Oct)
+
+- **No agents this round.** We build the manual version: every change is made or confirmed by a person. AI Analysis stays as planned (simulated provider, accept or dismiss), which is not an agent.
+- **Currency.** Deal totals add up deals in the workspace's default currency; deals in other currencies are counted, not converted (`docs/data-model.md`).
+- **Still open:** company health (Strong, Watch, New) from the design is not in the data model, so it is left out until someone asks for it.
 
 ## First 48 hours
 

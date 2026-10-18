@@ -108,6 +108,117 @@
     "DEAL_NOT_FOUND": "Deal nicht gefunden",
     "VALIDATION_ERROR": "Einige Felder müssen geprüft werden",
     "UNAUTHORIZED": "Bitte melden Sie sich erneut an",
-    "FORBIDDEN": "Dafür fehlt Ihnen die Berechtigung"
+    "FORBIDDEN": "Dafür fehlt Ihnen die Berechtigung",
+    "TASK_NOT_FOUND": "Aufgabe nicht gefunden"
+  },
+  "contacts": {
+    "import": "Importieren",
+    "add": "Kontakt hinzufügen",
+    "searchPlaceholder": "Kontakte, Unternehmen oder Tags suchen",
+    "selected": "{count} ausgewählt",
+    "deleteSelected": "Auswahl löschen",
+    "filtersLabel": "Kontaktfilter",
+    "filters": {
+      "all": "Alle Kontakte",
+      "mine": "Meine Kontakte",
+      "followUp": "Nachfassen nötig",
+      "newThisMonth": "Neu in diesem Monat"
+    },
+    "noMatches": "Keine passenden Kontakte",
+    "noMatchesHint": "Versuchen Sie eine andere Suche oder einen anderen Filter.",
+    "empty": "Noch keine Kontakte",
+    "emptyHint": "Fügen Sie Ihren ersten Kontakt hinzu oder importieren Sie eine Liste.",
+    "showing": "{count} von {total, plural, one {# Kontakt} other {# Kontakten}}",
+    "deleted": "{count, plural, one {Kontakt gelöscht} other {# Kontakte gelöscht}}",
+    "deleteTitle": "{count, plural, one {Kontakt löschen?} other {# Kontakte löschen?}}",
+    "deleteOne": "{name} wird aus Ihren Kontakten entfernt.",
+    "deleteMany": "{count} Kontakte werden aus Ihren Kontakten entfernt.",
+    "columns": {
+      "contact": "Kontakt",
+      "company": "Unternehmen",
+      "status": "Status",
+      "owner": "Verantwortlich",
+      "lastTouch": "Letzter Kontakt"
+    },
+    "form": {
+      "eyebrow": "Kontakte",
+      "addTitle": "Kontakt hinzufügen",
+      "editTitle": "Kontakt bearbeiten",
+      "name": "Vollständiger Name",
+      "email": "E-Mail",
+      "phone": "Telefon",
+      "company": "Unternehmen",
+      "noCompany": "Kein Unternehmen",
+      "jobRole": "Position",
+      "stage": "Status",
+      "source": "Quelle",
+      "noSource": "Nicht festgelegt",
+      "owner": "Verantwortlich",
+      "tags": "Tags",
+      "tagsHint": "Tags mit Kommas trennen",
+      "created": "Kontakt hinzugefügt",
+      "updated": "Kontakt gespeichert",
+      "errors": {
+        "nameRequired": "Bitte einen Namen eingeben",
+        "emailInvalid": "Bitte eine gültige E-Mail-Adresse eingeben",
+        "ownerRequired": "Bitte einen Verantwortlichen wählen"
+      }
+    },
+    "drawer": {
+      "eyebrow": "Kontaktprofil",
+      "email": "E-Mail",
+      "phone": "Telefon",
+      "company": "Unternehmen",
+      "owner": "Verantwortlich",
+      "source": "Quelle",
+      "tags": "Tags",
+      "converted": "Zum Kunden gemacht",
+      "sendEmail": "E-Mail",
+      "edit": "Bearbeiten",
+      "convert": "Zum Kunden machen",
+      "delete": "Löschen",
+      "details": "Details",
+      "timeline": "Verlauf",
+      "noActivity": "Noch keine Aktivität",
+      "notes": "Notizen",
+      "noNotes": "Noch keine Notizen",
+      "tasks": "Aufgaben",
+      "addTask": "Aufgabe hinzufügen",
+      "taskTitle": "Was ist zu tun?",
+      "taskDue": "Fällig am",
+      "cancel": "Abbrechen",
+      "saveTask": "Aufgabe hinzufügen",
+      "taskAdded": "Aufgabe hinzugefügt",
+      "noTasks": "Keine offenen Aufgaben"
+    }
+  },
+  "lifecycleStages": {
+    "new": "Neu",
+    "qualified": "Qualifiziert",
+    "follow_up": "Nachfassen",
+    "customer": "Kunde"
+  },
+  "sources": {
+    "website_form": "Website-Formular",
+    "referral": "Empfehlung",
+    "email": "E-Mail",
+    "import": "Import",
+    "marketplace": "Marktplatz",
+    "instagram": "Instagram"
+  },
+  "due": {
+    "overdue": "Überfällig",
+    "today": "Heute",
+    "tomorrow": "Morgen"
+  },
+  "activities": {
+    "someone": "Jemand",
+    "email": "E-Mail erhalten",
+    "meeting": "Termin geplant",
+    "task": "{actor} hat eine Aufgabe aktualisiert",
+    "note": "{actor} hat eine Notiz hinzugefügt",
+    "ai_signal": "KI hat ein Kaufsignal erkannt",
+    "created": "{actor} hat diesen Kontakt angelegt",
+    "stage_changed": "{actor} hat den Status geändert"
   }
 }

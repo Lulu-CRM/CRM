@@ -108,6 +108,117 @@
     "DEAL_NOT_FOUND": "Deal not found",
     "VALIDATION_ERROR": "Some fields need attention",
     "UNAUTHORIZED": "Please sign in again",
-    "FORBIDDEN": "You don't have permission to do this"
+    "FORBIDDEN": "You don't have permission to do this",
+    "TASK_NOT_FOUND": "Task not found"
+  },
+  "contacts": {
+    "import": "Import",
+    "add": "Add contact",
+    "searchPlaceholder": "Search contacts, companies or tags",
+    "selected": "{count, plural, one {# selected} other {# selected}}",
+    "deleteSelected": "Delete selected",
+    "filtersLabel": "Contact filters",
+    "filters": {
+      "all": "All contacts",
+      "mine": "My contacts",
+      "followUp": "Needs follow-up",
+      "newThisMonth": "New this month"
+    },
+    "noMatches": "No contacts match",
+    "noMatchesHint": "Try another search or filter.",
+    "empty": "No contacts yet",
+    "emptyHint": "Add your first contact or import a list.",
+    "showing": "Showing {count} of {total, plural, one {# contact} other {# contacts}}",
+    "deleted": "{count, plural, one {Contact deleted} other {# contacts deleted}}",
+    "deleteTitle": "{count, plural, one {Delete contact?} other {Delete # contacts?}}",
+    "deleteOne": "{name} will be removed from your contacts.",
+    "deleteMany": "{count} contacts will be removed from your contacts.",
+    "columns": {
+      "contact": "Contact",
+      "company": "Company",
+      "status": "Status",
+      "owner": "Owner",
+      "lastTouch": "Last touch"
+    },
+    "form": {
+      "eyebrow": "Contacts",
+      "addTitle": "Add contact",
+      "editTitle": "Edit contact",
+      "name": "Full name",
+      "email": "Email",
+      "phone": "Phone",
+      "company": "Company",
+      "noCompany": "No company",
+      "jobRole": "Job title",
+      "stage": "Status",
+      "source": "Source",
+      "noSource": "Not set",
+      "owner": "Owner",
+      "tags": "Tags",
+      "tagsHint": "Separate tags with commas",
+      "created": "Contact added",
+      "updated": "Contact saved",
+      "errors": {
+        "nameRequired": "Enter a name",
+        "emailInvalid": "Enter a valid email address",
+        "ownerRequired": "Choose an owner"
+      }
+    },
+    "drawer": {
+      "eyebrow": "Contact profile",
+      "email": "Email",
+      "phone": "Phone",
+      "company": "Company",
+      "owner": "Owner",
+      "source": "Source",
+      "tags": "Tags",
+      "converted": "Converted to customer",
+      "sendEmail": "Email",
+      "edit": "Edit",
+      "convert": "Convert to customer",
+      "delete": "Delete",
+      "details": "Details",
+      "timeline": "Timeline",
+      "noActivity": "No activity yet",
+      "notes": "Notes",
+      "noNotes": "No notes yet",
+      "tasks": "Tasks",
+      "addTask": "Add task",
+      "taskTitle": "What needs to happen?",
+      "taskDue": "Due date",
+      "cancel": "Cancel",
+      "saveTask": "Add task",
+      "taskAdded": "Task added",
+      "noTasks": "No open tasks"
+    }
+  },
+  "lifecycleStages": {
+    "new": "New",
+    "qualified": "Qualified",
+    "follow_up": "Follow-up",
+    "customer": "Customer"
+  },
+  "sources": {
+    "website_form": "Website form",
+    "referral": "Referral",
+    "email": "Email",
+    "import": "Import",
+    "marketplace": "Marketplace",
+    "instagram": "Instagram"
+  },
+  "due": {
+    "overdue": "Overdue",
+    "today": "Today",
+    "tomorrow": "Tomorrow"
+  },
+  "activities": {
+    "someone": "Someone",
+    "email": "Email received",
+    "meeting": "Meeting scheduled",
+    "task": "{actor} updated a task",
+    "note": "{actor} added a note",
+    "ai_signal": "AI spotted a buying signal",
+    "created": "{actor} created this contact",
+    "stage_changed": "{actor} changed the status"
   }
 }

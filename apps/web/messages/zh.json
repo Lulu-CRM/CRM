@@ -108,6 +108,117 @@
     "DEAL_NOT_FOUND": "未找到交易",
     "VALIDATION_ERROR": "部分字段需要修改",
     "UNAUTHORIZED": "请重新登录",
-    "FORBIDDEN": "你没有执行此操作的权限"
+    "FORBIDDEN": "你没有执行此操作的权限",
+    "TASK_NOT_FOUND": "未找到任务"
+  },
+  "contacts": {
+    "import": "导入",
+    "add": "添加联系人",
+    "searchPlaceholder": "搜索联系人、公司或标签",
+    "selected": "已选 {count} 项",
+    "deleteSelected": "删除所选",
+    "filtersLabel": "联系人筛选",
+    "filters": {
+      "all": "全部联系人",
+      "mine": "我的联系人",
+      "followUp": "需要跟进",
+      "newThisMonth": "本月新增"
+    },
+    "noMatches": "没有匹配的联系人",
+    "noMatchesHint": "换个搜索词或筛选条件试试。",
+    "empty": "还没有联系人",
+    "emptyHint": "添加第一个联系人，或导入一份名单。",
+    "showing": "显示 {count} 个，共 {total} 个联系人",
+    "deleted": "{count, plural, one {联系人已删除} other {已删除 # 个联系人}}",
+    "deleteTitle": "{count, plural, one {删除联系人？} other {删除 # 个联系人？}}",
+    "deleteOne": "{name} 将从联系人中移除。",
+    "deleteMany": "{count} 个联系人将被移除。",
+    "columns": {
+      "contact": "联系人",
+      "company": "公司",
+      "status": "状态",
+      "owner": "负责人",
+      "lastTouch": "最近联系"
+    },
+    "form": {
+      "eyebrow": "联系人",
+      "addTitle": "添加联系人",
+      "editTitle": "编辑联系人",
+      "name": "姓名",
+      "email": "邮箱",
+      "phone": "电话",
+      "company": "公司",
+      "noCompany": "无公司",
+      "jobRole": "职位",
+      "stage": "状态",
+      "source": "来源",
+      "noSource": "未设置",
+      "owner": "负责人",
+      "tags": "标签",
+      "tagsHint": "多个标签用逗号分隔",
+      "created": "联系人已添加",
+      "updated": "联系人已保存",
+      "errors": {
+        "nameRequired": "请输入姓名",
+        "emailInvalid": "请输入有效的邮箱地址",
+        "ownerRequired": "请选择负责人"
+      }
+    },
+    "drawer": {
+      "eyebrow": "联系人资料",
+      "email": "邮箱",
+      "phone": "电话",
+      "company": "公司",
+      "owner": "负责人",
+      "source": "来源",
+      "tags": "标签",
+      "converted": "已转为客户",
+      "sendEmail": "发邮件",
+      "edit": "编辑",
+      "convert": "转为客户",
+      "delete": "删除",
+      "details": "详细信息",
+      "timeline": "动态",
+      "noActivity": "暂无动态",
+      "notes": "笔记",
+      "noNotes": "暂无笔记",
+      "tasks": "任务",
+      "addTask": "添加任务",
+      "taskTitle": "需要做什么？",
+      "taskDue": "截止日期",
+      "cancel": "取消",
+      "saveTask": "添加任务",
+      "taskAdded": "任务已添加",
+      "noTasks": "没有待办任务"
+    }
+  },
+  "lifecycleStages": {
+    "new": "新建",
+    "qualified": "已确认",
+    "follow_up": "待跟进",
+    "customer": "客户"
+  },
+  "sources": {
+    "website_form": "网站表单",
+    "referral": "推荐",
+    "email": "邮件",
+    "import": "导入",
+    "marketplace": "应用市场",
+    "instagram": "Instagram"
+  },
+  "due": {
+    "overdue": "已逾期",
+    "today": "今天",
+    "tomorrow": "明天"
+  },
+  "activities": {
+    "someone": "有人",
+    "email": "收到邮件",
+    "meeting": "已安排会议",
+    "task": "{actor} 更新了任务",
+    "note": "{actor} 添加了笔记",
+    "ai_signal": "AI 发现了购买意向",
+    "created": "{actor} 创建了此联系人",
+    "stage_changed": "{actor} 更改了状态"
   }
 }

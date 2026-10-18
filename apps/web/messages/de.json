@@ -109,9 +109,155 @@
     "VALIDATION_ERROR": "Einige Felder müssen geprüft werden",
     "UNAUTHORIZED": "Bitte melden Sie sich erneut an",
     "FORBIDDEN": "Dafür fehlt Ihnen die Berechtigung",
+    "TASK_NOT_FOUND": "Aufgabe nicht gefunden",
     "STAGE_NOT_FOUND": "Phase nicht gefunden",
     "STAGE_IN_OTHER_PIPELINE": "Diese Phase gehört zu einer anderen Pipeline",
     "PIPELINE_NOT_FOUND": "Keine Pipeline gefunden"
+  },
+  "contacts": {
+    "import": "Importieren",
+    "add": "Kontakt hinzufügen",
+    "searchPlaceholder": "Kontakte, Unternehmen oder Tags suchen",
+    "selected": "{count} ausgewählt",
+    "deleteSelected": "Auswahl löschen",
+    "filtersLabel": "Kontaktfilter",
+    "filters": {
+      "all": "Alle Kontakte",
+      "mine": "Meine Kontakte",
+      "followUp": "Nachfassen nötig",
+      "newThisMonth": "Neu in diesem Monat"
+    },
+    "noMatches": "Keine passenden Kontakte",
+    "noMatchesHint": "Versuchen Sie eine andere Suche oder einen anderen Filter.",
+    "empty": "Noch keine Kontakte",
+    "emptyHint": "Fügen Sie Ihren ersten Kontakt hinzu oder importieren Sie eine Liste.",
+    "showing": "{count} von {total, plural, one {# Kontakt} other {# Kontakten}}",
+    "deleted": "{count, plural, one {Kontakt gelöscht} other {# Kontakte gelöscht}}",
+    "deleteTitle": "{count, plural, one {Kontakt löschen?} other {# Kontakte löschen?}}",
+    "deleteOne": "{name} wird aus Ihren Kontakten entfernt.",
+    "deleteMany": "{count} Kontakte werden aus Ihren Kontakten entfernt.",
+    "columns": {
+      "contact": "Kontakt",
+      "company": "Unternehmen",
+      "status": "Status",
+      "owner": "Verantwortlich",
+      "lastTouch": "Letzter Kontakt",
+      "actions": "Aktionen"
+    },
+    "form": {
+      "eyebrow": "Neuer Kontakt",
+      "addTitle": "Eine Beziehung zu Lulu hinzufügen",
+      "editTitle": "Kontakt bearbeiten",
+      "name": "Vollständiger Name",
+      "email": "Geschäftliche E-Mail",
+      "phone": "Telefon",
+      "company": "Unternehmen",
+      "noCompany": "Kein Unternehmen",
+      "jobRole": "Rolle",
+      "stage": "Lebenszyklus-Phase",
+      "source": "Quelle",
+      "noSource": "Nicht festgelegt",
+      "owner": "Verantwortlich",
+      "tags": "Tags",
+      "tagsHint": "Tags mit Kommas trennen",
+      "created": "Kontakt hinzugefügt",
+      "updated": "Kontakt gespeichert",
+      "errors": {
+        "nameRequired": "Bitte einen Namen eingeben",
+        "emailInvalid": "Bitte eine gültige E-Mail-Adresse eingeben",
+        "ownerRequired": "Bitte einen Verantwortlichen wählen"
+      },
+      "editEyebrow": "Kontakt",
+      "namePlaceholder": "z. B. Jamie Morgan",
+      "emailPlaceholder": "name@firma.de",
+      "phonePlaceholder": "+49 ...",
+      "jobRolePlaceholder": "Rolle oder Abteilung",
+      "requiredHint": "Mit * markierte Felder sind Pflicht.",
+      "submit": "Kontakt anlegen"
+    },
+    "drawer": {
+      "eyebrow": "Kontaktprofil",
+      "email": "E-Mail",
+      "phone": "Telefon",
+      "owner": "Verantwortlich",
+      "source": "Quelle",
+      "tags": "Tags",
+      "converted": "Zum Kunden gemacht",
+      "sendEmail": "E-Mail",
+      "edit": "Kontakt bearbeiten",
+      "convert": "Zum Kunden machen",
+      "delete": "Kontakt löschen",
+      "timeline": "Beziehungskontext",
+      "noActivity": "Noch keine Aktivität",
+      "notes": "Geteilte Notizen",
+      "noNotes": "Noch keine Notizen",
+      "tasks": "Aufgaben",
+      "taskTitle": "Was ist zu tun?",
+      "taskDue": "Fällig am",
+      "cancel": "Abbrechen",
+      "saveTask": "Aufgabe hinzufügen",
+      "taskAdded": "Aufgabe hinzugefügt",
+      "noTasks": "Keine offenen Aufgaben",
+      "task": "Aufgabe",
+      "lastTouch": "Letzter Kontakt",
+      "timelineEyebrow": "Verlauf",
+      "tasksEyebrow": "Nachfassen",
+      "notesEyebrow": "Notizen"
+    },
+    "importContacts": "Kontakte importieren",
+    "openProfile": "{name} öffnen",
+    "moreFilters": {
+      "button": "Filter",
+      "status": "Status",
+      "owner": "Verantwortlich",
+      "any": "Alle",
+      "remove": "Filter {filter} entfernen"
+    }
+  },
+  "lifecycleStages": {
+    "new": "Neu",
+    "qualified": "Qualifiziert",
+    "follow_up": "Nachfassen",
+    "customer": "Kunde"
+  },
+  "sources": {
+    "website_form": "Website-Formular",
+    "referral": "Empfehlung",
+    "email": "E-Mail",
+    "import": "Import",
+    "marketplace": "Marktplatz",
+    "instagram": "Instagram"
+  },
+  "due": {
+    "overdue": "Überfällig",
+    "today": "Heute",
+    "tomorrow": "Morgen"
+  },
+  "activities": {
+    "someone": "Jemand",
+    "titles": {
+      "email": "E-Mail erhalten",
+      "meeting": "Termin geplant",
+      "task": "Aufgabe aktualisiert",
+      "note": "Notiz hinzugefügt",
+      "ai_signal": "KI-Signal",
+      "created": "Kontakt angelegt",
+      "stage_changed": "Status geändert"
+    },
+    "details": {
+      "task": "{actor} hat eine Nachfassaktion aktualisiert.",
+      "note": "{actor} hat eine Notiz hinzugefügt.",
+      "ai_signal": "Die Kaufabsicht ist gestiegen.",
+      "created": "Angelegt von {actor}.",
+      "stage_changed": "Geändert von {actor}.",
+      "email": "Eine Antwort ist per E-Mail eingegangen.",
+      "meeting": "Der Termin steht im Kalender."
+    }
+  },
+  "time": {
+    "todayAt": "Heute, {time}",
+    "yesterdayAt": "Gestern, {time}",
+    "weekdayAt": "{day}, {time}"
   },
   "deals": {
     "eyebrow": "Deal-Pipeline",

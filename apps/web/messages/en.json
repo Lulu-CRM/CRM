@@ -109,9 +109,155 @@
     "VALIDATION_ERROR": "Some fields need attention",
     "UNAUTHORIZED": "Please sign in again",
     "FORBIDDEN": "You don't have permission to do this",
+    "TASK_NOT_FOUND": "Task not found",
     "STAGE_NOT_FOUND": "Stage not found",
     "STAGE_IN_OTHER_PIPELINE": "That stage belongs to another pipeline",
     "PIPELINE_NOT_FOUND": "No pipeline found"
+  },
+  "contacts": {
+    "import": "Import",
+    "add": "Add contact",
+    "searchPlaceholder": "Search contacts, companies or tags",
+    "selected": "{count, plural, one {# selected} other {# selected}}",
+    "deleteSelected": "Delete selected",
+    "filtersLabel": "Contact filters",
+    "filters": {
+      "all": "All contacts",
+      "mine": "My contacts",
+      "followUp": "Needs follow-up",
+      "newThisMonth": "New this month"
+    },
+    "noMatches": "No contacts match",
+    "noMatchesHint": "Try another search or filter.",
+    "empty": "No contacts yet",
+    "emptyHint": "Add your first contact or import a list.",
+    "showing": "Showing {count} of {total, plural, one {# contact} other {# contacts}}",
+    "deleted": "{count, plural, one {Contact deleted} other {# contacts deleted}}",
+    "deleteTitle": "{count, plural, one {Delete contact?} other {Delete # contacts?}}",
+    "deleteOne": "{name} will be removed from your contacts.",
+    "deleteMany": "{count} contacts will be removed from your contacts.",
+    "columns": {
+      "contact": "Contact",
+      "company": "Company",
+      "status": "Status",
+      "owner": "Owner",
+      "lastTouch": "Last touch",
+      "actions": "Actions"
+    },
+    "form": {
+      "eyebrow": "New contact",
+      "addTitle": "Add a relationship to Lulu",
+      "editTitle": "Edit contact",
+      "name": "Full name",
+      "email": "Work email",
+      "phone": "Phone",
+      "company": "Company",
+      "noCompany": "No company",
+      "jobRole": "Role",
+      "stage": "Lifecycle stage",
+      "source": "Source",
+      "noSource": "Not set",
+      "owner": "Owner",
+      "tags": "Tags",
+      "tagsHint": "Separate tags with commas",
+      "created": "Contact added",
+      "updated": "Contact saved",
+      "errors": {
+        "nameRequired": "Enter a name",
+        "emailInvalid": "Enter a valid email address",
+        "ownerRequired": "Choose an owner"
+      },
+      "editEyebrow": "Contact",
+      "namePlaceholder": "e.g. Jamie Morgan",
+      "emailPlaceholder": "name@company.com",
+      "phonePlaceholder": "+49 ...",
+      "jobRolePlaceholder": "Role or department",
+      "requiredHint": "Fields marked * are required.",
+      "submit": "Create contact"
+    },
+    "drawer": {
+      "eyebrow": "Contact profile",
+      "email": "Email",
+      "phone": "Phone",
+      "owner": "Owner",
+      "source": "Source",
+      "tags": "Tags",
+      "converted": "Converted to customer",
+      "sendEmail": "Email",
+      "edit": "Edit contact",
+      "convert": "Convert to customer",
+      "delete": "Delete contact",
+      "timeline": "Relationship context",
+      "noActivity": "No activity yet",
+      "notes": "Shared notes",
+      "noNotes": "No notes yet",
+      "tasks": "Tasks",
+      "taskTitle": "What needs to happen?",
+      "taskDue": "Due date",
+      "cancel": "Cancel",
+      "saveTask": "Add task",
+      "taskAdded": "Task added",
+      "noTasks": "No open tasks",
+      "task": "Task",
+      "lastTouch": "Last touch",
+      "timelineEyebrow": "Timeline",
+      "tasksEyebrow": "Follow-ups",
+      "notesEyebrow": "Notes"
+    },
+    "importContacts": "Import contacts",
+    "openProfile": "Open {name}",
+    "moreFilters": {
+      "button": "Filter",
+      "status": "Status",
+      "owner": "Owner",
+      "any": "Any",
+      "remove": "Remove filter {filter}"
+    }
+  },
+  "lifecycleStages": {
+    "new": "New",
+    "qualified": "Qualified",
+    "follow_up": "Follow-up",
+    "customer": "Customer"
+  },
+  "sources": {
+    "website_form": "Website form",
+    "referral": "Referral",
+    "email": "Email",
+    "import": "Import",
+    "marketplace": "Marketplace",
+    "instagram": "Instagram"
+  },
+  "due": {
+    "overdue": "Overdue",
+    "today": "Today",
+    "tomorrow": "Tomorrow"
+  },
+  "activities": {
+    "someone": "Someone",
+    "titles": {
+      "email": "Email received",
+      "meeting": "Meeting scheduled",
+      "task": "Task updated",
+      "note": "Note added",
+      "ai_signal": "AI signal",
+      "created": "Contact created",
+      "stage_changed": "Status changed"
+    },
+    "details": {
+      "task": "{actor} updated a follow-up.",
+      "note": "{actor} added a note.",
+      "ai_signal": "Buying intent increased.",
+      "created": "Added by {actor}.",
+      "stage_changed": "Changed by {actor}.",
+      "email": "A reply came in through Email.",
+      "meeting": "The call is on the calendar."
+    }
+  },
+  "time": {
+    "todayAt": "Today, {time}",
+    "yesterdayAt": "Yesterday, {time}",
+    "weekdayAt": "{day}, {time}"
   },
   "deals": {
     "eyebrow": "Deal pipeline",

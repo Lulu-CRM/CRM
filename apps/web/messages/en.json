@@ -112,7 +112,8 @@
     "TASK_NOT_FOUND": "Task not found",
     "STAGE_NOT_FOUND": "Stage not found",
     "STAGE_IN_OTHER_PIPELINE": "That stage belongs to another pipeline",
-    "PIPELINE_NOT_FOUND": "No pipeline found"
+    "PIPELINE_NOT_FOUND": "No pipeline found",
+    "COMPANY_NOT_FOUND": "Company not found"
   },
   "contacts": {
     "import": "Import",
@@ -431,6 +432,86 @@
         "titleRequired": "Give the task a title",
         "ownerRequired": "Choose an owner"
       }
+    }
+  },
+  "companies": {
+    "add": "Add company",
+    "eyebrow": "Company directory",
+    "title": "Accounts with context.",
+    "intro": "Connect people, pipeline and commercial history around each company.",
+    "searchPlaceholder": "Search companies, domains or industries",
+    "filtersLabel": "Company filters",
+    "filters": {
+      "all": "All companies",
+      "mine": "My companies"
+    },
+    "noMatches": "No companies match",
+    "noMatchesHint": "Try another search or filter.",
+    "empty": "No companies yet",
+    "emptyHint": "Add your first account to connect its people and deals.",
+    "showing": "Showing {count} of {total, plural, one {# company} other {# companies}}",
+    "people": "{count, plural, one {# contact} other {# contacts}}",
+    "pipelineValue": "Pipeline value",
+    "otherCurrency": "+{count, plural, one {# deal} other {# deals}} in other currencies",
+    "open": "Open {name}",
+    "sizeValue": "{size} employees",
+    "sortLabel": "Sort companies",
+    "sort": {
+      "openDealValue": "Highest pipeline value",
+      "name": "Name",
+      "contactCount": "Most contacts",
+      "lastTouchAt": "Recently touched"
+    },
+    "health": {
+      "strong": "Strong",
+      "watch": "Watch",
+      "new": "New"
+    },
+    "deleted": "Company deleted",
+    "deleteTitle": "Delete company?",
+    "deleteOne": "{name} will be removed. Its contacts and deals stay in the CRM.",
+    "form": {
+      "eyebrow": "New company",
+      "editEyebrow": "Company",
+      "addTitle": "Add an account",
+      "editTitle": "Edit company",
+      "name": "Company name",
+      "namePlaceholder": "e.g. Northstar Studio",
+      "domain": "Domain",
+      "domainPlaceholder": "company.com",
+      "industry": "Industry",
+      "industryPlaceholder": "e.g. Retail",
+      "size": "Company size",
+      "noSize": "Not set",
+      "owner": "Owner",
+      "requiredHint": "Fields marked * are required.",
+      "submit": "Create company",
+      "created": "Company added",
+      "updated": "Company saved",
+      "errors": {
+        "nameRequired": "Enter a company name",
+        "domainInvalid": "Enter a domain like company.com",
+        "ownerRequired": "Choose an owner"
+      }
+    },
+    "drawer": {
+      "eyebrow": "Company profile",
+      "domain": "Domain",
+      "industry": "Industry",
+      "size": "Company size",
+      "owner": "Owner",
+      "lastTouch": "Last touch",
+      "pipelineValue": "Open pipeline",
+      "openDeals": "{count, plural, one {# open deal} other {# open deals}}",
+      "peopleEyebrow": "People",
+      "people": "Contacts at this company",
+      "noPeople": "No contacts linked yet",
+      "dealsEyebrow": "Pipeline",
+      "deals": "Deals",
+      "noDeals": "No deals yet",
+      "edit": "Edit company",
+      "delete": "Delete company",
+      "website": "Website"
     }
   }
 }

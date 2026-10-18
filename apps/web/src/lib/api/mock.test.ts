@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { contactSchema, dealSchema, dealSummarySchema, noteSchema } from "@lulu/shared";
+import { contactSchema, dealSchema, dealSummarySchema, segmentListItemSchema, noteSchema } from "@lulu/shared";
 
 // Fresh copy of the in-memory data for every test.
 let mockApi: typeof import("./mock").mockApi;
@@ -154,5 +154,41 @@ describe("mock overview", () => {
     const before = overviewSchema.parse(await mockApi.overview());
     await mockApi.contacts.create({ name: "New Person" });
     expect((await mockApi.overview()).contactCount).toBe(before.contactCount + 1);
+  });
+});
+
+describe("mock segments", () => {
+  it("lists segments with live member counts", async () => {
+    const { data } = await mockApi.segments.list();
+    expect(data.map((s) => s.name)).toContain("High-intent leads");
+    data.forEach((s) => segmentListItemSchema.parse(s));
+  });
+
+  it("creates, edits, lists members and soft deletes", async () => {
+    const segment = await mockApi.segments.create({
+      name: "Alex's people",
+      rules: { match: "all", conditions: [{ field: "ownerId", op: "is", value: "user_alex" }] },
+    });
+    expect(segment.color).toBe("violet");
+    expect((await mockApi.segments.contacts(segment.id)).data.map((c) => c.name).sort()).toEqual(["Elena Schmidt", "Mila Rossi"]);
+
+    await mockApi.segments.update(segment.id, {
+      rules: { match: "all", conditions: [{ field: "ownerId", op: "is", value: "user_jamie" }] },
+    });
+    expect((await mockApi.segments.contacts(segment.id)).meta.total).toBe(3);
+
+    await mockApi.segments.remove(segment.id);
+    await expect(mockApi.segments.contacts(segment.id)).rejects.toMatchObject({ code: "SEGMENT_NOT_FOUND" });
+  });
+
+  it("counts change when a matching contact is added", async () => {
+    const segment = await mockApi.segments.create({
+      name: "New leads",
+      rules: { match: "all", conditions: [{ field: "lifecycleStage", op: "is", value: "new" }] },
+    });
+    const count = async () => (await mockApi.segments.list()).data.find((s) => s.id === segment.id)!.memberCount;
+    const before = await count();
+    await mockApi.contacts.create({ name: "Ada Lovelace" });
+    expect(await count()).toBe(before + 1);
   });
 });

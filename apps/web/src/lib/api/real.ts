@@ -26,6 +26,11 @@ import {
   type TaskUpdateInput,
   type DealCreateInput,
   type DealUpdateInput,
+  segmentListItemSchema,
+  segmentSchema,
+  type ListQuery,
+  type SegmentCreateInput,
+  type SegmentUpdateInput,
 } from "@lulu/shared";
 import { getList, getOne, remove, write } from "./http";
 
@@ -71,6 +76,14 @@ export const realApi = {
   },
 
   overview: () => getOne(overviewSchema, "/overview"),
+
+  segments: {
+    list: () => getList(segmentListItemSchema, "/segments", { pageSize: 100 }),
+    create: (input: SegmentCreateInput) => write(segmentSchema, "POST", "/segments", input),
+    update: (id: string, input: SegmentUpdateInput) => write(segmentSchema, "PATCH", `/segments/${id}`, input),
+    remove: (id: string) => remove(`/segments/${id}`),
+    contacts: (id: string, query: Partial<ListQuery> = {}) => getList(contactSchema, `/segments/${id}/contacts`, query),
+  },
 
   pipelines: () => getOne(z.array(pipelineWithStagesSchema), "/pipelines"),
 

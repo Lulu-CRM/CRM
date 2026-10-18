@@ -115,7 +115,8 @@
     "PIPELINE_NOT_FOUND": "未找到管道",
     "COMPANY_NOT_FOUND": "未找到公司",
     "NOTE_NOT_FOUND": "未找到笔记",
-    "RECORD_NOT_FOUND": "关联的记录已不存在"
+    "RECORD_NOT_FOUND": "关联的记录已不存在",
+    "SEGMENT_NOT_FOUND": "未找到分组"
   },
   "contacts": {
     "import": "导入",
@@ -604,6 +605,116 @@
         "titleRequired": "请为笔记添加标题",
         "titleTooLong": "标题不能超过 200 个字符",
         "bodyTooLong": "笔记不能超过 10,000 个字符"
+      }
+    }
+  },
+  "segments": {
+    "eyebrow": "客户分组",
+    "title": "让数据聚焦重点。",
+    "intro": "已保存的受众会随工作区的变化自动更新。",
+    "create": "创建分组",
+    "edit": "编辑 {name}",
+    "live": "{name} 正在自动更新",
+    "viewContacts": "查看联系人",
+    "members": "{count} 个联系人",
+    "empty": "还没有分组",
+    "emptyHint": "创建一个分组，让受众保持最新。",
+    "deleted": "分组已删除",
+    "created": "分组已创建",
+    "saved": "分组已保存",
+    "drawerEyebrow": "分组",
+    "drawerEmpty": "此分组目前没有联系人",
+    "rules": {
+      "or": "或",
+      "lifecycleStage": {
+        "is": "阶段为{value}",
+        "is_not": "阶段不是{value}"
+      },
+      "ownerId": {
+        "is": "负责人为 {value}",
+        "is_not": "负责人不是 {value}"
+      },
+      "tag": {
+        "has": "带有标签 {value}",
+        "has_not": "没有标签 {value}"
+      },
+      "marketingConsent": {
+        "granted": "已同意营销",
+        "notGranted": "未同意营销"
+      },
+      "lastTouch": {
+        "within_days": "最近 {days} 天内有联系",
+        "older_than_days": "超过 {days} 天未联系",
+        "never": "从未联系"
+      },
+      "followUp": {
+        "due": "跟进今天或更早到期"
+      },
+      "openDeal": {
+        "exists": "有进行中的交易",
+        "none": "没有进行中的交易"
+      }
+    },
+    "fields": {
+      "lifecycleStage": "阶段",
+      "ownerId": "负责人",
+      "tag": "标签",
+      "marketingConsent": "营销同意",
+      "lastTouch": "最近联系",
+      "followUp": "跟进",
+      "openDeal": "进行中的交易"
+    },
+    "operators": {
+      "is": "是",
+      "is_not": "不是",
+      "has": "包含",
+      "has_not": "不包含",
+      "within_days": "最近",
+      "older_than_days": "超过",
+      "never": "从未",
+      "due": "今天或更早到期",
+      "exists": "有",
+      "none": "没有"
+    },
+    "colours": {
+      "violet": "紫色",
+      "coral": "珊瑚色",
+      "blue": "蓝色",
+      "mint": "薄荷绿",
+      "peach": "桃色"
+    },
+    "form": {
+      "newEyebrow": "新分组",
+      "newTitle": "创建分组",
+      "editEyebrow": "编辑分组",
+      "editTitle": "更新此分组",
+      "name": "名称",
+      "namePlaceholder": "例如：高意向潜在客户",
+      "description": "描述",
+      "descriptionPlaceholder": "哪些人属于这里，以及原因",
+      "colour": "颜色",
+      "conditions": "条件",
+      "matchLabel": "联系人需要",
+      "matchAll": "满足全部条件",
+      "matchAny": "满足任一条件",
+      "field": "字段",
+      "operator": "条件",
+      "value": "值",
+      "days": "天",
+      "tagPlaceholder": "标签名称",
+      "consentGranted": "已同意",
+      "consentNotGranted": "未同意",
+      "addCondition": "添加条件",
+      "removeCondition": "移除条件 {number}",
+      "preview": "{count, plural, =0 {暂无匹配的联系人} other {# 个联系人匹配}}",
+      "hint": "联系人变化时，分组会自动更新。",
+      "create": "创建分组",
+      "delete": "删除分组",
+      "deleteTitle": "删除 {name}？",
+      "deleteBody": "分组将被删除，其中的联系人保持不变。",
+      "errors": {
+        "name": "请输入分组名称",
+        "condition": "请完善或移除标出的条件"
       }
     }
   }

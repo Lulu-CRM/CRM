@@ -115,7 +115,8 @@
     "PIPELINE_NOT_FOUND": "No pipeline found",
     "COMPANY_NOT_FOUND": "Company not found",
     "NOTE_NOT_FOUND": "Note not found",
-    "RECORD_NOT_FOUND": "The linked record no longer exists"
+    "RECORD_NOT_FOUND": "The linked record no longer exists",
+    "SEGMENT_NOT_FOUND": "Segment not found"
   },
   "contacts": {
     "import": "Import",
@@ -604,6 +605,116 @@
         "titleRequired": "Give the note a title",
         "titleTooLong": "Keep the title under 200 characters",
         "bodyTooLong": "Keep the note under 10,000 characters"
+      }
+    }
+  },
+  "segments": {
+    "eyebrow": "Segments",
+    "title": "Turn your data into focus.",
+    "intro": "Saved audiences stay live as your workspace changes.",
+    "create": "Create segment",
+    "edit": "Edit {name}",
+    "live": "{name} is updating automatically",
+    "viewContacts": "View contacts",
+    "members": "{count, plural, one {# contact} other {# contacts}}",
+    "empty": "No segments yet",
+    "emptyHint": "Create a segment to keep an audience up to date.",
+    "deleted": "Segment deleted",
+    "created": "Segment created",
+    "saved": "Segment saved",
+    "drawerEyebrow": "Segment",
+    "drawerEmpty": "No contacts in this segment right now",
+    "rules": {
+      "or": "or",
+      "lifecycleStage": {
+        "is": "Stage is {value}",
+        "is_not": "Stage is not {value}"
+      },
+      "ownerId": {
+        "is": "Owner is {value}",
+        "is_not": "Owner is not {value}"
+      },
+      "tag": {
+        "has": "Tagged {value}",
+        "has_not": "Not tagged {value}"
+      },
+      "marketingConsent": {
+        "granted": "Marketing consent is granted",
+        "notGranted": "No marketing consent"
+      },
+      "lastTouch": {
+        "within_days": "Last touch in the last {days, plural, one {day} other {# days}}",
+        "older_than_days": "Last touch more than {days, plural, one {# day} other {# days}} ago",
+        "never": "Never contacted"
+      },
+      "followUp": {
+        "due": "Follow-up due today or earlier"
+      },
+      "openDeal": {
+        "exists": "Has an open deal",
+        "none": "No open deal"
+      }
+    },
+    "fields": {
+      "lifecycleStage": "Stage",
+      "ownerId": "Owner",
+      "tag": "Tag",
+      "marketingConsent": "Marketing consent",
+      "lastTouch": "Last touch",
+      "followUp": "Follow-up",
+      "openDeal": "Open deal"
+    },
+    "operators": {
+      "is": "is",
+      "is_not": "is not",
+      "has": "has",
+      "has_not": "doesn't have",
+      "within_days": "in the last",
+      "older_than_days": "more than … ago",
+      "never": "never",
+      "due": "is due today or earlier",
+      "exists": "exists",
+      "none": "doesn't exist"
+    },
+    "colours": {
+      "violet": "Violet",
+      "coral": "Coral",
+      "blue": "Blue",
+      "mint": "Mint",
+      "peach": "Peach"
+    },
+    "form": {
+      "newEyebrow": "New segment",
+      "newTitle": "Create a segment",
+      "editEyebrow": "Edit segment",
+      "editTitle": "Update this segment",
+      "name": "Name",
+      "namePlaceholder": "e.g. High-intent leads",
+      "description": "Description",
+      "descriptionPlaceholder": "Who belongs here and why",
+      "colour": "Colour",
+      "conditions": "Conditions",
+      "matchLabel": "Contacts must",
+      "matchAll": "match all conditions",
+      "matchAny": "match any condition",
+      "field": "Field",
+      "operator": "Condition",
+      "value": "Value",
+      "days": "days",
+      "tagPlaceholder": "Tag name",
+      "consentGranted": "granted",
+      "consentNotGranted": "not granted",
+      "addCondition": "Add condition",
+      "removeCondition": "Remove condition {number}",
+      "preview": "{count, plural, =0 {No contacts match yet} one {# contact matches} other {# contacts match}}",
+      "hint": "Segments update automatically as contacts change.",
+      "create": "Create segment",
+      "delete": "Delete segment",
+      "deleteTitle": "Delete {name}?",
+      "deleteBody": "The segment is removed. Its contacts stay as they are.",
+      "errors": {
+        "name": "Give the segment a name",
+        "condition": "Complete or remove the highlighted condition"
       }
     }
   }

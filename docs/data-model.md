@@ -18,7 +18,7 @@ The prototype in `design/` stores money, dates and links as text. This model rep
 | Task | title, dueAt, priority (`high`, `normal`, `low`), ownerId, done, doneAt, linked record |
 | Note | title, body, visibility (`shared`, `private`), authorId, linked record |
 | Activity | type, linked record, occurredAt, sourceModule, actorId, payload |
-| Segment | name, description, rules (JSON), color |
+| Segment | name, description, rules (JSON, format in `docs/api.md`), color (`violet`, `coral`, `blue`, `mint`, `peach`) |
 | ImportJob | fileName, status, mapping (JSON), rowsTotal, rowsAdded, rowsHeld, ownerId, tag |
 | ImportRow | importJobId, rowNumber, raw (JSON), status (`added`, `held`, `skipped`), duplicateOfContactId |
 | AiInsight | contactId, summary, nextStep, dataQualityScore, missingFields, status (`suggested`, `accepted`, `dismissed`) |
@@ -51,6 +51,7 @@ The prototype in `design/` stores money, dates and links as text. This model rep
 - **Activities store facts, not sentences.** An activity has a `type` and a `payload` (for example `{ "taskId": "...", "action": "completed" }`). The UI builds the line from the translation files, so the timeline reads in the user's language. Only `summary` from other modules' events is free text.
 - **Ticking a task** sets `done` and `doneAt` and adds a `task` activity to the timeline (`action: completed`); unticking clears `doneAt` and adds `action: reopened`.
 - **Private notes.** A private note is seen, edited and deleted only by its author. Shared notes are seen and edited by everyone in the workspace. A note's link to a contact, company or deal can be changed after saving.
+- **Segments are rules, not lists.** A segment stores filter rules; its members are worked out when asked (`segmentMembers` in `packages/shared`). "Due today" for follow-ups uses UTC on the server until workspaces have a time zone.
 - **Delete.** Soft delete everywhere. Permanent deletion is a later feature.
 
 ## Indexes to add early

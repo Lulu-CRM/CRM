@@ -8,6 +8,8 @@ import {
   demoActivities,
   demoTasks,
   demoNotes,
+  demoSegments,
+  segmentMembers,
   canSeeNote,
   filterNotes,
   buildOverview,
@@ -39,6 +41,11 @@ import {
   type TaskUpdateInput,
   type DealCreateInput,
   type DealUpdateInput,
+  type ListQuery,
+  type Segment,
+  type SegmentCreateInput,
+  type SegmentListItem,
+  type SegmentUpdateInput,
 } from "@lulu/shared";
 import { ApiError, type ListResult } from "./types";
 
@@ -50,6 +57,7 @@ const db = {
   tasks: demoTasks(),
   activities: demoActivities(),
   notes: demoNotes(),
+  segments: structuredClone(demoSegments),
 };
 
 const CURRENCY = "EUR";
@@ -108,6 +116,23 @@ function checkRecord(recordType: RecordType | null | undefined, recordId: string
   const rows: { id: string; deletedAt: string | null }[] =
     recordType === "contact" ? db.contacts : recordType === "company" ? db.companies : db.deals;
   if (!alive(rows).some((r) => r.id === recordId)) throw new ApiError("RECORD_NOT_FOUND", 422);
+}
+
+function findSegmentIndex(id: string) {
+  const index = db.segments.findIndex((s) => s.id === id && !s.deletedAt);
+  if (index < 0) throw new ApiError("SEGMENT_NOT_FOUND", 404);
+  return index;
+}
+
+// Live members, worked out with the same shared rules the server uses.
+function members(segment: Segment) {
+  return segmentMembers(alive(db.contacts), segment.rules, {
+    now: new Date(),
+    timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+    tasks: alive(db.tasks).filter((t) => !t.done),
+    deals: alive(db.deals),
+    stages: demoPipeline.stages,
+  });
 }
 
 export const mockApi = {
@@ -343,6 +368,42 @@ export const mockApi = {
         Intl.DateTimeFormat().resolvedOptions().timeZone,
       ),
     ),
+
+  segments: {
+    list(): Promise<ListResult<SegmentListItem>> {
+      const rows = alive(db.segments).map((segment) => ({ ...segment, memberCount: members(segment).length }));
+      return delay(paginate(rows, 1, 100));
+    },
+    async create(input: SegmentCreateInput) {
+      const now = new Date().toISOString();
+      const segment: Segment = {
+        id: newId("segment"),
+        workspaceId: DEMO_WORKSPACE_ID,
+        createdAt: now,
+        updatedAt: now,
+        deletedAt: null,
+        name: input.name,
+        description: input.description ?? null,
+        rules: input.rules,
+        color: input.color ?? "violet",
+      };
+      db.segments.push(segment);
+      return delay(segment);
+    },
+    async update(id: string, input: SegmentUpdateInput) {
+      const index = findSegmentIndex(id);
+      db.segments[index] = { ...db.segments[index], ...input, updatedAt: new Date().toISOString() };
+      return delay(db.segments[index]);
+    },
+    async remove(id: string) {
+      db.segments[findSegmentIndex(id)].deletedAt = new Date().toISOString();
+      return delay(undefined);
+    },
+    async contacts(id: string, query: Partial<ListQuery> = {}) {
+      const rows = sortBy(members(db.segments[findSegmentIndex(id)]), "-lastTouchAt");
+      return delay(paginate(rows, query.page, query.pageSize));
+    },
+  },
 
   pipelines: () => delay([demoPipeline]),
 

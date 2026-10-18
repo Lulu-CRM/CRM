@@ -44,6 +44,18 @@ describe('envSchema', () => {
     const result = envSchema.safeParse({ ...validSource, NODE_ENV: 'staging' });
     expect(result.success).toBe(false);
   });
+
+  it('treats empty optional values as unset', () => {
+    const parsed = envSchema.parse({
+      ...validSource,
+      JWT_SECRET: '',
+      AI_API_KEY: '',
+      AI_PROVIDER: '',
+    });
+    expect(parsed.JWT_SECRET).toBeUndefined();
+    expect(parsed.AI_API_KEY).toBeUndefined();
+    expect(parsed.AI_PROVIDER).toBe('simulated');
+  });
 });
 
 describe('parseEnv', () => {

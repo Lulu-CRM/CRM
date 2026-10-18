@@ -1,6 +1,9 @@
 import 'dotenv/config';
 import { z } from 'zod';
 
+// Optional vars that arrive as an empty string (e.g. docker-compose ${VAR:-}) mean "not set".
+const emptyToUndefined = (value: unknown): unknown => (value === '' ? undefined : value);
+
 export const envSchema = z.object({
   NODE_ENV: z.enum(['development', 'test', 'production']),
   PORT: z.coerce.number().int().positive().default(4000),
@@ -9,9 +12,9 @@ export const envSchema = z.object({
     .string()
     .regex(/^rediss?:\/\//, 'must start with redis:// or rediss://'),
   CORS_ORIGIN: z.url().default('http://localhost:3000'),
-  JWT_SECRET: z.string().min(32).optional(),
-  AI_PROVIDER: z.string().default('simulated'),
-  AI_API_KEY: z.string().optional(),
+  JWT_SECRET: z.preprocess(emptyToUndefined, z.string().min(32).optional()),
+  AI_PROVIDER: z.preprocess(emptyToUndefined, z.string().default('simulated')),
+  AI_API_KEY: z.preprocess(emptyToUndefined, z.string().optional()),
 });
 
 export type Env = z.infer<typeof envSchema>;

@@ -5,6 +5,8 @@ Express API for the Lulu CRM module. PostgreSQL through Prisma 7 (driver adapter
 
 ## Setup
 
+Fastest: run `npm run docker:up` from the repo root — it builds this API and starts Postgres, Redis, migrations and the seed in one command (see the root `README.md`). For a host run:
+
 1. `npm install` at the repo root.
 2. Copy `.env.example` names into `apps/api/.env` and fill real values (needs a reachable PostgreSQL).
 3. `npm run db:generate -w @lulu/api` — generates the Prisma client into `src/generated/` (gitignored; `db:migrate` also regenerates).
@@ -27,12 +29,13 @@ Express API for the Lulu CRM module. PostgreSQL through Prisma 7 (driver adapter
 | `npm run db:deploy` | `prisma migrate deploy` (applies committed migrations only) |
 | `npm run db:generate` | Regenerates the Prisma client into `src/generated/` |
 | `npm run db:studio` | Prisma Studio (database browser)               |
+| `npm run seed` | Runs `prisma/seed.ts` (idempotent design sample data) |
 
 ## Folders
 
 | Folder        | Purpose                                              |
 | ------------- | ---------------------------------------------------- |
-| `prisma/`     | Schema (`schema.prisma`) and committed migrations    |
+| `prisma/`     | Schema (`schema.prisma`), committed migrations and the idempotent `seed.ts` |
 | `src/config`  | Env loading and parsing (`env.ts` is the only source of config) |
 | `src/routes`  | Express routers, mounted under `/api/v1` by `routes/index.ts` |
 | `src/services`| Business logic used by routes                        |

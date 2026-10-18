@@ -13,6 +13,9 @@
     "build:api": "npm run build -w @lulu/api",
     "lint:api": "npm run lint -w @lulu/api",
     "typecheck:api": "npm run typecheck -w @lulu/api",
-    "test": "npm run test --workspaces --if-present"
+    "test": "npm run test --workspaces --if-present",
+    "docker:up": "docker compose up --build",
+    "docker:down": "docker compose down",
+    "docker:reset": "docker compose down -v"
   }
 }

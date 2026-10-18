@@ -4,7 +4,7 @@ import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useTranslations } from "next-intl";
-import type { Contact } from "@lulu/shared";
+import type { Contact, LifecycleStage } from "@lulu/shared";
 import { Button, Modal, useToast } from "@/components/ui";
 import { api } from "@/lib/api";
 import { useErrorMessage } from "@/lib/errors";
@@ -15,17 +15,20 @@ import type { Lookups } from "./useLookups";
 const inputClass =
   "w-full rounded-md border border-border-strong bg-surface px-[11px] py-2.5 text-[11px] text-text outline-none focus:border-[#8e83de] focus:shadow-[0_0_0_3px_#eeecff] aria-[invalid=true]:border-[#d9534f]";
 
-// Add when `contact` is null, edit otherwise.
+// Add when `contact` is null, edit otherwise. `initialStage` presets the stage of a new contact
+// (the Leads board passes the column it was opened from).
 export function ContactFormModal({
   open,
   contact,
   lookups,
+  initialStage,
   onClose,
   onSaved,
 }: {
   open: boolean;
   contact: Contact | null;
   lookups: Lookups;
+  initialStage?: LifecycleStage;
   onClose: () => void;
   onSaved: (contact: Contact) => void;
 }) {
@@ -36,6 +39,10 @@ export function ContactFormModal({
   const toast = useToast();
   const errorMessage = useErrorMessage();
   const defaultOwner = lookups.me?.id ?? "";
+  const startValues = () => {
+    const values = toFormValues(contact, defaultOwner);
+    return !contact && initialStage ? { ...values, lifecycleStage: initialStage } : values;
+  };
 
   const {
     register,
@@ -44,12 +51,13 @@ export function ContactFormModal({
     formState: { errors, isSubmitting },
   } = useForm<ContactFormValues>({
     resolver: zodResolver(contactFormSchema),
-    defaultValues: toFormValues(contact, defaultOwner),
+    defaultValues: startValues(),
   });
 
   useEffect(() => {
-    if (open) reset(toFormValues(contact, defaultOwner));
-  }, [open, contact, defaultOwner, reset]);
+    if (open) reset(startValues());
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [open, contact, defaultOwner, initialStage, reset]);
 
   const onSubmit = async (values: ContactFormValues) => {
     try {

@@ -108,6 +108,100 @@
     "DEAL_NOT_FOUND": "Deal nicht gefunden",
     "VALIDATION_ERROR": "Einige Felder müssen geprüft werden",
     "UNAUTHORIZED": "Bitte melden Sie sich erneut an",
-    "FORBIDDEN": "Dafür fehlt Ihnen die Berechtigung"
+    "FORBIDDEN": "Dafür fehlt Ihnen die Berechtigung",
+    "STAGE_NOT_FOUND": "Phase nicht gefunden",
+    "STAGE_IN_OTHER_PIPELINE": "Diese Phase gehört zu einer anderen Pipeline",
+    "PIPELINE_NOT_FOUND": "Keine Pipeline gefunden"
+  },
+  "deals": {
+    "eyebrow": "Deal-Pipeline",
+    "title": "Chancen voranbringen.",
+    "intro": "Jeder Deal hat einen Verantwortlichen, einen Wert und einen nächsten Schritt.",
+    "addDeal": "Deal hinzufügen",
+    "boardView": "Board-Ansicht",
+    "tableView": "Tabellenansicht",
+    "stages": {
+      "new": "Neu",
+      "qualified": "Qualifiziert",
+      "proposal": "Angebot",
+      "negotiation": "Verhandlung",
+      "won": "Gewonnen",
+      "lost": "Verloren"
+    },
+    "summary": {
+      "openValue": "offener Wert",
+      "weightedValue": "gewichteter Wert",
+      "winRate": "Abschlussquote",
+      "activeDeals": "aktive Deals",
+      "averageClose": "bis zum Abschluss (Ø)",
+      "days": "{count, plural, one {# Tag} other {# Tage}}",
+      "otherCurrencies": "{count, plural, one {# offener Deal} other {# offene Deals}} in anderen Währungen nicht enthalten"
+    },
+    "column": {
+      "add": "Deal hinzufügen",
+      "addDeal": "Deal zu {stage} hinzufügen",
+      "empty": "Noch keine Deals"
+    },
+    "card": {
+      "likely": "{percent} wahrscheinlich",
+      "close": "Abschluss {date}",
+      "noCloseDate": "Kein Abschlussdatum",
+      "actions": "Aktionen für {name}",
+      "moveTo": "Verschieben nach"
+    },
+    "table": {
+      "deal": "Deal",
+      "contact": "Kontakt",
+      "stage": "Phase",
+      "value": "Wert",
+      "probability": "Wahrscheinlichkeit",
+      "close": "Erwarteter Abschluss",
+      "owner": "Verantwortlich",
+      "empty": "Noch keine Deals",
+      "emptyHint": "Füge deinen ersten Deal hinzu, um deine Pipeline zu starten."
+    },
+    "form": {
+      "newEyebrow": "Neuer Deal",
+      "newTitle": "Verkaufschance hinzufügen",
+      "editEyebrow": "Deal bearbeiten",
+      "editTitle": "Verkaufschance aktualisieren",
+      "name": "Name des Deals",
+      "namePlaceholder": "z. B. Northstar Jahres-Workspace",
+      "company": "Unternehmen",
+      "contact": "Kontakt",
+      "none": "Keine Angabe",
+      "value": "Wert",
+      "currency": "Währung",
+      "expectedClose": "Erwarteter Abschluss",
+      "stage": "Phase",
+      "owner": "Verantwortlich",
+      "hint": "Bei jedem Deal bleibt der nächste Schritt sichtbar.",
+      "create": "Deal anlegen",
+      "save": "Änderungen speichern",
+      "errors": {
+        "name": "Gib dem Deal einen Namen",
+        "value": "Gib einen Wert von 0 oder mehr ein",
+        "date": "Wähle ein gültiges Datum",
+        "invalid": "Prüfe dieses Feld"
+      }
+    },
+    "delete": {
+      "eyebrow": "Deal löschen",
+      "title": "{name} löschen?",
+      "body": "Der Deal wird aus der Pipeline und den Summen entfernt.",
+      "confirm": "Deal löschen"
+    },
+    "toast": {
+      "created": "Deal zur Pipeline hinzugefügt.",
+      "saved": "Deal aktualisiert.",
+      "deleted": "Deal gelöscht."
+    },
+    "dnd": {
+      "instructions": "Ziehe einen Deal in eine andere Phase oder verschiebe ihn über sein Menü.",
+      "picked": "{name} aufgenommen.",
+      "over": "{name} ist über {stage}.",
+      "dropped": "{name} nach {stage} verschoben.",
+      "cancelled": "Verschieben von {name} abgebrochen."
+    }
   }
 }

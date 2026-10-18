@@ -108,6 +108,100 @@
     "DEAL_NOT_FOUND": "未找到交易",
     "VALIDATION_ERROR": "部分字段需要修改",
     "UNAUTHORIZED": "请重新登录",
-    "FORBIDDEN": "你没有执行此操作的权限"
+    "FORBIDDEN": "你没有执行此操作的权限",
+    "STAGE_NOT_FOUND": "未找到阶段",
+    "STAGE_IN_OTHER_PIPELINE": "该阶段属于其他管道",
+    "PIPELINE_NOT_FOUND": "未找到管道"
+  },
+  "deals": {
+    "eyebrow": "交易管道",
+    "title": "推动商机向前。",
+    "intro": "每笔交易都有负责人、金额和下一步。",
+    "addDeal": "添加交易",
+    "boardView": "看板视图",
+    "tableView": "表格视图",
+    "stages": {
+      "new": "新建",
+      "qualified": "已确认",
+      "proposal": "提案",
+      "negotiation": "谈判",
+      "won": "赢单",
+      "lost": "输单"
+    },
+    "summary": {
+      "openValue": "未结金额",
+      "weightedValue": "加权金额",
+      "winRate": "赢单率",
+      "activeDeals": "进行中的交易",
+      "averageClose": "平均成交周期",
+      "days": "{count} 天",
+      "otherCurrencies": "{count} 笔其他货币的进行中交易未计入"
+    },
+    "column": {
+      "add": "添加交易",
+      "addDeal": "添加交易到{stage}",
+      "empty": "暂无交易"
+    },
+    "card": {
+      "likely": "可能性 {percent}",
+      "close": "预计 {date} 成交",
+      "noCloseDate": "无成交日期",
+      "actions": "{name} 的操作",
+      "moveTo": "移动到"
+    },
+    "table": {
+      "deal": "交易",
+      "contact": "联系人",
+      "stage": "阶段",
+      "value": "金额",
+      "probability": "可能性",
+      "close": "预计成交",
+      "owner": "负责人",
+      "empty": "暂无交易",
+      "emptyHint": "添加第一笔交易，开始建立你的管道。"
+    },
+    "form": {
+      "newEyebrow": "新交易",
+      "newTitle": "添加商机",
+      "editEyebrow": "编辑交易",
+      "editTitle": "更新此商机",
+      "name": "交易名称",
+      "namePlaceholder": "例如：Northstar 年度工作区",
+      "company": "公司",
+      "contact": "联系人",
+      "none": "无",
+      "value": "金额",
+      "currency": "货币",
+      "expectedClose": "预计成交日期",
+      "stage": "阶段",
+      "owner": "负责人",
+      "hint": "每笔交易的下一步都清晰可见。",
+      "create": "创建交易",
+      "save": "保存更改",
+      "errors": {
+        "name": "请输入交易名称",
+        "value": "请输入 0 或以上的金额",
+        "date": "请选择有效日期",
+        "invalid": "请检查此字段"
+      }
+    },
+    "delete": {
+      "eyebrow": "删除交易",
+      "title": "删除 {name}？",
+      "body": "该交易将从管道和统计中移除。",
+      "confirm": "删除交易"
+    },
+    "toast": {
+      "created": "交易已添加到管道。",
+      "saved": "交易已更新。",
+      "deleted": "交易已删除。"
+    },
+    "dnd": {
+      "instructions": "将交易拖到其他阶段，或通过它的菜单移动。",
+      "picked": "已拿起 {name}。",
+      "over": "{name} 位于 {stage} 上方。",
+      "dropped": "{name} 已移动到 {stage}。",
+      "cancelled": "已取消移动 {name}。"
+    }
   }
 }

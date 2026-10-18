@@ -19,6 +19,9 @@ export function useFormat() {
     percent: (value: number) => format.number(value, { style: "percent" }),
     date: (value: Date | string) =>
       format.dateTime(new Date(value), { dateStyle: "medium" }),
+    // Short day and month for cards ("28 Oct", "28. Okt.", "10月28日").
+    dayMonth: (value: Date | string) =>
+      format.dateTime(new Date(value), { day: "numeric", month: "short" }),
     relative: (value: Date | string) => format.relativeTime(new Date(value)),
   };
 }

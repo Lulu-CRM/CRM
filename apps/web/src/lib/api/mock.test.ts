@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { contactSchema, dealSummarySchema } from "@lulu/shared";
+import { contactSchema, dealSchema, dealSummarySchema } from "@lulu/shared";
 
 // Fresh copy of the in-memory data for every test.
 let mockApi: typeof import("./mock").mockApi;
@@ -53,6 +53,30 @@ describe("mock deals", () => {
     const after = await mockApi.deals.summary();
     expect(after.activeDeals).toBe(before.activeDeals - 1);
     expect(after.openValue.amount).toBe(before.openValue.amount - deal.value);
+  });
+
+  it("creates a deal with the stage's probability and the workspace currency", async () => {
+    const deal = await mockApi.deals.create({ name: "Pilot", value: 5000, stageId: "stage_proposal" });
+    expect(dealSchema.parse(deal)).toMatchObject({ probability: 0.7, currency: "EUR", closedAt: null });
+    expect((await mockApi.deals.summary()).openValue.amount).toBe(97900 + 5000);
+  });
+
+  it("creating a deal in a won stage closes it", async () => {
+    const deal = await mockApi.deals.create({ name: "Done", value: 1, stageId: "stage_won" });
+    expect(deal.closedAt).not.toBeNull();
+  });
+
+  it("rejects a deal in an unknown stage", async () => {
+    await expect(mockApi.deals.create({ name: "X", value: 1, stageId: "stage_nope" })).rejects.toMatchObject({
+      code: "STAGE_NOT_FOUND",
+    });
+  });
+
+  it("edits and soft deletes a deal", async () => {
+    expect((await mockApi.deals.update("deal_roam", { value: 20000 })).value).toBe(20000);
+    await mockApi.deals.remove("deal_roam");
+    expect((await mockApi.deals.list()).data.map((d) => d.id)).not.toContain("deal_roam");
+    await expect(mockApi.deals.update("deal_roam", { value: 1 })).rejects.toMatchObject({ code: "DEAL_NOT_FOUND" });
   });
 
   it("rejects an unknown deal", async () => {

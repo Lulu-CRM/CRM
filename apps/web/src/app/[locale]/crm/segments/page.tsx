@@ -1,5 +1,5 @@
-import { ComingSoon } from "@/components/layout/ComingSoon";
+import { SegmentsPage } from "@/features/segments/SegmentsPage";
 
-export default function SegmentsPage() {
-  return <ComingSoon page="segments" />;
+export default function Segments() {
+  return <SegmentsPage />;
 }

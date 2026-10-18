@@ -18,6 +18,9 @@ export function useFormat() {
       }),
     number: (value: number) => format.number(value),
     percent: (value: number) => format.number(value, { style: "percent" }),
+    // "+12%" / "-3%" for changes.
+    signedPercent: (value: number) =>
+      format.number(value, { style: "percent", signDisplay: "exceptZero", maximumFractionDigits: 1 }),
     date: (value: Date | string) =>
       format.dateTime(new Date(value), { dateStyle: "medium" }),
     relative: (value: Date | string) => format.relativeTime(new Date(value), new Date()),
@@ -35,5 +38,7 @@ export function useFormat() {
     // Short day and month for cards ("28 Oct", "28. Okt.", "10月28日").
     dayMonth: (value: Date | string) =>
       format.dateTime(new Date(value), { day: "numeric", month: "short" }),
+    // Weekday name for dates later this week ("Friday", "Freitag", "星期五").
+    weekday: (value: Date | string) => format.dateTime(new Date(value), { weekday: "long" }),
   };
 }

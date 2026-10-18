@@ -2,43 +2,49 @@ import { z } from "zod";
 import { baseRecordSchema, idSchema, listQuerySchema } from "./common";
 import { recordTypeSchema } from "./record";
 
+// Shared notes are seen by the whole workspace. Private notes only by their author.
 export const noteVisibilitySchema = z.enum(["shared", "private"]);
 
 export const noteSchema = baseRecordSchema.extend({
-    title: z.string().trim().min(1),
-    body: z.string(),
-    visibility: noteVisibilitySchema,
-    authorId: idSchema,
-    recordType: recordTypeSchema.nullable(),
-    recordId: idSchema.nullable(),
+  title: z.string().trim().min(1).max(200),
+  body: z.string().max(10000),
+  visibility: noteVisibilitySchema,
+  authorId: idSchema,
+  recordType: recordTypeSchema.nullable(),
+  recordId: idSchema.nullable(),
 });
 
-// POST /notes. Visibility defaults to "shared" and the author is the current user.
-export const noteCreateSchema = z
-    .object({
-        title: noteSchema.shape.title,
-        body: noteSchema.shape.body,
-        visibility: noteVisibilitySchema.optional(),
-        recordType: recordTypeSchema.nullable().optional(),
-        recordId: idSchema.nullable().optional(),
-    })
-    .refine((note) => (note.recordType == null) === (note.recordId == null), {
-        message: "RECORD_LINK_INCOMPLETE",
-        path: ["recordId"],
-    });
+const linkComplete = (note: { recordType?: unknown; recordId?: unknown }) =>
+  (note.recordType == null) === (note.recordId == null);
+const linkIssue = { message: "RECORD_LINK_INCOMPLETE", path: ["recordId"] };
 
-// PATCH /notes/:id. The link and the author never change.
-export const noteUpdateSchema = z.object({
+// POST /notes. The author is the current user, visibility defaults to "shared".
+export const noteCreateSchema = z
+  .object({
+    title: noteSchema.shape.title,
+    body: noteSchema.shape.body.optional(),
+    visibility: noteVisibilitySchema.optional(),
+    recordType: recordTypeSchema.nullable().optional(),
+    recordId: idSchema.nullable().optional(),
+  })
+  .refine(linkComplete, linkIssue);
+
+// PATCH /notes/:id. The link can be changed or removed (send both fields as null), but not half set.
+export const noteUpdateSchema = z
+  .object({
     title: noteSchema.shape.title.optional(),
     body: noteSchema.shape.body.optional(),
     visibility: noteVisibilitySchema.optional(),
-});
+    recordType: recordTypeSchema.nullable().optional(),
+    recordId: idSchema.nullable().optional(),
+  })
+  .refine((note) => (note.recordType === undefined) === (note.recordId === undefined) && linkComplete(note), linkIssue);
 
-// GET /notes. Private notes are returned only to their author (enforced by the server, not here).
+// GET /notes. Private notes of other users are never returned.
 export const noteListQuerySchema = listQuerySchema.extend({
-    recordType: recordTypeSchema.optional(),
-    recordId: idSchema.optional(),
-    visibility: noteVisibilitySchema.optional(),
+  visibility: noteVisibilitySchema.optional(),
+  recordType: recordTypeSchema.optional(),
+  recordId: idSchema.optional(),
 });
 
 export type NoteVisibility = z.infer<typeof noteVisibilitySchema>;

@@ -1,5 +1,5 @@
-import { ComingSoon } from "@/components/layout/ComingSoon";
+import { AiAnalysisPage } from "@/features/ai/AiAnalysisPage";
 
-export default function AiAnalysisPage() {
-  return <ComingSoon page="ai" />;
+export default function AiAnalysis() {
+  return <AiAnalysisPage />;
 }

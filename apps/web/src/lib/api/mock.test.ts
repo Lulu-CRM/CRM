@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { contactSchema, dealSchema, dealSummarySchema } from "@lulu/shared";
+import { contactSchema, dealSchema, dealSummarySchema, segmentListItemSchema, noteSchema } from "@lulu/shared";
 
 // Fresh copy of the in-memory data for every test.
 let mockApi: typeof import("./mock").mockApi;
@@ -90,4 +90,132 @@ describe("mock companies", () => {
     expect(atlas.contactCount).toBe(1);
     expect(atlas.openDealValue.currency).toBe("EUR");
   });
+
+  it("sorts by open deal value and searches name, domain and industry", async () => {
+    const all = await mockApi.companies.list();
+    expect(all.data.map((c) => c.id).slice(0, 2)).toEqual(["company_atlas", "company_northstar"]);
+    expect((await mockApi.companies.list({ q: "klarwerk.de" })).data.map((c) => c.id)).toEqual(["company_klarwerk"]);
+    expect((await mockApi.companies.list({ q: "hospitality" })).meta.total).toBe(1);
+    expect((await mockApi.companies.list({ sort: "name" })).data[0].name).toBe("Atlas Logistics");
+    expect((await mockApi.companies.list({ ownerId: "user_alex" })).meta.total).toBe(2);
+  });
+
+  it("creates, edits, shows and deletes a company", async () => {
+    const created = await mockApi.companies.create({ name: "Acme", domain: "acme.com", size: "1-10" });
+    expect(created).toMatchObject({ contactCount: 0, health: "new", ownerId: "user_jamie" });
+    await mockApi.companies.update(created.id, { industry: "Retail" });
+    const detail = await mockApi.companies.get(created.id);
+    expect(detail).toMatchObject({ industry: "Retail", contacts: [], deals: [] });
+    await mockApi.companies.remove(created.id);
+    await expect(mockApi.companies.get(created.id)).rejects.toMatchObject({ code: "COMPANY_NOT_FOUND" });
+  });
+
+  it("returns a company's people and deals", async () => {
+    const detail = await mockApi.companies.get("company_northstar");
+    expect(detail.contacts.map((c) => c.name)).toEqual(["Sophie Laurent"]);
+    expect(detail.deals.map((d) => d.id)).toEqual(["deal_northstar"]);
+  });
 });
+
+describe("mock notes", () => {
+  it("lists the shared sample notes and hides Alex's private one from Jamie", async () => {
+    const result = await mockApi.notes.list();
+    expect(result.data.map((n) => n.title)).toEqual(["Northstar decision criteria", "Roam & Root context"]);
+    result.data.forEach((n) => noteSchema.parse(n));
+  });
+
+  it("creates, edits, relinks and soft deletes", async () => {
+    const created = await mockApi.notes.create({ title: "Pricing", visibility: "private", recordType: "deal", recordId: "deal_atlas" });
+    expect(noteSchema.parse(created)).toMatchObject({ authorId: "user_jamie", body: "", visibility: "private" });
+    expect((await mockApi.notes.list({ visibility: "private" })).data.map((n) => n.id)).toEqual([created.id]);
+
+    const edited = await mockApi.notes.update(created.id, { body: "Ten seats", recordType: null, recordId: null });
+    expect(edited).toMatchObject({ body: "Ten seats", recordType: null, recordId: null });
+
+    await mockApi.notes.remove(created.id);
+    expect((await mockApi.notes.list()).meta.total).toBe(2);
+  });
+
+  it("answers NOTE_NOT_FOUND for someone else's private note", async () => {
+    await expect(mockApi.notes.update("note_klarwerk_next_step", { title: "x" })).rejects.toMatchObject({ code: "NOTE_NOT_FOUND" });
+    await expect(mockApi.notes.remove("note_klarwerk_next_step")).rejects.toMatchObject({ code: "NOTE_NOT_FOUND" });
+  });
+
+  it("rejects a link to a record that does not exist", async () => {
+    await expect(mockApi.notes.create({ title: "x", recordType: "contact", recordId: "contact_nobody" })).rejects.toMatchObject({
+      code: "RECORD_NOT_FOUND",
+    });
+  });
+});
+
+describe("mock overview", () => {
+  it("matches the schema and follows changes to the data", async () => {
+    const { overviewSchema } = await import("@lulu/shared");
+    const before = overviewSchema.parse(await mockApi.overview());
+    await mockApi.contacts.create({ name: "New Person" });
+    expect((await mockApi.overview()).contactCount).toBe(before.contactCount + 1);
+  });
+});
+
+describe("mock segments", () => {
+  it("lists segments with live member counts", async () => {
+    const { data } = await mockApi.segments.list();
+    expect(data.map((s) => s.name)).toContain("High-intent leads");
+    data.forEach((s) => segmentListItemSchema.parse(s));
+  });
+
+  it("creates, edits, lists members and soft deletes", async () => {
+    const segment = await mockApi.segments.create({
+      name: "Alex's people",
+      rules: { match: "all", conditions: [{ field: "ownerId", op: "is", value: "user_alex" }] },
+    });
+    expect(segment.color).toBe("violet");
+    expect((await mockApi.segments.contacts(segment.id)).data.map((c) => c.name).sort()).toEqual(["Elena Schmidt", "Mila Rossi"]);
+
+    await mockApi.segments.update(segment.id, {
+      rules: { match: "all", conditions: [{ field: "ownerId", op: "is", value: "user_jamie" }] },
+    });
+    expect((await mockApi.segments.contacts(segment.id)).meta.total).toBe(3);
+
+    await mockApi.segments.remove(segment.id);
+    await expect(mockApi.segments.contacts(segment.id)).rejects.toMatchObject({ code: "SEGMENT_NOT_FOUND" });
+  });
+
+  it("counts change when a matching contact is added", async () => {
+    const segment = await mockApi.segments.create({
+      name: "New leads",
+      rules: { match: "all", conditions: [{ field: "lifecycleStage", op: "is", value: "new" }] },
+    });
+    const count = async () => (await mockApi.segments.list()).data.find((s) => s.id === segment.id)!.memberCount;
+    const before = await count();
+    await mockApi.contacts.create({ name: "Ada Lovelace" });
+    expect(await count()).toBe(before + 1);
+  });
+});
+
+describe("mock import", () => {
+  it("with duplicate handling 'update', overwrites the existing contact in the background", async () => {
+    vi.useFakeTimers({ toFake: ["setTimeout"] });
+    try {
+      const csv = ["name,email,title", "Sophie L.,sophie@northstar.studio,CEO", "New Person,new@example.com,"].join("\n");
+      const file = new File([csv], "update.csv");
+      const job = await runWithTimers(mockApi.imports.create(file));
+      const confirmed = await runWithTimers(mockApi.imports.confirm(job.id, { duplicateHandling: "update" }));
+      expect(confirmed.status).toBe("processing");
+
+      await vi.advanceTimersByTimeAsync(1000);
+      const done = await runWithTimers(mockApi.imports.get(job.id));
+      expect(done).toMatchObject({ status: "done", rowsAdded: 1, rowsUpdated: 1, rowsHeld: 0 });
+      expect(await runWithTimers(mockApi.contacts.get("contact_sophie"))).toMatchObject({ name: "Sophie L.", jobRole: "CEO" });
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+});
+
+// The mock answers after a short timeout; with fake timers, move time on until the answer arrives.
+async function runWithTimers<T>(promise: Promise<T>) {
+  await vi.advanceTimersByTimeAsync(200);
+  return promise;
+}
+

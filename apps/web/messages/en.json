@@ -112,7 +112,24 @@
     "TASK_NOT_FOUND": "Task not found",
     "STAGE_NOT_FOUND": "Stage not found",
     "STAGE_IN_OTHER_PIPELINE": "That stage belongs to another pipeline",
-    "PIPELINE_NOT_FOUND": "No pipeline found"
+    "PIPELINE_NOT_FOUND": "No pipeline found",
+    "COMPANY_NOT_FOUND": "Company not found",
+    "NOTE_NOT_FOUND": "Note not found",
+    "RECORD_NOT_FOUND": "The linked record no longer exists",
+    "SEGMENT_NOT_FOUND": "Segment not found",
+    "IMPORT_NOT_FOUND": "Import not found",
+    "IMPORT_EMPTY": "The file has no rows to import",
+    "IMPORT_TOO_MANY_ROWS": "The file has more than 10,000 rows. Split it and import the parts.",
+    "IMPORT_ALREADY_STARTED": "This import has already started",
+    "IMPORT_ROW_NOT_FOUND": "That row was already resolved",
+    "IMPORT_MOCK_CSV_ONLY": "Excel files are read by the server. In mock mode, save the sheet as CSV first.",
+    "IMPORT_FILE_UNREADABLE": "This file could not be read. Use a CSV or XLSX file.",
+    "CUSTOM_FIELD_NOT_FOUND": "Field not found",
+    "CUSTOM_FIELD_KEY_TAKEN": "A field with this name already exists",
+    "STAGE_LOCKED": "Won and Lost stages cannot be deleted",
+    "STAGE_IN_USE": "Move the deals out of this stage before deleting it",
+    "AI_INSIGHT_NOT_FOUND": "Suggestion not found",
+    "AI_INSIGHT_CLOSED": "This suggestion was already accepted or dismissed"
   },
   "contacts": {
     "import": "Import",
@@ -231,7 +248,8 @@
   "due": {
     "overdue": "Overdue",
     "today": "Today",
-    "tomorrow": "Tomorrow"
+    "tomorrow": "Tomorrow",
+    "done": "Done"
   },
   "activities": {
     "someone": "Someone",
@@ -242,7 +260,9 @@
       "note": "Note added",
       "ai_signal": "AI signal",
       "created": "Contact created",
-      "stage_changed": "Status changed"
+      "stage_changed": "Status changed",
+      "task_completed": "Task completed",
+      "task_reopened": "Task reopened"
     },
     "details": {
       "task": "{actor} updated a follow-up.",
@@ -251,7 +271,9 @@
       "created": "Added by {actor}.",
       "stage_changed": "Changed by {actor}.",
       "email": "A reply came in through Email.",
-      "meeting": "The call is on the calendar."
+      "meeting": "The call is on the calendar.",
+      "task_completed": "{actor} completed a follow-up.",
+      "task_reopened": "{actor} reopened a follow-up."
     }
   },
   "time": {
@@ -348,6 +370,733 @@
       "over": "{name} is over {stage}.",
       "dropped": "{name} moved to {stage}.",
       "cancelled": "Moving {name} was cancelled."
+    }
+  },
+  "overview": {
+    "import": "Import",
+    "addContact": "Add contact",
+    "viewAll": "View all",
+    "stats": {
+      "contacts": "All contacts",
+      "contactsNoChange": "No data from last month yet",
+      "vsLastMonth": "vs last month",
+      "pipeline": "Open pipeline",
+      "weighted": "weighted value",
+      "followUps": "Follow-ups due",
+      "dueToday": "due today",
+      "signals": "AI signals",
+      "sinceMonday": "since Monday"
+    },
+    "recent": {
+      "eyebrow": "Recent contacts",
+      "title": "Keep relationships moving.",
+      "empty": "No contacts yet"
+    },
+    "pipeline": {
+      "eyebrow": "Pipeline snapshot",
+      "title": "What needs attention.",
+      "open": "Open Deals & Pipeline",
+      "empty": "No open deals",
+      "active": "{count, plural, one {# active opportunity} other {# active opportunities}}",
+      "addDeal": "Add deal"
+    },
+    "activity": {
+      "eyebrow": "Activity stream",
+      "title": "The team is in motion.",
+      "open": "Open activities",
+      "empty": "No activity yet"
+    }
+  },
+  "leads": {
+    "eyebrow": "Lead workspace",
+    "title": "Qualify with less guesswork.",
+    "intro": "Move a lead when the context changes. Every card keeps its next action visible.",
+    "addLead": "Add lead",
+    "column": {
+      "add": "Add lead",
+      "addLead": "Add lead to {stage}",
+      "empty": "No leads here"
+    },
+    "card": {
+      "actions": "Actions for {name}",
+      "open": "Open profile",
+      "moveTo": "Move to",
+      "noTouch": "No contact yet"
+    },
+    "dnd": {
+      "instructions": "Drag a lead to another stage, or use its menu to move it.",
+      "picked": "Picked up {name}.",
+      "over": "{name} is over {stage}.",
+      "dropped": "{name} moved to {stage}.",
+      "cancelled": "Moving {name} was cancelled."
+    }
+  },
+  "tasks": {
+    "eyebrow": "Tasks",
+    "title": "Follow-through stays visible.",
+    "newTask": "New task",
+    "edit": "Edit {title}",
+    "filters": {
+      "label": "Filter by due date",
+      "all": "All",
+      "overdue": "Overdue",
+      "today": "Today",
+      "this_week": "This week",
+      "owner": "Owner",
+      "anyOwner": "All owners",
+      "showDone": "Show completed"
+    },
+    "empty": "No tasks yet",
+    "emptyHint": "Create a follow-up so nothing slips.",
+    "noMatches": "No tasks match these filters",
+    "noMatchesHint": "Try another owner or due date.",
+    "timeline": {
+      "eyebrow": "Activity timeline",
+      "title": "Every touchpoint, together.",
+      "empty": "No activity yet"
+    },
+    "priority": {
+      "high": "High",
+      "normal": "Normal",
+      "low": "Low"
+    },
+    "form": {
+      "newEyebrow": "New task",
+      "newTitle": "Create a follow-up",
+      "editEyebrow": "Edit task",
+      "editTitle": "Update this follow-up",
+      "title": "Task title",
+      "titlePlaceholder": "What needs to happen?",
+      "related": "Related to",
+      "none": "Nothing",
+      "contacts": "Contacts",
+      "companies": "Companies",
+      "deals": "Deals",
+      "due": "Due date",
+      "owner": "Owner",
+      "priority": "Priority",
+      "hint": "Every follow-up has an owner and a date.",
+      "create": "Create task",
+      "created": "Task added to Activities.",
+      "saved": "Task updated.",
+      "errors": {
+        "titleRequired": "Give the task a title",
+        "ownerRequired": "Choose an owner"
+      }
+    }
+  },
+  "companies": {
+    "add": "Add company",
+    "eyebrow": "Company directory",
+    "title": "Accounts with context.",
+    "intro": "Connect people, pipeline and commercial history around each company.",
+    "searchPlaceholder": "Search companies, domains or industries",
+    "filtersLabel": "Company filters",
+    "filters": {
+      "all": "All companies",
+      "mine": "My companies"
+    },
+    "noMatches": "No companies match",
+    "noMatchesHint": "Try another search or filter.",
+    "empty": "No companies yet",
+    "emptyHint": "Add your first account to connect its people and deals.",
+    "showing": "Showing {count} of {total, plural, one {# company} other {# companies}}",
+    "people": "{count, plural, one {# contact} other {# contacts}}",
+    "pipelineValue": "Pipeline value",
+    "otherCurrency": "+{count, plural, one {# deal} other {# deals}} in other currencies",
+    "open": "Open {name}",
+    "sizeValue": "{size} employees",
+    "sortLabel": "Sort companies",
+    "sort": {
+      "openDealValue": "Highest pipeline value",
+      "name": "Name",
+      "contactCount": "Most contacts",
+      "lastTouchAt": "Recently touched"
+    },
+    "health": {
+      "strong": "Strong",
+      "watch": "Watch",
+      "new": "New"
+    },
+    "deleted": "Company deleted",
+    "deleteTitle": "Delete company?",
+    "deleteOne": "{name} will be removed. Its contacts and deals stay in the CRM.",
+    "form": {
+      "eyebrow": "New company",
+      "editEyebrow": "Company",
+      "addTitle": "Add an account",
+      "editTitle": "Edit company",
+      "name": "Company name",
+      "namePlaceholder": "e.g. Northstar Studio",
+      "domain": "Domain",
+      "domainPlaceholder": "company.com",
+      "industry": "Industry",
+      "industryPlaceholder": "e.g. Retail",
+      "size": "Company size",
+      "noSize": "Not set",
+      "owner": "Owner",
+      "requiredHint": "Fields marked * are required.",
+      "submit": "Create company",
+      "created": "Company added",
+      "updated": "Company saved",
+      "errors": {
+        "nameRequired": "Enter a company name",
+        "domainInvalid": "Enter a domain like company.com",
+        "ownerRequired": "Choose an owner"
+      }
+    },
+    "drawer": {
+      "eyebrow": "Company profile",
+      "domain": "Domain",
+      "industry": "Industry",
+      "size": "Company size",
+      "owner": "Owner",
+      "lastTouch": "Last touch",
+      "pipelineValue": "Open pipeline",
+      "openDeals": "{count, plural, one {# open deal} other {# open deals}}",
+      "peopleEyebrow": "People",
+      "people": "Contacts at this company",
+      "noPeople": "No contacts linked yet",
+      "dealsEyebrow": "Pipeline",
+      "deals": "Deals",
+      "noDeals": "No deals yet",
+      "edit": "Edit company",
+      "delete": "Delete company",
+      "website": "Website"
+    }
+  },
+  "notes": {
+    "add": "Add note",
+    "eyebrow": "Workspace notes",
+    "title": "Context that does not get lost.",
+    "intro": "Keep shared decisions and private reminders next to the relationships they belong to.",
+    "searchPlaceholder": "Search notes",
+    "open": "Open note {title}",
+    "filters": {
+      "label": "Show notes",
+      "all": "All",
+      "shared": "Shared",
+      "private": "Private"
+    },
+    "visibility": {
+      "shared": "Shared",
+      "private": "Private"
+    },
+    "linked": {
+      "contact": "Contact: {name}",
+      "company": "Company: {name}",
+      "deal": "Deal: {name}"
+    },
+    "empty": "No notes yet",
+    "emptyHint": "Write down a decision, handoff or next step so the team can find it later.",
+    "noMatches": "No notes match",
+    "noMatchesHint": "Try another search or show all notes.",
+    "deleteTitle": "Delete this note?",
+    "deleteMessage": "“{title}” will be removed for everyone who can see it.",
+    "deleted": "Note deleted.",
+    "form": {
+      "newEyebrow": "New note",
+      "newTitle": "Keep the context close",
+      "editEyebrow": "Edit note",
+      "editTitle": "Update this note",
+      "title": "Title",
+      "titlePlaceholder": "What should the team remember?",
+      "body": "Note",
+      "bodyPlaceholder": "Add a decision, handoff or next action",
+      "visibility": "Visibility",
+      "related": "Linked to",
+      "none": "Nothing",
+      "contacts": "Contacts",
+      "companies": "Companies",
+      "deals": "Deals",
+      "hint": "Private notes are only visible to you.",
+      "create": "Save note",
+      "delete": "Delete note",
+      "created": "Note saved to the CRM workspace.",
+      "saved": "Note updated.",
+      "errors": {
+        "titleRequired": "Give the note a title",
+        "titleTooLong": "Keep the title under 200 characters",
+        "bodyTooLong": "Keep the note under 10,000 characters"
+      }
+    }
+  },
+  "segments": {
+    "eyebrow": "Segments",
+    "title": "Turn your data into focus.",
+    "intro": "Saved audiences stay live as your workspace changes.",
+    "create": "Create segment",
+    "edit": "Edit {name}",
+    "live": "{name} is updating automatically",
+    "viewContacts": "View contacts",
+    "members": "{count, plural, one {# contact} other {# contacts}}",
+    "empty": "No segments yet",
+    "emptyHint": "Create a segment to keep an audience up to date.",
+    "deleted": "Segment deleted",
+    "created": "Segment created",
+    "saved": "Segment saved",
+    "drawerEyebrow": "Segment",
+    "drawerEmpty": "No contacts in this segment right now",
+    "rules": {
+      "or": "or",
+      "lifecycleStage": {
+        "is": "Stage is {value}",
+        "is_not": "Stage is not {value}"
+      },
+      "ownerId": {
+        "is": "Owner is {value}",
+        "is_not": "Owner is not {value}"
+      },
+      "tag": {
+        "has": "Tagged {value}",
+        "has_not": "Not tagged {value}"
+      },
+      "marketingConsent": {
+        "granted": "Marketing consent is granted",
+        "notGranted": "No marketing consent"
+      },
+      "lastTouch": {
+        "within_days": "Last touch in the last {days, plural, one {day} other {# days}}",
+        "older_than_days": "Last touch more than {days, plural, one {# day} other {# days}} ago",
+        "never": "Never contacted"
+      },
+      "followUp": {
+        "due": "Follow-up due today or earlier"
+      },
+      "openDeal": {
+        "exists": "Has an open deal",
+        "none": "No open deal"
+      }
+    },
+    "fields": {
+      "lifecycleStage": "Stage",
+      "ownerId": "Owner",
+      "tag": "Tag",
+      "marketingConsent": "Marketing consent",
+      "lastTouch": "Last touch",
+      "followUp": "Follow-up",
+      "openDeal": "Open deal"
+    },
+    "operators": {
+      "is": "is",
+      "is_not": "is not",
+      "has": "has",
+      "has_not": "doesn't have",
+      "within_days": "in the last",
+      "older_than_days": "more than … ago",
+      "never": "never",
+      "due": "is due today or earlier",
+      "exists": "exists",
+      "none": "doesn't exist"
+    },
+    "colours": {
+      "violet": "Violet",
+      "coral": "Coral",
+      "blue": "Blue",
+      "mint": "Mint",
+      "peach": "Peach"
+    },
+    "form": {
+      "newEyebrow": "New segment",
+      "newTitle": "Create a segment",
+      "editEyebrow": "Edit segment",
+      "editTitle": "Update this segment",
+      "name": "Name",
+      "namePlaceholder": "e.g. High-intent leads",
+      "description": "Description",
+      "descriptionPlaceholder": "Who belongs here and why",
+      "colour": "Colour",
+      "conditions": "Conditions",
+      "matchLabel": "Contacts must",
+      "matchAll": "match all conditions",
+      "matchAny": "match any condition",
+      "field": "Field",
+      "operator": "Condition",
+      "value": "Value",
+      "days": "days",
+      "tagPlaceholder": "Tag name",
+      "consentGranted": "granted",
+      "consentNotGranted": "not granted",
+      "addCondition": "Add condition",
+      "removeCondition": "Remove condition {number}",
+      "preview": "{count, plural, =0 {No contacts match yet} one {# contact matches} other {# contacts match}}",
+      "hint": "Segments update automatically as contacts change.",
+      "create": "Create segment",
+      "delete": "Delete segment",
+      "deleteTitle": "Delete {name}?",
+      "deleteBody": "The segment is removed. Its contacts stay as they are.",
+      "errors": {
+        "name": "Give the segment a name",
+        "condition": "Complete or remove the highlighted condition"
+      }
+    }
+  },
+  "import": {
+    "eyebrow": "Contact import",
+    "title": "Bring your relationships into Lulu.",
+    "intro": "Upload a CSV or Excel file, map the fields, review duplicates and confirm only when everything looks right.",
+    "stepsLabel": "Import steps",
+    "steps": {
+      "upload": {
+        "title": "Upload",
+        "hint": "CSV or XLSX"
+      },
+      "map": {
+        "title": "Map fields",
+        "hint": "Review matches"
+      },
+      "check": {
+        "title": "Check quality",
+        "hint": "Find duplicates"
+      },
+      "confirm": {
+        "title": "Confirm",
+        "hint": "Save contacts"
+      }
+    },
+    "upload": {
+      "drop": "Drop a CSV or Excel file here",
+      "limits": "CSV and XLSX files up to {max} rows",
+      "choose": "Choose file",
+      "owner": "Default owner",
+      "tag": "Apply tag",
+      "tagPlaceholder": "e.g. Imported 2026",
+      "duplicates": "Duplicate handling",
+      "handling": {
+        "hold": "Hold for review",
+        "skip": "Skip duplicates",
+        "update": "Update existing records"
+      },
+      "hint": "You can review field matches before importing."
+    },
+    "map": {
+      "summary": "{rows, plural, one {# row} other {# rows}} · {fields, plural, one {# field} other {# fields}} recognised",
+      "ready": "Ready to review",
+      "source": "Source column",
+      "field": "Lulu field",
+      "example": "Example",
+      "fieldFor": "Lulu field for {column}",
+      "next": "Check quality",
+      "problems": {
+        "noName": "Map a column to Full name, or to First name and Last name.",
+        "fieldTwice": "Each Lulu field can take one column only."
+      }
+    },
+    "fields": {
+      "name": "Full name",
+      "firstName": "First name",
+      "lastName": "Last name",
+      "email": "Email",
+      "phone": "Phone",
+      "company": "Company",
+      "jobRole": "Role",
+      "source": "Source",
+      "lifecycleStage": "Lifecycle stage",
+      "tags": "Tags",
+      "ignore": "Ignore column"
+    },
+    "check": {
+      "tiles": {
+        "new": "New contacts",
+        "duplicates": "Possible duplicates",
+        "problems": "Rows with problems"
+      },
+      "duplicates": {
+        "hold": "{count, plural, one {# possible duplicate will be held} other {# possible duplicates will be held}}",
+        "skip": "{count, plural, one {# possible duplicate will be skipped} other {# possible duplicates will be skipped}}",
+        "update": "{count, plural, one {# existing contact will be updated} other {# existing contacts will be updated}}"
+      },
+      "duplicatesHint": {
+        "hold": "Review them after the import without overwriting any existing data.",
+        "skip": "They are left out. Existing contacts stay as they are.",
+        "update": "Fields from the file replace the existing values. Tags are added."
+      },
+      "firstRows": "First {count, plural, one {row} other {# rows}}",
+      "rowNew": "New",
+      "match": {
+        "email": "Same email",
+        "nameAndCompany": "Same name and company"
+      },
+      "footer": "{count, plural, =0 {No new contacts will be added.} one {# new contact will be added.} other {# new contacts will be added.}}",
+      "back": "Back",
+      "confirm": "Confirm import"
+    },
+    "problems": {
+      "nameMissing": "No name",
+      "emailInvalid": "Invalid email",
+      "stageUnknown": "Unknown stage"
+    },
+    "running": "Importing {count, plural, one {# row} other {# rows}}. You can leave this page; the import keeps going.",
+    "done": {
+      "title": "Import finished.",
+      "failed": "The import stopped.",
+      "counts": {
+        "added": "Added",
+        "updated": "Updated",
+        "held": "Held for review",
+        "skipped": "Skipped"
+      },
+      "again": "Import another file",
+      "viewContacts": "View contacts",
+      "review": "Review {count, plural, one {# held duplicate} other {# held duplicates}}"
+    },
+    "held": {
+      "title": "Held duplicates",
+      "intro": "Decide for each row. Nothing changes until you choose.",
+      "empty": "All held duplicates are resolved.",
+      "rowLabel": "Row {row}: {name}",
+      "imported": "From the file, row {row}",
+      "existing": "Already in Lulu",
+      "match": {
+        "email": "Same email as an existing contact",
+        "nameAndCompany": "Same name and company as an existing contact"
+      },
+      "actions": {
+        "skip": "Skip",
+        "create": "Add as new contact",
+        "merge": "Merge into existing"
+      },
+      "resolved": {
+        "skip": "Row skipped",
+        "create": "Added as a new contact",
+        "merge": "Merged into the existing contact"
+      }
+    },
+    "safe": {
+      "eyebrow": "Safe by default",
+      "title": "Nothing changes before review.",
+      "preview": "Preview every mapped field",
+      "hold": "Hold possible duplicates",
+      "source": "Keep the original source",
+      "owner": "Assign owners and tags",
+      "consent": "Imported contacts inherit your workspace privacy and consent rules."
+    }
+  },
+  "settings": {
+    "eyebrow": "CRM settings",
+    "title": "Make the workspace fit your team.",
+    "intro": "CRM configuration stays here, while records remain easy to use for everyone.",
+    "protected": "Workspace protected",
+    "back": "All settings",
+    "saved": "Settings saved",
+    "unsaved": "You have unsaved changes",
+    "readOnly": "Only owners and admins can change these settings. You can look, not edit.",
+    "sections": {
+      "fields": {
+        "title": "Custom contact fields",
+        "copy": "Add fields such as preferred language, customer tier or renewal date.",
+        "action": "Manage fields"
+      },
+      "pipelines": {
+        "title": "Statuses and pipelines",
+        "copy": "Shape lifecycle, lead and deal stages around how your team works.",
+        "action": "Configure statuses"
+      },
+      "roles": {
+        "title": "Roles and permissions",
+        "copy": "Choose who can see, edit, assign or delete CRM records.",
+        "action": "Manage access"
+      },
+      "consent": {
+        "title": "Consent and privacy",
+        "copy": "Keep communication preferences and consent evidence explicit.",
+        "action": "Review consent"
+      },
+      "notifications": {
+        "title": "Notifications",
+        "copy": "Choose which owners receive follow-up and assignment alerts.",
+        "action": "Set notifications"
+      }
+    },
+    "fields": {
+      "add": "Add field",
+      "empty": "No custom fields yet",
+      "emptyHint": "Add a field and it appears on every contact.",
+      "eyebrow": "Custom field",
+      "addTitle": "Add a contact field",
+      "editTitle": "Edit field",
+      "label": "Label",
+      "labelPlaceholder": "e.g. Preferred language",
+      "type": "Type",
+      "options": "Choices",
+      "optionsPlaceholder": "One per line",
+      "types": {
+        "text": "Text",
+        "number": "Number",
+        "date": "Date",
+        "select": "Choice list",
+        "checkbox": "Yes / no"
+      },
+      "created": "Field added",
+      "saved": "Field saved",
+      "deleted": "Field deleted",
+      "editLabel": "Edit {label}",
+      "deleteLabel": "Delete {label}",
+      "deleteTitle": "Delete {label}?",
+      "deleteBody": "The field disappears from contacts. Values already saved stay in the record history.",
+      "errors": {
+        "label": "Give the field a label",
+        "options": "Add at least one choice"
+      }
+    },
+    "pipelines": {
+      "dealStages": "Deal stages",
+      "dealStagesHint": "Rename, reorder or add stages. Every pipeline keeps a Won and a Lost stage.",
+      "newStage": "New stage",
+      "namePlaceholder": "e.g. Demo booked",
+      "probability": "Probability %",
+      "add": "Add stage",
+      "nameFor": "Name of {stage}",
+      "probabilityFor": "Probability of {stage}",
+      "save": "Save",
+      "moveUp": "Move {stage} up",
+      "moveDown": "Move {stage} down",
+      "delete": "Delete {stage}",
+      "types": {
+        "won": "Won",
+        "lost": "Lost"
+      },
+      "added": "Stage added",
+      "saved": "Stage saved",
+      "moved": "Stage moved",
+      "deleted": "Stage deleted",
+      "lifecycle": "Lifecycle stages",
+      "lifecycleHint": "Lead and contact stages are the same for every workspace, so reports and imports stay comparable."
+    },
+    "roles": {
+      "ownerNote": "Owners can always do everything.",
+      "resource": "Records",
+      "role": {
+        "admin": "Admin",
+        "member": "Member"
+      },
+      "action": {
+        "view": "View",
+        "create": "Create",
+        "edit": "Edit",
+        "delete": "Delete"
+      },
+      "resources": {
+        "contacts": "Contacts",
+        "companies": "Companies",
+        "deals": "Deals",
+        "tasks": "Tasks",
+        "notes": "Notes",
+        "segments": "Segments",
+        "imports": "Imports",
+        "settings": "Settings"
+      },
+      "cell": "{role} can {action} {resource}"
+    },
+    "consent": {
+      "marketing": "Marketing needs consent",
+      "marketingHint": "Marketing email goes only to contacts who opted in.",
+      "evidence": "Record where consent came from",
+      "evidenceHint": "Changing consent asks for a short note, for example the form or call.",
+      "imported": "Imported contacts",
+      "importedHint": "What contacts brought in by an import get.",
+      "importedOptions": {
+        "not_granted": "No marketing consent",
+        "granted": "Consent granted (only if your file records it)"
+      }
+    },
+    "notifications": {
+      "event": "When",
+      "channels": {
+        "inApp": "In app",
+        "email": "Email"
+      },
+      "cell": "{event}: {channel}",
+      "events": {
+        "taskAssigned": "A task is assigned to me",
+        "taskDue": "One of my tasks is due",
+        "dealAssigned": "A deal is assigned to me",
+        "dealStageChanged": "One of my deals changes stage",
+        "leadAssigned": "A lead is assigned to me",
+        "importFinished": "My import is finished"
+      }
+    }
+  },
+  "aiAnalysis": {
+    "eyebrow": "Contact intelligence",
+    "title": "Understand the next best action.",
+    "intro": "Lulu reviews the context already in your workspace and keeps suggestions explainable.",
+    "badge": "AI assisted",
+    "pickContact": "Analyze contact",
+    "run": "Run analysis",
+    "running": "Analyzing…",
+    "noContacts": "Add a contact to analyze it.",
+    "empty": "No analysis yet",
+    "emptyHint": "Run an analysis to get a summary, a next step and a data quality check.",
+    "summary": "Relationship summary",
+    "nextStep": "Recommended next step",
+    "quality": "Data quality",
+    "qualityScore": "{filled} of {total} fields complete",
+    "missing": "Missing: {fields}. Add them from the contact drawer.",
+    "complete": "All key fields are filled in.",
+    "generatedAt": "Suggested {time}. Nothing is saved until you confirm.",
+    "status": {
+      "accepted": "Accepted. The changes you picked were saved.",
+      "dismissed": "Dismissed. Nothing was saved."
+    },
+    "dismiss": "Dismiss",
+    "review": "Review and save",
+    "dismissed": "Suggestion dismissed",
+    "fields": {
+      "email": "email",
+      "phone": "phone",
+      "company": "company",
+      "jobRole": "role",
+      "source": "source"
+    },
+    "accept": {
+      "eyebrow": "Confirm",
+      "title": "Save suggestions for {name}?",
+      "intro": "Pick what to save. Nothing else changes.",
+      "createTask": "Create a follow-up task, due {date}",
+      "taskTitle": "Task title",
+      "applyStage": "Change the stage to {stage}",
+      "confirm": "Save selected",
+      "saved": "Saved"
+    },
+    "controls": {
+      "eyebrow": "AI controls",
+      "title": "People stay in control.",
+      "intro": "AI can suggest, summarize and prioritize. Saving changes always requires confirmation.",
+      "analyzeNewActivity": {
+        "label": "Analyze new activity",
+        "hint": "Suggest insights when new context arrives"
+      },
+      "suggestFollowUps": {
+        "label": "Suggest follow-ups",
+        "hint": "Show next actions on contact records"
+      },
+      "autoUpdateFields": {
+        "label": "Pre-select field updates",
+        "hint": "Field changes start ticked in the confirm step. You still confirm every one."
+      },
+      "saved": "AI setting saved",
+      "footnote": "Suggestions come from a simulated AI until a model is connected."
+    },
+    "generated": {
+      "summaryCustomer": "{name} is a customer. Keep the relationship warm and look for the next opportunity.",
+      "summaryDeal": "{name} is working with you on {deal}. The deal is still open, so momentum matters.",
+      "summaryQuiet": "{name} has gone quiet: there has been no contact for more than 30 days.",
+      "summaryActive": "{name} is active: the last contact was {days, plural, =0 {today} one {yesterday} other {# days ago}}.",
+      "nextFinishTask": "Finish the open follow-up",
+      "nextFinishTaskDetail": "“{task}” is due. Close it before planning the next step.",
+      "nextFollowUpDeal": "Follow up on the deal",
+      "nextFollowUpDealDetail": "Check where {deal} stands and agree on the next step this week.",
+      "nextQualify": "Qualify this lead",
+      "nextQualifyDetail": "{name} has been in touch recently. A short call can confirm need, budget and timing.",
+      "nextReconnect": "Reconnect",
+      "nextReconnectDetail": "Send {name} a short, personal note to restart the conversation.",
+      "nextCheckIn": "Plan a check-in",
+      "nextCheckInDetail": "Book a short check-in with {name} to keep things moving.",
+      "taskFollowUpDeal": "Follow up with {name} on {deal}",
+      "taskQualify": "Qualification call with {name}",
+      "taskReconnect": "Reconnect with {name}",
+      "taskCheckIn": "Check in with {name}"
     }
   }
 }

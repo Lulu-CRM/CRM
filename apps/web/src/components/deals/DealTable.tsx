@@ -5,7 +5,7 @@ import { useTranslations } from "next-intl";
 import type { Deal, Stage } from "@lulu/shared";
 import { Avatar, EmptyState, Pill, Table, type Column, type PillTone, type SortState } from "@/components/ui";
 import { useFormat } from "@/i18n/format";
-import { initials, toneFor } from "@/lib/initials";
+import { avatarTone, initials } from "@/lib/initials";
 import { useStageName } from "./stages";
 
 type Props = {
@@ -87,7 +87,7 @@ export function DealTable({ deals, stages, companyName, contactName, ownerName, 
         const owner = ownerName(deal.ownerId);
         return owner ? (
           <span className="flex items-center gap-2">
-            <Avatar initials={initials(owner)} tone={toneFor(deal.ownerId)} small />
+            <Avatar initials={initials(owner)} tone={avatarTone(deal.ownerId)} small />
             {owner}
           </span>
         ) : (

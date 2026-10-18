@@ -112,7 +112,24 @@
     "TASK_NOT_FOUND": "未找到任务",
     "STAGE_NOT_FOUND": "未找到阶段",
     "STAGE_IN_OTHER_PIPELINE": "该阶段属于其他管道",
-    "PIPELINE_NOT_FOUND": "未找到管道"
+    "PIPELINE_NOT_FOUND": "未找到管道",
+    "COMPANY_NOT_FOUND": "未找到公司",
+    "NOTE_NOT_FOUND": "未找到笔记",
+    "RECORD_NOT_FOUND": "关联的记录已不存在",
+    "SEGMENT_NOT_FOUND": "未找到分组",
+    "IMPORT_NOT_FOUND": "未找到导入任务",
+    "IMPORT_EMPTY": "文件中没有可导入的行",
+    "IMPORT_TOO_MANY_ROWS": "文件超过 10,000 行。请拆分后分别导入。",
+    "IMPORT_ALREADY_STARTED": "此导入已经开始",
+    "IMPORT_ROW_NOT_FOUND": "该行已处理",
+    "IMPORT_MOCK_CSV_ONLY": "Excel 文件由服务器读取。在模拟模式下，请先另存为 CSV。",
+    "IMPORT_FILE_UNREADABLE": "无法读取此文件。请使用 CSV 或 XLSX 文件。",
+    "CUSTOM_FIELD_NOT_FOUND": "未找到字段",
+    "CUSTOM_FIELD_KEY_TAKEN": "已存在同名字段",
+    "STAGE_LOCKED": "赢单和输单阶段不能删除",
+    "STAGE_IN_USE": "请先把交易移出此阶段再删除",
+    "AI_INSIGHT_NOT_FOUND": "未找到建议",
+    "AI_INSIGHT_CLOSED": "此建议已被采纳或忽略"
   },
   "contacts": {
     "import": "导入",
@@ -231,7 +248,8 @@
   "due": {
     "overdue": "已逾期",
     "today": "今天",
-    "tomorrow": "明天"
+    "tomorrow": "明天",
+    "done": "已完成"
   },
   "activities": {
     "someone": "有人",
@@ -242,7 +260,9 @@
       "note": "已添加笔记",
       "ai_signal": "AI 信号",
       "created": "已创建联系人",
-      "stage_changed": "状态已更改"
+      "stage_changed": "状态已更改",
+      "task_completed": "任务已完成",
+      "task_reopened": "任务已重新打开"
     },
     "details": {
       "task": "{actor} 更新了一项跟进。",
@@ -251,7 +271,9 @@
       "created": "由 {actor} 添加。",
       "stage_changed": "由 {actor} 更改。",
       "email": "通过邮件收到了回复。",
-      "meeting": "会议已加入日历。"
+      "meeting": "会议已加入日历。",
+      "task_completed": "{actor} 完成了一项跟进。",
+      "task_reopened": "{actor} 重新打开了一项跟进。"
     }
   },
   "time": {
@@ -348,6 +370,733 @@
       "over": "{name} 位于 {stage} 上方。",
       "dropped": "{name} 已移动到 {stage}。",
       "cancelled": "已取消移动 {name}。"
+    }
+  },
+  "overview": {
+    "import": "导入",
+    "addContact": "添加联系人",
+    "viewAll": "查看全部",
+    "stats": {
+      "contacts": "全部联系人",
+      "contactsNoChange": "暂无上月数据",
+      "vsLastMonth": "较上月",
+      "pipeline": "在途商机",
+      "weighted": "加权价值",
+      "followUps": "待跟进",
+      "dueToday": "今天到期",
+      "signals": "AI 信号",
+      "sinceMonday": "自周一以来"
+    },
+    "recent": {
+      "eyebrow": "最近联系人",
+      "title": "让客户关系持续推进。",
+      "empty": "还没有联系人"
+    },
+    "pipeline": {
+      "eyebrow": "销售管道概览",
+      "title": "需要关注的事项。",
+      "open": "打开交易与销售管道",
+      "empty": "没有进行中的交易",
+      "active": "{count} 个进行中的商机",
+      "addDeal": "添加交易"
+    },
+    "activity": {
+      "eyebrow": "动态流",
+      "title": "团队正在推进。",
+      "open": "打开活动",
+      "empty": "暂无动态"
+    }
+  },
+  "leads": {
+    "eyebrow": "潜在客户工作区",
+    "title": "少些猜测，更好地筛选。",
+    "intro": "情况变化时移动潜在客户。每张卡片都清楚显示下一步。",
+    "addLead": "添加潜在客户",
+    "column": {
+      "add": "添加潜在客户",
+      "addLead": "添加潜在客户到{stage}",
+      "empty": "这里还没有潜在客户"
+    },
+    "card": {
+      "actions": "{name} 的操作",
+      "open": "打开资料",
+      "moveTo": "移动到",
+      "noTouch": "尚未联系"
+    },
+    "dnd": {
+      "instructions": "将潜在客户拖到其他阶段，或通过它的菜单移动。",
+      "picked": "已拿起 {name}。",
+      "over": "{name} 位于 {stage} 上方。",
+      "dropped": "{name} 已移动到 {stage}。",
+      "cancelled": "已取消移动 {name}。"
+    }
+  },
+  "tasks": {
+    "eyebrow": "任务",
+    "title": "跟进进度一目了然。",
+    "newTask": "新建任务",
+    "edit": "编辑 {title}",
+    "filters": {
+      "label": "按截止日期筛选",
+      "all": "全部",
+      "overdue": "已逾期",
+      "today": "今天",
+      "this_week": "本周",
+      "owner": "负责人",
+      "anyOwner": "所有负责人",
+      "showDone": "显示已完成"
+    },
+    "empty": "还没有任务",
+    "emptyHint": "创建一项跟进，避免遗漏。",
+    "noMatches": "没有符合筛选条件的任务",
+    "noMatchesHint": "换个负责人或截止日期试试。",
+    "timeline": {
+      "eyebrow": "活动时间线",
+      "title": "所有接触点，尽在一处。",
+      "empty": "暂无动态"
+    },
+    "priority": {
+      "high": "高",
+      "normal": "普通",
+      "low": "低"
+    },
+    "form": {
+      "newEyebrow": "新任务",
+      "newTitle": "创建跟进",
+      "editEyebrow": "编辑任务",
+      "editTitle": "更新此跟进",
+      "title": "任务标题",
+      "titlePlaceholder": "需要做什么？",
+      "related": "关联对象",
+      "none": "无",
+      "contacts": "联系人",
+      "companies": "公司",
+      "deals": "交易",
+      "due": "截止日期",
+      "owner": "负责人",
+      "priority": "优先级",
+      "hint": "每项跟进都有负责人和日期。",
+      "create": "创建任务",
+      "created": "任务已添加到活动。",
+      "saved": "任务已更新。",
+      "errors": {
+        "titleRequired": "请输入任务标题",
+        "ownerRequired": "请选择负责人"
+      }
+    }
+  },
+  "companies": {
+    "add": "添加公司",
+    "eyebrow": "公司目录",
+    "title": "有背景的客户。",
+    "intro": "将人员、销售管道和商业历史与每家公司关联起来。",
+    "searchPlaceholder": "搜索公司、域名或行业",
+    "filtersLabel": "公司筛选",
+    "filters": {
+      "all": "全部公司",
+      "mine": "我的公司"
+    },
+    "noMatches": "没有匹配的公司",
+    "noMatchesHint": "请尝试其他搜索或筛选条件。",
+    "empty": "还没有公司",
+    "emptyHint": "添加第一家公司，关联其联系人和交易。",
+    "showing": "显示 {count} / {total} 家公司",
+    "people": "{count} 位联系人",
+    "pipelineValue": "管道价值",
+    "otherCurrency": "另有 {count} 笔其他币种交易",
+    "open": "打开 {name}",
+    "sizeValue": "{size} 名员工",
+    "sortLabel": "公司排序",
+    "sort": {
+      "openDealValue": "管道价值最高",
+      "name": "名称",
+      "contactCount": "联系人最多",
+      "lastTouchAt": "最近联系"
+    },
+    "health": {
+      "strong": "良好",
+      "watch": "关注",
+      "new": "新客户"
+    },
+    "deleted": "公司已删除",
+    "deleteTitle": "删除公司？",
+    "deleteOne": "{name} 将被移除。其联系人和交易仍保留在 CRM 中。",
+    "form": {
+      "eyebrow": "新公司",
+      "editEyebrow": "公司",
+      "addTitle": "添加客户公司",
+      "editTitle": "编辑公司",
+      "name": "公司名称",
+      "namePlaceholder": "例如 Northstar Studio",
+      "domain": "域名",
+      "domainPlaceholder": "company.com",
+      "industry": "行业",
+      "industryPlaceholder": "例如 零售",
+      "size": "公司规模",
+      "noSize": "未设置",
+      "owner": "负责人",
+      "requiredHint": "标有 * 的字段为必填项。",
+      "submit": "创建公司",
+      "created": "公司已添加",
+      "updated": "公司已保存",
+      "errors": {
+        "nameRequired": "请输入公司名称",
+        "domainInvalid": "请输入类似 company.com 的域名",
+        "ownerRequired": "请选择负责人"
+      }
+    },
+    "drawer": {
+      "eyebrow": "公司资料",
+      "domain": "域名",
+      "industry": "行业",
+      "size": "公司规模",
+      "owner": "负责人",
+      "lastTouch": "最近联系",
+      "pipelineValue": "未结管道",
+      "openDeals": "{count} 笔进行中的交易",
+      "peopleEyebrow": "人员",
+      "people": "该公司的联系人",
+      "noPeople": "尚未关联联系人",
+      "dealsEyebrow": "管道",
+      "deals": "交易",
+      "noDeals": "还没有交易",
+      "edit": "编辑公司",
+      "delete": "删除公司",
+      "website": "网站"
+    }
+  },
+  "notes": {
+    "add": "添加笔记",
+    "eyebrow": "工作区笔记",
+    "title": "不会丢失的背景信息。",
+    "intro": "把共享的决策和私人提醒放在它们所属的客户关系旁边。",
+    "searchPlaceholder": "搜索笔记",
+    "open": "打开笔记 {title}",
+    "filters": {
+      "label": "显示笔记",
+      "all": "全部",
+      "shared": "共享",
+      "private": "私人"
+    },
+    "visibility": {
+      "shared": "共享",
+      "private": "私人"
+    },
+    "linked": {
+      "contact": "联系人：{name}",
+      "company": "公司：{name}",
+      "deal": "交易：{name}"
+    },
+    "empty": "还没有笔记",
+    "emptyHint": "记下决策、交接或下一步，方便团队以后查找。",
+    "noMatches": "没有匹配的笔记",
+    "noMatchesHint": "换个关键词搜索，或显示全部笔记。",
+    "deleteTitle": "删除这条笔记？",
+    "deleteMessage": "所有能看到「{title}」的人都将无法再看到它。",
+    "deleted": "笔记已删除。",
+    "form": {
+      "newEyebrow": "新笔记",
+      "newTitle": "让背景信息触手可及",
+      "editEyebrow": "编辑笔记",
+      "editTitle": "更新这条笔记",
+      "title": "标题",
+      "titlePlaceholder": "团队需要记住什么？",
+      "body": "笔记",
+      "bodyPlaceholder": "添加决策、交接或下一步行动",
+      "visibility": "可见范围",
+      "related": "关联到",
+      "none": "无",
+      "contacts": "联系人",
+      "companies": "公司",
+      "deals": "交易",
+      "hint": "私人笔记只有你能看到。",
+      "create": "保存笔记",
+      "delete": "删除笔记",
+      "created": "笔记已保存到 CRM 工作区。",
+      "saved": "笔记已更新。",
+      "errors": {
+        "titleRequired": "请为笔记添加标题",
+        "titleTooLong": "标题不能超过 200 个字符",
+        "bodyTooLong": "笔记不能超过 10,000 个字符"
+      }
+    }
+  },
+  "segments": {
+    "eyebrow": "客户分组",
+    "title": "让数据聚焦重点。",
+    "intro": "已保存的受众会随工作区的变化自动更新。",
+    "create": "创建分组",
+    "edit": "编辑 {name}",
+    "live": "{name} 正在自动更新",
+    "viewContacts": "查看联系人",
+    "members": "{count} 个联系人",
+    "empty": "还没有分组",
+    "emptyHint": "创建一个分组，让受众保持最新。",
+    "deleted": "分组已删除",
+    "created": "分组已创建",
+    "saved": "分组已保存",
+    "drawerEyebrow": "分组",
+    "drawerEmpty": "此分组目前没有联系人",
+    "rules": {
+      "or": "或",
+      "lifecycleStage": {
+        "is": "阶段为{value}",
+        "is_not": "阶段不是{value}"
+      },
+      "ownerId": {
+        "is": "负责人为 {value}",
+        "is_not": "负责人不是 {value}"
+      },
+      "tag": {
+        "has": "带有标签 {value}",
+        "has_not": "没有标签 {value}"
+      },
+      "marketingConsent": {
+        "granted": "已同意营销",
+        "notGranted": "未同意营销"
+      },
+      "lastTouch": {
+        "within_days": "最近 {days} 天内有联系",
+        "older_than_days": "超过 {days} 天未联系",
+        "never": "从未联系"
+      },
+      "followUp": {
+        "due": "跟进今天或更早到期"
+      },
+      "openDeal": {
+        "exists": "有进行中的交易",
+        "none": "没有进行中的交易"
+      }
+    },
+    "fields": {
+      "lifecycleStage": "阶段",
+      "ownerId": "负责人",
+      "tag": "标签",
+      "marketingConsent": "营销同意",
+      "lastTouch": "最近联系",
+      "followUp": "跟进",
+      "openDeal": "进行中的交易"
+    },
+    "operators": {
+      "is": "是",
+      "is_not": "不是",
+      "has": "包含",
+      "has_not": "不包含",
+      "within_days": "最近",
+      "older_than_days": "超过",
+      "never": "从未",
+      "due": "今天或更早到期",
+      "exists": "有",
+      "none": "没有"
+    },
+    "colours": {
+      "violet": "紫色",
+      "coral": "珊瑚色",
+      "blue": "蓝色",
+      "mint": "薄荷绿",
+      "peach": "桃色"
+    },
+    "form": {
+      "newEyebrow": "新分组",
+      "newTitle": "创建分组",
+      "editEyebrow": "编辑分组",
+      "editTitle": "更新此分组",
+      "name": "名称",
+      "namePlaceholder": "例如：高意向潜在客户",
+      "description": "描述",
+      "descriptionPlaceholder": "哪些人属于这里，以及原因",
+      "colour": "颜色",
+      "conditions": "条件",
+      "matchLabel": "联系人需要",
+      "matchAll": "满足全部条件",
+      "matchAny": "满足任一条件",
+      "field": "字段",
+      "operator": "条件",
+      "value": "值",
+      "days": "天",
+      "tagPlaceholder": "标签名称",
+      "consentGranted": "已同意",
+      "consentNotGranted": "未同意",
+      "addCondition": "添加条件",
+      "removeCondition": "移除条件 {number}",
+      "preview": "{count, plural, =0 {暂无匹配的联系人} other {# 个联系人匹配}}",
+      "hint": "联系人变化时，分组会自动更新。",
+      "create": "创建分组",
+      "delete": "删除分组",
+      "deleteTitle": "删除 {name}？",
+      "deleteBody": "分组将被删除，其中的联系人保持不变。",
+      "errors": {
+        "name": "请输入分组名称",
+        "condition": "请完善或移除标出的条件"
+      }
+    }
+  },
+  "import": {
+    "eyebrow": "联系人导入",
+    "title": "把你的客户关系带入 Lulu。",
+    "intro": "上传 CSV 或 Excel 文件，映射字段，检查重复项，确认无误后再导入。",
+    "stepsLabel": "导入步骤",
+    "steps": {
+      "upload": {
+        "title": "上传",
+        "hint": "CSV 或 XLSX"
+      },
+      "map": {
+        "title": "映射字段",
+        "hint": "检查匹配"
+      },
+      "check": {
+        "title": "检查质量",
+        "hint": "查找重复项"
+      },
+      "confirm": {
+        "title": "确认",
+        "hint": "保存联系人"
+      }
+    },
+    "upload": {
+      "drop": "把 CSV 或 Excel 文件拖到这里",
+      "limits": "支持最多 {max} 行的 CSV 和 XLSX 文件",
+      "choose": "选择文件",
+      "owner": "默认负责人",
+      "tag": "添加标签",
+      "tagPlaceholder": "例如：2026 导入",
+      "duplicates": "重复项处理",
+      "handling": {
+        "hold": "暂存待审核",
+        "skip": "跳过重复项",
+        "update": "更新现有记录"
+      },
+      "hint": "导入前你可以检查字段匹配。"
+    },
+    "map": {
+      "summary": "{rows} 行 · 已识别 {fields} 个字段",
+      "ready": "可以检查",
+      "source": "源列",
+      "field": "Lulu 字段",
+      "example": "示例",
+      "fieldFor": "{column} 对应的 Lulu 字段",
+      "next": "检查质量",
+      "problems": {
+        "noName": "请把一列映射到姓名，或映射到名和姓。",
+        "fieldTwice": "每个 Lulu 字段只能对应一列。"
+      }
+    },
+    "fields": {
+      "name": "姓名",
+      "firstName": "名",
+      "lastName": "姓",
+      "email": "邮箱",
+      "phone": "电话",
+      "company": "公司",
+      "jobRole": "职位",
+      "source": "来源",
+      "lifecycleStage": "生命周期阶段",
+      "tags": "标签",
+      "ignore": "忽略此列"
+    },
+    "check": {
+      "tiles": {
+        "new": "新联系人",
+        "duplicates": "可能的重复项",
+        "problems": "有问题的行"
+      },
+      "duplicates": {
+        "hold": "{count} 条可能的重复项将被暂存",
+        "skip": "{count} 条可能的重复项将被跳过",
+        "update": "{count} 个现有联系人将被更新"
+      },
+      "duplicatesHint": {
+        "hold": "导入后再审核，不会覆盖任何现有数据。",
+        "skip": "这些行不会导入，现有联系人保持不变。",
+        "update": "文件中的字段将替换现有值，标签会被追加。"
+      },
+      "firstRows": "前 {count} 行",
+      "rowNew": "新",
+      "match": {
+        "email": "邮箱相同",
+        "nameAndCompany": "姓名和公司相同"
+      },
+      "footer": "{count, plural, =0 {不会添加新联系人。} other {将添加 # 个新联系人。}}",
+      "back": "返回",
+      "confirm": "确认导入"
+    },
+    "problems": {
+      "nameMissing": "缺少姓名",
+      "emailInvalid": "邮箱无效",
+      "stageUnknown": "未知阶段"
+    },
+    "running": "正在导入 {count} 行。你可以离开此页面，导入会继续进行。",
+    "done": {
+      "title": "导入完成。",
+      "failed": "导入已中止。",
+      "counts": {
+        "added": "已添加",
+        "updated": "已更新",
+        "held": "待审核",
+        "skipped": "已跳过"
+      },
+      "again": "导入另一个文件",
+      "viewContacts": "查看联系人",
+      "review": "审核 {count} 条暂存的重复项"
+    },
+    "held": {
+      "title": "暂存的重复项",
+      "intro": "逐行决定。在你选择之前不会有任何更改。",
+      "empty": "所有暂存的重复项都已处理。",
+      "rowLabel": "第 {row} 行：{name}",
+      "imported": "来自文件，第 {row} 行",
+      "existing": "Lulu 中已有",
+      "match": {
+        "email": "与现有联系人邮箱相同",
+        "nameAndCompany": "与现有联系人姓名和公司相同"
+      },
+      "actions": {
+        "skip": "跳过",
+        "create": "添加为新联系人",
+        "merge": "合并到现有联系人"
+      },
+      "resolved": {
+        "skip": "已跳过该行",
+        "create": "已添加为新联系人",
+        "merge": "已合并到现有联系人"
+      }
+    },
+    "safe": {
+      "eyebrow": "默认安全",
+      "title": "审核之前不会有任何更改。",
+      "preview": "预览每个映射的字段",
+      "hold": "暂存可能的重复项",
+      "source": "保留原始来源",
+      "owner": "分配负责人和标签",
+      "consent": "导入的联系人沿用工作区的隐私和授权规则。"
+    }
+  },
+  "settings": {
+    "eyebrow": "CRM 设置",
+    "title": "让工作区适合你的团队。",
+    "intro": "CRM 配置集中在这里，记录对每个人都保持简单易用。",
+    "protected": "工作区已受保护",
+    "back": "全部设置",
+    "saved": "设置已保存",
+    "unsaved": "你有未保存的更改",
+    "readOnly": "只有所有者和管理员可以更改这些设置。你可以查看，但不能编辑。",
+    "sections": {
+      "fields": {
+        "title": "自定义联系人字段",
+        "copy": "添加首选语言、客户等级或续约日期等字段。",
+        "action": "管理字段"
+      },
+      "pipelines": {
+        "title": "状态与销售管道",
+        "copy": "根据团队的工作方式调整生命周期、潜在客户和交易阶段。",
+        "action": "配置状态"
+      },
+      "roles": {
+        "title": "角色与权限",
+        "copy": "决定谁可以查看、编辑、分配或删除 CRM 记录。",
+        "action": "管理权限"
+      },
+      "consent": {
+        "title": "授权与隐私",
+        "copy": "清楚记录沟通偏好和授权凭证。",
+        "action": "查看授权"
+      },
+      "notifications": {
+        "title": "通知",
+        "copy": "选择哪些负责人接收跟进和分配提醒。",
+        "action": "设置通知"
+      }
+    },
+    "fields": {
+      "add": "添加字段",
+      "empty": "还没有自定义字段",
+      "emptyHint": "添加字段后，它会出现在每个联系人上。",
+      "eyebrow": "自定义字段",
+      "addTitle": "添加联系人字段",
+      "editTitle": "编辑字段",
+      "label": "名称",
+      "labelPlaceholder": "例如：首选语言",
+      "type": "类型",
+      "options": "选项",
+      "optionsPlaceholder": "每行一个",
+      "types": {
+        "text": "文本",
+        "number": "数字",
+        "date": "日期",
+        "select": "选项列表",
+        "checkbox": "是 / 否"
+      },
+      "created": "字段已添加",
+      "saved": "字段已保存",
+      "deleted": "字段已删除",
+      "editLabel": "编辑 {label}",
+      "deleteLabel": "删除 {label}",
+      "deleteTitle": "删除 {label}？",
+      "deleteBody": "该字段将不再显示在联系人上，已保存的值仍保留在记录历史中。",
+      "errors": {
+        "label": "请输入字段名称",
+        "options": "请至少添加一个选项"
+      }
+    },
+    "pipelines": {
+      "dealStages": "交易阶段",
+      "dealStagesHint": "重命名、排序或添加阶段。每个管道都保留赢单和输单阶段。",
+      "newStage": "新阶段",
+      "namePlaceholder": "例如：已预约演示",
+      "probability": "可能性 %",
+      "add": "添加阶段",
+      "nameFor": "{stage} 的名称",
+      "probabilityFor": "{stage} 的可能性",
+      "save": "保存",
+      "moveUp": "上移 {stage}",
+      "moveDown": "下移 {stage}",
+      "delete": "删除 {stage}",
+      "types": {
+        "won": "赢单",
+        "lost": "输单"
+      },
+      "added": "阶段已添加",
+      "saved": "阶段已保存",
+      "moved": "阶段已移动",
+      "deleted": "阶段已删除",
+      "lifecycle": "生命周期阶段",
+      "lifecycleHint": "潜在客户和联系人阶段在所有工作区中相同，便于比较报表和导入。"
+    },
+    "roles": {
+      "ownerNote": "所有者始终拥有全部权限。",
+      "resource": "记录",
+      "role": {
+        "admin": "管理员",
+        "member": "成员"
+      },
+      "action": {
+        "view": "查看",
+        "create": "创建",
+        "edit": "编辑",
+        "delete": "删除"
+      },
+      "resources": {
+        "contacts": "联系人",
+        "companies": "公司",
+        "deals": "交易",
+        "tasks": "任务",
+        "notes": "笔记",
+        "segments": "客户分组",
+        "imports": "导入",
+        "settings": "设置"
+      },
+      "cell": "{role}可以{action}{resource}"
+    },
+    "consent": {
+      "marketing": "营销需要授权",
+      "marketingHint": "营销邮件只发送给已同意的联系人。",
+      "evidence": "记录授权来源",
+      "evidenceHint": "更改授权时需要填写简短说明，例如表单或电话。",
+      "imported": "导入的联系人",
+      "importedHint": "通过导入添加的联系人获得的授权状态。",
+      "importedOptions": {
+        "not_granted": "未授权营销",
+        "granted": "已授权（仅当文件中有记录时）"
+      }
+    },
+    "notifications": {
+      "event": "何时",
+      "channels": {
+        "inApp": "应用内",
+        "email": "邮件"
+      },
+      "cell": "{event}：{channel}",
+      "events": {
+        "taskAssigned": "有任务分配给我",
+        "taskDue": "我的任务到期",
+        "dealAssigned": "有交易分配给我",
+        "dealStageChanged": "我的交易阶段变化",
+        "leadAssigned": "有潜在客户分配给我",
+        "importFinished": "我的导入已完成"
+      }
+    }
+  },
+  "aiAnalysis": {
+    "eyebrow": "联系人洞察",
+    "title": "了解最佳下一步。",
+    "intro": "Lulu 会查看工作区中已有的信息，并让建议清晰可解释。",
+    "badge": "AI 辅助",
+    "pickContact": "分析联系人",
+    "run": "开始分析",
+    "running": "正在分析…",
+    "noContacts": "先添加联系人再进行分析。",
+    "empty": "还没有分析结果",
+    "emptyHint": "开始分析，获取摘要、下一步建议和数据质量检查。",
+    "summary": "关系摘要",
+    "nextStep": "建议的下一步",
+    "quality": "数据质量",
+    "qualityScore": "已填写 {filled}/{total} 个字段",
+    "missing": "缺少：{fields}。可在联系人资料中补充。",
+    "complete": "所有关键字段都已填写。",
+    "generatedAt": "建议生成于 {time}。在你确认之前不会保存任何内容。",
+    "status": {
+      "accepted": "已采纳。你选择的更改已保存。",
+      "dismissed": "已忽略。没有保存任何内容。"
+    },
+    "dismiss": "忽略",
+    "review": "查看并保存",
+    "dismissed": "已忽略建议",
+    "fields": {
+      "email": "邮箱",
+      "phone": "电话",
+      "company": "公司",
+      "jobRole": "职位",
+      "source": "来源"
+    },
+    "accept": {
+      "eyebrow": "确认",
+      "title": "保存针对 {name} 的建议？",
+      "intro": "选择要保存的内容，其他内容不会更改。",
+      "createTask": "创建跟进任务，截止 {date}",
+      "taskTitle": "任务标题",
+      "applyStage": "将阶段改为{stage}",
+      "confirm": "保存所选",
+      "saved": "已保存"
+    },
+    "controls": {
+      "eyebrow": "AI 控制",
+      "title": "决定权始终在人。",
+      "intro": "AI 可以提出建议、总结和排序。保存更改始终需要确认。",
+      "analyzeNewActivity": {
+        "label": "分析新动态",
+        "hint": "有新信息时提供洞察"
+      },
+      "suggestFollowUps": {
+        "label": "建议跟进",
+        "hint": "在联系人记录上显示下一步"
+      },
+      "autoUpdateFields": {
+        "label": "预先勾选字段更新",
+        "hint": "字段更改在确认步骤中默认勾选，你仍需逐项确认。"
+      },
+      "saved": "AI 设置已保存",
+      "footnote": "在连接模型之前，建议来自模拟 AI。"
+    },
+    "generated": {
+      "summaryCustomer": "{name} 是客户。保持关系热度，留意下一个机会。",
+      "summaryDeal": "{name} 正在和你推进 {deal}。交易仍在进行中，保持节奏很重要。",
+      "summaryQuiet": "{name} 已沉寂：超过 30 天没有联系。",
+      "summaryActive": "{name} 很活跃：{days, plural, =0 {今天} one {昨天} other {# 天前}}有过联系。",
+      "nextFinishTask": "完成待办的跟进",
+      "nextFinishTaskDetail": "“{task}”已到期。先完成它，再规划下一步。",
+      "nextFollowUpDeal": "跟进交易",
+      "nextFollowUpDealDetail": "了解 {deal} 的进展，并在本周商定下一步。",
+      "nextQualify": "确认这个潜在客户",
+      "nextQualifyDetail": "{name} 最近有联系。一次简短通话即可确认需求、预算和时间。",
+      "nextReconnect": "重新联系",
+      "nextReconnectDetail": "给 {name} 发一条简短的个人消息，重新开启对话。",
+      "nextCheckIn": "安排一次沟通",
+      "nextCheckInDetail": "和 {name} 约一次简短沟通，保持推进。",
+      "taskFollowUpDeal": "就 {deal} 跟进 {name}",
+      "taskQualify": "与 {name} 进行确认通话",
+      "taskReconnect": "重新联系 {name}",
+      "taskCheckIn": "与 {name} 简短沟通"
     }
   }
 }

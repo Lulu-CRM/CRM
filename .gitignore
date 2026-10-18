@@ -8,4 +8,5 @@ coverage/
 .env.*.local
 *.tsbuildinfo
 *.log
+apps/api/src/generated/
 .DS_Store

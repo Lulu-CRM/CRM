@@ -1,0 +1,46 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum Role {
+  owner
+  admin
+  member
+}
+
+model Workspace {
+  id              String    @id @default(uuid())
+  name            String
+  defaultCurrency String    @default("EUR")
+  defaultLanguage String    @default("en")
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  deletedAt       DateTime?
+
+  users User[]
+
+  @@map("workspaces")
+}
+
+model User {
+  id           String   @id @default(uuid())
+  workspaceId  String
+  name         String
+  email        String   @unique
+  passwordHash String?
+  language     String   @default("en")
+  role         Role     @default(member)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  deletedAt    DateTime?
+
+  workspace Workspace @relation(fields: [workspaceId], references: [id])
+
+  @@index([workspaceId])
+  @@map("users")
+}

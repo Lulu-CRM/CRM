@@ -1,6 +1,13 @@
 # @lulu/api
 
-Express API for the Lulu CRM module. Boots without connecting to anything yet; database and Redis checks land in a later prompt.
+Express API for the Lulu CRM module. PostgreSQL through Prisma 7 (driver adapter: `pg`); Redis checks land in a later prompt.
+
+## Setup
+
+1. `npm install` at the repo root.
+2. Copy `.env.example` names into `apps/api/.env` and fill real values (needs a reachable PostgreSQL).
+3. `npm run db:generate -w @lulu/api` — generates the Prisma client into `src/generated/` (gitignored; `db:migrate` also regenerates).
+4. `npm run db:migrate -w @lulu/api` — applies migrations.
 
 ## Scripts
 
@@ -14,21 +21,29 @@ Express API for the Lulu CRM module. Boots without connecting to anything yet; d
 | `npm run format` | Prettier write                                     |
 | `npm test`    | Vitest run (unit tests, `*.int.test.ts` excluded)   |
 | `npm run test:watch` | Vitest in watch mode                         |
+| `npm run test:int` | Integration tests (`*.int.test.ts`, needs a real database) |
+| `npm run db:migrate` | `prisma migrate dev` (creates and applies migrations) |
+| `npm run db:deploy` | `prisma migrate deploy` (applies committed migrations only) |
+| `npm run db:generate` | Regenerates the Prisma client into `src/generated/` |
+| `npm run db:studio` | Prisma Studio (database browser)               |
 
 ## Folders
 
 | Folder        | Purpose                                              |
 | ------------- | ---------------------------------------------------- |
+| `prisma/`     | Schema (`schema.prisma`) and committed migrations    |
 | `src/config`  | Env loading and parsing (`env.ts` is the only source of config) |
 | `src/routes`  | Express routers, mounted under `/api/v1` by `routes/index.ts` |
 | `src/services`| Business logic used by routes                        |
 | `src/middleware` | Express middleware (auth, errors, etc.)           |
 | `src/jobs`    | BullMQ background jobs (import, AI analysis)         |
 | `src/lib`     | Small shared helpers                                 |
-| `src/db`      | Database client setup (Prisma, later)                |
+| `src/db`      | Prisma client (`prisma.ts`) and workspace-scoped client (`scoped.ts`) |
+| `src/generated` | Generated Prisma client, gitignored, rebuilt by `db:generate` |
 
 ## Conventions
 
 - Never read `process.env` outside `src/config/env.ts`; import `env` from there.
+- **All application queries go through `scopedDb(workspaceId)`** (`src/db/scoped.ts`) — it enforces workspace scoping and soft delete. The base client (`src/db/prisma.ts`) is only for the `Workspace` table, migrations, and infrastructure. To scope a new model, add its delegate name to `SCOPED_MODELS` in `src/db/scoped.ts`.
 - Health is served at `GET /health` and `GET /api/v1/health`.
-- Test env vars are injected by `vitest.config.ts` (`test.env`); no real `.env` is needed to run tests.
+- Unit-test env vars are injected by `vitest.config.ts` (`test.env`); unit tests need no `.env`. Integration tests (`test:int`) read `DATABASE_URL` from `.env` and need a migrated database.

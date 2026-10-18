@@ -4,6 +4,31 @@ Every table has `id`, `workspaceId`, `createdAt`, `updatedAt`, and `deletedAt` f
 
 The prototype in `design/` stores money, dates and links as text. This model replaces that with real fields.
 
+## Base fields (the pattern every new model follows)
+
+In `apps/api/prisma/schema.prisma`, every workspace-scoped model carries:
+
+```prisma
+model Example {
+  id          String    @id @default(uuid())
+  workspaceId String
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  deletedAt   DateTime?
+
+  workspace Workspace @relation(fields: [workspaceId], references: [id])
+
+  @@index([workspaceId])
+  @@map("examples")
+}
+```
+
+Rules: `@@map` uses snake_case plural table names, model names are PascalCase singular. `Workspace` itself has no `workspaceId`. After adding a model to the schema, add its delegate name to `SCOPED_MODELS` in `apps/api/src/db/scoped.ts` so scoping and soft delete apply to it.
+
+## Query rule
+
+**All application queries go through `scopedDb(workspaceId)`** (`apps/api/src/db/scoped.ts`). It forces `workspaceId` and `deletedAt = null` into reads, stamps `workspaceId` on create, forces it into update/upsert `where`, and converts `delete`/`deleteMany` into soft deletes. The base client (`src/db/prisma.ts`) is only for the `Workspace` table, migrations, and infrastructure code. Hard delete is never exposed through `scopedDb`.
+
 ## Entities
 
 | Entity | Key fields |
@@ -47,7 +72,8 @@ The prototype in `design/` stores money, dates and links as text. This model rep
 - **Duplicates.** A possible duplicate of a contact is matched on email first, then on name plus company. Duplicates are held for review, never merged automatically.
 - **Consent.** `marketingConsent` and its timestamp are stored on the contact, and imported contacts inherit the workspace rules.
 - **Activity feed from other modules.** Email, Calendar and others create `Activity` rows through the event format in `docs/api.md`.
-- **Delete.** Soft delete everywhere. Permanent deletion is a later feature.
+- **User table exists now.** Created in `init_base` migration with `passwordHash String?` (nullable) so the login task needs no extra migration. `User.email` is **globally unique** (`@unique`, not per-workspace): login uses email alone, and a user belongs to exactly one workspace.
+- **Delete.** Soft delete everywhere. Permanent deletion is a later feature. The API enforces this: `scopedDb` converts every `delete` into `deletedAt = now()`.
 
 ## Indexes to add early
 

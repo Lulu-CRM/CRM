@@ -29,5 +29,69 @@
     "language": "Sprache",
     "error": "Etwas ist schiefgelaufen",
     "retry": "Erneut versuchen"
+  },
+  "layout": {
+    "tagline": "Intelligenter Arbeitsbereich",
+    "workspace": "Arbeitsbereich",
+    "modules": "Module",
+    "active": "Aktiv",
+    "workspaceOwner": "Inhaber des Arbeitsbereichs",
+    "crm": "CRM",
+    "relationships": "Beziehungen",
+    "crmWorkspace": "CRM-Arbeitsbereich",
+    "aiTipTitle": "KI-bereiter Kontext",
+    "aiTipBody": "Jeder Datensatz kann die ganze Geschichte enthalten.",
+    "searchWorkspace": "Arbeitsbereich durchsuchen",
+    "help": "Hilfe",
+    "notifications": "Benachrichtigungen",
+    "menu": "Menü",
+    "openMenu": "Menü öffnen",
+    "closeMenu": "Menü schließen",
+    "breadcrumb": "Navigationspfad"
+  },
+  "modules": {
+    "onlinePresence": "Online-Präsenz",
+    "accounting": "Buchhaltung",
+    "email": "E-Mail",
+    "calendar": "Kalender",
+    "crm": "CRM",
+    "marketplace": "Marktplatz",
+    "workspaceSettings": "Einstellungen"
+  },
+  "pages": {
+    "eyebrow": "Lulu CRM · {page}",
+    "overview": {
+      "description": "Alle Beziehungen, Nachfassaktionen und Chancen an einem ruhigen Ort."
+    },
+    "contacts": {
+      "description": "Eine vollständige, nutzbare Quelle der Wahrheit für jede Beziehung."
+    },
+    "companies": {
+      "description": "Verstehen Sie die Menschen, den Kontext und den Wert hinter jedem Kunden."
+    },
+    "leads": {
+      "description": "Interesse qualifizieren und die richtigen Gespräche voranbringen."
+    },
+    "deals": {
+      "description": "Jede Chance, jeden Verantwortlichen und jeden nächsten Schritt im Blick."
+    },
+    "activities": {
+      "description": "Gespräche in sichtbare Nachverfolgung für das ganze Team verwandeln."
+    },
+    "notes": {
+      "description": "Entscheidungen und Kontext dort festhalten, wo das Team sie nutzen kann."
+    },
+    "segments": {
+      "description": "Gezielte Zielgruppen aus den Daten Ihres Arbeitsbereichs erstellen."
+    },
+    "import": {
+      "description": "Bestehende Beziehungen sicher und überprüfbar in Lulu importieren."
+    },
+    "ai": {
+      "description": "Lulu zeigt Kontext und nächste Schritte – die Kontrolle bleibt bei Ihnen."
+    },
+    "settings": {
+      "description": "Felder, Status, Rollen und Einwilligungsregeln für Ihren Arbeitsbereich festlegen."
+    }
   }
 }

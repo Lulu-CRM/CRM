@@ -10,6 +10,7 @@ import {
   demoNotes,
   canSeeNote,
   filterNotes,
+  buildOverview,
   companyDetail,
   summarizeCompany,
   moveDeal,
@@ -325,6 +326,23 @@ export const mockApi = {
       return delay(paginate(sortTimeline(rows), query.page, query.pageSize ?? 50));
     },
   },
+
+  overview: () =>
+    delay(
+      buildOverview(
+        {
+          contacts: db.contacts,
+          companies: db.companies,
+          deals: db.deals,
+          stages: demoPipeline.stages,
+          tasks: db.tasks,
+          activities: db.activities,
+          currency: CURRENCY,
+        },
+        new Date(),
+        Intl.DateTimeFormat().resolvedOptions().timeZone,
+      ),
+    ),
 
   pipelines: () => delay([demoPipeline]),
 

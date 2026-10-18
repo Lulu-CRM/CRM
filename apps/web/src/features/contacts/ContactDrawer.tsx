@@ -10,7 +10,8 @@ import { useErrorMessage } from "@/lib/errors";
 import { useApi } from "@/lib/useApi";
 import { ActivityItem } from "@/features/activities/ActivityItem";
 import { DueChip } from "@/features/activities/DueChip";
-import { avatarTone, initials, knownSources, stageTone } from "./options";
+import { knownSources, stageTone } from "./options";
+import { avatarTone, initials } from "@/lib/initials";
 import type { Lookups } from "./useLookups";
 
 const textButton = "text-[11px] font-extrabold text-primary-hover hover:underline";

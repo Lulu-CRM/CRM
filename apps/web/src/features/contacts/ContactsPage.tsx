@@ -26,7 +26,8 @@ import { useApi, useDebounced } from "@/lib/useApi";
 import { ContactDrawer } from "./ContactDrawer";
 import { ContactFormModal } from "./ContactFormModal";
 import { FilterMenu, type ExtraFilters } from "./FilterMenu";
-import { avatarTone, filterKeys, initials, stageTone, startOfMonth, type FilterKey } from "./options";
+import { filterKeys, stageTone, startOfMonth, type FilterKey } from "./options";
+import { avatarTone, initials } from "@/lib/initials";
 import { useLookups } from "./useLookups";
 
 const PAGE_SIZE = 10;

@@ -1,6 +1,7 @@
 # @lulu/api
 
-Express API for the Lulu CRM module. PostgreSQL through Prisma 7 (driver adapter: `pg`); Redis checks land in a later prompt.
+Express API for the Lulu CRM module. PostgreSQL through Prisma 7 (driver adapter: `pg`) and Redis with BullMQ for background jobs.
+
 
 ## Setup
 
@@ -21,7 +22,7 @@ Express API for the Lulu CRM module. PostgreSQL through Prisma 7 (driver adapter
 | `npm run format` | Prettier write                                     |
 | `npm test`    | Vitest run (unit tests, `*.int.test.ts` excluded)   |
 | `npm run test:watch` | Vitest in watch mode                         |
-| `npm run test:int` | Integration tests (`*.int.test.ts`, needs a real database) |
+| `npm run test:int` | Integration tests (`*.int.test.ts`, needs a real database and Redis) |
 | `npm run db:migrate` | `prisma migrate dev` (creates and applies migrations) |
 | `npm run db:deploy` | `prisma migrate deploy` (applies committed migrations only) |
 | `npm run db:generate` | Regenerates the Prisma client into `src/generated/` |
@@ -45,5 +46,6 @@ Express API for the Lulu CRM module. PostgreSQL through Prisma 7 (driver adapter
 
 - Never read `process.env` outside `src/config/env.ts`; import `env` from there.
 - **All application queries go through `scopedDb(workspaceId)`** (`src/db/scoped.ts`) — it enforces workspace scoping and soft delete. The base client (`src/db/prisma.ts`) is only for the `Workspace` table, migrations, and infrastructure. To scope a new model, add its delegate name to `SCOPED_MODELS` in `src/db/scoped.ts`.
-- Health is served at `GET /health` and `GET /api/v1/health`.
+- Health endpoints: `GET /health`, `GET /api/v1/health` return `{ data: { status: 'ok'|'degraded', checks: { database: 'ok'|'down', redis: 'ok'|'down' } } }`; `GET /health/live` returns `{ data: { status: 'ok' } }` without touching dependencies.
+
 - Unit-test env vars are injected by `vitest.config.ts` (`test.env`); unit tests need no `.env`. Integration tests (`test:int`) read `DATABASE_URL` from `.env` and need a migrated database.

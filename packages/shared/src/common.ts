@@ -45,3 +45,30 @@ export type Money = z.infer<typeof moneySchema>;
 export type BaseRecord = z.infer<typeof baseRecordSchema>;
 export type ListQuery = z.infer<typeof listQuerySchema>;
 export type ListMeta = z.infer<typeof listMetaSchema>;
+
+// Path parameter for single-resource routes: /contacts/<uuid>.
+export const idParamSchema = z.object({
+  id: z.uuid(),
+});
+
+// Common list parameters for new endpoints (supersedes listQuerySchema above;
+// kept until existing call sites migrate). Sort is an optional leading "-"
+// (descending) followed by a field name, as in docs/api.md.
+export const paginationQuerySchema = z.object({
+  page: z.coerce.number().int().min(1).default(1),
+  pageSize: z.coerce.number().int().min(1).max(100).default(25),
+  q: z.string().trim().optional(),
+  sort: z
+    .string()
+    .regex(/^-?[a-zA-Z][a-zA-Z0-9_]*$/, 'sort must be a field name with an optional leading "-"')
+    .optional(),
+});
+
+export type PaginationQuery = z.infer<typeof paginationQuerySchema>;
+
+// Shape of the meta object on paginated responses.
+export interface PaginationMeta {
+  page: number;
+  pageSize: number;
+  total: number;
+}

@@ -2,6 +2,7 @@ import type { Server } from 'node:http';
 import { createApp } from './app';
 import { env } from './config/env';
 import { disconnectDb } from './db/prisma';
+import { closeQueues } from './jobs/queues';
 
 const app = createApp();
 
@@ -12,7 +13,7 @@ const server: Server = app.listen(env.PORT, () => {
 function shutdown(signal: string): void {
   console.log(`${signal} received, shutting down`);
   server.close((err) => {
-    void disconnectDb().finally(() => {
+    void Promise.allSettled([disconnectDb(), closeQueues()]).finally(() => {
       process.exit(err === undefined ? 0 : 1);
     });
   });

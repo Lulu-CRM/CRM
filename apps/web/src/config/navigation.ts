@@ -11,7 +11,7 @@ export const crmPages = [
   { key: "segments", slug: "segments", icon: "◌" },
   { key: "import", slug: "import", icon: "⇧" },
   { key: "ai", slug: "ai-analysis", icon: "✦" },
-  { key: "settings", slug: "settings", icon: "⚙" },
+  { key: "settings", slug: "settings", icon: "⚙\uFE0E" },
 ] as const;
 
 export type CrmPageKey = (typeof crmPages)[number]["key"];
@@ -20,14 +20,14 @@ export type CrmPageKey = (typeof crmPages)[number]["key"];
 export const workspaceModules = [
   { key: "onlinePresence", icon: "▦", href: "#" },
   { key: "accounting", icon: "▤", href: "#" },
-  { key: "email", icon: "✉", href: "#" },
+  { key: "email", icon: "✉\uFE0E", href: "#" },
   { key: "calendar", icon: "◷", href: "#" },
   { key: "crm", icon: "♧", href: "/crm/overview" },
 ] as const;
 
 export const extraModules = [
   { key: "marketplace", icon: "⌘", href: "#" },
-  { key: "workspaceSettings", icon: "⚙", href: "#" },
+  { key: "workspaceSettings", icon: "⚙\uFE0E", href: "#" },
 ] as const;
 
 export function crmHref(slug: string) {

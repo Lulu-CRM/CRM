@@ -17,7 +17,7 @@ export function PageHeader({
         <span className="text-[9px] font-black tracking-[0.16em] text-rail-label uppercase">
           {tPages("eyebrow", { page: t(page) })}
         </span>
-        <h1 className="mt-2 mb-1.5 text-[29px] font-bold tracking-tight text-text">{t(page)}</h1>
+        <h1 className="mt-2 mb-1.5 text-[29px] font-semibold tracking-tight text-text">{t(page)}</h1>
         <p className="max-w-[690px] text-xs leading-relaxed text-text-muted">
           {tPages(`${page}.description`)}
         </p>

@@ -3,6 +3,7 @@
 import { useTranslations } from "next-intl";
 import { usePathname } from "@/i18n/navigation";
 import { findCrmPage } from "@/config/navigation";
+import { Avatar } from "@/components/ui/Avatar";
 
 export function TopBar({ onOpenMenu }: { onOpenMenu: () => void }) {
   const t = useTranslations("layout");
@@ -50,6 +51,7 @@ export function TopBar({ onOpenMenu }: { onOpenMenu: () => void }) {
           ♢
           <i className="absolute top-0 right-0 size-[5px] rounded-full bg-[#ee7968]" />
         </button>
+        <Avatar initials="JM" small />
       </div>
     </header>
   );

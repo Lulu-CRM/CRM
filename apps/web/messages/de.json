@@ -47,7 +47,8 @@
     "menu": "Menü",
     "openMenu": "Menü öffnen",
     "closeMenu": "Menü schließen",
-    "breadcrumb": "Navigationspfad"
+    "breadcrumb": "Navigationspfad",
+    "profileMenu": "Profilmenü"
   },
   "modules": {
     "onlinePresence": "Online-Präsenz",

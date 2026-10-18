@@ -2,6 +2,7 @@
 
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
+import { Avatar } from "@/components/ui/Avatar";
 import { extraModules, workspaceModules } from "@/config/navigation";
 
 // Placeholder until auth (backend task 2) gives us the signed-in user.
@@ -56,6 +57,7 @@ export function Rail({ onNavigate }: { onNavigate?: () => void }) {
 
       <div className="min-h-6 flex-1" />
 
+      <div className="border-t border-[#2d2c3d] pt-4">
       <span className="px-2.5 pb-2 text-[9px] font-black tracking-[0.16em] text-rail-label uppercase">
         {t("modules")}
       </span>
@@ -67,15 +69,17 @@ export function Rail({ onNavigate }: { onNavigate?: () => void }) {
           </Link>
         ))}
       </nav>
+      </div>
 
       <div className="mt-3.5 flex items-center gap-2.5 border-t border-[#2d2c3d] px-1 pt-4">
-        <span className="grid size-8 place-items-center rounded-full bg-primary-soft text-[10px] font-bold text-primary">
-          {currentUser.initials}
-        </span>
+        <Avatar initials={currentUser.initials} small />
         <span>
           <strong className="block text-[11px] text-white">{currentUser.name}</strong>
           <small className="block text-[9px] text-rail-label">{t("workspaceOwner")}</small>
         </span>
+        <button type="button" aria-label={t("profileMenu")} className="ml-auto text-[#85869b]">
+          ⌄
+        </button>
       </div>
     </aside>
   );

@@ -47,7 +47,8 @@
     "menu": "Menu",
     "openMenu": "Open menu",
     "closeMenu": "Close menu",
-    "breadcrumb": "Breadcrumb"
+    "breadcrumb": "Breadcrumb",
+    "profileMenu": "Profile menu"
   },
   "modules": {
     "onlinePresence": "Online Presence",

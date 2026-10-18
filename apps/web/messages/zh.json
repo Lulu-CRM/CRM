@@ -47,7 +47,8 @@
     "menu": "菜单",
     "openMenu": "打开菜单",
     "closeMenu": "关闭菜单",
-    "breadcrumb": "导航路径"
+    "breadcrumb": "导航路径",
+    "profileMenu": "个人菜单"
   },
   "modules": {
     "onlinePresence": "线上形象",

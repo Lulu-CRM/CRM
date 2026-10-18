@@ -12,11 +12,16 @@ export function CrmNav() {
   return (
     <aside className="hidden w-[220px] flex-none border-r border-border bg-surface px-3 py-5.5 md:block">
       <div className="mb-5.5 flex items-center gap-2.5 rounded-lg bg-[#f3f1ff] px-2.5 py-3 text-primary-hover">
-        <span>♧</span>
+        <span className="grid size-[25px] place-items-center rounded-[7px] bg-[#675ce0] text-sm text-white">
+          ♧
+        </span>
         <div>
           <strong className="block text-xs">{tLayout("crm")}</strong>
           <small className="block text-[9px] text-[#8178c0]">{tLayout("relationships")}</small>
         </div>
+        <span className="ml-auto text-[11px]" aria-hidden>
+          ⌃
+        </span>
       </div>
 
       <span className="block px-2.5 pb-2 text-[8px] font-black tracking-[0.14em] text-text-subtle uppercase">

@@ -116,7 +116,14 @@
     "COMPANY_NOT_FOUND": "Unternehmen nicht gefunden",
     "NOTE_NOT_FOUND": "Notiz nicht gefunden",
     "RECORD_NOT_FOUND": "Der verknüpfte Datensatz existiert nicht mehr",
-    "SEGMENT_NOT_FOUND": "Segment nicht gefunden"
+    "SEGMENT_NOT_FOUND": "Segment nicht gefunden",
+    "IMPORT_NOT_FOUND": "Import nicht gefunden",
+    "IMPORT_EMPTY": "Die Datei enthält keine Zeilen zum Importieren",
+    "IMPORT_TOO_MANY_ROWS": "Die Datei hat mehr als 10.000 Zeilen. Teile sie auf und importiere die Teile.",
+    "IMPORT_ALREADY_STARTED": "Dieser Import wurde bereits gestartet",
+    "IMPORT_ROW_NOT_FOUND": "Diese Zeile wurde bereits erledigt",
+    "IMPORT_MOCK_CSV_ONLY": "Excel-Dateien liest der Server. Speichere die Tabelle im Mock-Modus zuerst als CSV.",
+    "IMPORT_FILE_UNREADABLE": "Diese Datei konnte nicht gelesen werden. Verwende eine CSV- oder XLSX-Datei."
   },
   "contacts": {
     "import": "Importieren",
@@ -716,6 +723,147 @@
         "name": "Gib dem Segment einen Namen",
         "condition": "Vervollständige oder entferne die markierte Bedingung"
       }
+    }
+  },
+  "import": {
+    "eyebrow": "Kontaktimport",
+    "title": "Bringe deine Beziehungen zu Lulu.",
+    "intro": "Lade eine CSV- oder Excel-Datei hoch, ordne die Felder zu, prüfe Duplikate und bestätige erst, wenn alles stimmt.",
+    "stepsLabel": "Importschritte",
+    "steps": {
+      "upload": {
+        "title": "Hochladen",
+        "hint": "CSV oder XLSX"
+      },
+      "map": {
+        "title": "Felder zuordnen",
+        "hint": "Zuordnung prüfen"
+      },
+      "check": {
+        "title": "Qualität prüfen",
+        "hint": "Duplikate finden"
+      },
+      "confirm": {
+        "title": "Bestätigen",
+        "hint": "Kontakte speichern"
+      }
+    },
+    "upload": {
+      "drop": "CSV- oder Excel-Datei hier ablegen",
+      "limits": "CSV- und XLSX-Dateien bis {max} Zeilen",
+      "choose": "Datei auswählen",
+      "owner": "Standard-Verantwortlicher",
+      "tag": "Tag vergeben",
+      "tagPlaceholder": "z. B. Import 2026",
+      "duplicates": "Umgang mit Duplikaten",
+      "handling": {
+        "hold": "Zur Prüfung zurückhalten",
+        "skip": "Duplikate überspringen",
+        "update": "Bestehende Einträge aktualisieren"
+      },
+      "hint": "Du kannst die Feldzuordnung vor dem Import prüfen."
+    },
+    "map": {
+      "summary": "{rows, plural, one {# Zeile} other {# Zeilen}} · {fields, plural, one {# Feld} other {# Felder}} erkannt",
+      "ready": "Bereit zur Prüfung",
+      "source": "Quellspalte",
+      "field": "Lulu-Feld",
+      "example": "Beispiel",
+      "fieldFor": "Lulu-Feld für {column}",
+      "next": "Qualität prüfen",
+      "problems": {
+        "noName": "Ordne eine Spalte dem vollständigen Namen zu oder Vor- und Nachname.",
+        "fieldTwice": "Jedes Lulu-Feld kann nur eine Spalte aufnehmen."
+      }
+    },
+    "fields": {
+      "name": "Vollständiger Name",
+      "firstName": "Vorname",
+      "lastName": "Nachname",
+      "email": "E-Mail",
+      "phone": "Telefon",
+      "company": "Unternehmen",
+      "jobRole": "Rolle",
+      "source": "Quelle",
+      "lifecycleStage": "Lebenszyklus-Phase",
+      "tags": "Tags",
+      "ignore": "Spalte ignorieren"
+    },
+    "check": {
+      "tiles": {
+        "new": "Neue Kontakte",
+        "duplicates": "Mögliche Duplikate",
+        "problems": "Zeilen mit Problemen"
+      },
+      "duplicates": {
+        "hold": "{count, plural, one {# mögliches Duplikat wird zurückgehalten} other {# mögliche Duplikate werden zurückgehalten}}",
+        "skip": "{count, plural, one {# mögliches Duplikat wird übersprungen} other {# mögliche Duplikate werden übersprungen}}",
+        "update": "{count, plural, one {# bestehender Kontakt wird aktualisiert} other {# bestehende Kontakte werden aktualisiert}}"
+      },
+      "duplicatesHint": {
+        "hold": "Prüfe sie nach dem Import, ohne bestehende Daten zu überschreiben.",
+        "skip": "Sie werden ausgelassen. Bestehende Kontakte bleiben unverändert.",
+        "update": "Felder aus der Datei ersetzen die bestehenden Werte. Tags werden ergänzt."
+      },
+      "firstRows": "{count, plural, one {Erste Zeile} other {Erste # Zeilen}}",
+      "rowNew": "Neu",
+      "match": {
+        "email": "Gleiche E-Mail",
+        "nameAndCompany": "Gleicher Name und Firma"
+      },
+      "footer": "{count, plural, =0 {Es werden keine neuen Kontakte hinzugefügt.} one {# neuer Kontakt wird hinzugefügt.} other {# neue Kontakte werden hinzugefügt.}}",
+      "back": "Zurück",
+      "confirm": "Import bestätigen"
+    },
+    "problems": {
+      "nameMissing": "Kein Name",
+      "emailInvalid": "Ungültige E-Mail",
+      "stageUnknown": "Unbekannte Phase"
+    },
+    "running": "{count, plural, one {# Zeile wird} other {# Zeilen werden}} importiert. Du kannst die Seite verlassen; der Import läuft weiter.",
+    "done": {
+      "title": "Import abgeschlossen.",
+      "failed": "Der Import wurde abgebrochen.",
+      "counts": {
+        "added": "Hinzugefügt",
+        "updated": "Aktualisiert",
+        "held": "Zur Prüfung",
+        "skipped": "Übersprungen"
+      },
+      "again": "Weitere Datei importieren",
+      "viewContacts": "Kontakte ansehen",
+      "review": "{count, plural, one {# zurückgehaltenes Duplikat prüfen} other {# zurückgehaltene Duplikate prüfen}}"
+    },
+    "held": {
+      "title": "Zurückgehaltene Duplikate",
+      "intro": "Entscheide für jede Zeile. Nichts ändert sich, bevor du wählst.",
+      "empty": "Alle zurückgehaltenen Duplikate sind erledigt.",
+      "rowLabel": "Zeile {row}: {name}",
+      "imported": "Aus der Datei, Zeile {row}",
+      "existing": "Bereits in Lulu",
+      "match": {
+        "email": "Gleiche E-Mail wie ein bestehender Kontakt",
+        "nameAndCompany": "Gleicher Name und gleiche Firma wie ein bestehender Kontakt"
+      },
+      "actions": {
+        "skip": "Überspringen",
+        "create": "Als neuen Kontakt anlegen",
+        "merge": "Mit bestehendem zusammenführen"
+      },
+      "resolved": {
+        "skip": "Zeile übersprungen",
+        "create": "Als neuer Kontakt angelegt",
+        "merge": "Mit dem bestehenden Kontakt zusammengeführt"
+      }
+    },
+    "safe": {
+      "eyebrow": "Sicher von Anfang an",
+      "title": "Nichts ändert sich vor der Prüfung.",
+      "preview": "Jedes zugeordnete Feld vorab ansehen",
+      "hold": "Mögliche Duplikate zurückhalten",
+      "source": "Ursprüngliche Quelle behalten",
+      "owner": "Verantwortliche und Tags vergeben",
+      "consent": "Importierte Kontakte übernehmen die Datenschutz- und Einwilligungsregeln deines Arbeitsbereichs."
     }
   }
 }

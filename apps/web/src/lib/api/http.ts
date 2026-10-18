@@ -16,15 +16,18 @@ async function send(method: string, path: string, body?: unknown, query?: object
     if (value !== undefined && value !== null && value !== "") url.searchParams.set(key, String(value));
   }
 
+  // Files go as multipart form data; the browser sets that Content-Type (with its boundary) itself.
+  const isForm = typeof FormData !== "undefined" && body instanceof FormData;
+
   let response: Response;
   try {
     response = await fetch(url, {
       method,
       headers: {
-        "Content-Type": "application/json",
+        ...(isForm ? {} : { "Content-Type": "application/json" }),
         ...(token ? { Authorization: `Bearer ${token}` } : {}),
       },
-      body: body === undefined ? undefined : JSON.stringify(body),
+      body: body === undefined ? undefined : isForm ? body : JSON.stringify(body),
     });
   } catch {
     throw new ApiError("NETWORK_ERROR", 0);
@@ -55,7 +58,7 @@ export async function getList<T extends z.ZodType>(
 
 export async function write<T extends z.ZodType>(
   schema: T,
-  method: "POST" | "PATCH",
+  method: "POST" | "PATCH" | "PUT",
   path: string,
   body: unknown,
 ) {
@@ -65,4 +68,12 @@ export async function write<T extends z.ZodType>(
 
 export async function remove(path: string) {
   await send("DELETE", path);
+}
+
+// Uploads one file as multipart form data (field "file"), for example POST /imports.
+export async function upload<T extends z.ZodType>(schema: T, path: string, file: File) {
+  const form = new FormData();
+  form.append("file", file);
+  const json = await send("POST", path, form);
+  return schema.parse(json.data) as z.infer<T>;
 }

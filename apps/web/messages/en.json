@@ -129,7 +129,13 @@
     "STAGE_LOCKED": "Won and Lost stages cannot be deleted",
     "STAGE_IN_USE": "Move the deals out of this stage before deleting it",
     "AI_INSIGHT_NOT_FOUND": "Suggestion not found",
-    "AI_INSIGHT_CLOSED": "This suggestion was already accepted or dismissed"
+    "AI_INSIGHT_CLOSED": "This suggestion was already accepted or dismissed",
+    "NOT_FOUND": "Not found",
+    "CONFLICT": "This conflicts with something that already exists",
+    "RATE_LIMITED": "Too many requests. Please wait a moment and try again.",
+    "INTERNAL_ERROR": "Something went wrong on our side. Please try again.",
+    "DUPLICATE_CONTACT": "This contact already exists",
+    "RECORD_LINK_INCOMPLETE": "A linked record needs both a record type and an id"
   },
   "contacts": {
     "import": "Import",

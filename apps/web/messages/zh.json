@@ -129,7 +129,13 @@
     "STAGE_LOCKED": "赢单和输单阶段不能删除",
     "STAGE_IN_USE": "请先把交易移出此阶段再删除",
     "AI_INSIGHT_NOT_FOUND": "未找到建议",
-    "AI_INSIGHT_CLOSED": "此建议已被采纳或忽略"
+    "AI_INSIGHT_CLOSED": "此建议已被采纳或忽略",
+    "NOT_FOUND": "未找到",
+    "CONFLICT": "与已有数据冲突",
+    "RATE_LIMITED": "请求过于频繁，请稍后重试",
+    "INTERNAL_ERROR": "服务器出现问题，请稍后重试",
+    "DUPLICATE_CONTACT": "该联系人已存在",
+    "RECORD_LINK_INCOMPLETE": "关联记录需要同时提供类型和 ID"
   },
   "contacts": {
     "import": "导入",

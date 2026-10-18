@@ -15,7 +15,7 @@ export function codeToStatus(code: ErrorCode): number {
 }
 
 export function codeToMessageKey(code: ErrorCode): string {
-  return `errors.${code.toLowerCase()}`;
+  return `errors.${code}`;
 }
 
 export class AppError extends Error {

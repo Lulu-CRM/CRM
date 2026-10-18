@@ -55,7 +55,7 @@ describe('errorHandler', () => {
     expect(res.status).toBe(404);
     const b = res.body as ErrorBody;
     expect(b.error.code).toBe('CONTACT_NOT_FOUND');
-    expect(b.error.message).toBe('errors.contact_not_found');
+    expect(b.error.message).toBe('errors.CONTACT_NOT_FOUND');
     expect(b.error.details).toBeNull();
   });
 
@@ -76,7 +76,7 @@ describe('errorHandler', () => {
     expect(res.status).toBe(400);
     const b = res.body as ErrorBody;
     expect(b.error.code).toBe('VALIDATION_ERROR');
-    expect(b.error.message).toBe('errors.validation_error');
+    expect(b.error.message).toBe('errors.VALIDATION_ERROR');
     expect(b.error.details).toEqual([
       expect.objectContaining({ path: 'email', code: 'invalid_format', message: 'errors.validation.invalid_format' }),
     ]);
@@ -90,7 +90,7 @@ describe('errorHandler', () => {
     expect(res.status).toBe(400);
     expect((res.body as ErrorBody).error).toEqual({
       code: 'VALIDATION_ERROR',
-      message: 'errors.validation_error',
+      message: 'errors.VALIDATION_ERROR',
       details: [{ path: 'body', code: 'invalid_json', message: 'errors.validation.invalid_json' }],
     });
   });
@@ -100,7 +100,7 @@ describe('errorHandler', () => {
     expect(res.status).toBe(409);
     const b = res.body as ErrorBody;
     expect(b.error.code).toBe('CONFLICT');
-    expect(b.error.message).toBe('errors.conflict');
+    expect(b.error.message).toBe('errors.CONFLICT');
   });
 
   it('maps Prisma P2025 to 404 NOT_FOUND', async () => {
@@ -115,7 +115,7 @@ describe('errorHandler', () => {
     expect(res.status).toBe(500);
     const b = res.body as ErrorBody;
     expect(b.error.code).toBe('INTERNAL_ERROR');
-    expect(b.error.message).toBe('errors.internal_error');
+    expect(b.error.message).toBe('errors.INTERNAL_ERROR');
     expect(b.error.details).toBeNull();
     expect(JSON.stringify(res.body)).not.toContain('hunter2');
     expect(JSON.stringify(res.body)).not.toContain('stack');

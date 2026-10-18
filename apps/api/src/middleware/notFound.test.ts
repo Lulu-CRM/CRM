@@ -18,7 +18,7 @@ describe('notFound middleware', () => {
     const res = await request(app).get('/nope');
     expect(res.status).toBe(404);
     expect(res.body).toEqual({
-      error: { code: 'NOT_FOUND', message: 'errors.not_found', details: null },
+      error: { code: 'NOT_FOUND', message: 'errors.NOT_FOUND', details: null },
     });
   });
 

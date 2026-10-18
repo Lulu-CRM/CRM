@@ -18,3 +18,6 @@ export * from "./note-logic";
 export * from "./fixtures/notes";
 export * from "./overview";
 export * from "./overview-logic";
+export * from "./segment";
+export * from "./segment-logic";
+export * from "./fixtures/segments";

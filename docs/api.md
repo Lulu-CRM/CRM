@@ -152,6 +152,31 @@ Schemas: `packages/shared/src/note.ts`. Who sees what: `canSeeNote` and `filterN
 | DELETE | `/segments/:id` | Delete |
 | GET | `/segments/:id/contacts` | Contacts in the segment |
 
+A segment's `rules` (schema: `segmentRulesSchema` in `packages/shared/src/segment.ts`):
+
+```json
+{
+  "match": "all",
+  "conditions": [
+    { "field": "lifecycleStage", "op": "is", "value": "qualified" },
+    { "field": "lastTouch", "op": "within_days", "value": 14 }
+  ]
+}
+```
+
+| Field | Operators | Value |
+| --- | --- | --- |
+| `lifecycleStage` | `is`, `is_not` | a lifecycle stage |
+| `ownerId` | `is`, `is_not` | a user id |
+| `tag` | `has`, `has_not` | tag text (case does not matter) |
+| `marketingConsent` | `is` | `true` or `false` |
+| `lastTouch` | `within_days`, `older_than_days` | number of days (never-touched contacts count as older) |
+| `lastTouch` | `never` | none |
+| `followUp` | `due` | none: an open task on the contact is due today or earlier |
+| `openDeal` | `exists`, `none` | none: the contact is on an open deal, or not |
+
+`match` is `all` or `any`; 1 to 20 conditions. Membership is worked out by `segmentMembers` in `packages/shared`, which the API, the `segments.refresh` job and the web app's live preview all use. `GET /segments` returns each segment with `memberCount`. Errors: `SEGMENT_NOT_FOUND`.
+
 ## Import
 
 | Method | Path | Purpose |

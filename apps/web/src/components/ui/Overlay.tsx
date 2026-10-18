@@ -38,7 +38,9 @@ export function Overlay({
     const trigger = document.activeElement as HTMLElement | null;
     const overflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
-    (panel.current?.querySelector<HTMLElement>(FOCUSABLE) ?? panel.current)?.focus();
+    // Start in the first form field when there is one (like the design's add contact form).
+    const firstField = panel.current?.querySelector<HTMLElement>("input:not([type=checkbox]):not([disabled]), select, textarea");
+    (firstField ?? panel.current?.querySelector<HTMLElement>(FOCUSABLE) ?? panel.current)?.focus();
 
     const onKey = (event: KeyboardEvent) => {
       if (stack[stack.length - 1] !== id) return;

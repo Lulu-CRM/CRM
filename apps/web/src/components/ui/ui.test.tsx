@@ -30,11 +30,11 @@ describe("Modal", () => {
     );
   }
 
-  it("opens as a labelled dialog and focuses inside it", () => {
+  it("opens as a labelled dialog and focuses the first field", () => {
     wrap(<Harness />);
     fireEvent.click(screen.getByText("open"));
     expect(screen.getByRole("dialog", { name: "Add contact" })).toBeTruthy();
-    expect(document.activeElement).toBe(screen.getByRole("button", { name: "Close" }));
+    expect(document.activeElement).toBe(screen.getByLabelText("Name"));
   });
 
   it("closes on Escape and gives focus back to the trigger", () => {

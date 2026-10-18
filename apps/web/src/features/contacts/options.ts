@@ -25,12 +25,13 @@ export function initials(name: string) {
     .join("");
 }
 
-const tones = ["violet", "blue", "peach", "mint", "coral"] as const;
+const tones = ["violet", "blue", "mint", "peach", "coral"] as const;
 
-// Same contact, same colour, on every screen.
+// Same contact, same colour, on every screen. The constants (seed 11, factor 193) are
+// picked so the design's sample contacts get the colours they have in the MagicPath design.
 export function avatarTone(id: string) {
-  let hash = 0;
-  for (const char of id) hash = (hash * 31 + char.charCodeAt(0)) >>> 0;
+  let hash = 11;
+  for (const char of id) hash = (hash * 193 + char.charCodeAt(0)) >>> 0;
   return tones[hash % tones.length];
 }
 

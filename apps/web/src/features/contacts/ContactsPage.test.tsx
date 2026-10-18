@@ -88,16 +88,16 @@ describe("Contacts page", () => {
   it("validates and adds a contact", async () => {
     await waitForRows(5);
     fireEvent.click(screen.getAllByRole("button", { name: /Add contact/ })[0]);
-    const dialog = await screen.findByRole("dialog", { name: "Add contact" });
-    fireEvent.change(within(dialog).getByLabelText("Email"), { target: { value: "not-an-email" } });
-    fireEvent.click(within(dialog).getByRole("button", { name: "Add contact" }));
+    const dialog = await screen.findByRole("dialog", { name: "Add a relationship to Lulu" });
+    fireEvent.change(within(dialog).getByLabelText("Work email"), { target: { value: "not-an-email" } });
+    fireEvent.click(within(dialog).getByRole("button", { name: "Create contact" }));
     expect(await within(dialog).findByText("Enter a name")).toBeTruthy();
     expect(within(dialog).getByText("Enter a valid email address")).toBeTruthy();
 
-    fireEvent.change(within(dialog).getByLabelText("Full name"), { target: { value: "Ada Lovelace" } });
-    fireEvent.change(within(dialog).getByLabelText("Email"), { target: { value: "ada@example.com" } });
+    fireEvent.change(within(dialog).getByLabelText(/Full name/), { target: { value: "Ada Lovelace" } });
+    fireEvent.change(within(dialog).getByLabelText("Work email"), { target: { value: "ada@example.com" } });
     fireEvent.change(within(dialog).getByLabelText("Tags"), { target: { value: "VIP, vip ,  Math" } });
-    fireEvent.click(within(dialog).getByRole("button", { name: "Add contact" }));
+    fireEvent.click(within(dialog).getByRole("button", { name: "Create contact" }));
 
     expect(await screen.findByText("Contact added")).toBeTruthy();
     await waitForRows(6);
@@ -109,14 +109,14 @@ describe("Contacts page", () => {
     await waitForRows(5);
     fireEvent.click(screen.getByText("Sophie Laurent"));
     const drawer = await screen.findByRole("dialog", { name: "Sophie Laurent" });
-    expect(within(drawer).getByText("Northstar Studio", { selector: "dd" })).toBeTruthy();
+    expect(within(drawer).getByText("Website form")).toBeTruthy();
     expect(await within(drawer).findByText("Send proposal to Sophie Laurent")).toBeTruthy();
     expect(await within(drawer).findByText("Email received")).toBeTruthy();
 
-    fireEvent.click(within(drawer).getByRole("button", { name: "Edit" }));
+    fireEvent.click(within(drawer).getByRole("button", { name: "Edit contact" }));
     const form = await screen.findByRole("dialog", { name: "Edit contact" });
-    expect((within(form).getByLabelText("Full name") as HTMLInputElement).value).toBe("Sophie Laurent");
-    fireEvent.change(within(form).getByLabelText("Job title"), { target: { value: "Head of Design" } });
+    expect((within(form).getByLabelText(/Full name/) as HTMLInputElement).value).toBe("Sophie Laurent");
+    fireEvent.change(within(form).getByLabelText("Role"), { target: { value: "Head of Design" } });
     fireEvent.click(within(form).getByRole("button", { name: "Save" }));
     expect(await screen.findByText("Contact saved")).toBeTruthy();
     await waitFor(() => expect(within(screen.getByRole("dialog", { name: "Sophie Laurent" })).getByText("Head of Design")).toBeTruthy());
@@ -127,14 +127,14 @@ describe("Contacts page", () => {
     fireEvent.click(screen.getByText("Sophie Laurent"));
     const drawer = await screen.findByRole("dialog", { name: "Sophie Laurent" });
     fireEvent.click(await within(drawer).findByRole("checkbox", { name: "Send proposal to Sophie Laurent" }));
-    expect(await within(drawer).findByText("Jamie Morgan updated a task", {}, { timeout: 2000 })).toBeTruthy();
+    expect(await within(drawer).findByText("Jamie Morgan updated a follow-up.", {}, { timeout: 2000 })).toBeTruthy();
   });
 
   it("adds a task from the drawer", async () => {
     await waitForRows(5);
     fireEvent.click(screen.getByText("Mila Rossi"));
     const drawer = await screen.findByRole("dialog", { name: "Mila Rossi" });
-    fireEvent.click(within(drawer).getByRole("button", { name: /Add task/ }));
+    fireEvent.click(within(drawer).getAllByRole("button", { name: /Task/ })[0]);
     fireEvent.change(within(drawer).getByLabelText("What needs to happen?"), { target: { value: "Call Mila" } });
     fireEvent.click(within(drawer).getByRole("button", { name: "Add task" }));
     expect(await within(drawer).findByText("Call Mila")).toBeTruthy();
@@ -153,14 +153,14 @@ describe("Contacts page", () => {
     await waitForRows(5);
     fireEvent.click(screen.getByText("Elena Schmidt"));
     const drawer = await screen.findByRole("dialog", { name: "Elena Schmidt" });
-    fireEvent.click(within(drawer).getByRole("button", { name: "Delete" }));
+    fireEvent.click(within(drawer).getByRole("button", { name: "Delete contact" }));
     expect(await screen.findByRole("dialog", { name: "Delete contact?" })).toBeTruthy();
 
     fireEvent.keyDown(document, { key: "Escape" });
     await waitFor(() => expect(screen.queryByRole("dialog", { name: "Delete contact?" })).toBeNull());
     expect(screen.getByRole("dialog", { name: "Elena Schmidt" })).toBeTruthy();
 
-    fireEvent.click(within(screen.getByRole("dialog", { name: "Elena Schmidt" })).getByRole("button", { name: "Delete" }));
+    fireEvent.click(within(screen.getByRole("dialog", { name: "Elena Schmidt" })).getByRole("button", { name: "Delete contact" }));
     const confirm = await screen.findByRole("dialog", { name: "Delete contact?" });
     fireEvent.click(within(confirm).getByRole("button", { name: "Delete" }));
     expect(await screen.findByText("Contact deleted")).toBeTruthy();
@@ -178,6 +178,24 @@ describe("Contacts page", () => {
     fireEvent.click(within(confirm).getByRole("button", { name: "Delete" }));
     await waitForRows(3);
     expect(screen.getByText("2 contacts deleted")).toBeTruthy();
+  });
+
+  it("opens the profile from the row menu", async () => {
+    await waitForRows(5);
+    fireEvent.click(screen.getByRole("button", { name: "Open Daniel Chen" }));
+    expect(await screen.findByRole("dialog", { name: "Daniel Chen" })).toBeTruthy();
+  });
+
+  it("filters by status and owner from + Filter, and the chip removes it", async () => {
+    await waitForRows(5);
+    fireEvent.click(screen.getByRole("button", { name: /Filter/ }));
+    fireEvent.change(screen.getByLabelText("Status"), { target: { value: "qualified" } });
+    await waitForRows(2);
+    fireEvent.change(screen.getByLabelText("Owner"), { target: { value: "user_alex" } });
+    await waitForRows(1);
+    expect(names()).toEqual(["Elena Schmidt"]);
+    fireEvent.click(screen.getByRole("button", { name: "Remove filter Qualified" }));
+    await waitForRows(2);
   });
 
   it("shows an error with a retry", async () => {

@@ -13,7 +13,7 @@ import { knownSources, lifecycleStages } from "./options";
 import type { Lookups } from "./useLookups";
 
 const inputClass =
-  "w-full rounded-md border border-border-strong bg-surface px-3 py-2 text-xs text-text outline-none focus:border-primary aria-[invalid=true]:border-[#d9534f]";
+  "w-full rounded-md border border-border-strong bg-surface px-[11px] py-2.5 text-[11px] text-text outline-none focus:border-[#8e83de] focus:shadow-[0_0_0_3px_#eeecff] aria-[invalid=true]:border-[#d9534f]";
 
 // Add when `contact` is null, edit otherwise.
 export function ContactFormModal({
@@ -71,9 +71,9 @@ export function ContactFormModal({
     ) : null;
   };
 
-  const field = (name: keyof ContactFormValues, label: string, input: React.ReactNode, wide = false) => (
-    <div className={`grid gap-1.5 ${wide ? "sm:col-span-2" : ""}`}>
-      <label htmlFor={`contact-${name}`} className="text-[10px] font-bold text-text-strong">
+  const field = (name: keyof ContactFormValues, label: React.ReactNode, input: React.ReactNode, wide = false) => (
+    <div className={`grid content-start gap-1.5 ${wide ? "sm:col-span-2" : ""}`}>
+      <label htmlFor={`contact-${name}`} className="text-[10px] font-extrabold text-neutral">
         {label}
       </label>
       {input}
@@ -88,17 +88,14 @@ export function ContactFormModal({
     "aria-describedby": errors[name] ? `${name}-error` : undefined,
   });
 
+  const req = <span className="text-[#c2413d]" aria-hidden> *</span>;
+
   return (
-    <Modal
-      open={open}
-      onClose={onClose}
-      eyebrow={t("eyebrow")}
-      title={contact ? t("editTitle") : t("addTitle")}
-    >
-      <form onSubmit={handleSubmit(onSubmit)} noValidate className="grid gap-4 sm:grid-cols-2">
-        {field("name", t("name"), <input className={inputClass} autoComplete="off" {...register("name")} {...aria("name")} />, true)}
-        {field("email", t("email"), <input type="email" className={inputClass} {...register("email")} {...aria("email")} />)}
-        {field("phone", t("phone"), <input type="tel" className={inputClass} {...register("phone")} {...aria("phone")} />)}
+    <Modal open={open} onClose={onClose} eyebrow={contact ? t("editEyebrow") : t("eyebrow")} title={contact ? t("editTitle") : t("addTitle")}>
+      <form onSubmit={handleSubmit(onSubmit)} noValidate className="grid gap-3.5 sm:grid-cols-2">
+        {field("name", <>{t("name")}{req}</>, <input className={inputClass} autoComplete="off" placeholder={t("namePlaceholder")} aria-required {...register("name")} {...aria("name")} />)}
+        {field("email", t("email"), <input type="email" className={inputClass} placeholder={t("emailPlaceholder")} {...register("email")} {...aria("email")} />)}
+        {field("phone", t("phone"), <input type="tel" className={inputClass} placeholder={t("phonePlaceholder")} {...register("phone")} {...aria("phone")} />)}
         {field(
           "companyId",
           t("company"),
@@ -111,18 +108,7 @@ export function ContactFormModal({
             ))}
           </select>,
         )}
-        {field("jobRole", t("jobRole"), <input className={inputClass} {...register("jobRole")} {...aria("jobRole")} />)}
-        {field(
-          "lifecycleStage",
-          t("stage"),
-          <select className={inputClass} {...register("lifecycleStage")} {...aria("lifecycleStage")}>
-            {lifecycleStages.map((stage) => (
-              <option key={stage} value={stage}>
-                {tStage(stage)}
-              </option>
-            ))}
-          </select>,
-        )}
+        {field("jobRole", t("jobRole"), <input className={inputClass} placeholder={t("jobRolePlaceholder")} {...register("jobRole")} {...aria("jobRole")} />)}
         {field(
           "source",
           t("source"),
@@ -139,6 +125,17 @@ export function ContactFormModal({
           </select>,
         )}
         {field(
+          "lifecycleStage",
+          t("stage"),
+          <select className={inputClass} {...register("lifecycleStage")} {...aria("lifecycleStage")}>
+            {lifecycleStages.map((stage) => (
+              <option key={stage} value={stage}>
+                {tStage(stage)}
+              </option>
+            ))}
+          </select>,
+        )}
+        {field(
           "ownerId",
           t("owner"),
           <select className={inputClass} {...register("ownerId")} {...aria("ownerId")}>
@@ -149,15 +146,18 @@ export function ContactFormModal({
             ))}
           </select>,
         )}
-        {field("tags", t("tags"), <input className={inputClass} placeholder={t("tagsHint")} {...register("tags")} {...aria("tags")} />)}
+        {field("tags", t("tags"), <input className={inputClass} placeholder={t("tagsHint")} {...register("tags")} {...aria("tags")} />, true)}
 
-        <div className="flex justify-end gap-2 border-t border-border pt-4 sm:col-span-2">
-          <Button variant="outline" onClick={onClose} disabled={isSubmitting}>
-            {tCommon("cancel")}
-          </Button>
-          <Button type="submit" loading={isSubmitting}>
-            {contact ? tCommon("save") : t("addTitle")}
-          </Button>
+        <div className="mt-1.5 flex flex-col items-end justify-between gap-3 border-t border-[#efedf4] pt-4 sm:col-span-2 sm:flex-row sm:items-center">
+          <span className="text-[10px] text-text-subtle">{t("requiredHint")}</span>
+          <div className="flex gap-2">
+            <Button variant="outline" onClick={onClose} disabled={isSubmitting}>
+              {tCommon("cancel")}
+            </Button>
+            <Button type="submit" loading={isSubmitting}>
+              {contact ? tCommon("save") : t("submit")}
+            </Button>
+          </div>
         </div>
       </form>
     </Modal>

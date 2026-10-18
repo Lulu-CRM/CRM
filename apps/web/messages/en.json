@@ -138,19 +138,20 @@
       "company": "Company",
       "status": "Status",
       "owner": "Owner",
-      "lastTouch": "Last touch"
+      "lastTouch": "Last touch",
+      "actions": "Actions"
     },
     "form": {
-      "eyebrow": "Contacts",
-      "addTitle": "Add contact",
+      "eyebrow": "New contact",
+      "addTitle": "Add a relationship to Lulu",
       "editTitle": "Edit contact",
       "name": "Full name",
-      "email": "Email",
+      "email": "Work email",
       "phone": "Phone",
       "company": "Company",
       "noCompany": "No company",
-      "jobRole": "Job title",
-      "stage": "Status",
+      "jobRole": "Role",
+      "stage": "Lifecycle stage",
       "source": "Source",
       "noSource": "Not set",
       "owner": "Owner",
@@ -162,34 +163,52 @@
         "nameRequired": "Enter a name",
         "emailInvalid": "Enter a valid email address",
         "ownerRequired": "Choose an owner"
-      }
+      },
+      "editEyebrow": "Contact",
+      "namePlaceholder": "e.g. Jamie Morgan",
+      "emailPlaceholder": "name@company.com",
+      "phonePlaceholder": "+49 ...",
+      "jobRolePlaceholder": "Role or department",
+      "requiredHint": "Fields marked * are required.",
+      "submit": "Create contact"
     },
     "drawer": {
       "eyebrow": "Contact profile",
       "email": "Email",
       "phone": "Phone",
-      "company": "Company",
       "owner": "Owner",
       "source": "Source",
       "tags": "Tags",
       "converted": "Converted to customer",
       "sendEmail": "Email",
-      "edit": "Edit",
+      "edit": "Edit contact",
       "convert": "Convert to customer",
-      "delete": "Delete",
-      "details": "Details",
-      "timeline": "Timeline",
+      "delete": "Delete contact",
+      "timeline": "Relationship context",
       "noActivity": "No activity yet",
-      "notes": "Notes",
+      "notes": "Shared notes",
       "noNotes": "No notes yet",
       "tasks": "Tasks",
-      "addTask": "Add task",
       "taskTitle": "What needs to happen?",
       "taskDue": "Due date",
       "cancel": "Cancel",
       "saveTask": "Add task",
       "taskAdded": "Task added",
-      "noTasks": "No open tasks"
+      "noTasks": "No open tasks",
+      "task": "Task",
+      "lastTouch": "Last touch",
+      "timelineEyebrow": "Timeline",
+      "tasksEyebrow": "Follow-ups",
+      "notesEyebrow": "Notes"
+    },
+    "importContacts": "Import contacts",
+    "openProfile": "Open {name}",
+    "moreFilters": {
+      "button": "Filter",
+      "status": "Status",
+      "owner": "Owner",
+      "any": "Any",
+      "remove": "Remove filter {filter}"
     }
   },
   "lifecycleStages": {
@@ -213,12 +232,28 @@
   },
   "activities": {
     "someone": "Someone",
-    "email": "Email received",
-    "meeting": "Meeting scheduled",
-    "task": "{actor} updated a task",
-    "note": "{actor} added a note",
-    "ai_signal": "AI spotted a buying signal",
-    "created": "{actor} created this contact",
-    "stage_changed": "{actor} changed the status"
+    "titles": {
+      "email": "Email received",
+      "meeting": "Meeting scheduled",
+      "task": "Task updated",
+      "note": "Note added",
+      "ai_signal": "AI signal",
+      "created": "Contact created",
+      "stage_changed": "Status changed"
+    },
+    "details": {
+      "task": "{actor} updated a follow-up.",
+      "note": "{actor} added a note.",
+      "ai_signal": "Buying intent increased.",
+      "created": "Added by {actor}.",
+      "stage_changed": "Changed by {actor}.",
+      "email": "A reply came in through Email.",
+      "meeting": "The call is on the calendar."
+    }
+  },
+  "time": {
+    "todayAt": "Today, {time}",
+    "yesterdayAt": "Yesterday, {time}",
+    "weekdayAt": "{day}, {time}"
   }
 }

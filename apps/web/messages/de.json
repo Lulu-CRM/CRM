@@ -138,19 +138,20 @@
       "company": "Unternehmen",
       "status": "Status",
       "owner": "Verantwortlich",
-      "lastTouch": "Letzter Kontakt"
+      "lastTouch": "Letzter Kontakt",
+      "actions": "Aktionen"
     },
     "form": {
-      "eyebrow": "Kontakte",
-      "addTitle": "Kontakt hinzufügen",
+      "eyebrow": "Neuer Kontakt",
+      "addTitle": "Eine Beziehung zu Lulu hinzufügen",
       "editTitle": "Kontakt bearbeiten",
       "name": "Vollständiger Name",
-      "email": "E-Mail",
+      "email": "Geschäftliche E-Mail",
       "phone": "Telefon",
       "company": "Unternehmen",
       "noCompany": "Kein Unternehmen",
-      "jobRole": "Position",
-      "stage": "Status",
+      "jobRole": "Rolle",
+      "stage": "Lebenszyklus-Phase",
       "source": "Quelle",
       "noSource": "Nicht festgelegt",
       "owner": "Verantwortlich",
@@ -162,34 +163,52 @@
         "nameRequired": "Bitte einen Namen eingeben",
         "emailInvalid": "Bitte eine gültige E-Mail-Adresse eingeben",
         "ownerRequired": "Bitte einen Verantwortlichen wählen"
-      }
+      },
+      "editEyebrow": "Kontakt",
+      "namePlaceholder": "z. B. Jamie Morgan",
+      "emailPlaceholder": "name@firma.de",
+      "phonePlaceholder": "+49 ...",
+      "jobRolePlaceholder": "Rolle oder Abteilung",
+      "requiredHint": "Mit * markierte Felder sind Pflicht.",
+      "submit": "Kontakt anlegen"
     },
     "drawer": {
       "eyebrow": "Kontaktprofil",
       "email": "E-Mail",
       "phone": "Telefon",
-      "company": "Unternehmen",
       "owner": "Verantwortlich",
       "source": "Quelle",
       "tags": "Tags",
       "converted": "Zum Kunden gemacht",
       "sendEmail": "E-Mail",
-      "edit": "Bearbeiten",
+      "edit": "Kontakt bearbeiten",
       "convert": "Zum Kunden machen",
-      "delete": "Löschen",
-      "details": "Details",
-      "timeline": "Verlauf",
+      "delete": "Kontakt löschen",
+      "timeline": "Beziehungskontext",
       "noActivity": "Noch keine Aktivität",
-      "notes": "Notizen",
+      "notes": "Geteilte Notizen",
       "noNotes": "Noch keine Notizen",
       "tasks": "Aufgaben",
-      "addTask": "Aufgabe hinzufügen",
       "taskTitle": "Was ist zu tun?",
       "taskDue": "Fällig am",
       "cancel": "Abbrechen",
       "saveTask": "Aufgabe hinzufügen",
       "taskAdded": "Aufgabe hinzugefügt",
-      "noTasks": "Keine offenen Aufgaben"
+      "noTasks": "Keine offenen Aufgaben",
+      "task": "Aufgabe",
+      "lastTouch": "Letzter Kontakt",
+      "timelineEyebrow": "Verlauf",
+      "tasksEyebrow": "Nachfassen",
+      "notesEyebrow": "Notizen"
+    },
+    "importContacts": "Kontakte importieren",
+    "openProfile": "{name} öffnen",
+    "moreFilters": {
+      "button": "Filter",
+      "status": "Status",
+      "owner": "Verantwortlich",
+      "any": "Alle",
+      "remove": "Filter {filter} entfernen"
     }
   },
   "lifecycleStages": {
@@ -213,12 +232,28 @@
   },
   "activities": {
     "someone": "Jemand",
-    "email": "E-Mail erhalten",
-    "meeting": "Termin geplant",
-    "task": "{actor} hat eine Aufgabe aktualisiert",
-    "note": "{actor} hat eine Notiz hinzugefügt",
-    "ai_signal": "KI hat ein Kaufsignal erkannt",
-    "created": "{actor} hat diesen Kontakt angelegt",
-    "stage_changed": "{actor} hat den Status geändert"
+    "titles": {
+      "email": "E-Mail erhalten",
+      "meeting": "Termin geplant",
+      "task": "Aufgabe aktualisiert",
+      "note": "Notiz hinzugefügt",
+      "ai_signal": "KI-Signal",
+      "created": "Kontakt angelegt",
+      "stage_changed": "Status geändert"
+    },
+    "details": {
+      "task": "{actor} hat eine Nachfassaktion aktualisiert.",
+      "note": "{actor} hat eine Notiz hinzugefügt.",
+      "ai_signal": "Die Kaufabsicht ist gestiegen.",
+      "created": "Angelegt von {actor}.",
+      "stage_changed": "Geändert von {actor}.",
+      "email": "Eine Antwort ist per E-Mail eingegangen.",
+      "meeting": "Der Termin steht im Kalender."
+    }
+  },
+  "time": {
+    "todayAt": "Heute, {time}",
+    "yesterdayAt": "Gestern, {time}",
+    "weekdayAt": "{day}, {time}"
   }
 }

@@ -1,12 +1,13 @@
 "use client";
 
-import { useFormatter } from "next-intl";
+import { useFormatter, useTranslations } from "next-intl";
 
 export type Money = { amount: number; currency: string };
 
 // Dates, numbers and money always go through Intl so they follow the user's language.
 export function useFormat() {
   const format = useFormatter();
+  const t = useTranslations("time");
 
   return {
     money: (value: Money) =>
@@ -20,13 +21,16 @@ export function useFormat() {
     date: (value: Date | string) =>
       format.dateTime(new Date(value), { dateStyle: "medium" }),
     relative: (value: Date | string) => format.relativeTime(new Date(value), new Date()),
-    // "2 hours ago" for the last week, then a short date and time.
+    // Like the design: "Today, 09:42", "Yesterday, 16:18", "Mon, 14:30", then a date.
     recent: (value: Date | string) => {
       const date = new Date(value);
-      const week = 7 * 24 * 60 * 60 * 1000;
-      return Date.now() - date.getTime() < week
-        ? format.relativeTime(date, new Date())
-        : format.dateTime(date, { dateStyle: "medium", timeStyle: "short" });
+      const time = format.dateTime(date, { hour: "numeric", minute: "2-digit" });
+      const startOfDay = (d: Date) => new Date(d.getFullYear(), d.getMonth(), d.getDate()).getTime();
+      const days = Math.round((startOfDay(new Date()) - startOfDay(date)) / (24 * 60 * 60 * 1000));
+      if (days === 0) return t("todayAt", { time });
+      if (days === 1) return t("yesterdayAt", { time });
+      if (days > 1 && days < 7) return t("weekdayAt", { day: format.dateTime(date, { weekday: "short" }), time });
+      return format.dateTime(date, { dateStyle: "medium" });
     },
   };
 }

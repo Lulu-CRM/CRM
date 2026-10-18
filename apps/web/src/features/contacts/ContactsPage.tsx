@@ -25,6 +25,7 @@ import { useErrorMessage } from "@/lib/errors";
 import { useApi, useDebounced } from "@/lib/useApi";
 import { ContactDrawer } from "./ContactDrawer";
 import { ContactFormModal } from "./ContactFormModal";
+import { FilterMenu, type ExtraFilters } from "./FilterMenu";
 import { avatarTone, filterKeys, initials, stageTone, startOfMonth, type FilterKey } from "./options";
 import { useLookups } from "./useLookups";
 
@@ -32,6 +33,10 @@ const PAGE_SIZE = 10;
 
 // Sort keys the API understands (docs/api.md: sort=-lastTouchAt).
 const sortFields: Record<string, string> = { contact: "name", status: "lifecycleStage", lastTouch: "lastTouchAt" };
+
+function withoutEmpty(extra: ExtraFilters): Partial<ContactListQuery> {
+  return Object.fromEntries(Object.entries(extra).filter(([, v]) => v));
+}
 
 function filterQuery(filter: FilterKey, meId: string | undefined): Partial<ContactListQuery> {
   switch (filter) {
@@ -59,6 +64,7 @@ export function ContactsPage() {
   const [search, setSearch] = useState("");
   const q = useDebounced(search.trim());
   const [filter, setFilter] = useState<FilterKey>("all");
+  const [extra, setExtra] = useState<ExtraFilters>({});
   const [sort, setSort] = useState<SortState>({ key: "lastTouch", direction: "desc" });
   const [page, setPage] = useState(1);
   const [selected, setSelected] = useState(new Set<string>());
@@ -75,9 +81,16 @@ export function ContactsPage() {
   const list = useApi(
     () =>
       filterReady
-        ? api.contacts.list({ q: q || undefined, sort: sortParam, page, pageSize: PAGE_SIZE, ...filterQuery(filter, meId) })
+        ? api.contacts.list({
+            q: q || undefined,
+            sort: sortParam,
+            page,
+            pageSize: PAGE_SIZE,
+            ...filterQuery(filter, meId),
+            ...withoutEmpty(extra),
+          })
         : new Promise<never>(() => {}),
-    [q, sortParam, page, filter, meId],
+    [q, sortParam, page, filter, meId, extra.stage, extra.ownerId],
   );
 
   // One count per chip, with the search applied, like the design's "All contacts 5".
@@ -87,10 +100,12 @@ export function ContactsPage() {
         filterKeys.map((key) =>
           key === "mine" && !meId
             ? Promise.resolve(null)
-            : api.contacts.list({ q: q || undefined, pageSize: 1, ...filterQuery(key, meId) }).then((r) => r.meta.total),
+            : api.contacts
+                .list({ q: q || undefined, pageSize: 1, ...filterQuery(key, meId), ...withoutEmpty(extra) })
+                .then((r) => r.meta.total),
         ),
       ),
-    [q, meId, list.data],
+    [q, meId, list.data, extra.stage, extra.ownerId],
   );
 
   const resetPaging = () => {
@@ -185,6 +200,24 @@ export function ContactsPage() {
       sortable: true,
       cell: (c) => (c.lastTouchAt ? format.recent(c.lastTouchAt) : "–"),
     },
+    {
+      key: "menu",
+      header: <span className="sr-only">{t("columns.actions")}</span>,
+      className: "w-10 text-right",
+      cell: (c) => (
+        <button
+          type="button"
+          aria-label={t("openProfile", { name: c.name })}
+          onClick={(event) => {
+            event.stopPropagation();
+            setOpen(c);
+          }}
+          className="rounded px-1.5 py-1 text-[11px] tracking-widest text-text-subtle hover:bg-surface-muted"
+        >
+          •••
+        </button>
+      ),
+    },
   ];
 
   const selectedContacts = rows.filter((c) => selected.has(c.id));
@@ -224,17 +257,30 @@ export function ContactsPage() {
               className="w-full min-w-0 bg-transparent text-[11px] text-text outline-none"
             />
           </label>
-          {selectedContacts.length > 0 && (
+          {selectedContacts.length > 0 ? (
             <div className="flex items-center gap-2 text-[11px] text-text-muted">
               {t("selected", { count: selectedContacts.length })}
               <Button variant="outline" onClick={() => setToDelete(selectedContacts)}>
                 {t("deleteSelected")}
               </Button>
             </div>
+          ) : (
+            <div className="flex gap-2">
+              <Link
+                href="/crm/import"
+                className="inline-flex items-center gap-1.5 rounded-md border border-[#dad8ec] bg-surface px-3.5 py-2.5 text-[11px] font-extrabold text-primary-hover hover:bg-[#f7f5ff]"
+              >
+                ⇧ {t("importContacts")}
+              </Link>
+              <Button icon="＋" onClick={openAdd}>
+                {t("add")}
+              </Button>
+            </div>
           )}
         </div>
 
-        <div className="flex gap-1 overflow-x-auto pt-5 pb-3" role="tablist" aria-label={t("filtersLabel")}>
+        <div className="flex items-center gap-1 pt-5 pb-3">
+        <div className="flex min-w-0 gap-1 overflow-x-auto" role="tablist" aria-label={t("filtersLabel")}>
           {filterKeys.map((key, index) => (
             <button
               key={key}
@@ -254,6 +300,15 @@ export function ContactsPage() {
             </button>
           ))}
         </div>
+        <FilterMenu
+          value={extra}
+          lookups={lookups}
+          onChange={(next) => {
+            setExtra(next);
+            resetPaging();
+          }}
+        />
+        </div>
 
         {list.error ? (
           <EmptyState
@@ -266,7 +321,7 @@ export function ContactsPage() {
             <SkeletonRows rows={5} />
           </div>
         ) : rows.length === 0 ? (
-          q || filter !== "all" ? (
+          q || filter !== "all" || extra.stage || extra.ownerId ? (
             <EmptyState title={t("noMatches")} description={t("noMatchesHint")} />
           ) : (
             <EmptyState

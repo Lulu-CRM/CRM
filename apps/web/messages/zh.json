@@ -138,19 +138,20 @@
       "company": "公司",
       "status": "状态",
       "owner": "负责人",
-      "lastTouch": "最近联系"
+      "lastTouch": "最近联系",
+      "actions": "操作"
     },
     "form": {
-      "eyebrow": "联系人",
-      "addTitle": "添加联系人",
+      "eyebrow": "新联系人",
+      "addTitle": "在 Lulu 中添加一段客户关系",
       "editTitle": "编辑联系人",
       "name": "姓名",
-      "email": "邮箱",
+      "email": "工作邮箱",
       "phone": "电话",
       "company": "公司",
       "noCompany": "无公司",
       "jobRole": "职位",
-      "stage": "状态",
+      "stage": "生命周期阶段",
       "source": "来源",
       "noSource": "未设置",
       "owner": "负责人",
@@ -162,34 +163,52 @@
         "nameRequired": "请输入姓名",
         "emailInvalid": "请输入有效的邮箱地址",
         "ownerRequired": "请选择负责人"
-      }
+      },
+      "editEyebrow": "联系人",
+      "namePlaceholder": "例如：Jamie Morgan",
+      "emailPlaceholder": "name@company.com",
+      "phonePlaceholder": "+86 ...",
+      "jobRolePlaceholder": "职位或部门",
+      "requiredHint": "带 * 的字段为必填项。",
+      "submit": "创建联系人"
     },
     "drawer": {
       "eyebrow": "联系人资料",
       "email": "邮箱",
       "phone": "电话",
-      "company": "公司",
       "owner": "负责人",
       "source": "来源",
       "tags": "标签",
       "converted": "已转为客户",
       "sendEmail": "发邮件",
-      "edit": "编辑",
+      "edit": "编辑联系人",
       "convert": "转为客户",
-      "delete": "删除",
-      "details": "详细信息",
-      "timeline": "动态",
+      "delete": "删除联系人",
+      "timeline": "关系背景",
       "noActivity": "暂无动态",
-      "notes": "笔记",
+      "notes": "共享笔记",
       "noNotes": "暂无笔记",
       "tasks": "任务",
-      "addTask": "添加任务",
       "taskTitle": "需要做什么？",
       "taskDue": "截止日期",
       "cancel": "取消",
       "saveTask": "添加任务",
       "taskAdded": "任务已添加",
-      "noTasks": "没有待办任务"
+      "noTasks": "没有待办任务",
+      "task": "任务",
+      "lastTouch": "最近联系",
+      "timelineEyebrow": "动态",
+      "tasksEyebrow": "跟进",
+      "notesEyebrow": "笔记"
+    },
+    "importContacts": "导入联系人",
+    "openProfile": "打开 {name}",
+    "moreFilters": {
+      "button": "筛选",
+      "status": "状态",
+      "owner": "负责人",
+      "any": "全部",
+      "remove": "移除筛选 {filter}"
     }
   },
   "lifecycleStages": {
@@ -213,12 +232,28 @@
   },
   "activities": {
     "someone": "有人",
-    "email": "收到邮件",
-    "meeting": "已安排会议",
-    "task": "{actor} 更新了任务",
-    "note": "{actor} 添加了笔记",
-    "ai_signal": "AI 发现了购买意向",
-    "created": "{actor} 创建了此联系人",
-    "stage_changed": "{actor} 更改了状态"
+    "titles": {
+      "email": "收到邮件",
+      "meeting": "已安排会议",
+      "task": "任务已更新",
+      "note": "已添加笔记",
+      "ai_signal": "AI 信号",
+      "created": "已创建联系人",
+      "stage_changed": "状态已更改"
+    },
+    "details": {
+      "task": "{actor} 更新了一项跟进。",
+      "note": "{actor} 添加了一条笔记。",
+      "ai_signal": "购买意向上升。",
+      "created": "由 {actor} 添加。",
+      "stage_changed": "由 {actor} 更改。",
+      "email": "通过邮件收到了回复。",
+      "meeting": "会议已加入日历。"
+    }
+  },
+  "time": {
+    "todayAt": "今天 {time}",
+    "yesterdayAt": "昨天 {time}",
+    "weekdayAt": "{day} {time}"
   }
 }

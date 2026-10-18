@@ -50,6 +50,7 @@ The prototype in `design/` stores money, dates and links as text. This model rep
 - **Due dates.** A due date picked without a time is stored at 12:00 UTC, so it stays on the same calendar day in every time zone we serve. Chips (`overdue`, `today`, `tomorrow`, `this_week`, `later`, `done`) are worked out by calendar day in the user's time zone (`dueKind` in `packages/shared`).
 - **Activities store facts, not sentences.** An activity has a `type` and a `payload` (for example `{ "taskId": "...", "action": "completed" }`). The UI builds the line from the translation files, so the timeline reads in the user's language. Only `summary` from other modules' events is free text.
 - **Ticking a task** sets `done` and `doneAt` and adds a `task` activity to the timeline (`action: completed`); unticking clears `doneAt` and adds `action: reopened`.
+- **Private notes.** A private note is seen, edited and deleted only by its author. Shared notes are seen and edited by everyone in the workspace. A note's link to a contact, company or deal can be changed after saving.
 - **Delete.** Soft delete everywhere. Permanent deletion is a later feature.
 
 ## Indexes to add early

@@ -7,6 +7,9 @@ import {
   demoUsers,
   demoActivities,
   demoTasks,
+  demoNotes,
+  canSeeNote,
+  filterNotes,
   moveDeal,
   setTaskDone,
   sortTimeline,
@@ -19,6 +22,11 @@ import {
   type ContactListQuery,
   type ContactUpdateInput,
   type Deal,
+  type Note,
+  type NoteCreateInput,
+  type NoteListQuery,
+  type NoteUpdateInput,
+  type RecordType,
   type Task,
   type TaskCreateInput,
   type TaskListQuery,
@@ -35,6 +43,7 @@ const db = {
   deals: structuredClone(demoDeals),
   tasks: demoTasks(),
   activities: demoActivities(),
+  notes: demoNotes(),
 };
 
 const CURRENCY = "EUR";
@@ -70,6 +79,20 @@ function findDealIndex(id: string) {
   const index = db.deals.findIndex((d) => d.id === id && !d.deletedAt);
   if (index < 0) throw new ApiError("DEAL_NOT_FOUND", 404);
   return index;
+}
+
+// Someone else's private note answers NOT_FOUND, like the server, so its existence is not revealed.
+function findNoteIndex(id: string) {
+  const index = db.notes.findIndex((n) => n.id === id && canSeeNote(n, CURRENT_USER_ID));
+  if (index < 0) throw new ApiError("NOTE_NOT_FOUND", 404);
+  return index;
+}
+
+function checkRecord(recordType: RecordType | null | undefined, recordId: string | null | undefined) {
+  if (!recordType || !recordId) return;
+  const rows: { id: string; deletedAt: string | null }[] =
+    recordType === "contact" ? db.contacts : recordType === "company" ? db.companies : db.deals;
+  if (!alive(rows).some((r) => r.id === recordId)) throw new ApiError("RECORD_NOT_FOUND", 422);
 }
 
 export const mockApi = {
@@ -206,6 +229,42 @@ export const mockApi = {
       }
       db.tasks[index] = task;
       return delay(task);
+    },
+  },
+
+  notes: {
+    list(query: Partial<NoteListQuery> = {}) {
+      const rows = filterNotes(db.notes, CURRENT_USER_ID, query);
+      return delay(paginate(rows, query.page, query.pageSize ?? 100));
+    },
+    async create(input: NoteCreateInput) {
+      checkRecord(input.recordType, input.recordId);
+      const now = new Date().toISOString();
+      const note: Note = {
+        id: newId("note"),
+        workspaceId: DEMO_WORKSPACE_ID,
+        createdAt: now,
+        updatedAt: now,
+        deletedAt: null,
+        title: input.title,
+        body: input.body ?? "",
+        visibility: input.visibility ?? "shared",
+        authorId: CURRENT_USER_ID,
+        recordType: input.recordType ?? null,
+        recordId: input.recordId ?? null,
+      };
+      db.notes.push(note);
+      return delay(note);
+    },
+    async update(id: string, input: NoteUpdateInput) {
+      const index = findNoteIndex(id);
+      checkRecord(input.recordType, input.recordId);
+      db.notes[index] = { ...db.notes[index], ...input, updatedAt: new Date().toISOString() };
+      return delay(db.notes[index]);
+    },
+    async remove(id: string) {
+      db.notes[findNoteIndex(id)].deletedAt = new Date().toISOString();
+      return delay(undefined);
     },
   },
 

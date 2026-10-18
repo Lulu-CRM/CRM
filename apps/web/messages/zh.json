@@ -112,7 +112,9 @@
     "TASK_NOT_FOUND": "未找到任务",
     "STAGE_NOT_FOUND": "未找到阶段",
     "STAGE_IN_OTHER_PIPELINE": "该阶段属于其他管道",
-    "PIPELINE_NOT_FOUND": "未找到管道"
+    "PIPELINE_NOT_FOUND": "未找到管道",
+    "NOTE_NOT_FOUND": "未找到笔记",
+    "RECORD_NOT_FOUND": "关联的记录已不存在"
   },
   "contacts": {
     "import": "导入",
@@ -406,6 +408,62 @@
       "errors": {
         "titleRequired": "请输入任务标题",
         "ownerRequired": "请选择负责人"
+      }
+    }
+  },
+  "notes": {
+    "add": "添加笔记",
+    "eyebrow": "工作区笔记",
+    "title": "不会丢失的背景信息。",
+    "intro": "把共享的决策和私人提醒放在它们所属的客户关系旁边。",
+    "searchPlaceholder": "搜索笔记",
+    "open": "打开笔记 {title}",
+    "filters": {
+      "label": "显示笔记",
+      "all": "全部",
+      "shared": "共享",
+      "private": "私人"
+    },
+    "visibility": {
+      "shared": "共享",
+      "private": "私人"
+    },
+    "linked": {
+      "contact": "联系人：{name}",
+      "company": "公司：{name}",
+      "deal": "交易：{name}"
+    },
+    "empty": "还没有笔记",
+    "emptyHint": "记下决策、交接或下一步，方便团队以后查找。",
+    "noMatches": "没有匹配的笔记",
+    "noMatchesHint": "换个关键词搜索，或显示全部笔记。",
+    "deleteTitle": "删除这条笔记？",
+    "deleteMessage": "所有能看到「{title}」的人都将无法再看到它。",
+    "deleted": "笔记已删除。",
+    "form": {
+      "newEyebrow": "新笔记",
+      "newTitle": "让背景信息触手可及",
+      "editEyebrow": "编辑笔记",
+      "editTitle": "更新这条笔记",
+      "title": "标题",
+      "titlePlaceholder": "团队需要记住什么？",
+      "body": "笔记",
+      "bodyPlaceholder": "添加决策、交接或下一步行动",
+      "visibility": "可见范围",
+      "related": "关联到",
+      "none": "无",
+      "contacts": "联系人",
+      "companies": "公司",
+      "deals": "交易",
+      "hint": "私人笔记只有你能看到。",
+      "create": "保存笔记",
+      "delete": "删除笔记",
+      "created": "笔记已保存到 CRM 工作区。",
+      "saved": "笔记已更新。",
+      "errors": {
+        "titleRequired": "请为笔记添加标题",
+        "titleTooLong": "标题不能超过 200 个字符",
+        "bodyTooLong": "笔记不能超过 10,000 个字符"
       }
     }
   }

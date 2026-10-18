@@ -96,6 +96,14 @@ Schemas: `packages/shared/src/pipeline.ts` and `deal.ts`.
 | POST | `/activities` | Log an activity by hand |
 | POST | `/events` | Other modules post an event (see below) |
 
+`GET /notes` returns `noteSchema` rows, most recently edited first. Filters: `q` (title and body), `visibility`, `recordType` with `recordId`. Private notes of other users are left out, for every role.
+
+- `POST /notes` takes `title` (required, up to 200 characters), `body` (up to 10,000), `visibility` (`shared` by default) and an optional link (`recordType` plus `recordId`). The author is the current user.
+- `PATCH /notes/:id` takes the same fields. Send `recordType` and `recordId` together, or both as `null` to unlink the note. The author does not change.
+- Errors: `NOTE_NOT_FOUND` (also for someone else's private note, so its existence is not revealed), `RECORD_NOT_FOUND` when the linked record is not in the workspace, `VALIDATION_ERROR` with `RECORD_LINK_INCOMPLETE` for a half link.
+
+Schemas: `packages/shared/src/note.ts`. Who sees what: `canSeeNote` and `filterNotes` in `note-logic.ts`.
+
 ## Segments
 
 | Method | Path | Purpose |

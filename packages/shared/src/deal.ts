@@ -45,7 +45,6 @@ export const dealMoveSchema = z.object({
   stageId: idSchema,
 });
 
-
 // GET /deals/summary. The default pipeline is used when pipelineId is left out.
 export const dealSummaryQuerySchema = z.object({
   pipelineId: idSchema.optional(),

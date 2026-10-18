@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
-import { demoNotes } from "./fixtures/notes.js";
-import { noteCreateSchema, noteListQuerySchema, noteSchema, noteUpdateSchema, type Note } from "./note.js";
-import { canSeeNote, filterNotes } from "./note-logic.js";
+import { demoNotes } from "./fixtures/notes";
+import { noteCreateSchema, noteListQuerySchema, noteSchema, noteUpdateSchema, type Note } from "./note";
+import { canSeeNote, filterNotes } from "./note-logic";
 
 const NOW = new Date("2026-10-17T10:00:00.000Z");
 const notes = demoNotes(NOW);

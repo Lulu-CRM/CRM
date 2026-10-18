@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { idSchema } from "./common.js";
+import { idSchema } from "./common";
 
 // "Linked record" on Task, Note and Activity (see docs/data-model.md).
 export const recordTypeSchema = z.enum(["contact", "company", "deal"]);

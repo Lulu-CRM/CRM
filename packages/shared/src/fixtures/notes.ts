@@ -1,5 +1,5 @@
-import type { Note } from "../note.js";
-import { DEMO_WORKSPACE_ID } from "./pipeline.js";
+import type { Note } from "../note";
+import { DEMO_WORKSPACE_ID } from "./pipeline";
 
 // Sample notes from the MagicPath design (design/src/components/generated/LuluCRM.tsx).
 // Times are relative to `now`, like the sample tasks: today 09:18, yesterday 15:40 and earlier this week (the design shows "Mon, 11:22").

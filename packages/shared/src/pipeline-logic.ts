@@ -1,6 +1,6 @@
-import type { Money } from "./common.js";
-import type { Deal, DealSummary } from "./deal.js";
-import type { Stage } from "./pipeline.js";
+import type { Money } from "./common";
+import type { Deal, DealSummary } from "./deal";
+import type { Stage } from "./pipeline";
 
 // Pure pipeline calculations, shared so the API (GET /deals/summary, POST /deals/:id/move)
 // and the board's optimistic update always agree.

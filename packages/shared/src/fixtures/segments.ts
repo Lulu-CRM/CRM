@@ -1,5 +1,5 @@
-import type { Segment } from "../segment.js";
-import { DEMO_WORKSPACE_ID } from "./pipeline.js";
+import type { Segment } from "../segment";
+import { DEMO_WORKSPACE_ID } from "./pipeline";
 
 // The four sample segments from the MagicPath design (renderSegments), as real rules.
 

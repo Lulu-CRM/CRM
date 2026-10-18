@@ -1,11 +1,11 @@
 import { describe, expect, it } from "vitest";
-import type { Contact } from "./contact.js";
-import { demoContacts } from "./fixtures/contacts.js";
-import { demoDeals, demoStages } from "./fixtures/pipeline.js";
-import { demoSegments } from "./fixtures/segments.js";
-import { demoTasks } from "./fixtures/tasks.js";
-import { segmentCreateSchema, segmentSchema, type SegmentRules } from "./segment.js";
-import { segmentMembers, type SegmentContext } from "./segment-logic.js";
+import type { Contact } from "./contact";
+import { demoContacts } from "./fixtures/contacts";
+import { demoDeals, demoStages } from "./fixtures/pipeline";
+import { demoSegments } from "./fixtures/segments";
+import { demoTasks } from "./fixtures/tasks";
+import { segmentCreateSchema, segmentSchema, type SegmentRules } from "./segment";
+import { segmentMembers, type SegmentContext } from "./segment-logic";
 
 // Saturday 17 October 2026, the design's "today".
 const NOW = new Date("2026-10-17T10:00:00.000Z");

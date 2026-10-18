@@ -1,4 +1,4 @@
-import type { Role } from "./user.js";
+import type { Role } from "./user";
 import type {
   AiSettings,
   ConsentSettings,
@@ -6,7 +6,7 @@ import type {
   PermissionAction,
   PermissionResource,
   RolePermissions,
-} from "./settings.js";
+} from "./settings";
 
 // Defaults for a new workspace, and the permission check the API's role guard and the UI share.
 

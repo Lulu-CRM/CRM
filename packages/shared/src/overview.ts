@@ -1,7 +1,7 @@
 import { z } from "zod";
-import { activitySchema } from "./activity.js";
-import { contactSchema } from "./contact.js";
-import { idSchema, moneySchema } from "./common.js";
+import { activitySchema } from "./activity";
+import { contactSchema } from "./contact";
+import { idSchema, moneySchema } from "./common";
 
 // One row per open stage of the default pipeline, in pipeline order. The UI shows the stage
 // name through the stage helpers and draws the bar from `value` relative to the largest one.

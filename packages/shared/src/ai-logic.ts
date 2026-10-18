@@ -1,10 +1,10 @@
-import type { AiInsightContent, AiText, QualityField } from "./ai.js";
-import type { Company } from "./company.js";
-import type { Contact } from "./contact.js";
-import type { Deal } from "./deal.js";
-import type { Stage } from "./pipeline.js";
-import type { Task } from "./task.js";
-import { dueKind } from "./task-logic.js";
+import type { AiInsightContent, AiText, QualityField } from "./ai";
+import type { Company } from "./company";
+import type { Contact } from "./contact";
+import type { Deal } from "./deal";
+import type { Stage } from "./pipeline";
+import type { Task } from "./task";
+import { dueKind } from "./task-logic";
 
 const DAY_MS = 24 * 60 * 60 * 1000;
 

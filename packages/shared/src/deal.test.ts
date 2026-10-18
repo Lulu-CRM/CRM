@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { dealCreateSchema, dealListQuerySchema, dealUpdateSchema } from "./deal.js";
+import { dealCreateSchema, dealListQuerySchema, dealUpdateSchema } from "./deal";
 
 describe("dealCreateSchema", () => {
   it("accepts the smallest valid deal", () => {

@@ -1,7 +1,7 @@
 import { z } from "zod";
-import { baseRecordSchema, idSchema, listQuerySchema, moneySchema, timestampSchema } from "./common.js";
-import { contactSchema } from "./contact.js";
-import { dealSchema } from "./deal.js";
+import { baseRecordSchema, idSchema, listQuerySchema, moneySchema, timestampSchema } from "./common";
+import { contactSchema } from "./contact";
+import { dealSchema } from "./deal";
 
 // Head-count bands from the design. They are numbers, so the UI shows them as they are.
 export const companySizes = ["1-10", "11-50", "51-200", "201+"] as const;

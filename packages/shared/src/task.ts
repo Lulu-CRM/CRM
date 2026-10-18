@@ -1,6 +1,6 @@
 import { z } from "zod";
-import { baseRecordSchema, idSchema, listQuerySchema, timestampSchema } from "./common.js";
-import { recordTypeSchema } from "./record.js";
+import { baseRecordSchema, idSchema, listQuerySchema, timestampSchema } from "./common";
+import { recordTypeSchema } from "./record";
 
 export const taskPrioritySchema = z.enum(["high", "normal", "low"]);
 

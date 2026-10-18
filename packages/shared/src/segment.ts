@@ -1,6 +1,6 @@
 import { z } from "zod";
-import { baseRecordSchema, idSchema, listQuerySchema } from "./common.js";
-import { lifecycleStageSchema } from "./contact.js";
+import { baseRecordSchema, idSchema, listQuerySchema } from "./common";
+import { lifecycleStageSchema } from "./contact";
 
 // One condition of a segment rule. Each field has its own operators, so a rule can never be half valid.
 export const segmentConditionSchema = z.union([

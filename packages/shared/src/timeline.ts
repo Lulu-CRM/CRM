@@ -1,8 +1,8 @@
 import { z } from "zod";
-import { timestampSchema } from "./common.js";
-import { activitySchema } from "./activity.js";
-import { noteSchema } from "./note.js";
-import { taskSchema } from "./task.js";
+import { timestampSchema } from "./common";
+import { activitySchema } from "./activity";
+import { noteSchema } from "./note";
+import { taskSchema } from "./task";
 
 // GET /contacts/:id/timeline, newest first by `at`.
 // `at` is the sort time for each kind:

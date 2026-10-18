@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
-import { demoCompanies, demoContacts } from "./fixtures/contacts.js";
-import { importConfirmSchema, importMappingSchema } from "./import.js";
-import { findDuplicate, guessMapping, mapRow, mergeIntoContact, parseCsv, planImport } from "./import-logic.js";
+import { demoCompanies, demoContacts } from "./fixtures/contacts";
+import { importConfirmSchema, importMappingSchema } from "./import";
+import { findDuplicate, guessMapping, mapRow, mergeIntoContact, parseCsv, planImport } from "./import-logic";
 
 describe("parseCsv", () => {
   it("reads quoted fields, doubled quotes and line breaks inside quotes", () => {

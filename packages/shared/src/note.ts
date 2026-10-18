@@ -1,6 +1,6 @@
 import { z } from "zod";
-import { baseRecordSchema, idSchema, listQuerySchema } from "./common.js";
-import { recordTypeSchema } from "./record.js";
+import { baseRecordSchema, idSchema, listQuerySchema } from "./common";
+import { recordTypeSchema } from "./record";
 
 // Shared notes are seen by the whole workspace. Private notes only by their author.
 export const noteVisibilitySchema = z.enum(["shared", "private"]);

@@ -1,7 +1,7 @@
-import type { Company, CompanyDetail, CompanyHealth, CompanyListItem } from "./company.js";
-import type { Contact } from "./contact.js";
-import type { Deal } from "./deal.js";
-import type { Stage } from "./pipeline.js";
+import type { Company, CompanyDetail, CompanyHealth, CompanyListItem } from "./company";
+import type { Contact } from "./contact";
+import type { Deal } from "./deal";
+import type { Stage } from "./pipeline";
 
 // Pure company calculations, shared so GET /companies and mock mode always agree.
 

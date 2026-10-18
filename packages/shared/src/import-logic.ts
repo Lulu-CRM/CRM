@@ -1,5 +1,5 @@
-import type { Company } from "./company.js";
-import type { Contact, ContactUpdateInput, LifecycleStage } from "./contact.js";
+import type { Company } from "./company";
+import type { Contact, ContactUpdateInput, LifecycleStage } from "./contact";
 import type {
   DuplicateMatch,
   ImportedContact,
@@ -7,7 +7,7 @@ import type {
   ImportMapping,
   ImportPreviewRow,
   ImportRowProblem,
-} from "./import.js";
+} from "./import";
 
 // Pure import logic, shared by the API's import.process job and the web app's mock, so the
 // preview, the duplicate check and the final import follow the same rules.

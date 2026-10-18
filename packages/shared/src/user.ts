@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { baseRecordSchema } from "./common.js";
+import { baseRecordSchema } from "./common";
 
 export const roleSchema = z.enum(["owner", "admin", "member"]);
 

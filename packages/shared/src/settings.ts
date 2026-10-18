@@ -1,6 +1,6 @@
 import { z } from "zod";
-import { baseRecordSchema, fractionSchema } from "./common.js";
-import { roleSchema } from "./user.js";
+import { baseRecordSchema, fractionSchema } from "./common";
+import { roleSchema } from "./user";
 
 // CRM settings (docs/api.md, "Settings"). Only owners and admins may change them.
 

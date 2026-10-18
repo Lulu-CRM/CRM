@@ -1,9 +1,9 @@
 import { describe, expect, it } from "vitest";
-import { companyCreateSchema, companyDetailSchema, companyListItemSchema } from "./company.js";
-import { companyDetail, companyHealth, summarizeCompany } from "./company-logic.js";
-import type { Deal } from "./deal.js";
-import { demoCompanies, demoContacts } from "./fixtures/contacts.js";
-import { demoDeals, demoStages } from "./fixtures/pipeline.js";
+import { companyCreateSchema, companyDetailSchema, companyListItemSchema } from "./company";
+import { companyDetail, companyHealth, summarizeCompany } from "./company-logic";
+import type { Deal } from "./deal";
+import { demoCompanies, demoContacts } from "./fixtures/contacts";
+import { demoDeals, demoStages } from "./fixtures/pipeline";
 
 const NOW = new Date("2026-10-18T12:00:00.000Z");
 const company = (id: string) => demoCompanies.find((c) => c.id === id)!;

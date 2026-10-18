@@ -1,9 +1,9 @@
-import type { Contact } from "./contact.js";
-import type { Deal } from "./deal.js";
-import type { Stage } from "./pipeline.js";
-import type { SegmentCondition, SegmentRules } from "./segment.js";
-import type { Task } from "./task.js";
-import { dueKind } from "./task-logic.js";
+import type { Contact } from "./contact";
+import type { Deal } from "./deal";
+import type { Stage } from "./pipeline";
+import type { SegmentCondition, SegmentRules } from "./segment";
+import type { Task } from "./task";
+import { dueKind } from "./task-logic";
 
 // Pure segment matching, shared so the API (segments.refresh, GET /segments/:id/contacts),
 // the mock and the rule builder's live preview count the same members.

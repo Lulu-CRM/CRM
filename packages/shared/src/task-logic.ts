@@ -1,5 +1,5 @@
-import type { Activity } from "./activity.js";
-import type { Task } from "./task.js";
+import type { Activity } from "./activity";
+import type { Task } from "./task";
 
 // Pure task and timeline logic for the Activities & Tasks page, shared with the API (PATCH /tasks/:id).
 

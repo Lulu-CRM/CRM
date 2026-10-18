@@ -1,8 +1,8 @@
 import { describe, expect, it } from "vitest";
-import { activitySchema, moduleEventSchema } from "./activity.js";
-import { demoActivities, demoTasks } from "./fixtures/tasks.js";
-import { taskCreateSchema, taskListQuerySchema, taskSchema, type Task } from "./task.js";
-import { dueKind, filterTasks, setTaskDone, sortTimeline } from "./task-logic.js";
+import { activitySchema, moduleEventSchema } from "./activity";
+import { demoActivities, demoTasks } from "./fixtures/tasks";
+import { taskCreateSchema, taskListQuerySchema, taskSchema, type Task } from "./task";
+import { dueKind, filterTasks, setTaskDone, sortTimeline } from "./task-logic";
 
 // Saturday 17 October 2026, 10:00 in Berlin.
 const NOW = new Date("2026-10-17T08:00:00.000Z");

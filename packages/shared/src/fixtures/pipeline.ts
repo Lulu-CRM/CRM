@@ -1,5 +1,5 @@
-import type { Deal } from "../deal.js";
-import type { PipelineWithStages, Stage } from "../pipeline.js";
+import type { Deal } from "../deal";
+import type { PipelineWithStages, Stage } from "../pipeline";
 
 // Sample data from the MagicPath design (design/src/components/generated/LuluCRM.tsx),
 // for mock mode and the seed script. Ids are stable so other fixtures can link to them.

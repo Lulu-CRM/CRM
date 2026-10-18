@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { baseRecordSchema, idSchema, listQuerySchema, timestampSchema } from "./common.js";
+import { baseRecordSchema, idSchema, listQuerySchema, timestampSchema } from "./common";
 
 // See docs/data-model.md, "Enums". The UI translates these keys (lifecycleStages.<key>).
 export const lifecycleStageSchema = z.enum(["new", "qualified", "follow_up", "customer"]);

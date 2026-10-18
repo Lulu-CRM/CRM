@@ -1,4 +1,4 @@
-import type { Note, NoteVisibility } from "./note.js";
+import type { Note, NoteVisibility } from "./note";
 
 // Private notes are only for their author: the API leaves them out of lists for everyone else,
 // and answers NOTE_NOT_FOUND when someone else asks for, edits or deletes one.

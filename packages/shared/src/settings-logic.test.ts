@@ -5,8 +5,8 @@ import {
   notificationSettingsSchema,
   rolePermissionsSchema,
   stageUpdateSchema,
-} from "./settings.js";
-import { can, defaultConsentSettings, defaultNotificationSettings, defaultPermissions, fieldKeyFromLabel } from "./settings-logic.js";
+} from "./settings";
+import { can, defaultConsentSettings, defaultNotificationSettings, defaultPermissions, fieldKeyFromLabel } from "./settings-logic";
 
 describe("defaults", () => {
   it("match the schemas", () => {

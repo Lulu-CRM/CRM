@@ -1,6 +1,6 @@
 import { z } from "zod";
-import { baseRecordSchema, idSchema, timestampSchema } from "./common.js";
-import { lifecycleStageSchema } from "./contact.js";
+import { baseRecordSchema, idSchema, timestampSchema } from "./common";
+import { lifecycleStageSchema } from "./contact";
 
 // AI analysis (docs/api.md, "AI analysis"). AI runs behind one provider interface (AiProvider below);
 // a simulated provider answers until we have a model key. Nothing is saved until the user accepts.

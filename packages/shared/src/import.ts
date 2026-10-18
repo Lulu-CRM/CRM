@@ -1,6 +1,6 @@
 import { z } from "zod";
-import { baseRecordSchema, idSchema } from "./common.js";
-import { contactSchema } from "./contact.js";
+import { baseRecordSchema, idSchema } from "./common";
+import { contactSchema } from "./contact";
 
 // Contact import (docs/api.md, "Import"). The server reads CSV and XLSX; rows go through the
 // shared logic in import-logic.ts, so the preview and the background job agree.

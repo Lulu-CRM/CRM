@@ -1,9 +1,9 @@
 import { describe, expect, it } from "vitest";
-import type { Deal } from "./deal.js";
-import { dealSchema, dealSummarySchema } from "./deal.js";
-import { demoDeals, demoPipeline, demoStages } from "./fixtures/pipeline.js";
-import { buildBoard, moveDeal, PipelineError, summarizeDeals } from "./pipeline-logic.js";
-import { pipelineWithStagesSchema, type Stage } from "./pipeline.js";
+import type { Deal } from "./deal";
+import { dealSchema, dealSummarySchema } from "./deal";
+import { demoDeals, demoPipeline, demoStages } from "./fixtures/pipeline";
+import { buildBoard, moveDeal, PipelineError, summarizeDeals } from "./pipeline-logic";
+import { pipelineWithStagesSchema, type Stage } from "./pipeline";
 
 const NOW = new Date("2026-10-20T10:00:00.000Z");
 

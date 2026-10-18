@@ -1,9 +1,9 @@
 import { describe, expect, it } from "vitest";
-import { companySchema } from "./company.js";
-import { contactCreateSchema, contactListQuerySchema, contactSchema } from "./contact.js";
-import { demoCompanies, demoContacts, demoUsers } from "./fixtures/contacts.js";
-import { demoDeals } from "./fixtures/pipeline.js";
-import { userSchema } from "./user.js";
+import { companySchema } from "./company";
+import { contactCreateSchema, contactListQuerySchema, contactSchema } from "./contact";
+import { demoCompanies, demoContacts, demoUsers } from "./fixtures/contacts";
+import { demoDeals } from "./fixtures/pipeline";
+import { userSchema } from "./user";
 
 describe("contact fixtures", () => {
   it("match the schemas", () => {

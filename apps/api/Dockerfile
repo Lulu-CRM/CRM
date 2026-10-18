@@ -24,7 +24,6 @@ COPY apps/api apps/api
 # prisma generate reads DATABASE_URL from prisma.config.ts but never connects at build time
 ENV DATABASE_URL="postgresql://build:build@127.0.0.1:5432/build"
 
-RUN npm run build -w @lulu/shared
 RUN npm run db:generate -w @lulu/api
 RUN npm run build -w @lulu/api
 
@@ -51,7 +50,7 @@ COPY --from=build /app/apps/api/prisma apps/api/prisma
 COPY --from=build /app/apps/api/prisma.config.ts apps/api/prisma.config.ts
 COPY --from=build /app/apps/api/docker-entrypoint.sh apps/api/docker-entrypoint.sh
 COPY --from=build /app/packages/shared/package.json packages/shared/package.json
-COPY --from=build /app/packages/shared/dist packages/shared/dist
+COPY --from=build /app/packages/shared/src packages/shared/src
 
 USER node
 EXPOSE 4000

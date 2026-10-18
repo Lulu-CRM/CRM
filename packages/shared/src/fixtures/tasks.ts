@@ -1,6 +1,6 @@
-import type { Activity } from "../activity.js";
-import type { Task } from "../task.js";
-import { DEMO_WORKSPACE_ID } from "./pipeline.js";
+import type { Activity } from "../activity";
+import type { Task } from "../task";
+import { DEMO_WORKSPACE_ID } from "./pipeline";
 
 // Sample tasks and activities from the MagicPath design (design/src/components/generated/LuluCRM.tsx).
 // Dates are relative to `now`, so "due today" in the design is still due today whenever mock mode runs.

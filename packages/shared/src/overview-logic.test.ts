@@ -1,11 +1,11 @@
 import { describe, expect, it } from "vitest";
-import { overviewSchema } from "./overview.js";
-import { buildOverview, startOfWeek, type OverviewInput } from "./overview-logic.js";
-import { demoCompanies, demoContacts } from "./fixtures/contacts.js";
-import { demoDeals, demoStages } from "./fixtures/pipeline.js";
-import { demoActivities, demoTasks } from "./fixtures/tasks.js";
-import type { Activity } from "./activity.js";
-import type { Task } from "./task.js";
+import { overviewSchema } from "./overview";
+import { buildOverview, startOfWeek, type OverviewInput } from "./overview-logic";
+import { demoCompanies, demoContacts } from "./fixtures/contacts";
+import { demoDeals, demoStages } from "./fixtures/pipeline";
+import { demoActivities, demoTasks } from "./fixtures/tasks";
+import type { Activity } from "./activity";
+import type { Task } from "./task";
 
 const NOW = new Date("2026-10-18T10:00:00.000Z"); // a Sunday
 const TZ = "UTC";

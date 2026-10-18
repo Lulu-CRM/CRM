@@ -1,9 +1,9 @@
 import { describe, expect, it } from "vitest";
-import { aiAcceptSchema, aiInsightSchema } from "./ai.js";
-import { dataQuality, simulateInsight, simulatedProvider, type AiContext } from "./ai-logic.js";
-import { demoCompanies, demoContacts } from "./fixtures/contacts.js";
-import { demoDeals, demoStages } from "./fixtures/pipeline.js";
-import { demoTasks } from "./fixtures/tasks.js";
+import { aiAcceptSchema, aiInsightSchema } from "./ai";
+import { dataQuality, simulateInsight, simulatedProvider, type AiContext } from "./ai-logic";
+import { demoCompanies, demoContacts } from "./fixtures/contacts";
+import { demoDeals, demoStages } from "./fixtures/pipeline";
+import { demoTasks } from "./fixtures/tasks";
 
 const NOW = new Date("2026-10-17T10:00:00.000Z");
 const contact = (id: string) => demoContacts.find((c) => c.id === id)!;

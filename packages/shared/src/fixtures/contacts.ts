@@ -1,7 +1,7 @@
-import type { Company } from "../company.js";
-import type { Contact } from "../contact.js";
-import type { User } from "../user.js";
-import { DEMO_WORKSPACE_ID } from "./pipeline.js";
+import type { Company } from "../company";
+import type { Contact } from "../contact";
+import type { User } from "../user";
+import { DEMO_WORKSPACE_ID } from "./pipeline";
 
 // Sample people and companies from the MagicPath design, with the same ids the deal fixtures use.
 

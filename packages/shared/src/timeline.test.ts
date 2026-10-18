@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { timelineItemSchema } from "./timeline.js";
+import { timelineItemSchema } from "./timeline";
 
 const base = {
   id: "r1",

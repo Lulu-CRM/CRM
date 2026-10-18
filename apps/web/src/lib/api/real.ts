@@ -27,6 +27,9 @@ import {
   type DealCreateInput,
   type DealUpdateInput,
   segmentListItemSchema,
+  aiInsightSchema,
+  aiRunSchema,
+  type AiAcceptInput,
   aiSettingsSchema,
   consentSettingsSchema,
   customFieldSchema,
@@ -145,6 +148,13 @@ export const realApi = {
       get: () => getOne(aiSettingsSchema, "/settings/ai"),
       put: (input: AiSettings) => write(aiSettingsSchema, "PUT", "/settings/ai", input),
     },
+  },
+
+  ai: {
+    run: (contactId: string) => write(aiRunSchema, "POST", `/contacts/${contactId}/ai-analysis`, {}),
+    latest: (contactId: string) => getOne(aiInsightSchema.nullable(), `/contacts/${contactId}/ai-insights`),
+    accept: (id: string, input: AiAcceptInput) => write(aiInsightSchema, "POST", `/ai-insights/${id}/accept`, input),
+    dismiss: (id: string) => write(z.unknown(), "POST", `/ai-insights/${id}/dismiss`, {}).then(() => undefined),
   },
 
   pipelines: () => getOne(z.array(pipelineWithStagesSchema), "/pipelines"),

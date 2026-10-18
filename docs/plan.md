@@ -102,6 +102,12 @@ We keep building on the default below while we ask:
 - [ ] **AI provider and key:** Sudais asks Dave. Until then AI Analysis runs on a simulated reply, so nothing is blocked.
 - [ ] **App shell:** ask Satyam whether his shell (login, sign-up, settings, language switch) is the base the CRM plugs into. Until then Tobi builds a simple login that can be swapped out.
 
+## Decisions from Dave (18 Oct)
+
+- **No agents this round.** We build the manual version: every change is made or confirmed by a person. AI Analysis stays as planned (simulated provider, accept or dismiss), which is not an agent.
+- **Currency.** Deal totals add up deals in the workspace's default currency; deals in other currencies are counted, not converted (`docs/data-model.md`).
+- **Still open:** company health (Strong, Watch, New) from the design is not in the data model, so it is left out until someone asks for it.
+
 ## First 48 hours
 
 - [x] Plan and task list posted in the group by Sudais, so everyone claims their numbers

@@ -127,7 +127,9 @@
     "CUSTOM_FIELD_NOT_FOUND": "未找到字段",
     "CUSTOM_FIELD_KEY_TAKEN": "已存在同名字段",
     "STAGE_LOCKED": "赢单和输单阶段不能删除",
-    "STAGE_IN_USE": "请先把交易移出此阶段再删除"
+    "STAGE_IN_USE": "请先把交易移出此阶段再删除",
+    "AI_INSIGHT_NOT_FOUND": "未找到建议",
+    "AI_INSIGHT_CLOSED": "此建议已被采纳或忽略"
   },
   "contacts": {
     "import": "导入",
@@ -1013,6 +1015,88 @@
         "leadAssigned": "有潜在客户分配给我",
         "importFinished": "我的导入已完成"
       }
+    }
+  },
+  "aiAnalysis": {
+    "eyebrow": "联系人洞察",
+    "title": "了解最佳下一步。",
+    "intro": "Lulu 会查看工作区中已有的信息，并让建议清晰可解释。",
+    "badge": "AI 辅助",
+    "pickContact": "分析联系人",
+    "run": "开始分析",
+    "running": "正在分析…",
+    "noContacts": "先添加联系人再进行分析。",
+    "empty": "还没有分析结果",
+    "emptyHint": "开始分析，获取摘要、下一步建议和数据质量检查。",
+    "summary": "关系摘要",
+    "nextStep": "建议的下一步",
+    "quality": "数据质量",
+    "qualityScore": "已填写 {filled}/{total} 个字段",
+    "missing": "缺少：{fields}。可在联系人资料中补充。",
+    "complete": "所有关键字段都已填写。",
+    "generatedAt": "建议生成于 {time}。在你确认之前不会保存任何内容。",
+    "status": {
+      "accepted": "已采纳。你选择的更改已保存。",
+      "dismissed": "已忽略。没有保存任何内容。"
+    },
+    "dismiss": "忽略",
+    "review": "查看并保存",
+    "dismissed": "已忽略建议",
+    "fields": {
+      "email": "邮箱",
+      "phone": "电话",
+      "company": "公司",
+      "jobRole": "职位",
+      "source": "来源"
+    },
+    "accept": {
+      "eyebrow": "确认",
+      "title": "保存针对 {name} 的建议？",
+      "intro": "选择要保存的内容，其他内容不会更改。",
+      "createTask": "创建跟进任务，截止 {date}",
+      "taskTitle": "任务标题",
+      "applyStage": "将阶段改为{stage}",
+      "confirm": "保存所选",
+      "saved": "已保存"
+    },
+    "controls": {
+      "eyebrow": "AI 控制",
+      "title": "决定权始终在人。",
+      "intro": "AI 可以提出建议、总结和排序。保存更改始终需要确认。",
+      "analyzeNewActivity": {
+        "label": "分析新动态",
+        "hint": "有新信息时提供洞察"
+      },
+      "suggestFollowUps": {
+        "label": "建议跟进",
+        "hint": "在联系人记录上显示下一步"
+      },
+      "autoUpdateFields": {
+        "label": "预先勾选字段更新",
+        "hint": "字段更改在确认步骤中默认勾选，你仍需逐项确认。"
+      },
+      "saved": "AI 设置已保存",
+      "footnote": "在连接模型之前，建议来自模拟 AI。"
+    },
+    "generated": {
+      "summaryCustomer": "{name} 是客户。保持关系热度，留意下一个机会。",
+      "summaryDeal": "{name} 正在和你推进 {deal}。交易仍在进行中，保持节奏很重要。",
+      "summaryQuiet": "{name} 已沉寂：超过 30 天没有联系。",
+      "summaryActive": "{name} 很活跃：{days, plural, =0 {今天} one {昨天} other {# 天前}}有过联系。",
+      "nextFinishTask": "完成待办的跟进",
+      "nextFinishTaskDetail": "“{task}”已到期。先完成它，再规划下一步。",
+      "nextFollowUpDeal": "跟进交易",
+      "nextFollowUpDealDetail": "了解 {deal} 的进展，并在本周商定下一步。",
+      "nextQualify": "确认这个潜在客户",
+      "nextQualifyDetail": "{name} 最近有联系。一次简短通话即可确认需求、预算和时间。",
+      "nextReconnect": "重新联系",
+      "nextReconnectDetail": "给 {name} 发一条简短的个人消息，重新开启对话。",
+      "nextCheckIn": "安排一次沟通",
+      "nextCheckInDetail": "和 {name} 约一次简短沟通，保持推进。",
+      "taskFollowUpDeal": "就 {deal} 跟进 {name}",
+      "taskQualify": "与 {name} 进行确认通话",
+      "taskReconnect": "重新联系 {name}",
+      "taskCheckIn": "与 {name} 简短沟通"
     }
   }
 }

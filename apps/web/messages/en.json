@@ -127,7 +127,9 @@
     "CUSTOM_FIELD_NOT_FOUND": "Field not found",
     "CUSTOM_FIELD_KEY_TAKEN": "A field with this name already exists",
     "STAGE_LOCKED": "Won and Lost stages cannot be deleted",
-    "STAGE_IN_USE": "Move the deals out of this stage before deleting it"
+    "STAGE_IN_USE": "Move the deals out of this stage before deleting it",
+    "AI_INSIGHT_NOT_FOUND": "Suggestion not found",
+    "AI_INSIGHT_CLOSED": "This suggestion was already accepted or dismissed"
   },
   "contacts": {
     "import": "Import",
@@ -1013,6 +1015,88 @@
         "leadAssigned": "A lead is assigned to me",
         "importFinished": "My import is finished"
       }
+    }
+  },
+  "aiAnalysis": {
+    "eyebrow": "Contact intelligence",
+    "title": "Understand the next best action.",
+    "intro": "Lulu reviews the context already in your workspace and keeps suggestions explainable.",
+    "badge": "AI assisted",
+    "pickContact": "Analyze contact",
+    "run": "Run analysis",
+    "running": "Analyzing…",
+    "noContacts": "Add a contact to analyze it.",
+    "empty": "No analysis yet",
+    "emptyHint": "Run an analysis to get a summary, a next step and a data quality check.",
+    "summary": "Relationship summary",
+    "nextStep": "Recommended next step",
+    "quality": "Data quality",
+    "qualityScore": "{filled} of {total} fields complete",
+    "missing": "Missing: {fields}. Add them from the contact drawer.",
+    "complete": "All key fields are filled in.",
+    "generatedAt": "Suggested {time}. Nothing is saved until you confirm.",
+    "status": {
+      "accepted": "Accepted. The changes you picked were saved.",
+      "dismissed": "Dismissed. Nothing was saved."
+    },
+    "dismiss": "Dismiss",
+    "review": "Review and save",
+    "dismissed": "Suggestion dismissed",
+    "fields": {
+      "email": "email",
+      "phone": "phone",
+      "company": "company",
+      "jobRole": "role",
+      "source": "source"
+    },
+    "accept": {
+      "eyebrow": "Confirm",
+      "title": "Save suggestions for {name}?",
+      "intro": "Pick what to save. Nothing else changes.",
+      "createTask": "Create a follow-up task, due {date}",
+      "taskTitle": "Task title",
+      "applyStage": "Change the stage to {stage}",
+      "confirm": "Save selected",
+      "saved": "Saved"
+    },
+    "controls": {
+      "eyebrow": "AI controls",
+      "title": "People stay in control.",
+      "intro": "AI can suggest, summarize and prioritize. Saving changes always requires confirmation.",
+      "analyzeNewActivity": {
+        "label": "Analyze new activity",
+        "hint": "Suggest insights when new context arrives"
+      },
+      "suggestFollowUps": {
+        "label": "Suggest follow-ups",
+        "hint": "Show next actions on contact records"
+      },
+      "autoUpdateFields": {
+        "label": "Pre-select field updates",
+        "hint": "Field changes start ticked in the confirm step. You still confirm every one."
+      },
+      "saved": "AI setting saved",
+      "footnote": "Suggestions come from a simulated AI until a model is connected."
+    },
+    "generated": {
+      "summaryCustomer": "{name} is a customer. Keep the relationship warm and look for the next opportunity.",
+      "summaryDeal": "{name} is working with you on {deal}. The deal is still open, so momentum matters.",
+      "summaryQuiet": "{name} has gone quiet: there has been no contact for more than 30 days.",
+      "summaryActive": "{name} is active: the last contact was {days, plural, =0 {today} one {yesterday} other {# days ago}}.",
+      "nextFinishTask": "Finish the open follow-up",
+      "nextFinishTaskDetail": "“{task}” is due. Close it before planning the next step.",
+      "nextFollowUpDeal": "Follow up on the deal",
+      "nextFollowUpDealDetail": "Check where {deal} stands and agree on the next step this week.",
+      "nextQualify": "Qualify this lead",
+      "nextQualifyDetail": "{name} has been in touch recently. A short call can confirm need, budget and timing.",
+      "nextReconnect": "Reconnect",
+      "nextReconnectDetail": "Send {name} a short, personal note to restart the conversation.",
+      "nextCheckIn": "Plan a check-in",
+      "nextCheckInDetail": "Book a short check-in with {name} to keep things moving.",
+      "taskFollowUpDeal": "Follow up with {name} on {deal}",
+      "taskQualify": "Qualification call with {name}",
+      "taskReconnect": "Reconnect with {name}",
+      "taskCheckIn": "Check in with {name}"
     }
   }
 }

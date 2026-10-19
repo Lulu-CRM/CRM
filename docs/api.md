@@ -128,13 +128,17 @@ Response (`overviewSchema` in `packages/shared/src/overview.ts`, computed by `bu
 | --- | --- | --- |
 | GET | `/contacts` | List. Filters: `stage`, `ownerId`, `companyId`, `tag`, `needsFollowUp`, `createdSince`, `segmentId` |
 | POST | `/contacts` | Create |
-| GET | `/contacts/:id` | Profile, with company and counts |
+| GET | `/contacts/:id` | Profile, with its company when linked |
 | PATCH | `/contacts/:id` | Edit |
 | DELETE | `/contacts/:id` | Soft delete |
 | POST | `/contacts/:id/convert` | Lead to customer |
 | GET | `/contacts/:id/timeline` | Activities, notes and tasks for this contact |
 
 `GET /contacts/:id/timeline` returns a list of `TimelineItem` (see `packages/shared/src/timeline.ts`), newest first by `at`: activities (`occurredAt`), notes (`createdAt`, private ones only for their author) and open tasks (`createdAt`).
+
+`GET /contacts/:id` returns the `contactSchema` fields plus `company`: the linked company (`companySchema`) or `null`. Per-contact counts are not returned yet.
+
+`POST /contacts/:id/convert` takes no body and returns the updated contact; it sets `lifecycleStage` to `customer` and logs a `stage_changed` activity. Duplicate creates and edits answer `DUPLICATE_CONTACT` (409): same email first (ignoring case), then the same name at the same company.
 
 ## Companies
 

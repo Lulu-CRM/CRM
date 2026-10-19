@@ -19,6 +19,9 @@ export function buildOpenApiDocument(): Record<string, unknown> {
       { name: 'Operations', description: 'Unauthenticated operational endpoints.' },
       { name: 'Auth', description: 'Log in, log out and the current user.' },
       { name: 'Users', description: 'People in the workspace.' },
+      { name: 'Contacts', description: 'Contacts, leads and their timeline.' },
+      { name: 'Companies', description: 'Companies with computed contact and deal numbers.' },
+      { name: 'Deals', description: 'Pipelines, stages and deals.' },
     ],
     paths,
     components: {

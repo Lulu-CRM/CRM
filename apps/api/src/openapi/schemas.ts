@@ -1,5 +1,12 @@
 import {
   authSessionSchema,
+  companyCreateSchema,
+  companyDetailSchema,
+  companyListItemSchema,
+  companyUpdateSchema,
+  contactCreateSchema,
+  contactSchema,
+  contactUpdateSchema,
   dealCreateSchema,
   dealMoveSchema,
   dealSchema,
@@ -12,6 +19,7 @@ import {
   loginInputSchema,
   meUpdateSchema,
   pipelineWithStagesSchema,
+  timelineItemSchema,
   userSchema,
 } from '@lulu/shared';
 import { z, type ZodType } from 'zod';
@@ -37,6 +45,14 @@ const COMPONENT_NAMES = {
   DealMove: dealMoveSchema,
   DealSummary: dealSummarySchema,
   PipelineWithStages: pipelineWithStagesSchema,
+  Contact: contactSchema,
+  ContactCreate: contactCreateSchema,
+  ContactUpdate: contactUpdateSchema,
+  Company: companyListItemSchema,
+  CompanyCreate: companyCreateSchema,
+  CompanyUpdate: companyUpdateSchema,
+  CompanyDetail: companyDetailSchema,
+  TimelineItem: timelineItemSchema,
 } as const satisfies Record<string, ZodType>;
 
 export type ComponentName = keyof typeof COMPONENT_NAMES;

@@ -14,6 +14,28 @@ npm test -w @lulu/web    # unit tests
 
 Copy `.env.example` to `apps/web/.env.local`. `NEXT_PUBLIC_USE_MOCK=true` (the default) serves the design's sample data from `packages/shared`. Set it to `false` and set `NEXT_PUBLIC_API_URL` to use the real API.
 
+### Moving to the real API one area at a time
+
+Keep `NEXT_PUBLIC_USE_MOCK=true` and list the areas that are ready in `NEXT_PUBLIC_REAL_API`, for example:
+
+```
+NEXT_PUBLIC_API_URL=http://localhost:4000/api/v1
+NEXT_PUBLIC_REAL_API=me,users,contacts,companies
+```
+
+Everything not listed keeps using sample data (`src/lib/api/index.ts`, `chooseApi`). Restart `npm run dev:web` after changing it.
+
+Switch linked areas **together**, because the real database uses different ids from the sample data and a real deal cannot point at a sample contact:
+
+| Switch together | Needs |
+| --- | --- |
+| `me`, `users` | login (task 2), and every other area needs these |
+| `contacts`, `companies` | task 3 |
+| `pipelines`, `deals` | task 4, and contacts/companies already real |
+| `tasks`, `notes`, `activities` | task 5, and contacts/companies already real |
+| `overview` | every area above |
+| `segments`, `imports`, `ai`, `settings` | tasks 6 to 9 |
+
 ## Where things are
 
 | Path | What |

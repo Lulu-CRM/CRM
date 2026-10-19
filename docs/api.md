@@ -158,6 +158,13 @@ Response (`overviewSchema` in `packages/shared/src/overview.ts`, computed by `bu
 
 Schemas: `packages/shared/src/pipeline.ts` and `deal.ts`.
 
+- `POST /deals`: currency defaults to the workspace currency, probability to the stage's, owner to the current user. A deal created straight into Won or Lost gets `closedAt`.
+- `PATCH /deals/:id` returns 400 `VALIDATION_ERROR` if the body has `stageId`.
+- `POST /deals/:id/move` returns the updated deal and logs a `stage_changed` activity (`{ fromStageId, toStageId }`). Moving to the current stage changes nothing.
+- `DELETE /deals/:id` returns 204.
+- Move errors: `STAGE_NOT_FOUND` (404) and `STAGE_IN_OTHER_PIPELINE` (400).
+- A missing deal is `DEAL_NOT_FOUND` (404); a missing pipeline on `/deals/summary` is `PIPELINE_NOT_FOUND` (404). Responses use the shared `dealSchema` shape.
+
 ## Tasks, notes, activities
 
 | Method | Path | Purpose |

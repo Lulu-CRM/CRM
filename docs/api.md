@@ -4,6 +4,10 @@ Base path: `/api/v1`. JSON only. Authenticated with a bearer token. The workspac
 
 This list is the contract for the frontend and the backend. Add or change an endpoint here in the same pull request as the code.
 
+## Swagger UI
+
+Swagger UI is served by the API at `/docs` (the OpenAPI 3.1 document is at `/docs.json`). It documents the implemented endpoints only. Schemas are generated from the Zod contracts in `packages/shared`; the operations live in `apps/api/src/openapi/paths.ts`. When you implement an endpoint from this document, add it to `paths.ts` in the same pull request so the two stay in step.
+
 ## Errors
 
 Every error body is `{ code, message, details }` (see `AGENTS.md`). `ERROR_CODES` in `packages/shared/src/errors.ts` is the single list of codes; this document and the translation files (`errors.<CODE>` in `apps/web/messages`) must cover all of them. Codes that can occur on any endpoint: `VALIDATION_ERROR`, `UNAUTHORIZED`, `FORBIDDEN`, `NOT_FOUND`, `CONFLICT`, `RATE_LIMITED`, `INTERNAL_ERROR`. Codes that can occur wherever those records are touched: `CONTACT_NOT_FOUND`, `COMPANY_NOT_FOUND`, `DEAL_NOT_FOUND`, `TASK_NOT_FOUND`, `RECORD_NOT_FOUND`, `RECORD_LINK_INCOMPLETE`, `DUPLICATE_CONTACT`. Endpoints also document their own codes in their section below.

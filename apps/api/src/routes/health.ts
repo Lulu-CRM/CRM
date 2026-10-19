@@ -1,3 +1,4 @@
+import type { DependencyStatus, HealthStatus as HealthStatusBody } from '@lulu/shared';
 import type { Request, RequestHandler, Response } from 'express';
 import { db } from '../db/prisma';
 import { getRedisConnection } from '../lib/redis';
@@ -7,14 +8,9 @@ export interface HealthChecks {
   redis: () => Promise<void>;
 }
 
-export type DependencyStatus = 'ok' | 'down';
+export type { DependencyStatus };
 
-export interface HealthStatus {
-  data: {
-    status: 'ok' | 'degraded';
-    checks: { database: DependencyStatus; redis: DependencyStatus };
-  };
-}
+export type HealthStatus = HealthStatusBody;
 
 export const CHECK_TIMEOUT_MS = 2000;
 

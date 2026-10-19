@@ -1,12 +1,15 @@
 import cors from 'cors';
 import express, { type Express } from 'express';
 import helmet from 'helmet';
+import swaggerUi from 'swagger-ui-express';
 import { env } from './config/env';
 import { errorHandler } from './middleware/errorHandler';
 import { notFound } from './middleware/notFound';
 import { requestId } from './middleware/requestId';
 import { requestLog } from './middleware/requestLog';
 import './middleware/requestContext';
+import { buildOpenApiDocument } from './openapi/document';
+import { swaggerUiCsp } from './openapi/ui';
 import { apiRouter } from './routes';
 import { createHealthHandler, liveHandler } from './routes/health';
 
@@ -22,6 +25,13 @@ export function createApp(): Express {
   app.get('/health', createHealthHandler());
   app.get('/health/live', liveHandler);
   app.use('/api/v1', apiRouter);
+
+  const openApiDocument = buildOpenApiDocument();
+  app.get('/docs.json', (_req, res) => {
+    res.json(openApiDocument);
+  });
+  app.use('/docs', swaggerUiCsp, swaggerUi.serve);
+  app.get('/docs', swaggerUi.setup(undefined, { swaggerOptions: { url: '/docs.json' } }));
 
   app.use(notFound);
   app.use(errorHandler);

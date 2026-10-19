@@ -2,6 +2,7 @@ import request from 'supertest';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import type { Express } from 'express';
 import { runSeed } from '../../prisma/seed';
+import { SEED_DEAL_NORTHSTAR_ID } from '../../prisma/seed-ids';
 import { createApp } from '../app';
 import { env } from '../config/env';
 import { db } from '../db/prisma';
@@ -147,5 +148,30 @@ describe('auth routes (int)', () => {
 
     const after = await request(app).get('/api/v1/me').set('Authorization', `Bearer ${token}`);
     expect(after.status).toBe(401);
+  });
+
+  it('lets a member call protected endpoints but not delete a deal', async () => {
+    const memberToken = await login(app, MEMBER);
+
+    // Alex is a member: reading is fine, deleting is not (defaultPermissions).
+    const me = await request(app).get('/api/v1/me').set('Authorization', `Bearer ${memberToken}`);
+    expect(me.status).toBe(200);
+    expect(me.body as UserBody).toMatchObject({ data: { email: MEMBER.email, role: 'member' } });
+
+    const remove = await request(app)
+      .delete(`/api/v1/deals/${SEED_DEAL_NORTHSTAR_ID}`)
+      .set('Authorization', `Bearer ${memberToken}`);
+    expect(remove.status).toBe(403);
+    expect((remove.body as ErrorBody).error.code).toBe('FORBIDDEN');
+
+    // The deal is untouched: an owner can still read it.
+    const ownerToken = await login(app);
+    const stillThere = await request(app)
+      .get(`/api/v1/deals/${SEED_DEAL_NORTHSTAR_ID}`)
+      .set('Authorization', `Bearer ${ownerToken}`);
+    expect(stillThere.status).toBe(200);
+    expect(stillThere.body as { data: { id: string } }).toMatchObject({
+      data: { id: SEED_DEAL_NORTHSTAR_ID },
+    });
   });
 });

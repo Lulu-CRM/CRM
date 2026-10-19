@@ -1,12 +1,22 @@
 import { Router } from 'express';
-import { authRouter } from './auth';
+import { requireAuth } from '../middleware/auth';
+import { authRouter, loginRouter } from './auth';
+import { dealsRouter } from './deals';
 import { createHealthHandler } from './health';
 import { meRouter } from './me';
+import { pipelinesRouter } from './pipelines';
 import { usersRouter } from './users';
 
 export const apiRouter = Router();
 
 apiRouter.get('/health', createHealthHandler());
+
+// Public: the only route that does not need a token. Everything below is
+// guarded by requireAuth, so a new router never ships unauthenticated.
+apiRouter.use(loginRouter);
+apiRouter.use(requireAuth);
 apiRouter.use(authRouter);
 apiRouter.use(meRouter);
 apiRouter.use(usersRouter);
+apiRouter.use('/pipelines', pipelinesRouter);
+apiRouter.use('/deals', dealsRouter);

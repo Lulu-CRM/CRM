@@ -10,6 +10,13 @@ export function setAuthToken(value: string | null) {
   token = value;
 }
 
+// Called when the API rejects the token we sent (expired, logged out, user removed), so the app can sign out.
+let onUnauthorized: (() => void) | null = null;
+
+export function setUnauthorizedHandler(handler: (() => void) | null) {
+  onUnauthorized = handler;
+}
+
 async function send(method: string, path: string, body?: unknown, query?: object) {
   const url = new URL(baseUrl + path, typeof window === "undefined" ? "http://localhost" : window.location.origin);
   for (const [key, value] of Object.entries(query ?? {})) {
@@ -35,6 +42,8 @@ async function send(method: string, path: string, body?: unknown, query?: object
 
   const json = await response.json().catch(() => null);
   if (!response.ok) {
+    // Only a rejected token signs the user out; a failed login (no token yet) just shows its error.
+    if (response.status === 401 && token && onUnauthorized) onUnauthorized();
     const error = json?.error;
     throw new ApiError(error?.code ?? "UNKNOWN_ERROR", response.status, error?.details ?? null);
   }
@@ -76,4 +85,9 @@ export async function upload<T extends z.ZodType>(schema: T, path: string, file:
   form.append("file", file);
   const json = await send("POST", path, form);
   return schema.parse(json.data) as z.infer<T>;
+}
+
+// POST that answers without a body, for example POST /auth/logout (204).
+export async function post(path: string, body: unknown = {}) {
+  await send("POST", path, body);
 }

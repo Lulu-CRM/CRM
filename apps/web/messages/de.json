@@ -1104,5 +1104,21 @@
       "taskReconnect": "Wieder Kontakt mit {name} aufnehmen",
       "taskCheckIn": "Kurzer Austausch mit {name}"
     }
+  },
+  "auth": {
+    "brand": "Lulu",
+    "eyebrow": "Lulu CRM",
+    "title": "Bei deinem Arbeitsbereich anmelden",
+    "intro": "Verwende die E-Mail-Adresse und das Passwort deines Lulu-Kontos.",
+    "email": "E-Mail",
+    "password": "Passwort",
+    "submit": "Anmelden",
+    "checking": "Sitzung wird geprüft…",
+    "signOut": "Abmelden",
+    "mockHint": "Beispieldaten-Modus: Melde dich als {email} mit einem beliebigen Passwort an.",
+    "errors": {
+      "missing": "Gib deine E-Mail-Adresse und dein Passwort ein.",
+      "wrong": "E-Mail-Adresse oder Passwort ist falsch."
+    }
   }
 }

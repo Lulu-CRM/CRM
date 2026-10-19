@@ -11,11 +11,14 @@ services:
     ports:
       - "5432:5432"
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U lulu -d lulu"]
+      # -h 127.0.0.1 forces TCP: initdb's temporary server only listens on the
+      # unix socket, so without it the healthcheck passes before the real
+      # server is up and the api's migrations fail with P1001 on a fresh volume.
+      test: ["CMD-SHELL", "pg_isready -h 127.0.0.1 -U lulu -d lulu"]
       interval: 5s
       timeout: 3s
       retries: 10
-      start_period: 5s
+      start_period: 10s
 
   redis:
     image: redis:7
@@ -34,6 +37,9 @@ services:
     build:
       context: .
       dockerfile: apps/api/Dockerfile
+    # The entrypoint (migrate + idempotent seed) is safe to retry, so a
+    # transient dependency blip self-heals instead of leaving the stack dead.
+    restart: on-failure
     depends_on:
       postgres:
         condition: service_healthy

@@ -1,5 +1,20 @@
-import { errorSchema, healthLiveSchema, healthStatusSchema, listMetaSchema } from '@lulu/shared';
+import {
+  dealCreateSchema,
+  dealMoveSchema,
+  dealSchema,
+  dealSummarySchema,
+  dealUpdateSchema,
+  errorSchema,
+  healthLiveSchema,
+  healthStatusSchema,
+  listMetaSchema,
+  pipelineWithStagesSchema,
+} from '@lulu/shared';
 import { z, type ZodType } from 'zod';
+import {
+  
+} from '@lulu/shared';
+
 
 export type JsonObject = Record<string, unknown>;
 
@@ -8,6 +23,12 @@ const COMPONENT_NAMES = {
   HealthLiveStatus: healthLiveSchema,
   ListMeta: listMetaSchema,
   ErrorEnvelope: errorSchema,
+  Deal: dealSchema,
+  DealCreate: dealCreateSchema,
+  DealUpdate: dealUpdateSchema,
+  DealMove: dealMoveSchema,
+  DealSummary: dealSummarySchema,
+  PipelineWithStages: pipelineWithStagesSchema,
 } as const satisfies Record<string, ZodType>;
 
 export type ComponentName = keyof typeof COMPONENT_NAMES;

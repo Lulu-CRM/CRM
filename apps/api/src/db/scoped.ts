@@ -33,6 +33,10 @@ export const SCOPED_MODELS = [
 
 type WhereArg = Record<string, unknown>;
 
+const getExtensionContext = (Prisma as unknown as {
+  getExtensionContext: (context: unknown) => unknown;
+}).getExtensionContext;
+
 function applyScope(where: WhereArg | undefined, workspaceId: string): WhereArg {
   const scoped: WhereArg = { ...(where ?? {}), workspaceId };
   if (scoped.deletedAt === undefined) {
@@ -198,10 +202,13 @@ function scopingQuery(workspaceId: string) {
     query[model] = handlers;
   }
 
-  return Prisma.defineExtension({
+  const defineExtension = (Prisma as unknown as {
+    defineExtension: <T>(extension: T) => T;
+  }).defineExtension;
+
+  return defineExtension({
     name: 'workspaceScoping',
     // Prisma's types demand literal model keys; SCOPED_MODELS is built at runtime.
-    // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
     query: query as never,
   });
 }
@@ -212,7 +219,7 @@ function softDeleteModels() {
   for (const model of SCOPED_MODELS) {
     models[model] = {
       async delete(args: { where: WhereArg }) {
-        const ctx = Prisma.getExtensionContext(this) as unknown as {
+        const ctx = getExtensionContext(this) as {
           findFirstOrThrow: (a: unknown) => Promise<Record<string, unknown>>;
           updateMany: (a: unknown) => Promise<unknown>;
         };
@@ -221,7 +228,7 @@ function softDeleteModels() {
         return row;
       },
       async deleteMany(args: { where?: WhereArg }) {
-        const ctx = Prisma.getExtensionContext(this) as unknown as {
+        const ctx = getExtensionContext(this) as {
           updateMany: (a: unknown) => Promise<{ count: number }>;
         };
         return ctx.updateMany({ where: args.where ?? {}, data: { deletedAt: new Date() } });
@@ -229,15 +236,23 @@ function softDeleteModels() {
     };
   }
 
-  return Prisma.defineExtension({
+  const defineExtension = (Prisma as unknown as {
+    defineExtension: <T>(extension: T) => T;
+  }).defineExtension;
+
+  return defineExtension({
     name: 'softDelete',
     model: models as never,
   });
 }
 
 export function scopedDb(workspaceId: string): Db {
-  const scoped = db.$extends(scopingQuery(workspaceId)).$extends(softDeleteModels());
-  return scoped as unknown as Db;
+  const client = db as unknown as {
+    $extends: (extension: unknown) => {
+      $extends: (extension: unknown) => Db;
+    };
+  };
+  return client.$extends(scopingQuery(workspaceId)).$extends(softDeleteModels());
 }
 
 export type ScopedDb = Db;

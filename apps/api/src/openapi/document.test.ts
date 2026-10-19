@@ -13,6 +13,7 @@ function collectRefs(node: unknown, refs: string[] = []): string[] {
       else collectRefs(value, refs);
     }
   }
+
   return refs;
 }
 
@@ -28,25 +29,72 @@ describe('OpenAPI document', () => {
 
   it('documents every implemented operational endpoint from docs/api.md', () => {
     const paths = doc.paths as Json;
-    expect(Object.keys(paths).sort()).toEqual(['/api/v1/health', '/health', '/health/live']);
-    for (const path of Object.keys(paths)) {
-      const operation = (paths[path] as Json).get as Json;
-      expect(operation, `missing GET ${path}`).toBeDefined();
-      expect(Object.keys(operation.responses as Json).length).toBeGreaterThan(0);
+
+    expect(Object.keys(paths).sort()).toEqual([
+      '/api/v1/deals',
+      '/api/v1/deals/summary',
+      '/api/v1/deals/{id}',
+      '/api/v1/deals/{id}/move',
+      '/api/v1/health',
+      '/api/v1/pipelines',
+      '/health',
+      '/health/live',
+    ]);
+
+    const expectedMethods: Record<string, string[]> = {
+      '/api/v1/deals': ['get', 'post'],
+      '/api/v1/deals/summary': ['get'],
+      '/api/v1/deals/{id}': ['get', 'patch', 'delete'],
+      '/api/v1/deals/{id}/move': ['post'],
+      '/api/v1/health': ['get'],
+      '/api/v1/pipelines': ['get'],
+      '/health': ['get'],
+      '/health/live': ['get'],
+    };
+
+    for (const [path, methods] of Object.entries(expectedMethods)) {
+      const pathItem = paths[path] as Json;
+
+      for (const method of methods) {
+        const operation = pathItem[method] as Json | undefined;
+
+        expect(operation, `missing ${method.toUpperCase()} ${path}`).toBeDefined();
+        expect(
+          Object.keys(operation!.responses as Json).length,
+          `${method.toUpperCase()} ${path} must document responses`,
+        ).toBeGreaterThan(0);
+      }
     }
   });
 
   it('marks operational endpoints as unauthenticated', () => {
     const paths = doc.paths as Json;
-    for (const path of Object.keys(paths)) {
-      const operation = (paths[path] as Json).get as Json;
-      expect(operation.security, `GET ${path}`).toEqual([]);
+
+    for (const [path, pathItemValue] of Object.entries(paths)) {
+      const pathItem = pathItemValue as Json;
+
+      for (const [method, operationValue] of Object.entries(pathItem)) {
+        if (
+          !['get', 'post', 'put', 'patch', 'delete'].includes(method) ||
+          typeof operationValue !== 'object' ||
+          operationValue === null
+        ) {
+          continue;
+        }
+
+        const operation = operationValue as Json;
+        expect(
+          operation.security,
+          `${method.toUpperCase()} ${path}`,
+        ).toEqual([]);
+      }
     }
   });
 
   it('declares the bearer auth scheme for future authenticated endpoints', () => {
     const components = doc.components as Json;
     const securitySchemes = components.securitySchemes as Json;
+
     expect(securitySchemes).toHaveProperty('bearerAuth');
   });
 
@@ -54,9 +102,12 @@ describe('OpenAPI document', () => {
     const components = doc.components as Json;
     const schemas = components.schemas as Json;
     const refs = collectRefs(doc);
+
     expect(refs.length).toBeGreaterThan(0);
+
     for (const ref of refs) {
       expect(ref.startsWith(COMPONENT_REF_PREFIX), ref).toBe(true);
+
       const name = ref.slice(COMPONENT_REF_PREFIX.length);
       expect(schemas, `unresolved ref ${ref}`).toHaveProperty(name);
     }
@@ -69,12 +120,16 @@ describe('OpenAPI document', () => {
 
     const ok = responses['200'] as Json;
     expect((ok.content as Json)['application/json']).toMatchObject({
-      example: { data: { status: 'ok', checks: { database: 'ok', redis: 'ok' } } },
+      example: {
+        data: { status: 'ok', checks: { database: 'ok', redis: 'ok' } },
+      },
     });
 
     const degraded = responses['503'] as Json;
     expect((degraded.content as Json)['application/json']).toMatchObject({
-      example: { data: { status: 'degraded', checks: { database: 'down', redis: 'ok' } } },
+      example: {
+        data: { status: 'degraded', checks: { database: 'down', redis: 'ok' } },
+      },
     });
 
     const live = ((paths['/health/live'] as Json).get as Json).responses as Json;
@@ -87,6 +142,7 @@ describe('OpenAPI document', () => {
     const components = doc.components as Json;
     const schemas = components.schemas as Json;
     const healthStatus = schemas.HealthStatus as Json;
+
     expect(healthStatus).toMatchObject({
       type: 'object',
       properties: {

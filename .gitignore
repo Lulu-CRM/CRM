@@ -10,3 +10,6 @@ coverage/
 *.log
 apps/api/src/generated/
 .DS_Store
+
+# Local task trackers: agent progress notes, never committed.
+task-*.md

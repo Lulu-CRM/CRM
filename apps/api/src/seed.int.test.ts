@@ -56,6 +56,19 @@ describe('seed (int)', () => {
     });
   });
 
+  it('gives both seeded users a password hash to log in with', async () => {
+    const users = await db.user.findMany({
+      where: { workspaceId: SEED_WORKSPACE_ID, deletedAt: null },
+      select: { email: true, passwordHash: true },
+    });
+
+    expect(users).toHaveLength(2);
+    for (const user of users) {
+      expect(user.passwordHash).not.toBeNull();
+      expect(user.passwordHash?.startsWith('$2')).toBe(true);
+    }
+  });
+
   it('links every deal to a stage of the seeded pipeline', async () => {
     const pipelineStages = await db.stage.findMany({
       where: { pipelineId: SEED_PIPELINE_SALES_ID },

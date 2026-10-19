@@ -25,8 +25,9 @@ const SORTABLE = [
   'updatedAt',
 ];
 
+// Specific codes, because the web app translates errors by code (errors.DEAL_NOT_FOUND, ...).
 function notFound(): AppError {
-  return AppError.notFound(ERROR_CODES.NOT_FOUND);
+  return AppError.notFound(ERROR_CODES.DEAL_NOT_FOUND);
 }
 
 function parseSort(sort: string | undefined): Prisma.DealOrderByWithRelationInput {
@@ -107,13 +108,13 @@ export async function listDeals(ctx: RequestContext, query: DealListQuery) {
     }),
     scoped.deal.count({ where }),
   ]);
-  return { items, total };
+  return { items: items.map(toSharedDeal), total };
 }
 
 export async function getDeal(ctx: RequestContext, id: string) {
   const deal = await scopedDb(ctx.workspaceId).deal.findFirst({ where: { id } });
   if (deal === null) throw notFound();
-  return deal;
+  return toSharedDeal(deal);
 }
 
 export async function createDeal(ctx: RequestContext, input: DealCreateInput) {
@@ -126,7 +127,7 @@ export async function createDeal(ctx: RequestContext, input: DealCreateInput) {
     input.currency ??
     (await db.workspace.findUniqueOrThrow({ where: { id: ctx.workspaceId } })).defaultCurrency;
 
-  return scoped.deal.create({
+  const deal = await scoped.deal.create({
     data: {
       workspaceId: ctx.workspaceId,
       name: input.name,
@@ -142,6 +143,7 @@ export async function createDeal(ctx: RequestContext, input: DealCreateInput) {
       closedAt: stage.type === 'open' ? null : new Date(),
     },
   });
+  return toSharedDeal(deal);
 }
 
 export async function updateDeal(ctx: RequestContext, id: string, input: DealUpdateInput) {
@@ -150,7 +152,7 @@ export async function updateDeal(ctx: RequestContext, id: string, input: DealUpd
   if (existing === null) throw notFound();
   await assertReferences(scoped, input);
 
-  return scoped.deal.update({
+  const deal = await scoped.deal.update({
     where: { id },
     data: {
       ...(input.name === undefined ? {} : { name: input.name }),
@@ -168,6 +170,7 @@ export async function updateDeal(ctx: RequestContext, id: string, input: DealUpd
           }),
     },
   });
+  return toSharedDeal(deal);
 }
 
 export async function deleteDeal(ctx: RequestContext, id: string): Promise<void> {
@@ -200,7 +203,7 @@ export async function moveDealToStage(ctx: RequestContext, id: string, toStageId
       throw err;
     }
 
-    if (moved.stageId === row.stageId) return row;
+    if (moved.stageId === row.stageId) return toSharedDeal(row);
 
     const updated = await tx.deal.update({
       where: { id },
@@ -221,7 +224,7 @@ export async function moveDealToStage(ctx: RequestContext, id: string, toStageId
         payload: { fromStageId: row.stageId, toStageId: moved.stageId },
       },
     });
-    return updated;
+    return toSharedDeal(updated);
   });
 }
 
@@ -233,7 +236,7 @@ export async function getDealSummary(
   const pipeline = await scoped.pipeline.findFirst({
     where: pipelineId === undefined ? { isDefault: true } : { id: pipelineId },
   });
-  if (pipeline === null) throw notFound();
+  if (pipeline === null) throw AppError.notFound(ERROR_CODES.PIPELINE_NOT_FOUND);
 
   const [workspace, stageRows] = await Promise.all([
     db.workspace.findUniqueOrThrow({ where: { id: ctx.workspaceId } }),

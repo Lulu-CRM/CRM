@@ -376,7 +376,7 @@ describe('deals API (int)', () => {
     const missing = await move(a, randomUUID(), a.stages.won);
 
     expect(missing.status).toBe(404);
-    expect(responseBody<ErrorEnvelope>(missing).error.code).toBe('NOT_FOUND');
+    expect(responseBody<ErrorEnvelope>(missing).error.code).toBe('DEAL_NOT_FOUND');
   });
 
   it('edits a deal but never its stage', async () => {

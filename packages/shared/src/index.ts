@@ -1,6 +1,7 @@
 export * from "./common";
 export * from "./health";
 export * from "./errors";
+export * from "./auth";
 export * from "./api";
 export * from "./record";
 export * from "./pipeline";

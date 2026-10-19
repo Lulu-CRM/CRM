@@ -1,5 +1,7 @@
 import type { Prisma } from '../src/generated/prisma/client';
 import { db, disconnectDb } from '../src/db/prisma';
+import { env } from '../src/config/env';
+import { hashPassword } from '../src/services/auth';
 import {
   SEED_ACTIVITY_AI_SIGNAL_ID,
   SEED_ACTIVITY_DANIEL_CALL_ID,
@@ -480,11 +482,24 @@ async function openDealTotals(): Promise<{ openValue: number; weightedValue: num
   return { openValue, weightedValue };
 }
 
+// Passwords are hashed fresh on every run (new salt), so the seed stays
+// idempotent: the same two users, each with a non-null passwordHash.
+async function usersWithPasswords(): Promise<WithId<Prisma.UserUncheckedCreateInput>[]> {
+  return Promise.all(
+    users.map(async (user) => ({
+      ...user,
+      passwordHash: await hashPassword(
+        user.id === SEED_JAMIE_ID ? env.SEED_OWNER_PASSWORD : env.SEED_MEMBER_PASSWORD,
+      ),
+    })),
+  );
+}
+
 export async function runSeed(): Promise<void> {
   await upsertMany([workspace], (id, data, create) =>
     db.workspace.upsert({ where: { id }, update: data, create }),
   );
-  await upsertMany(users, (id, data, create) =>
+  await upsertMany(await usersWithPasswords(), (id, data, create) =>
     db.user.upsert({ where: { id }, update: data, create }),
   );
   await upsertMany(companies, (id, data, create) =>

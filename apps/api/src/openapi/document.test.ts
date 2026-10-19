@@ -16,6 +16,8 @@ function collectRefs(node: unknown, refs: string[] = []): string[] {
   return refs;
 }
 
+const OPERATIONAL_PATHS = ['/health', '/health/live', '/api/v1/health'];
+
 describe('OpenAPI document', () => {
   const doc = buildOpenApiDocument();
 
@@ -26,21 +28,42 @@ describe('OpenAPI document', () => {
     expect(doc.components).toBeDefined();
   });
 
-  it('documents every implemented operational endpoint from docs/api.md', () => {
+  it('documents every implemented endpoint from docs/api.md', () => {
     const paths = doc.paths as Json;
-    expect(Object.keys(paths).sort()).toEqual(['/api/v1/health', '/health', '/health/live']);
+    expect(Object.keys(paths).sort()).toEqual([
+      '/api/v1/auth/login',
+      '/api/v1/auth/logout',
+      '/api/v1/health',
+      '/api/v1/me',
+      '/api/v1/users',
+      '/health',
+      '/health/live',
+    ]);
     for (const path of Object.keys(paths)) {
-      const operation = (paths[path] as Json).get as Json;
-      expect(operation, `missing GET ${path}`).toBeDefined();
-      expect(Object.keys(operation.responses as Json).length).toBeGreaterThan(0);
+      const operations = Object.values(paths[path] as Json) as Json[];
+      expect(operations.length, `no operations on ${path}`).toBeGreaterThan(0);
+      for (const operation of operations) {
+        expect(Object.keys(operation.responses as Json).length).toBeGreaterThan(0);
+      }
     }
   });
 
   it('marks operational endpoints as unauthenticated', () => {
     const paths = doc.paths as Json;
-    for (const path of Object.keys(paths)) {
+    for (const path of OPERATIONAL_PATHS) {
       const operation = (paths[path] as Json).get as Json;
       expect(operation.security, `GET ${path}`).toEqual([]);
+    }
+  });
+
+  it('marks the auth endpoints with the right bearer security', () => {
+    const paths = doc.paths as Json;
+    expect(((paths['/api/v1/auth/login'] as Json).post as Json).security).toEqual([]);
+    for (const path of ['/api/v1/auth/logout', '/api/v1/me', '/api/v1/users']) {
+      const operations = Object.values(paths[path] as Json) as Json[];
+      for (const operation of operations) {
+        expect(operation.security, path).toEqual([{ bearerAuth: [] }]);
+      }
     }
   });
 

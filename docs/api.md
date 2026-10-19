@@ -48,13 +48,61 @@ Each dependency check is bounded by a timeout (`CHECK_TIMEOUT_MS`, 2000ms) so a 
 
 ## Auth and workspace
 
+Every endpoint here except `POST /auth/login` needs `Authorization: Bearer <token>`. The token comes from login; the workspace is read from the token, never from the body. A missing, malformed, expired or logged-out token answers `UNAUTHORIZED`. A valid token whose role may not do the action answers `FORBIDDEN`.
+
 | Method | Path | Purpose |
 | --- | --- | --- |
 | POST | `/auth/login` | Email and password, returns a token. Replaced if the shared app shell provides login |
-| POST | `/auth/logout` | End the session |
-| GET | `/me` | Current user, workspace, role, language |
-| PATCH | `/me` | Update language and profile |
+| POST | `/auth/logout` | End the session: revokes the token until it expires |
+| GET | `/me` | Current user (role and language included) |
+| PATCH | `/me` | Update the user's name and language |
 | GET | `/users` | People in the workspace (for owner pickers) |
+
+`POST /auth/login` — request:
+
+```json
+{ "email": "jamie.morgan@lulu.test", "password": "lulu-dev-owner" }
+```
+
+Response `200`:
+
+```json
+{ "data": { "token": "<jwt>", "expiresAt": "2026-10-19T12:00:00.000Z" } }
+```
+
+A wrong password and an unknown email both answer `401` with `UNAUTHORIZED`, so the response never says which part was wrong.
+
+`POST /auth/logout` — no body, `204`. The token is added to a server-side denylist until it expires, so it cannot be used again.
+
+`GET /me` — `200` with the `userSchema` row (`id`, `workspaceId`, `name`, `email`, `role`, `language`, timestamps):
+
+```json
+{
+  "data": {
+    "id": "562025e7-2561-4ac9-82da-44cb11df5c28",
+    "workspaceId": "…",
+    "name": "Jamie Morgan",
+    "email": "jamie.morgan@lulu.test",
+    "role": "owner",
+    "language": "en",
+    "createdAt": "2026-10-18T11:55:09.000Z",
+    "updatedAt": "2026-10-18T11:55:09.000Z",
+    "deletedAt": null
+  }
+}
+```
+
+The workspace itself is loaded from the token on the server; it is not part of this payload yet (follow-up: add it once the web client parses it too).
+
+`PATCH /me` — request takes `name` and/or `language` (at least one); `role`, `email` and `workspaceId` cannot be changed. Response is the updated user.
+
+```json
+{ "name": "Jamie M. Morgan", "language": "de" }
+```
+
+`GET /users` — list envelope, every user in the workspace (`userSchema`), for owner pickers. Uses the common list parameters; `q` matches name or email, and `sort` is `name` (default) or `createdAt`, with `-` for descending.
+
+Errors: `UNAUTHORIZED` (bad credentials, or missing/invalid/expired/revoked token), `FORBIDDEN` (the role may not do the action), `VALIDATION_ERROR` (bad body).
 
 ## Overview
 

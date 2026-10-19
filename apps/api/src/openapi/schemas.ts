@@ -1,13 +1,30 @@
-import { errorSchema, healthLiveSchema, healthStatusSchema, listMetaSchema } from '@lulu/shared';
+import {
+  authSessionSchema,
+  errorSchema,
+  healthLiveSchema,
+  healthStatusSchema,
+  listMetaSchema,
+  loginInputSchema,
+  meUpdateSchema,
+  userSchema,
+} from '@lulu/shared';
 import { z, type ZodType } from 'zod';
 
 export type JsonObject = Record<string, unknown>;
+
+// Scheme name for the bearer token from POST /auth/login. Lives here (not in
+// document.ts) so paths.ts can reference it without a circular import.
+export const BEARER_AUTH_SCHEME = 'bearerAuth';
 
 const COMPONENT_NAMES = {
   HealthStatus: healthStatusSchema,
   HealthLiveStatus: healthLiveSchema,
   ListMeta: listMetaSchema,
   ErrorEnvelope: errorSchema,
+  LoginInput: loginInputSchema,
+  AuthSession: authSessionSchema,
+  MeUpdateInput: meUpdateSchema,
+  User: userSchema,
 } as const satisfies Record<string, ZodType>;
 
 export type ComponentName = keyof typeof COMPONENT_NAMES;

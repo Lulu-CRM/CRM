@@ -1,4 +1,33 @@
-import { schemaRef } from './schemas';
+import { BEARER_AUTH_SCHEME, schemaRef } from './schemas';
+
+// Authenticated operations carry the bearer token from POST /auth/login.
+const bearer: Array<Record<string, string[]>> = [{ [BEARER_AUTH_SCHEME]: [] }];
+
+// AGENTS.md envelope: { "data": ... }. Components are bare payloads, so the
+// wrapper is expressed here instead of as a separate component.
+function dataResponse(ref: string): Record<string, unknown> {
+  return {
+    'application/json': { schema: { type: 'object', properties: { data: { $ref: ref } } } },
+  };
+}
+
+function listResponse(ref: string): Record<string, unknown> {
+  return {
+    'application/json': {
+      schema: {
+        type: 'object',
+        properties: {
+          data: { type: 'array', items: { $ref: ref } },
+          meta: { $ref: schemaRef('ListMeta') },
+        },
+      },
+    },
+  };
+}
+
+function errorResponse(): Record<string, unknown> {
+  return { 'application/json': { schema: { $ref: schemaRef('ErrorEnvelope') } } };
+}
 
 export interface OpenApiOperation {
   operationId: string;
@@ -103,6 +132,83 @@ export const paths: OpenApiPaths = {
             },
           },
         },
+      },
+    },
+  },
+  '/api/v1/auth/login': {
+    post: {
+      operationId: 'login',
+      summary: 'Log in',
+      description:
+        'Email and password. Returns a bearer token; the workspace is read from the token, never the body. A wrong password and an unknown email both answer 401 UNAUTHORIZED, so the response never says which part was wrong. Unauthenticated.',
+      tags: ['Auth'],
+      security: [],
+      responses: {
+        '200': {
+          description: 'Logged in.',
+          content: {
+            'application/json': {
+              schema: { type: 'object', properties: { data: { $ref: schemaRef('AuthSession') } } },
+              example: { data: { token: '<jwt>', expiresAt: '2026-10-19T12:00:00.000Z' } },
+            },
+          },
+        },
+        '400': { description: 'Invalid body.', content: errorResponse() },
+        '401': { description: 'Bad credentials.', content: errorResponse() },
+      },
+    },
+  },
+  '/api/v1/auth/logout': {
+    post: {
+      operationId: 'logout',
+      summary: 'Log out',
+      description:
+        'Revokes the current token by adding it to a server-side denylist until it expires, so it cannot be used again.',
+      tags: ['Auth'],
+      security: bearer,
+      responses: {
+        '204': { description: 'Logged out.' },
+        '401': { description: 'Missing, invalid or expired token.', content: errorResponse() },
+      },
+    },
+  },
+  '/api/v1/me': {
+    get: {
+      operationId: 'getMe',
+      summary: 'Current user',
+      description: 'The user the token belongs to (role and language included).',
+      tags: ['Auth'],
+      security: bearer,
+      responses: {
+        '200': { description: 'Current user.', content: dataResponse(schemaRef('User')) },
+        '401': { description: 'Missing, invalid or expired token.', content: errorResponse() },
+      },
+    },
+    patch: {
+      operationId: 'updateMe',
+      summary: 'Update the current user',
+      description:
+        "Updates the user's name and/or language (at least one). role, email and workspaceId cannot be changed.",
+      tags: ['Auth'],
+      security: bearer,
+      responses: {
+        '200': { description: 'Updated user.', content: dataResponse(schemaRef('User')) },
+        '400': { description: 'Invalid body.', content: errorResponse() },
+        '401': { description: 'Missing, invalid or expired token.', content: errorResponse() },
+      },
+    },
+  },
+  '/api/v1/users': {
+    get: {
+      operationId: 'listUsers',
+      summary: 'People in the workspace',
+      description:
+        'Every user in the workspace, for owner pickers. Uses the common list parameters.',
+      tags: ['Users'],
+      security: bearer,
+      responses: {
+        '200': { description: 'Workspace users.', content: listResponse(schemaRef('User')) },
+        '401': { description: 'Missing, invalid or expired token.', content: errorResponse() },
       },
     },
   },

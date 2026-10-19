@@ -129,7 +129,13 @@
     "STAGE_LOCKED": "Die Phasen Gewonnen und Verloren können nicht gelöscht werden",
     "STAGE_IN_USE": "Verschiebe zuerst die Deals aus dieser Phase",
     "AI_INSIGHT_NOT_FOUND": "Vorschlag nicht gefunden",
-    "AI_INSIGHT_CLOSED": "Dieser Vorschlag wurde bereits übernommen oder verworfen"
+    "AI_INSIGHT_CLOSED": "Dieser Vorschlag wurde bereits übernommen oder verworfen",
+    "NOT_FOUND": "Nicht gefunden",
+    "CONFLICT": "Dies steht im Konflikt mit etwas, das bereits existiert",
+    "RATE_LIMITED": "Zu viele Anfragen. Bitte kurz warten und erneut versuchen.",
+    "INTERNAL_ERROR": "Auf unserer Seite ist etwas schiefgelaufen. Bitte versuche es erneut.",
+    "DUPLICATE_CONTACT": "Dieser Kontakt existiert bereits",
+    "RECORD_LINK_INCOMPLETE": "Ein verknüpfter Datensatz braucht Typ und Id"
   },
   "contacts": {
     "import": "Importieren",

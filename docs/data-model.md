@@ -1,8 +1,33 @@
-# Data model (draft)
+# Data model
 
-Every table has `id`, `workspaceId`, `createdAt`, `updatedAt`, and `deletedAt` for soft delete. The backend dev who owns the schema refines this and records changes here.
+Every table has `id`, `workspaceId`, `createdAt`, `updatedAt`, and `deletedAt` for soft delete. This document matches `apps/api/prisma/schema.prisma`; change both in the same pull request.
 
 The prototype in `design/` stores money, dates and links as text. This model replaces that with real fields.
+
+## Base fields (the pattern every new model follows)
+
+In `apps/api/prisma/schema.prisma`, every workspace-scoped model carries:
+
+```prisma
+model Example {
+  id          String    @id @default(uuid())
+  workspaceId String
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  deletedAt   DateTime?
+
+  workspace Workspace @relation(fields: [workspaceId], references: [id])
+
+  @@index([workspaceId])
+  @@map("examples")
+}
+```
+
+Rules: `@@map` uses snake_case plural table names, model names are PascalCase singular. `Workspace` itself has no `workspaceId`. After adding a model to the schema, add its delegate name to `SCOPED_MODELS` in `apps/api/src/db/scoped.ts` so scoping and soft delete apply to it.
+
+## Query rule
+
+**All application queries go through `scopedDb(workspaceId)`** (`apps/api/src/db/scoped.ts`). It forces `workspaceId` and `deletedAt = null` into reads, stamps `workspaceId` on create, forces it into update/upsert `where`, and converts `delete`/`deleteMany` into soft deletes. The base client (`src/db/prisma.ts`) is only for the `Workspace` table, migrations, and infrastructure code. Hard delete is never exposed through `scopedDb`.
 
 ## Entities
 
@@ -10,16 +35,16 @@ The prototype in `design/` stores money, dates and links as text. This model rep
 | --- | --- |
 | Workspace | name, defaultCurrency, defaultLanguage |
 | User | name, email, language, role (`owner`, `admin`, `member`), workspaceId |
-| Contact | name, email, phone, companyId, jobRole, source, lifecycleStage, ownerId, tags, marketingConsent, consentUpdatedAt, lastTouchAt |
+| Contact | name, email, phone, companyId, jobRole, source, lifecycleStage, ownerId, tags, marketingConsent, consentUpdatedAt, lastTouchAt, customFields (JSON) |
 | Company | name, domain (bare host name, lower case), industry, size (`1-10`, `11-50`, `51-200`, `201+`), ownerId. Contact count, open deal value, last touch and health are computed, not stored |
 | Pipeline | key, name, isDefault |
 | Stage | pipelineId, key, name, order, probability, type (`open`, `won`, `lost`) |
 | Deal | name, value (number), currency, stageId, probability, expectedCloseAt, contactId, companyId, ownerId, closedAt |
 | Task | title, dueAt, priority (`high`, `normal`, `low`), ownerId, done, doneAt, linked record |
 | Note | title, body, visibility (`shared`, `private`), authorId, linked record |
-| Activity | type, linked record, occurredAt, sourceModule, actorId, payload |
+| Activity | type, linked record, occurredAt, sourceModule, actorId, payload, summary |
 | Segment | name, description, rules (JSON, format in `docs/api.md`), color (`violet`, `coral`, `blue`, `mint`, `peach`) |
-| ImportJob | fileName, status, mapping (JSON), rowsTotal, rowsAdded, rowsHeld, ownerId, tag |
+| ImportJob | fileName, status (`uploaded`, `mapped`, `processing`, `completed`, `failed`), mapping (JSON), rowsTotal, rowsAdded, rowsHeld, ownerId, tag |
 | ImportRow | importJobId, rowNumber, raw (JSON), status (`added`, `held`, `skipped`), duplicateOfContactId |
 | AiInsight | contactId, summary, nextStep, dataQualityScore, missingFields, status (`suggested`, `accepted`, `dismissed`) |
 | CustomField | entity, key, label, type, options |
@@ -30,10 +55,24 @@ The prototype in `design/` stores money, dates and links as text. This model rep
 
 ## Enums
 
-- **Contact lifecycle stage:** `new`, `qualified`, `follow_up`, `customer`
+These are the `enum` types in `schema.prisma`. The first block is database enums (the name in parentheses is the `@@map` DB type name where it differs from the model name). The second block is open value sets: columns typed `String`, validated in the API.
+
+- **Role:** `owner`, `admin`, `member`
+- **LifecycleStage** (`lifecycle_stage`): `new`, `qualified`, `follow_up`, `customer`
+- **StageType** (`stage_type`): `open`, `won`, `lost`
+- **TaskPriority** (`task_priority`): `high`, `normal`, `low`
+- **NoteVisibility** (`note_visibility`): `shared`, `private`
+- **RecordType** (`record_type`): `contact`, `company`, `deal`
+- **ActivityType** (`activity_type`): `email`, `meeting`, `task`, `note`, `ai_signal`, `created`, `stage_changed`
+- **SourceModule** (`source_module`): `crm`, `email`, `calendar`, `online_presence`, `marketplace`
+- **ImportJobStatus** (`import_job_status`): `uploaded`, `mapped`, `processing`, `completed`, `failed`
+- **ImportRowStatus** (`import_row_status`): `added`, `held`, `skipped`
+- **AiInsightStatus** (`ai_insight_status`): `suggested`, `accepted`, `dismissed`
+
+Open value sets (`String` columns, not DB enums — validated in the API):
+
 - **Contact source:** `website_form`, `referral`, `email`, `import`, `marketplace`, `instagram`, plus custom values
-- **Activity type:** `email`, `meeting`, `task`, `note`, `ai_signal`, `created`, `stage_changed`
-- **Source module:** `crm`, `email`, `calendar`, `online_presence`, `marketplace`
+- **Segment color:** `violet`, `coral`, `blue`, `mint`, `peach`
 
 ## Decisions
 
@@ -47,12 +86,20 @@ The prototype in `design/` stores money, dates and links as text. This model rep
 - **Duplicates.** A possible duplicate of a contact is matched on email first, then on name plus company. Duplicates are held for review, never merged automatically.
 - **Consent.** `marketingConsent` and its timestamp are stored on the contact, and imported contacts inherit the workspace rules.
 - **Activity feed from other modules.** Email, Calendar and others create `Activity` rows through the event format in `docs/api.md`.
+- **User table exists now.** Created in `init_base` migration with `passwordHash String?` (nullable) so the login task needs no extra migration. `User.email` is **globally unique** (`@unique`, not per-workspace): login uses email alone, and a user belongs to exactly one workspace.
+- **Delete.** Soft delete everywhere. Permanent deletion is a later feature. The API enforces this: `scopedDb` converts every `delete` into `deletedAt = now()`. All foreign keys are `onDelete: Restrict` in the schema, so a hard cascade can never remove rows behind the soft delete.
+- **Contact.customFields.** `Json` column defaulting to `{}` on Contact, so ST-1 custom field values have a place to live before the CustomField definition UI maps keys to types. The `CustomField` model defines the definitions; this column holds the values.
+- **Contact.source is a nullable String with no default.** Source values are open (`website_form`, `referral`, `email`, `import`, `marketplace`, `instagram`, plus custom), so the database assumes nothing; the API validates known values.
+- **ImportJobStatus enum values:** `uploaded`, `mapped`, `processing`, `completed`, `failed` — the import pipeline's five states (doc was silent).
+- **Decimal precision.** `Stage.probability` and `Deal.probability` are `Decimal(5,4)` (0 to 1, four decimals); `Deal.value` is `Decimal(14,2)`. The 0–1 range is validated in the API (Zod), not by a DB `CHECK` constraint — Prisma Migrate treats unknown checks as drift and would drop them in a later migration. Prisma returns `Decimal` columns as JS Decimal objects; the API serializes them per the money rule.
+- **Trigram search.** The migration creates `pg_trgm` and GIN trigram indexes on `lower(contacts.name)`, `lower(contacts.email)` and `lower(companies.name)` for case-insensitive search (the "text index" from the indexes section). Creating the extension needs a database user allowed to `CREATE EXTENSION`.
+- **Enum naming.** `Role` keeps its original DB type name (already migrated). New enums are mapped to snake_case DB type names with `@@map` (`lifecycle_stage`, `stage_type`, …).
+- **Linked record is polymorphic.** Task, Note and Activity store `recordType` + `recordId` (string id), not foreign keys — so there is no `ON DELETE` behavior to define and rows from other modules (Email, Calendar) can be linked without shared tables. `(workspaceId, recordType, recordId)` indexes back these lookups.
 - **Due dates.** A due date picked without a time is stored at 12:00 UTC, so it stays on the same calendar day in every time zone we serve. Chips (`overdue`, `today`, `tomorrow`, `this_week`, `later`, `done`) are worked out by calendar day in the user's time zone (`dueKind` in `packages/shared`).
 - **Activities store facts, not sentences.** An activity has a `type` and a `payload` (for example `{ "taskId": "...", "action": "completed" }`). The UI builds the line from the translation files, so the timeline reads in the user's language. Only `summary` from other modules' events is free text.
 - **Ticking a task** sets `done` and `doneAt` and adds a `task` activity to the timeline (`action: completed`); unticking clears `doneAt` and adds `action: reopened`.
 - **Private notes.** A private note is seen, edited and deleted only by its author. Shared notes are seen and edited by everyone in the workspace. A note's link to a contact, company or deal can be changed after saving.
 - **Segments are rules, not lists.** A segment stores filter rules; its members are worked out when asked (`segmentMembers` in `packages/shared`). "Due today" for follow-ups uses UTC on the server until workspaces have a time zone.
-- **Delete.** Soft delete everywhere. Permanent deletion is a later feature.
 
 ## Indexes to add early
 

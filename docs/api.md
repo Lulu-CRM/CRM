@@ -1,8 +1,46 @@
-# API (draft)
+# API
 
 Base path: `/api/v1`. JSON only. Authenticated with a bearer token. The workspace comes from the token, never from the request body. Response format is in `AGENTS.md`.
 
 This list is the contract for the frontend and the backend. Add or change an endpoint here in the same pull request as the code.
+
+## Swagger UI
+
+Swagger UI is served by the API at `/docs` (the OpenAPI 3.1 document is at `/docs.json`). It documents the implemented endpoints only. Schemas are generated from the Zod contracts in `packages/shared`; the operations live in `apps/api/src/openapi/paths.ts`. When you implement an endpoint from this document, add it to `paths.ts` in the same pull request so the two stay in step.
+
+## Errors
+
+Every error body is `{ code, message, details }` (see `AGENTS.md`). `ERROR_CODES` in `packages/shared/src/errors.ts` is the single list of codes; this document and the translation files (`errors.<CODE>` in `apps/web/messages`) must cover all of them. Codes that can occur on any endpoint: `VALIDATION_ERROR`, `UNAUTHORIZED`, `FORBIDDEN`, `NOT_FOUND`, `CONFLICT`, `RATE_LIMITED`, `INTERNAL_ERROR`. Codes that can occur wherever those records are touched: `CONTACT_NOT_FOUND`, `COMPANY_NOT_FOUND`, `DEAL_NOT_FOUND`, `TASK_NOT_FOUND`, `RECORD_NOT_FOUND`, `RECORD_LINK_INCOMPLETE`, `DUPLICATE_CONTACT`. Endpoints also document their own codes in their section below.
+
+## Operations and health
+
+Unauthenticated endpoints for the container, the load balancer and the developer. They live outside the versioned `/api/v1` base path (mounted on the app root) because they must answer before the rest of the stack is verified.
+
+| Method | Path | Purpose |
+| --- | --- | --- |
+| GET | `/health` | Readiness: checks Postgres and Redis, `200` when both are up, `503` when either is down |
+| GET | `/health/live` | Liveness: always `200`, touches no dependency — use it to detect a hung process |
+| GET | `/api/v1/health` | Alias of `/health`, for clients that only know the versioned base path |
+
+Each dependency check is bounded by a timeout (`CHECK_TIMEOUT_MS`, 2000ms) so a hung database cannot hang the response.
+
+`GET /health` — both up:
+
+```json
+{ "data": { "status": "ok", "checks": { "database": "ok", "redis": "ok" } } }
+```
+
+`GET /health` — Postgres down (status `503`):
+
+```json
+{ "data": { "status": "degraded", "checks": { "database": "down", "redis": "ok" } } }
+```
+
+`GET /health/live`:
+
+```json
+{ "data": { "status": "ok" } }
+```
 
 ## Common list parameters
 

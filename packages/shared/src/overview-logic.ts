@@ -29,7 +29,7 @@ const live = <T extends { deletedAt: string | null }>(rows: T[]) => rows.filter(
 // Monday 00:00 of the week `now` is in, in the given time zone.
 // Uses the zone's offset at `now`; a DST change earlier in the week moves it by at most an hour.
 export function startOfWeek(now: Date, timeZone: string): number {
-  const parts = Object.fromEntries(
+  const parts = new Map(
     new Intl.DateTimeFormat("en-US", {
       timeZone,
       hourCycle: "h23",
@@ -42,12 +42,13 @@ export function startOfWeek(now: Date, timeZone: string): number {
       second: "numeric",
     })
       .formatToParts(now)
-      .map((part) => [part.type, part.value]),
+      .map((part) => [part.type, part.value] as const),
   );
-  const wallClock = Date.UTC(+parts.year, +parts.month - 1, +parts.day, +parts.hour, +parts.minute, +parts.second);
+  const part = (type: Intl.DateTimeFormatPartTypes) => parts.get(type) ?? "1";
+  const wallClock = Date.UTC(+part("year"), +part("month") - 1, +part("day"), +part("hour"), +part("minute"), +part("second"));
   const offset = wallClock - Math.floor(now.getTime() / 1000) * 1000;
-  const daysSinceMonday = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"].indexOf(parts.weekday);
-  return Date.UTC(+parts.year, +parts.month - 1, +parts.day - daysSinceMonday) - offset;
+  const daysSinceMonday = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"].indexOf(part("weekday"));
+  return Date.UTC(+part("year"), +part("month") - 1, +part("day") - daysSinceMonday) - offset;
 }
 
 /**

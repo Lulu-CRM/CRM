@@ -45,3 +45,8 @@ export type Money = z.infer<typeof moneySchema>;
 export type BaseRecord = z.infer<typeof baseRecordSchema>;
 export type ListQuery = z.infer<typeof listQuerySchema>;
 export type ListMeta = z.infer<typeof listMetaSchema>;
+
+// Path parameter for single-resource routes: /contacts/<id>.
+export const idParamSchema = z.object({
+  id: idSchema,
+});

@@ -30,7 +30,9 @@ interface BodyParseError extends SyntaxError {
 
 function isBodyParseError(err: unknown): err is BodyParseError {
   return (
-    err instanceof SyntaxError && 'type' in err && (err as BodyParseError).type === 'entity.parse.failed'
+    err instanceof SyntaxError &&
+    'type' in err &&
+    (err as BodyParseError).type === 'entity.parse.failed'
   );
 }
 
@@ -42,7 +44,9 @@ export function toAppError(err: unknown): AppError {
     return AppError.validation(zodErrorToDetails(err));
   }
   if (isBodyParseError(err)) {
-    return AppError.validation([{ path: 'body', code: 'invalid_json', message: 'errors.validation.invalid_json' }]);
+    return AppError.validation([
+      { path: 'body', code: 'invalid_json', message: 'errors.validation.invalid_json' },
+    ]);
   }
   if (isErrorWithCode(err)) {
     if (err.code === 'P2002') {
@@ -64,7 +68,7 @@ export const errorHandler: ErrorRequestHandler = (err, req, res, _next) => {
   if (appError.status >= 500) {
     console.error(
       `[${req.id ?? 'no-request-id'}] unhandled error:`,
-      err instanceof Error ? err.stack ?? err.message : err,
+      err instanceof Error ? (err.stack ?? err.message) : err,
     );
   }
   res.status(appError.status).json({

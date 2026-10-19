@@ -27,7 +27,9 @@ describe('health routes (unit)', () => {
     app.get('/health', createHealthHandler(checks));
     const res = await request(app).get('/health');
     expect(res.status).toBe(503);
-    expect(res.body).toEqual({ data: { status: 'degraded', checks: { database: 'down', redis: 'ok' } } });
+    expect(res.body).toEqual({
+      data: { status: 'degraded', checks: { database: 'down', redis: 'ok' } },
+    });
   });
 
   it('GET /health returns 503 when redis is down', async () => {
@@ -39,7 +41,9 @@ describe('health routes (unit)', () => {
     app.get('/health', createHealthHandler(checks));
     const res = await request(app).get('/health');
     expect(res.status).toBe(503);
-    expect(res.body).toEqual({ data: { status: 'degraded', checks: { database: 'ok', redis: 'down' } } });
+    expect(res.body).toEqual({
+      data: { status: 'degraded', checks: { database: 'ok', redis: 'down' } },
+    });
   });
 
   it('GET /health returns 503 when a check times out', async () => {

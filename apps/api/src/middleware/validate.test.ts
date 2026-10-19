@@ -7,7 +7,11 @@ import { errorHandler } from './errorHandler';
 import { TypedRequest, validate } from './validate';
 
 interface ErrorBody {
-  error: { code: string; message: string; details: Array<{ path: string; code: string; message: string }> };
+  error: {
+    code: string;
+    message: string;
+    details: Array<{ path: string; code: string; message: string }>;
+  };
 }
 
 const bodySchema = z.object({
@@ -25,40 +29,28 @@ const paramsSchema = z.object({
 const app = express();
 app.use(express.json());
 
-app.post(
-  '/body',
-  validate({ body: bodySchema }),
-  (req, res) => {
-    const typed = req.body as z.infer<typeof bodySchema>;
-    res.status(200).json({ data: { name: typed.name, age: typed.age } });
-  },
-);
+app.post('/body', validate({ body: bodySchema }), (req, res) => {
+  const typed = req.body as z.infer<typeof bodySchema>;
+  res.status(200).json({ data: { name: typed.name, age: typed.age } });
+});
 
-app.get(
-  '/query',
-  validate({ query: querySchema }),
-  (req, res) => {
-    const typed = req.query as unknown as z.infer<typeof querySchema>;
-    res.status(200).json({ data: typed });
-  },
-);
+app.get('/query', validate({ query: querySchema }), (req, res) => {
+  const typed = req.query as unknown as z.infer<typeof querySchema>;
+  res.status(200).json({ data: typed });
+});
 
-app.get(
-  '/params/:id',
-  validate({ params: paramsSchema }),
-  (req, res) => {
-    res.status(200).json({ data: req.params.id });
-  },
-);
+app.get('/params/:id', validate({ params: paramsSchema }), (req, res) => {
+  res.status(200).json({ data: req.params.id });
+});
 
-app.get(
-  '/typed/:id',
-  validate({ params: paramsSchema, query: querySchema }),
-  (req, res) => {
-    const typed = req as unknown as TypedRequest<unknown, z.infer<typeof querySchema>, z.infer<typeof paramsSchema>>;
-    res.status(200).json({ data: { id: typed.params.id, page: typed.query.page } });
-  },
-);
+app.get('/typed/:id', validate({ params: paramsSchema, query: querySchema }), (req, res) => {
+  const typed = req as unknown as TypedRequest<
+    unknown,
+    z.infer<typeof querySchema>,
+    z.infer<typeof paramsSchema>
+  >;
+  res.status(200).json({ data: { id: typed.params.id, page: typed.query.page } });
+});
 
 app.use(errorHandler);
 

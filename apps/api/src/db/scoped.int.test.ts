@@ -81,9 +81,9 @@ describe('scopedDb', () => {
   it('rejects create with a mismatched workspaceId', async () => {
     const scoped = scopedDb(workspaceA);
 
-    await expect(
-      scoped.user.create({ data: liveUserData(workspaceB) }),
-    ).rejects.toThrow(/WORKSPACE_MISMATCH/);
+    await expect(scoped.user.create({ data: liveUserData(workspaceB) })).rejects.toThrow(
+      /WORKSPACE_MISMATCH/,
+    );
 
     await expect(
       scoped.user.createMany({ data: [liveUserData(workspaceA), liveUserData(workspaceB)] }),

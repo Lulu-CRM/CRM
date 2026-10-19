@@ -45,11 +45,23 @@ function scopingQuery(workspaceId: string) {
   const scopedWhere = (where: WhereArg | undefined): WhereArg => applyScope(where, workspaceId);
 
   const handlers = {
-    async findMany({ args, query }: { args: { where?: WhereArg }; query: (a: unknown) => Promise<unknown> }) {
+    async findMany({
+      args,
+      query,
+    }: {
+      args: { where?: WhereArg };
+      query: (a: unknown) => Promise<unknown>;
+    }) {
       args.where = scopedWhere(args.where);
       return query(args);
     },
-    async findFirst({ args, query }: { args: { where?: WhereArg }; query: (a: unknown) => Promise<unknown> }) {
+    async findFirst({
+      args,
+      query,
+    }: {
+      args: { where?: WhereArg };
+      query: (a: unknown) => Promise<unknown>;
+    }) {
       args.where = scopedWhere(args.where);
       return query(args);
     },
@@ -63,27 +75,63 @@ function scopingQuery(workspaceId: string) {
       args.where = scopedWhere(args.where);
       return query(args);
     },
-    async count({ args, query }: { args: { where?: WhereArg }; query: (a: unknown) => Promise<unknown> }) {
+    async count({
+      args,
+      query,
+    }: {
+      args: { where?: WhereArg };
+      query: (a: unknown) => Promise<unknown>;
+    }) {
       args.where = scopedWhere(args.where);
       return query(args);
     },
-    async aggregate({ args, query }: { args: { where?: WhereArg }; query: (a: unknown) => Promise<unknown> }) {
+    async aggregate({
+      args,
+      query,
+    }: {
+      args: { where?: WhereArg };
+      query: (a: unknown) => Promise<unknown>;
+    }) {
       args.where = scopedWhere(args.where);
       return query(args);
     },
-    async groupBy({ args, query }: { args: { where?: WhereArg }; query: (a: unknown) => Promise<unknown> }) {
+    async groupBy({
+      args,
+      query,
+    }: {
+      args: { where?: WhereArg };
+      query: (a: unknown) => Promise<unknown>;
+    }) {
       args.where = scopedWhere(args.where);
       return query(args);
     },
-    async findUnique({ args, query }: { args: { where: WhereArg }; query: (a: unknown) => Promise<unknown> }) {
+    async findUnique({
+      args,
+      query,
+    }: {
+      args: { where: WhereArg };
+      query: (a: unknown) => Promise<unknown>;
+    }) {
       args.where = { ...args.where, workspaceId, deletedAt: null };
       return query(args);
     },
-    async findUniqueOrThrow({ args, query }: { args: { where: WhereArg }; query: (a: unknown) => Promise<unknown> }) {
+    async findUniqueOrThrow({
+      args,
+      query,
+    }: {
+      args: { where: WhereArg };
+      query: (a: unknown) => Promise<unknown>;
+    }) {
       args.where = { ...args.where, workspaceId, deletedAt: null };
       return query(args);
     },
-    async create({ args, query }: { args: { data: WhereArg }; query: (a: unknown) => Promise<unknown> }) {
+    async create({
+      args,
+      query,
+    }: {
+      args: { data: WhereArg };
+      query: (a: unknown) => Promise<unknown>;
+    }) {
       const given = args.data.workspaceId;
       if (given !== undefined && given !== workspaceId) {
         throw new Error(
@@ -93,7 +141,13 @@ function scopingQuery(workspaceId: string) {
       args.data = { ...args.data, workspaceId };
       return query(args);
     },
-    async createMany({ args, query }: { args: { data: WhereArg | WhereArg[] }; query: (a: unknown) => Promise<unknown> }) {
+    async createMany({
+      args,
+      query,
+    }: {
+      args: { data: WhereArg | WhereArg[] };
+      query: (a: unknown) => Promise<unknown>;
+    }) {
       const rows = Array.isArray(args.data) ? args.data : [args.data];
       for (const row of rows) {
         const given = row.workspaceId;
@@ -106,15 +160,33 @@ function scopingQuery(workspaceId: string) {
       }
       return query(args);
     },
-    async update({ args, query }: { args: { where: WhereArg }; query: (a: unknown) => Promise<unknown> }) {
+    async update({
+      args,
+      query,
+    }: {
+      args: { where: WhereArg };
+      query: (a: unknown) => Promise<unknown>;
+    }) {
       args.where = { ...args.where, workspaceId };
       return query(args);
     },
-    async updateMany({ args, query }: { args: { where?: WhereArg }; query: (a: unknown) => Promise<unknown> }) {
+    async updateMany({
+      args,
+      query,
+    }: {
+      args: { where?: WhereArg };
+      query: (a: unknown) => Promise<unknown>;
+    }) {
       args.where = scopedWhere(args.where);
       return query(args);
     },
-    async upsert({ args, query }: { args: { where: WhereArg; create: WhereArg; update: WhereArg }; query: (a: unknown) => Promise<unknown> }) {
+    async upsert({
+      args,
+      query,
+    }: {
+      args: { where: WhereArg; create: WhereArg; update: WhereArg };
+      query: (a: unknown) => Promise<unknown>;
+    }) {
       args.where = { ...args.where, workspaceId };
       args.create = { ...args.create, workspaceId };
       return query(args);

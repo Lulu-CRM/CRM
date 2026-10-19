@@ -49,7 +49,9 @@ function utcToday(): Date {
 }
 
 function atTime(day: Date, hour: number, minute: number): Date {
-  return new Date(Date.UTC(day.getUTCFullYear(), day.getUTCMonth(), day.getUTCDate(), hour, minute));
+  return new Date(
+    Date.UTC(day.getUTCFullYear(), day.getUTCMonth(), day.getUTCDate(), hour, minute),
+  );
 }
 
 function todayAt(hour: number, minute: number): Date {
@@ -482,7 +484,9 @@ export async function runSeed(): Promise<void> {
   await upsertMany([workspace], (id, data, create) =>
     db.workspace.upsert({ where: { id }, update: data, create }),
   );
-  await upsertMany(users, (id, data, create) => db.user.upsert({ where: { id }, update: data, create }));
+  await upsertMany(users, (id, data, create) =>
+    db.user.upsert({ where: { id }, update: data, create }),
+  );
   await upsertMany(companies, (id, data, create) =>
     db.company.upsert({ where: { id }, update: data, create }),
   );
@@ -492,9 +496,15 @@ export async function runSeed(): Promise<void> {
   await upsertMany([pipeline], (id, data, create) =>
     db.pipeline.upsert({ where: { id }, update: data, create }),
   );
-  await upsertMany(stages, (id, data, create) => db.stage.upsert({ where: { id }, update: data, create }));
-  await upsertMany(deals, (id, data, create) => db.deal.upsert({ where: { id }, update: data, create }));
-  await upsertMany(notes, (id, data, create) => db.note.upsert({ where: { id }, update: data, create }));
+  await upsertMany(stages, (id, data, create) =>
+    db.stage.upsert({ where: { id }, update: data, create }),
+  );
+  await upsertMany(deals, (id, data, create) =>
+    db.deal.upsert({ where: { id }, update: data, create }),
+  );
+  await upsertMany(notes, (id, data, create) =>
+    db.note.upsert({ where: { id }, update: data, create }),
+  );
   await upsertMany(activities, (id, data, create) =>
     db.activity.upsert({ where: { id }, update: data, create }),
   );

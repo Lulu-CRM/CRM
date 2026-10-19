@@ -48,15 +48,21 @@ export const aiAnalyzeQueue = new Queue<AiAnalyzePayload>(QUEUE_NAMES.AI_ANALYZE
   defaultJobOptions,
 });
 
-export const segmentsRefreshQueue = new Queue<SegmentsRefreshPayload>(QUEUE_NAMES.SEGMENTS_REFRESH, {
-  connection: createRedisConnection(),
-  defaultJobOptions,
-});
+export const segmentsRefreshQueue = new Queue<SegmentsRefreshPayload>(
+  QUEUE_NAMES.SEGMENTS_REFRESH,
+  {
+    connection: createRedisConnection(),
+    defaultJobOptions,
+  },
+);
 
-export const notificationsSendQueue = new Queue<NotificationPayload>(QUEUE_NAMES.NOTIFICATIONS_SEND, {
-  connection: createRedisConnection(),
-  defaultJobOptions,
-});
+export const notificationsSendQueue = new Queue<NotificationPayload>(
+  QUEUE_NAMES.NOTIFICATIONS_SEND,
+  {
+    connection: createRedisConnection(),
+    defaultJobOptions,
+  },
+);
 
 export async function enqueueImportProcess(payload: ImportProcessPayload) {
   return importProcessQueue.add('process', payload);

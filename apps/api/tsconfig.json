@@ -20,5 +20,12 @@
     "resolveJsonModule": true,
     "types": ["node"]
   },
-  "include": ["src", "prisma", "tsup.config.ts", "vitest.config.mts", "vitest.int.config.mts", "prisma.config.ts"]
+  "include": [
+    "src",
+    "prisma",
+    "tsup.config.ts",
+    "vitest.config.mts",
+    "vitest.int.config.mts",
+    "prisma.config.ts"
+  ]
 }

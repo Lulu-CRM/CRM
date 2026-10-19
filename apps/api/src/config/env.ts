@@ -8,9 +8,7 @@ export const envSchema = z.object({
   NODE_ENV: z.enum(['development', 'test', 'production']),
   PORT: z.coerce.number().int().positive().default(4000),
   DATABASE_URL: z.url(),
-  REDIS_URL: z
-    .string()
-    .regex(/^rediss?:\/\//, 'must start with redis:// or rediss://'),
+  REDIS_URL: z.string().regex(/^rediss?:\/\//, 'must start with redis:// or rediss://'),
   CORS_ORIGIN: z.url().default('http://localhost:3000'),
   JWT_SECRET: z.preprocess(emptyToUndefined, z.string().min(32).optional()),
   AI_PROVIDER: z.preprocess(emptyToUndefined, z.string().default('simulated')),

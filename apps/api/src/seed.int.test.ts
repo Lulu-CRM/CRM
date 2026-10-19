@@ -57,9 +57,13 @@ describe('seed (int)', () => {
   });
 
   it('links every deal to a stage of the seeded pipeline', async () => {
-    const pipelineStages = await db.stage.findMany({ where: { pipelineId: SEED_PIPELINE_SALES_ID } });
+    const pipelineStages = await db.stage.findMany({
+      where: { pipelineId: SEED_PIPELINE_SALES_ID },
+    });
     const stageIds = new Set(pipelineStages.map((stage) => stage.id));
-    const deals = await db.deal.findMany({ where: { workspaceId: SEED_WORKSPACE_ID, deletedAt: null } });
+    const deals = await db.deal.findMany({
+      where: { workspaceId: SEED_WORKSPACE_ID, deletedAt: null },
+    });
 
     expect(deals.length).toBe(4);
     for (const deal of deals) {
@@ -68,7 +72,9 @@ describe('seed (int)', () => {
   });
 
   it('stores deal money as Decimal with an explicit currency', async () => {
-    const deals = await db.deal.findMany({ where: { workspaceId: SEED_WORKSPACE_ID, deletedAt: null } });
+    const deals = await db.deal.findMany({
+      where: { workspaceId: SEED_WORKSPACE_ID, deletedAt: null },
+    });
 
     expect(deals.length).toBe(4);
     for (const deal of deals) {

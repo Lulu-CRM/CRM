@@ -12,7 +12,9 @@ function toJsonSafe(value: unknown): unknown {
   if (value !== null && typeof value === 'object') {
     const proto = Object.getPrototypeOf(value) as object | null;
     if (proto === Object.prototype || proto === null) {
-      const entries = Object.entries(value).map(([key, entry]) => [key, toJsonSafe(entry)] as [string, unknown]);
+      const entries = Object.entries(value).map(
+        ([key, entry]) => [key, toJsonSafe(entry)] as [string, unknown],
+      );
       return Object.fromEntries(entries);
     }
   }

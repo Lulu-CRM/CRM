@@ -19,7 +19,11 @@ app.get('/throw-app-error', (_req, _res, next) => {
   next(AppError.notFound('CONTACT_NOT_FOUND'));
 });
 app.get('/throw-app-error-details', (_req, _res, next) => {
-  next(AppError.validation([{ path: 'email', code: 'invalid_format', message: 'errors.validation.invalid_format' }]));
+  next(
+    AppError.validation([
+      { path: 'email', code: 'invalid_format', message: 'errors.validation.invalid_format' },
+    ]),
+  );
 });
 app.get('/throw-unknown', (_req, _res, next) => {
   next(new Error('secret database password is hunter2'));
@@ -78,7 +82,11 @@ describe('errorHandler', () => {
     expect(b.error.code).toBe('VALIDATION_ERROR');
     expect(b.error.message).toBe('errors.VALIDATION_ERROR');
     expect(b.error.details).toEqual([
-      expect.objectContaining({ path: 'email', code: 'invalid_format', message: 'errors.validation.invalid_format' }),
+      expect.objectContaining({
+        path: 'email',
+        code: 'invalid_format',
+        message: 'errors.validation.invalid_format',
+      }),
     ]);
   });
 

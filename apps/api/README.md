@@ -2,7 +2,6 @@
 
 Express API for the Lulu CRM module. PostgreSQL through Prisma 7 (driver adapter: `pg`) and Redis with BullMQ for background jobs.
 
-
 ## Setup
 
 Fastest: run `npm run docker:up` from the repo root — it builds this API and starts Postgres, Redis, migrations and the seed in one command (see the root `README.md`). For a host run:
@@ -14,36 +13,36 @@ Fastest: run `npm run docker:up` from the repo root — it builds this API and s
 
 ## Scripts
 
-| Script        | What it does                                        |
-| ------------- | --------------------------------------------------- |
-| `npm run dev` | Runs `src/server.ts` in watch mode with tsx          |
-| `npm run build` | Compiles TypeScript to `dist/` (CommonJS)          |
-| `npm start`   | Runs the compiled server (`node dist/server.js`)     |
-| `npm run typecheck` | Type-checks everything, no emit                 |
-| `npm run lint` | ESLint (type-checked rules, floating promises, any) |
-| `npm run format` | Prettier write                                     |
-| `npm test`    | Vitest run (unit tests, `*.int.test.ts` excluded)   |
-| `npm run test:watch` | Vitest in watch mode                         |
-| `npm run test:int` | Integration tests (`*.int.test.ts`, needs a real database and Redis) |
-| `npm run db:migrate` | `prisma migrate dev` (creates and applies migrations) |
-| `npm run db:deploy` | `prisma migrate deploy` (applies committed migrations only) |
-| `npm run db:generate` | Regenerates the Prisma client into `src/generated/` |
-| `npm run db:studio` | Prisma Studio (database browser)               |
-| `npm run seed` | Runs `prisma/seed.ts` (idempotent design sample data) |
+| Script                | What it does                                                         |
+| --------------------- | -------------------------------------------------------------------- |
+| `npm run dev`         | Runs `src/server.ts` in watch mode with tsx                          |
+| `npm run build`       | Compiles TypeScript to `dist/` (CommonJS)                            |
+| `npm start`           | Runs the compiled server (`node dist/server.js`)                     |
+| `npm run typecheck`   | Type-checks everything, no emit                                      |
+| `npm run lint`        | ESLint (type-checked rules, floating promises, any)                  |
+| `npm run format`      | Prettier write                                                       |
+| `npm test`            | Vitest run (unit tests, `*.int.test.ts` excluded)                    |
+| `npm run test:watch`  | Vitest in watch mode                                                 |
+| `npm run test:int`    | Integration tests (`*.int.test.ts`, needs a real database and Redis) |
+| `npm run db:migrate`  | `prisma migrate dev` (creates and applies migrations)                |
+| `npm run db:deploy`   | `prisma migrate deploy` (applies committed migrations only)          |
+| `npm run db:generate` | Regenerates the Prisma client into `src/generated/`                  |
+| `npm run db:studio`   | Prisma Studio (database browser)                                     |
+| `npm run seed`        | Runs `prisma/seed.ts` (idempotent design sample data)                |
 
 ## Folders
 
-| Folder        | Purpose                                              |
-| ------------- | ---------------------------------------------------- |
-| `prisma/`     | Schema (`schema.prisma`), committed migrations and the idempotent `seed.ts` |
-| `src/config`  | Env loading and parsing (`env.ts` is the only source of config) |
-| `src/routes`  | Express routers, mounted under `/api/v1` by `routes/index.ts` |
-| `src/services`| Business logic used by routes                        |
-| `src/middleware` | Express middleware (auth, errors, etc.)           |
-| `src/jobs`    | BullMQ queues (`queues.ts`: import.process, ai.analyze, segments.refresh, notifications.send) and enqueue helpers; no workers yet |
-| `src/lib`     | Small shared helpers, including `redis.ts` (`createRedisConnection()` for health ping and queue connections) |
-| `src/db`      | Prisma client (`prisma.ts`) and workspace-scoped client (`scoped.ts`) |
-| `src/generated` | Generated Prisma client, gitignored, rebuilt by `db:generate` |
+| Folder           | Purpose                                                                                                                           |
+| ---------------- | --------------------------------------------------------------------------------------------------------------------------------- |
+| `prisma/`        | Schema (`schema.prisma`), committed migrations and the idempotent `seed.ts`                                                       |
+| `src/config`     | Env loading and parsing (`env.ts` is the only source of config)                                                                   |
+| `src/routes`     | Express routers, mounted under `/api/v1` by `routes/index.ts`                                                                     |
+| `src/services`   | Business logic used by routes                                                                                                     |
+| `src/middleware` | Express middleware (auth, errors, etc.)                                                                                           |
+| `src/jobs`       | BullMQ queues (`queues.ts`: import.process, ai.analyze, segments.refresh, notifications.send) and enqueue helpers; no workers yet |
+| `src/lib`        | Small shared helpers, including `redis.ts` (`createRedisConnection()` for health ping and queue connections)                      |
+| `src/db`         | Prisma client (`prisma.ts`) and workspace-scoped client (`scoped.ts`)                                                             |
+| `src/generated`  | Generated Prisma client, gitignored, rebuilt by `db:generate`                                                                     |
 
 ## Conventions
 

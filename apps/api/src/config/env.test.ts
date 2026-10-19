@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { envSchema, parseEnv } from './env';
+import { DEV_JWT_SECRET, envSchema, parseEnv, resolveJwtSecret } from './env';
 
 const validSource = {
   NODE_ENV: 'test',
@@ -55,6 +55,48 @@ describe('envSchema', () => {
     expect(parsed.JWT_SECRET).toBeUndefined();
     expect(parsed.AI_API_KEY).toBeUndefined();
     expect(parsed.AI_PROVIDER).toBe('simulated');
+  });
+
+  it('requires JWT_SECRET in production', () => {
+    const without = envSchema.safeParse({ ...validSource, NODE_ENV: 'production' });
+    expect(without.success).toBe(false);
+
+    const withSecret = envSchema.safeParse({
+      ...validSource,
+      NODE_ENV: 'production',
+      JWT_SECRET: 'a'.repeat(32),
+    });
+    expect(withSecret.success).toBe(true);
+  });
+
+  it('applies auth and seed defaults', () => {
+    const parsed = envSchema.parse(validSource);
+    expect(parsed.AUTH_TOKEN_TTL).toBe('1h');
+    expect(parsed.PASSWORD_HASH_ROUNDS).toBe(10);
+    expect(parsed.SEED_OWNER_PASSWORD).toBe('lulu-dev-owner');
+    expect(parsed.SEED_MEMBER_PASSWORD).toBe('lulu-dev-member');
+  });
+
+  it('coerces PASSWORD_HASH_ROUNDS and rejects out-of-range values', () => {
+    expect(
+      envSchema.parse({ ...validSource, PASSWORD_HASH_ROUNDS: '6' }).PASSWORD_HASH_ROUNDS,
+    ).toBe(6);
+    expect(envSchema.safeParse({ ...validSource, PASSWORD_HASH_ROUNDS: 'abc' }).success).toBe(
+      false,
+    );
+    expect(envSchema.safeParse({ ...validSource, PASSWORD_HASH_ROUNDS: '2' }).success).toBe(false);
+    expect(envSchema.parse({ ...validSource, PASSWORD_HASH_ROUNDS: '' }).PASSWORD_HASH_ROUNDS).toBe(
+      10,
+    );
+  });
+});
+
+describe('resolveJwtSecret', () => {
+  it('returns the configured secret, or the dev fallback when unset', () => {
+    expect(resolveJwtSecret(envSchema.parse({ ...validSource, JWT_SECRET: 'a'.repeat(32) }))).toBe(
+      'a'.repeat(32),
+    );
+    expect(resolveJwtSecret(envSchema.parse(validSource))).toBe(DEV_JWT_SECRET);
   });
 });
 

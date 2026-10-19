@@ -1104,5 +1104,21 @@
       "taskReconnect": "Reconnect with {name}",
       "taskCheckIn": "Check in with {name}"
     }
+  },
+  "auth": {
+    "brand": "Lulu",
+    "eyebrow": "Lulu CRM",
+    "title": "Sign in to your workspace",
+    "intro": "Use the email and password of your Lulu account.",
+    "email": "Email",
+    "password": "Password",
+    "submit": "Sign in",
+    "checking": "Checking your session…",
+    "signOut": "Sign out",
+    "mockHint": "Sample data mode: sign in as {email} with any password.",
+    "errors": {
+      "missing": "Enter your email and password.",
+      "wrong": "Email or password is incorrect."
+    }
   }
 }

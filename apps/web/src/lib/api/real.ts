@@ -27,6 +27,8 @@ import {
   type DealCreateInput,
   type DealUpdateInput,
   segmentListItemSchema,
+  authSessionSchema,
+  type LoginInput,
   aiInsightSchema,
   aiRunSchema,
   type AiAcceptInput,
@@ -55,10 +57,15 @@ import {
   type SegmentCreateInput,
   type SegmentUpdateInput,
 } from "@lulu/shared";
-import { getList, getOne, remove, upload, write } from "./http";
+import { getList, getOne, post, remove, upload, write } from "./http";
 
 // Endpoints from docs/api.md. Keep the same shape as mock.ts.
 export const realApi = {
+  auth: {
+    login: (input: LoginInput) => write(authSessionSchema, "POST", "/auth/login", input),
+    logout: () => post("/auth/logout"),
+  },
+
   me: () => getOne(userSchema, "/me"),
   users: () => getList(userSchema, "/users"),
 

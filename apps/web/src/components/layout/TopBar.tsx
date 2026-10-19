@@ -4,12 +4,17 @@ import { useTranslations } from "next-intl";
 import { usePathname } from "@/i18n/navigation";
 import { findCrmPage } from "@/config/navigation";
 import { Avatar } from "@/components/ui/Avatar";
+import { useSignOut } from "@/features/auth/AuthGate";
+import { api } from "@/lib/api";
+import { loginRequired } from "@/lib/auth";
 import { LanguageSwitcher } from "./LanguageSwitcher";
 
 export function TopBar({ onOpenMenu }: { onOpenMenu: () => void }) {
   const t = useTranslations("layout");
   const tNav = useTranslations("nav");
   const page = findCrmPage(usePathname());
+  const tAuth = useTranslations("auth");
+  const signOut = useSignOut();
 
   return (
     <header className="flex h-[69px] items-center justify-between gap-4 border-b border-border bg-surface px-4 md:px-8">
@@ -54,6 +59,11 @@ export function TopBar({ onOpenMenu }: { onOpenMenu: () => void }) {
           <i className="absolute top-0 right-0 size-[5px] rounded-full bg-[#ee7968]" />
         </button>
         <Avatar initials="JM" small />
+        {loginRequired && (
+          <button type="button" onClick={() => signOut(api.auth.logout)} className="text-[11px] font-semibold text-text-muted hover:text-primary">
+            {tAuth("signOut")}
+          </button>
+        )}
       </div>
     </header>
   );

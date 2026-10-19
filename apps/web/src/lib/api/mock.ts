@@ -70,6 +70,8 @@ import {
   type ImportMapping,
   type ImportPreview,
   type ImportResolveAction,
+  type AuthSession,
+  type LoginInput,
   type AiAcceptInput,
   type AiInsight,
   type AiRun,
@@ -332,6 +334,18 @@ function findInsight(id: string) {
 }
 
 export const mockApi = {
+  // Mock sign-in: any demo user's email with any password (sample data only, never real accounts).
+  auth: {
+    async login(input: LoginInput): Promise<AuthSession> {
+      const user = demoUsers.find((u) => u.email === input.email.trim().toLowerCase());
+      if (!user || !input.password) throw new ApiError("UNAUTHORIZED", 401);
+      return delay({ token: `mock-${user.id}`, expiresAt: new Date(Date.now() + 60 * 60 * 1000).toISOString() });
+    },
+    async logout() {
+      return delay(undefined);
+    },
+  },
+
   me: () => delay(demoUsers.find((u) => u.id === CURRENT_USER_ID)!),
   users: () => delay(paginate(demoUsers)),
 

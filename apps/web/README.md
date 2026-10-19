@@ -14,6 +14,10 @@ npm test -w @lulu/web    # unit tests
 
 Copy `.env.example` to `apps/web/.env.local`. `NEXT_PUBLIC_USE_MOCK=true` (the default) serves the design's sample data from `packages/shared`. Set it to `false` and set `NEXT_PUBLIC_API_URL` to use the real API.
 
+### Signing in
+
+As soon as any area uses the real API, the CRM pages ask you to sign in at `/<locale>/login` (`src/features/auth`). Locally, use the seeded owner from `docs/api.md` (`jamie.morgan@lulu.test`). The token is kept in the browser until it expires; when it expires or the API rejects it, you are sent back to sign in. In full mock mode there is no sign-in.
+
 ### Moving to the real API one area at a time
 
 Keep `NEXT_PUBLIC_USE_MOCK=true` and list the areas that are ready in `NEXT_PUBLIC_REAL_API`, for example:

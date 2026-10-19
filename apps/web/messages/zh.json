@@ -1104,5 +1104,21 @@
       "taskReconnect": "重新联系 {name}",
       "taskCheckIn": "与 {name} 简短沟通"
     }
+  },
+  "auth": {
+    "brand": "Lulu",
+    "eyebrow": "Lulu CRM",
+    "title": "登录你的工作区",
+    "intro": "使用你的 Lulu 账户邮箱和密码。",
+    "email": "邮箱",
+    "password": "密码",
+    "submit": "登录",
+    "checking": "正在检查登录状态…",
+    "signOut": "退出登录",
+    "mockHint": "示例数据模式：使用 {email} 和任意密码登录。",
+    "errors": {
+      "missing": "请输入邮箱和密码。",
+      "wrong": "邮箱或密码不正确。"
+    }
   }
 }

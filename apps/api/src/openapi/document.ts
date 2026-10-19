@@ -1,9 +1,7 @@
 import pkg from '../../package.json';
 import { env } from '../config/env';
 import { paths } from './paths';
-import { buildComponentSchemas } from './schemas';
-
-export const BEARER_AUTH_SCHEME = 'bearerAuth';
+import { BEARER_AUTH_SCHEME, buildComponentSchemas } from './schemas';
 
 // OpenAPI 3.1 (JSON Schema 2020-12 compatible). Schemas are generated from the
 // Zod contracts in packages/shared; operations mirror docs/api.md.
@@ -17,7 +15,11 @@ export function buildOpenApiDocument(): Record<string, unknown> {
         'CRM module of Lulu. The endpoint contract lives in docs/api.md; schemas live in packages/shared and are the source for the components below. Add a newly implemented endpoint to apps/api/src/openapi/paths.ts in the same pull request.',
     },
     servers: [{ url: '/' }, { url: `http://localhost:${env.PORT}` }],
-    tags: [{ name: 'Operations', description: 'Unauthenticated operational endpoints.' }],
+    tags: [
+      { name: 'Operations', description: 'Unauthenticated operational endpoints.' },
+      { name: 'Auth', description: 'Log in, log out and the current user.' },
+      { name: 'Users', description: 'People in the workspace.' },
+    ],
     paths,
     components: {
       securitySchemes: {

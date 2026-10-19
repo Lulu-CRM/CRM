@@ -12,7 +12,7 @@ Status values: `open`, `in progress`, `in review`, `done`.
 | --- | --- | --- | --- | --- |
 | PM | Organisation, repo, invites, task list, daily status | Sudais | in progress | |
 | 1 | API base and database | Tobi | open | |
-| 2 | Auth, workspace, roles | Tobi | open | 1 |
+| 2 | Auth, workspace, roles | Tobi | in review | |
 | 3 | Contacts and Companies API | Tobi | open | 1, 2 |
 | 4 | Deals and pipeline API | Brobot | open | 1 |
 | 5 | Tasks, Notes, Activities API | Brobot | open | 1 |
@@ -61,11 +61,11 @@ Done when: everyone can start the API with one command, `/health` returns ok and
 
 ### 2. Auth, workspace, roles
 
-- [ ] `POST /auth/login` and `/auth/logout`, `GET` and `PATCH /me`, `GET /users`
-- [ ] Hashed passwords, token auth, middleware that loads the workspace from the token
-- [ ] Role guard (owner, admin, member) and a permission helper
-- [ ] Seed owner user Jamie Morgan
-- [ ] Tests for login and the role guard
+- [x] `POST /auth/login` and `/auth/logout`, `GET` and `PATCH /me`, `GET /users`
+- [x] Hashed passwords, token auth, middleware that loads the workspace from the token
+- [x] Role guard (owner, admin, member) and a permission helper
+- [x] Seed owner user Jamie Morgan
+- [x] Tests for login and the role guard
 
 Done when: a test user logs in and calls a protected endpoint, and a member cannot delete.
 

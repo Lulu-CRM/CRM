@@ -1,4 +1,3 @@
-
 import {
   dealCreateSchema,
   dealListQuerySchema,
@@ -18,6 +17,7 @@ import { asyncHandler } from '../lib/asyncHandler';
 import { created, noContent, ok, paginated } from '../lib/response';
 import { validate } from '../middleware/validate';
 import { requireContext } from '../middleware/requestContext';
+import { requirePermission } from '../middleware/auth';
 import {
   createDeal,
   deleteDeal,
@@ -96,8 +96,10 @@ dealsRouter.post(
   }),
 );
 
+// Members work with deals but cannot delete them (defaultPermissions).
 dealsRouter.delete(
   '/:id',
+  requirePermission('deals', 'delete'),
   validate({ params }),
   asyncHandler(async (req, res) => {
     await deleteDeal(requireContext(req), idOf(req));

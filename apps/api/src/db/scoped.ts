@@ -33,9 +33,11 @@ export const SCOPED_MODELS = [
 
 type WhereArg = Record<string, unknown>;
 
-const getExtensionContext = (Prisma as unknown as {
-  getExtensionContext: (context: unknown) => unknown;
-}).getExtensionContext;
+const getExtensionContext = (
+  Prisma as unknown as {
+    getExtensionContext: (context: unknown) => unknown;
+  }
+).getExtensionContext;
 
 function applyScope(where: WhereArg | undefined, workspaceId: string): WhereArg {
   const scoped: WhereArg = { ...(where ?? {}), workspaceId };
@@ -202,9 +204,11 @@ function scopingQuery(workspaceId: string) {
     query[model] = handlers;
   }
 
-  const defineExtension = (Prisma as unknown as {
-    defineExtension: <T>(extension: T) => T;
-  }).defineExtension;
+  const defineExtension = (
+    Prisma as unknown as {
+      defineExtension: <T>(extension: T) => T;
+    }
+  ).defineExtension;
 
   return defineExtension({
     name: 'workspaceScoping',
@@ -236,9 +240,11 @@ function softDeleteModels() {
     };
   }
 
-  const defineExtension = (Prisma as unknown as {
-    defineExtension: <T>(extension: T) => T;
-  }).defineExtension;
+  const defineExtension = (
+    Prisma as unknown as {
+      defineExtension: <T>(extension: T) => T;
+    }
+  ).defineExtension;
 
   return defineExtension({
     name: 'softDelete',

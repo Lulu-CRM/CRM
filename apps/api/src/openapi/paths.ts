@@ -1,4 +1,10 @@
-import {  schemaRef, type ComponentName } from './schemas';
+import { BEARER_AUTH_SCHEME, schemaRef, type ComponentName } from './schemas';
+
+// Authenticated operations carry the bearer token from POST /auth/login.
+// Every /api/v1 route except POST /auth/login sits behind requireAuth
+// (routes/index.ts), so the default is authenticated and only the
+// unauthenticated operations opt out with security: [].
+const bearer: Array<Record<string, string[]>> = [{ [BEARER_AUTH_SCHEME]: [] }];
 
 export interface OpenApiOperation {
   operationId: string;
@@ -7,7 +13,7 @@ export interface OpenApiOperation {
   tags: string[];
   security?: Array<Record<string, string[]>>;
   responses: Record<string, unknown>;
-  parameters?: unknown[]; 
+  parameters?: unknown[];
   requestBody?: unknown;
 }
 
@@ -15,7 +21,6 @@ export type OpenApiPaths = Record<
   string,
   Partial<Record<'get' | 'post' | 'put' | 'patch' | 'delete', OpenApiOperation>>
 >;
-
 
 const idParam = { name: 'id', in: 'path', required: true, schema: { type: 'string' } };
 
@@ -54,11 +59,27 @@ const jsonBody = (name: ComponentName) => ({
   content: { 'application/json': { schema: { $ref: schemaRef(name) } } },
 });
 
+const listDataResponse = (description: string, name: ComponentName) => ({
+  description,
+  content: {
+    'application/json': {
+      schema: {
+        type: 'object',
+        required: ['data', 'meta'],
+        properties: {
+          data: { type: 'array', items: { $ref: schemaRef(name) } },
+          meta: { $ref: schemaRef('ListMeta') },
+        },
+      },
+    },
+  },
+});
+
 const dealPaths: OpenApiPaths = {
   '/api/v1/pipelines': {
     get: {
       operationId: 'listPipelines',
-      security: [],
+      security: bearer,
       summary: 'List pipelines with their stages',
       description: 'Pipelines of the current workspace, each with its stages in order.',
       tags: ['Deals'],
@@ -85,7 +106,7 @@ const dealPaths: OpenApiPaths = {
     get: {
       operationId: 'listDeals',
       summary: 'List deals',
-      security: [],
+      security: bearer,
       description: 'Filters: stageId, ownerId, companyId, contactId, status (open, won, lost).',
       tags: ['Deals'],
       parameters: listParams,
@@ -112,7 +133,7 @@ const dealPaths: OpenApiPaths = {
     post: {
       operationId: 'createDeal',
       summary: 'Create a deal',
-      security: [],
+      security: bearer,
       description:
         'Currency defaults to the workspace currency, probability to the stage, owner to the current user.',
       tags: ['Deals'],
@@ -129,11 +150,13 @@ const dealPaths: OpenApiPaths = {
     get: {
       operationId: 'getDealSummary',
       summary: 'Deal summary',
-      security: [],
+      security: bearer,
       description:
         'Open value, weighted value, win rate, active deals and average days to close, computed on the server. Optional pipelineId, default pipeline otherwise.',
       tags: ['Deals'],
-      parameters: [{ name: 'pipelineId', in: 'query', required: false, schema: { type: 'string' } }],
+      parameters: [
+        { name: 'pipelineId', in: 'query', required: false, schema: { type: 'string' } },
+      ],
       responses: {
         '200': dataResponse('The summary.', 'DealSummary'),
         '401': errorResponse('Not authenticated.'),
@@ -145,7 +168,7 @@ const dealPaths: OpenApiPaths = {
     get: {
       operationId: 'getDeal',
       summary: 'Get a deal',
-      security: [],
+      security: bearer,
       description: 'One deal of the current workspace.',
       tags: ['Deals'],
       parameters: [idParam],
@@ -158,7 +181,7 @@ const dealPaths: OpenApiPaths = {
     patch: {
       operationId: 'updateDeal',
       summary: 'Edit a deal',
-      security: [],
+      security: bearer,
       description: 'The stage cannot be changed here: use POST /deals/{id}/move.',
       tags: ['Deals'],
       parameters: [idParam],
@@ -173,13 +196,14 @@ const dealPaths: OpenApiPaths = {
     delete: {
       operationId: 'deleteDeal',
       summary: 'Delete a deal',
-      security: [],
+      security: bearer,
       description: 'Soft delete.',
       tags: ['Deals'],
       parameters: [idParam],
       responses: {
         '204': { description: 'Deleted.' },
         '401': errorResponse('Not authenticated.'),
+        '403': errorResponse('FORBIDDEN: the role may not delete deals.'),
         '404': errorResponse('Deal not found.'),
       },
     },
@@ -188,7 +212,7 @@ const dealPaths: OpenApiPaths = {
     post: {
       operationId: 'moveDeal',
       summary: 'Move a deal to another stage',
-      security: [],
+      security: bearer,
       description:
         'Updates probability and closedAt, and logs a stage_changed activity. Errors: STAGE_NOT_FOUND (404), STAGE_IN_OTHER_PIPELINE (400).',
       tags: ['Deals'],
@@ -199,6 +223,88 @@ const dealPaths: OpenApiPaths = {
         '400': errorResponse('STAGE_IN_OTHER_PIPELINE or invalid body.'),
         '401': errorResponse('Not authenticated.'),
         '404': errorResponse('Deal or STAGE_NOT_FOUND.'),
+      },
+    },
+  },
+};
+
+const authPaths: OpenApiPaths = {
+  '/api/v1/auth/login': {
+    post: {
+      operationId: 'login',
+      summary: 'Log in',
+      description:
+        'Email and password. Returns a bearer token; the workspace is read from the token, never the body. A wrong password and an unknown email both answer 401 UNAUTHORIZED, so the response never says which part was wrong. Unauthenticated.',
+      tags: ['Auth'],
+      security: [],
+      requestBody: jsonBody('LoginInput'),
+      responses: {
+        '200': {
+          description: 'Logged in.',
+          content: {
+            'application/json': {
+              schema: { type: 'object', properties: { data: { $ref: schemaRef('AuthSession') } } },
+              example: { data: { token: '<jwt>', expiresAt: '2026-10-19T12:00:00.000Z' } },
+            },
+          },
+        },
+        '400': errorResponse('Invalid body.'),
+        '401': errorResponse('Bad credentials.'),
+      },
+    },
+  },
+  '/api/v1/auth/logout': {
+    post: {
+      operationId: 'logout',
+      summary: 'Log out',
+      description:
+        'Revokes the current token by adding it to a server-side denylist until it expires, so it cannot be used again.',
+      tags: ['Auth'],
+      security: bearer,
+      responses: {
+        '204': { description: 'Logged out.' },
+        '401': errorResponse('Missing, invalid or expired token.'),
+      },
+    },
+  },
+  '/api/v1/me': {
+    get: {
+      operationId: 'getMe',
+      summary: 'Current user',
+      description: 'The user the token belongs to (role and language included).',
+      tags: ['Auth'],
+      security: bearer,
+      responses: {
+        '200': dataResponse('Current user.', 'User'),
+        '401': errorResponse('Missing, invalid or expired token.'),
+      },
+    },
+    patch: {
+      operationId: 'updateMe',
+      summary: 'Update the current user',
+      description:
+        "Updates the user's name and/or language (at least one). role, email and workspaceId cannot be changed.",
+      tags: ['Auth'],
+      security: bearer,
+      responses: {
+        '200': dataResponse('Updated user.', 'User'),
+        '400': errorResponse('Invalid body.'),
+        '401': errorResponse('Missing, invalid or expired token.'),
+      },
+    },
+  },
+  '/api/v1/users': {
+    get: {
+      operationId: 'listUsers',
+      summary: 'People in the workspace',
+      description:
+        'Every user in the workspace, for owner pickers. Uses the common list parameters; q matches name or email, and sort is name (default) or createdAt, with - for descending.',
+      tags: ['Users'],
+      security: bearer,
+      responses: {
+        '200': listDataResponse('Workspace users.', 'User'),
+        '400': errorResponse('Invalid query, including an unsupported sort.'),
+        '401': errorResponse('Missing, invalid or expired token.'),
       },
     },
   },
@@ -296,5 +402,6 @@ export const paths: OpenApiPaths = {
       },
     },
   },
+  ...authPaths,
   ...dealPaths,
 };

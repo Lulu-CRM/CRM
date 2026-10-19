@@ -17,6 +17,15 @@ function collectRefs(node: unknown, refs: string[] = []): string[] {
   return refs;
 }
 
+// The only endpoints that do not need a bearer token: the health checks and
+// login. Everything else under /api/v1 sits behind requireAuth (routes/index.ts).
+const UNAUTHENTICATED = new Set([
+  '/health',
+  '/health/live',
+  '/api/v1/health',
+  '/api/v1/auth/login',
+]);
+
 describe('OpenAPI document', () => {
   const doc = buildOpenApiDocument();
 
@@ -31,23 +40,31 @@ describe('OpenAPI document', () => {
     const paths = doc.paths as Json;
 
     expect(Object.keys(paths).sort()).toEqual([
+      '/api/v1/auth/login',
+      '/api/v1/auth/logout',
       '/api/v1/deals',
       '/api/v1/deals/summary',
       '/api/v1/deals/{id}',
       '/api/v1/deals/{id}/move',
       '/api/v1/health',
+      '/api/v1/me',
       '/api/v1/pipelines',
+      '/api/v1/users',
       '/health',
       '/health/live',
     ]);
 
     const expectedMethods: Record<string, string[]> = {
+      '/api/v1/auth/login': ['post'],
+      '/api/v1/auth/logout': ['post'],
       '/api/v1/deals': ['get', 'post'],
       '/api/v1/deals/summary': ['get'],
       '/api/v1/deals/{id}': ['get', 'patch', 'delete'],
       '/api/v1/deals/{id}/move': ['post'],
       '/api/v1/health': ['get'],
+      '/api/v1/me': ['get', 'patch'],
       '/api/v1/pipelines': ['get'],
+      '/api/v1/users': ['get'],
       '/health': ['get'],
       '/health/live': ['get'],
     };
@@ -67,26 +84,24 @@ describe('OpenAPI document', () => {
     }
   });
 
-  it('marks operational endpoints as unauthenticated', () => {
+  it('marks only the unauthenticated endpoints with empty security', () => {
     const paths = doc.paths as Json;
 
     for (const [path, pathItemValue] of Object.entries(paths)) {
       const pathItem = pathItemValue as Json;
 
       for (const [method, operationValue] of Object.entries(pathItem)) {
-        if (
-          !['get', 'post', 'put', 'patch', 'delete'].includes(method) ||
-          typeof operationValue !== 'object' ||
-          operationValue === null
-        ) {
-          continue;
-        }
+        if (!['get', 'post', 'put', 'patch', 'delete'].includes(method)) continue;
 
         const operation = operationValue as Json;
-        expect(
-          operation.security,
-          `${method.toUpperCase()} ${path}`,
-        ).toEqual([]);
+        const label = `${method.toUpperCase()} ${path}`;
+
+        if (UNAUTHENTICATED.has(path)) {
+          expect(operation.security, label).toEqual([]);
+        } else {
+          // Everything under /api/v1 except login sits behind requireAuth.
+          expect(operation.security, label).toEqual([{ bearerAuth: [] }]);
+        }
       }
     }
   });

@@ -1,6 +1,6 @@
-# Data model (draft)
+# Data model
 
-Every table has `id`, `workspaceId`, `createdAt`, `updatedAt`, and `deletedAt` for soft delete. The backend dev who owns the schema refines this and records changes here.
+Every table has `id`, `workspaceId`, `createdAt`, `updatedAt`, and `deletedAt` for soft delete. This document matches `apps/api/prisma/schema.prisma`; change both in the same pull request.
 
 The prototype in `design/` stores money, dates and links as text. This model replaces that with real fields.
 
@@ -55,10 +55,24 @@ Rules: `@@map` uses snake_case plural table names, model names are PascalCase si
 
 ## Enums
 
-- **Contact lifecycle stage:** `new`, `qualified`, `follow_up`, `customer`
+These are the `enum` types in `schema.prisma`. The first block is database enums (the name in parentheses is the `@@map` DB type name where it differs from the model name). The second block is open value sets: columns typed `String`, validated in the API.
+
+- **Role:** `owner`, `admin`, `member`
+- **LifecycleStage** (`lifecycle_stage`): `new`, `qualified`, `follow_up`, `customer`
+- **StageType** (`stage_type`): `open`, `won`, `lost`
+- **TaskPriority** (`task_priority`): `high`, `normal`, `low`
+- **NoteVisibility** (`note_visibility`): `shared`, `private`
+- **RecordType** (`record_type`): `contact`, `company`, `deal`
+- **ActivityType** (`activity_type`): `email`, `meeting`, `task`, `note`, `ai_signal`, `created`, `stage_changed`
+- **SourceModule** (`source_module`): `crm`, `email`, `calendar`, `online_presence`, `marketplace`
+- **ImportJobStatus** (`import_job_status`): `uploaded`, `mapped`, `processing`, `completed`, `failed`
+- **ImportRowStatus** (`import_row_status`): `added`, `held`, `skipped`
+- **AiInsightStatus** (`ai_insight_status`): `suggested`, `accepted`, `dismissed`
+
+Open value sets (`String` columns, not DB enums — validated in the API):
+
 - **Contact source:** `website_form`, `referral`, `email`, `import`, `marketplace`, `instagram`, plus custom values
-- **Activity type:** `email`, `meeting`, `task`, `note`, `ai_signal`, `created`, `stage_changed`
-- **Source module:** `crm`, `email`, `calendar`, `online_presence`, `marketplace`
+- **Segment color:** `violet`, `coral`, `blue`, `mint`, `peach`
 
 ## Decisions
 

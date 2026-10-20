@@ -45,6 +45,15 @@ import {
   pipelineWithStagesSchema,
   timelineItemSchema,
   userSchema,
+  activityCreateSchema,
+  activitySchema,
+  moduleEventSchema,
+  noteCreateSchema,
+  noteSchema,
+  noteUpdateSchema,
+  taskCreateSchema,
+  taskSchema,
+  taskUpdateSchema,
 } from '@lulu/shared';
 import { z, type ZodType } from 'zod';
 
@@ -101,6 +110,15 @@ const COMPONENT_NAMES = {
   SegmentListItem: segmentListItemSchema,
   SegmentCreate: segmentCreateSchema,
   SegmentUpdate: segmentUpdateSchema,
+  Task: taskSchema,
+  TaskCreate: taskCreateSchema,
+  TaskUpdate: taskUpdateSchema,
+  Note: noteSchema,
+  NoteCreate: noteCreateSchema,
+  NoteUpdate: noteUpdateSchema,
+  Activity: activitySchema,
+  ActivityCreate: activityCreateSchema,
+  ModuleEvent: moduleEventSchema,
 } as const satisfies Record<string, ZodType>;
 
 export type ComponentName = keyof typeof COMPONENT_NAMES;

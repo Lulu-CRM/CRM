@@ -13,6 +13,10 @@ import { createHealthHandler } from './health';
 import { meRouter } from './me';
 import { pipelinesRouter } from './pipelines';
 import { usersRouter } from './users';
+import { eventsRouter } from './events';
+import { activitiesRouter } from './activities';
+import { notesRouter } from './notes';
+import { tasksRouter } from './tasks';
 
 export const apiRouter = Router();
 
@@ -35,3 +39,10 @@ apiRouter.use('/imports', importsRouter);
 apiRouter.use('/overview', overviewRouter);
 apiRouter.use('/settings', settingsRouter);
 apiRouter.use('/segments', segmentsRouter);
+apiRouter.use('/tasks', tasksRouter);
+apiRouter.use('/notes', notesRouter);
+apiRouter.use('/activities', activitiesRouter);
+apiRouter.use('/tasks', tasksRouter);
+apiRouter.use('/notes', notesRouter);
+apiRouter.use('/activities', activitiesRouter);
+apiRouter.use('/events', eventsRouter);

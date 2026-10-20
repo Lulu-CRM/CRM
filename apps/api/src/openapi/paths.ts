@@ -804,6 +804,223 @@ const settingsPaths: OpenApiPaths = {
   ),
 };
 
+
+const taskListParams = [
+  ['q', 'string'],
+  ['sort', 'string'],
+  ['page', 'integer'],
+  ['pageSize', 'integer'],
+  ['ownerId', 'string'],
+  ['done', 'boolean'],
+  ['dueBefore', 'string'],
+  ['recordType', 'string'],
+  ['recordId', 'string'],
+].map(([name, type]) => ({ name, in: 'query', required: false, schema: { type } }));
+
+const noteListParams = [
+  ['q', 'string'],
+  ['sort', 'string'],
+  ['page', 'integer'],
+  ['pageSize', 'integer'],
+  ['visibility', 'string'],
+  ['recordType', 'string'],
+  ['recordId', 'string'],
+].map(([name, type]) => ({ name, in: 'query', required: false, schema: { type } }));
+
+const activityListParams = [
+  ['q', 'string'],
+  ['sort', 'string'],
+  ['page', 'integer'],
+  ['pageSize', 'integer'],
+  ['recordType', 'string'],
+  ['recordId', 'string'],
+  ['type', 'string'],
+].map(([name, type]) => ({ name, in: 'query', required: false, schema: { type } }));
+
+const tasksNotesActivitiesPaths: OpenApiPaths = {
+  '/api/v1/tasks': {
+    get: {
+      operationId: 'listTasks',
+      summary: 'List tasks',
+      security: bearer,
+      description:
+        'Filters: ownerId, done (true or false), dueBefore, recordType with recordId. q searches the title. Open tasks come first by due date (undated last), then done tasks, most recently finished first.',
+      tags: ['Tasks'],
+      parameters: taskListParams,
+      responses: {
+        '200': listDataResponse('A page of tasks.', 'Task'),
+        '400': errorResponse('Invalid query.'),
+        '401': errorResponse('Not authenticated.'),
+      },
+    },
+    post: {
+      operationId: 'createTask',
+      summary: 'Create a task',
+      security: bearer,
+      description:
+        'Owner defaults to the current user, priority to normal. The optional link (recordType plus recordId) must point at a record in the workspace. Needs tasks: create.',
+      tags: ['Tasks'],
+      requestBody: jsonBody('TaskCreate'),
+      responses: {
+        '201': dataResponse('The created task.', 'Task'),
+        '400': errorResponse('Invalid body, including RECORD_LINK_INCOMPLETE.'),
+        '401': errorResponse('Not authenticated.'),
+        '403': errorResponse('FORBIDDEN.'),
+        '404': errorResponse('RECORD_NOT_FOUND: the linked record or owner is not in the workspace.'),
+      },
+    },
+  },
+  '/api/v1/tasks/{id}': {
+    patch: {
+      operationId: 'updateTask',
+      summary: 'Edit a task or mark it done',
+      security: bearer,
+      description:
+        'Changing done sets or clears doneAt and logs a task activity ({ taskId, action: completed or reopened }) in the same transaction. Needs tasks: edit.',
+      tags: ['Tasks'],
+      parameters: [idParam],
+      requestBody: jsonBody('TaskUpdate'),
+      responses: {
+        '200': dataResponse('The updated task.', 'Task'),
+        '400': errorResponse('Invalid body.'),
+        '401': errorResponse('Not authenticated.'),
+        '403': errorResponse('FORBIDDEN.'),
+        '404': errorResponse('TASK_NOT_FOUND, or RECORD_NOT_FOUND for an unknown owner.'),
+      },
+    },
+    delete: {
+      operationId: 'deleteTask',
+      summary: 'Delete a task',
+      security: bearer,
+      description: 'Soft delete. Needs tasks: delete.',
+      tags: ['Tasks'],
+      parameters: [idParam],
+      responses: {
+        '204': { description: 'Deleted.' },
+        '401': errorResponse('Not authenticated.'),
+        '403': errorResponse('FORBIDDEN.'),
+        '404': errorResponse('TASK_NOT_FOUND.'),
+      },
+    },
+  },
+  '/api/v1/notes': {
+    get: {
+      operationId: 'listNotes',
+      summary: 'List notes',
+      security: bearer,
+      description:
+        'Filters: visibility, recordType with recordId. q searches title and body. Most recently edited first. Private notes of other users are left out, for every role.',
+      tags: ['Notes'],
+      parameters: noteListParams,
+      responses: {
+        '200': listDataResponse('A page of notes.', 'Note'),
+        '400': errorResponse('Invalid query.'),
+        '401': errorResponse('Not authenticated.'),
+      },
+    },
+    post: {
+      operationId: 'createNote',
+      summary: 'Create a note',
+      security: bearer,
+      description:
+        'The author is the current user, visibility defaults to shared. The link is optional but must be complete. Needs notes: create.',
+      tags: ['Notes'],
+      requestBody: jsonBody('NoteCreate'),
+      responses: {
+        '201': dataResponse('The created note.', 'Note'),
+        '400': errorResponse('Invalid body, including RECORD_LINK_INCOMPLETE.'),
+        '401': errorResponse('Not authenticated.'),
+        '403': errorResponse('FORBIDDEN.'),
+        '404': errorResponse('RECORD_NOT_FOUND.'),
+      },
+    },
+  },
+  '/api/v1/notes/{id}': {
+    patch: {
+      operationId: 'updateNote',
+      summary: 'Edit a note',
+      security: bearer,
+      description:
+        'Send recordType and recordId together, or both as null to unlink. The author does not change. Needs notes: edit.',
+      tags: ['Notes'],
+      parameters: [idParam],
+      requestBody: jsonBody('NoteUpdate'),
+      responses: {
+        '200': dataResponse('The updated note.', 'Note'),
+        '400': errorResponse('Invalid body, including RECORD_LINK_INCOMPLETE.'),
+        '401': errorResponse('Not authenticated.'),
+        '403': errorResponse('FORBIDDEN.'),
+        '404': errorResponse(
+          "NOTE_NOT_FOUND (also for someone else's private note) or RECORD_NOT_FOUND.",
+        ),
+      },
+    },
+    delete: {
+      operationId: 'deleteNote',
+      summary: 'Delete a note',
+      security: bearer,
+      description: 'Soft delete. Needs notes: delete.',
+      tags: ['Notes'],
+      parameters: [idParam],
+      responses: {
+        '204': { description: 'Deleted.' },
+        '401': errorResponse('Not authenticated.'),
+        '403': errorResponse('FORBIDDEN.'),
+        '404': errorResponse("NOTE_NOT_FOUND (also for someone else's private note)."),
+      },
+    },
+  },
+  '/api/v1/activities': {
+    get: {
+      operationId: 'listActivities',
+      summary: 'Activity timeline',
+      security: bearer,
+      description: 'Newest first by occurredAt. Filters: recordType, recordId, type.',
+      tags: ['Activities'],
+      parameters: activityListParams,
+      responses: {
+        '200': listDataResponse('A page of activities.', 'Activity'),
+        '400': errorResponse('Invalid query.'),
+        '401': errorResponse('Not authenticated.'),
+      },
+    },
+    post: {
+      operationId: 'createActivity',
+      summary: 'Log an activity by hand',
+      security: bearer,
+      description:
+        'The actor is the current user and sourceModule is crm. occurredAt defaults to now. There is no activities permission resource, so it needs notes: create.',
+      tags: ['Activities'],
+      requestBody: jsonBody('ActivityCreate'),
+      responses: {
+        '201': dataResponse('The logged activity.', 'Activity'),
+        '400': errorResponse('Invalid body.'),
+        '401': errorResponse('Not authenticated.'),
+        '403': errorResponse('FORBIDDEN.'),
+        '404': errorResponse('RECORD_NOT_FOUND.'),
+      },
+    },
+  },
+  '/api/v1/events': {
+    post: {
+      operationId: 'postModuleEvent',
+      summary: 'Event from another module',
+      security: bearer,
+      description:
+        'Email, Calendar and other modules report something that happened. Finds the contact by email (ignoring case), logs an activity and moves lastTouchAt forward. Email events log type email, calendar events log meeting, others log note; the original type is kept as eventType in the payload. Needs contacts: edit.',
+      tags: ['Activities'],
+      requestBody: jsonBody('ModuleEvent'),
+      responses: {
+        '201': dataResponse('The logged activity.', 'Activity'),
+        '400': errorResponse('Invalid event.'),
+        '401': errorResponse('Not authenticated.'),
+        '403': errorResponse('FORBIDDEN.'),
+        '404': errorResponse('CONTACT_NOT_FOUND: no contact has that email.'),
+      },
+    },
+  },
+};
+
 const importPaths: OpenApiPaths = {
   '/api/v1/imports': {
     post: {
@@ -1111,4 +1328,6 @@ export const paths: OpenApiPaths = {
   ...settingsPaths,
   ...overviewPaths,
   ...segmentsPaths,
+  ...tasksNotesActivitiesPaths,
 };
+

@@ -1,0 +1,57 @@
+import {
+  idParamSchema,
+  taskCreateSchema,
+  taskListQuerySchema,
+  taskUpdateSchema,
+  type TaskCreateInput,
+  type TaskListQuery,
+  type TaskUpdateInput,
+} from '@lulu/shared';
+import { Router, type Request } from 'express';
+import { asyncHandler } from '../lib/asyncHandler';
+import { created, noContent, ok, paginated } from '../lib/response';
+import { requirePermission } from '../middleware/auth';
+import { requireContext } from '../middleware/requestContext';
+import { validate } from '../middleware/validate';
+import { createTask, deleteTask, listTasks, updateTask } from '../services/tasks';
+
+export const tasksRouter = Router();
+const idOf = (req: Request) => (req.params as { id: string }).id;
+
+tasksRouter.get(
+  '/',
+  validate({ query: taskListQuerySchema }),
+  asyncHandler(async (req, res) => {
+    const query = req.query as unknown as TaskListQuery;
+    const r = await listTasks(requireContext(req), query);
+    paginated(res, r.items, { page: query.page, pageSize: query.pageSize, total: r.total });
+  }),
+);
+
+tasksRouter.post(
+  '/',
+  requirePermission('tasks', 'create'),
+  validate({ body: taskCreateSchema }),
+  asyncHandler(async (req, res) => {
+    created(res, await createTask(requireContext(req), req.body as TaskCreateInput));
+  }),
+);
+
+tasksRouter.patch(
+  '/:id',
+  requirePermission('tasks', 'edit'),
+  validate({ params: idParamSchema, body: taskUpdateSchema }),
+  asyncHandler(async (req, res) => {
+    ok(res, await updateTask(requireContext(req), idOf(req), req.body as TaskUpdateInput));
+  }),
+);
+
+tasksRouter.delete(
+  '/:id',
+  requirePermission('tasks', 'delete'),
+  validate({ params: idParamSchema }),
+  asyncHandler(async (req, res) => {
+    await deleteTask(requireContext(req), idOf(req));
+    noContent(res);
+  }),
+);

@@ -316,6 +316,7 @@ AI details (schemas: `packages/shared/src/ai.ts`, provider interface and the sim
 - **AI text:** either `{ key, params }` (the simulated provider; the web app shows `aiAnalysis.generated.<key>`) or `{ text, language }` (a real model, asked to write in the user's language). The server never sends one-language text for the simulated provider.
 - **Accept:** `POST /ai-insights/:id/accept` with `{ createTask, taskTitle, applyStage }`. Only the ticked changes are saved; the task title is the text the user confirmed. This is the only way an insight changes a record. Errors: `AI_INSIGHT_NOT_FOUND`, `AI_INSIGHT_CLOSED`.
 - **Switches:** `autoUpdateFields` only pre-ticks field changes in the confirm step. Nothing is ever saved without confirmation.
+- **Implementation:** `apps/api/src/services/ai.ts`. The `ai.analyze` worker runs inside the API process (`jobs/workers.ts`). `AI_PROVIDER` picks the provider (`simulated` today; `services/aiProvider.ts` lists the available ones). Accepting needs permission to edit contacts, creates the task with the contact's owner, and logs an `ai_signal` activity (`{ insightId, action: "accepted", saved }`). Dismiss answers 204.
 
 ## Settings
 

@@ -408,14 +408,19 @@ model ImportRow {
   @@map("import_rows")
 }
 
+// AI text fields are JSON in the shape of aiTextSchema (packages/shared/src/ai.ts): { key, params } from the
+// simulated provider, { text, language } from a model. Suggested changes are saved only on accept.
 model AiInsight {
-  id                String         @id @default(uuid())
+  id                String          @id @default(uuid())
   workspaceId       String
   contactId         String
-  summary           String         @db.Text
-  nextStep          String         @db.Text
-  dataQualityScore  Decimal        @db.Decimal(5, 4)
-  missingFields     String[]       @default([])
+  provider          String          @default("simulated")
+  summary           Json
+  nextStep          Json
+  suggestedTask     Json?
+  suggestedStage    LifecycleStage?
+  dataQualityScore  Decimal         @db.Decimal(5, 4)
+  missingFields     String[]        @default([])
   status            AiInsightStatus @default(suggested)
   createdAt         DateTime       @default(now())
   updatedAt         DateTime       @updatedAt

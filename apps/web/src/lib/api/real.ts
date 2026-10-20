@@ -161,7 +161,8 @@ export const realApi = {
     run: (contactId: string) => write(aiRunSchema, "POST", `/contacts/${contactId}/ai-analysis`, {}),
     latest: (contactId: string) => getOne(aiInsightSchema.nullable(), `/contacts/${contactId}/ai-insights`),
     accept: (id: string, input: AiAcceptInput) => write(aiInsightSchema, "POST", `/ai-insights/${id}/accept`, input),
-    dismiss: (id: string) => write(z.unknown(), "POST", `/ai-insights/${id}/dismiss`, {}).then(() => undefined),
+    // 204, no body.
+    dismiss: (id: string) => post(`/ai-insights/${id}/dismiss`),
   },
 
   pipelines: () => getOne(z.array(pipelineWithStagesSchema), "/pipelines"),

@@ -3,6 +3,7 @@ import { createApp } from './app';
 import { env } from './config/env';
 import { disconnectDb } from './db/prisma';
 import { closeQueues } from './jobs/queues';
+import { startWorkers, stopWorkers } from './jobs/workers';
 
 const app = createApp();
 
@@ -10,10 +11,13 @@ const server: Server = app.listen(env.PORT, () => {
   console.log(`API listening on http://localhost:${env.PORT} (${env.NODE_ENV})`);
 });
 
+// Background jobs (ai.analyze) run in the same process for now.
+startWorkers();
+
 function shutdown(signal: string): void {
   console.log(`${signal} received, shutting down`);
   server.close((err) => {
-    void Promise.allSettled([disconnectDb(), closeQueues()]).finally(() => {
+    void Promise.allSettled([stopWorkers().then(closeQueues), disconnectDb()]).finally(() => {
       process.exit(err === undefined ? 0 : 1);
     });
   });

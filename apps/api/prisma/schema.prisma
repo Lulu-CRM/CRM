@@ -355,8 +355,9 @@ model Segment {
   workspaceId String
   name        String
   description String?
+  // Rules in the shape of segmentRulesSchema; color is one of violet, coral, blue, mint, peach.
   rules       Json
-  color       String?
+  color       String    @default("violet")
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
   deletedAt   DateTime?

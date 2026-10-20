@@ -277,7 +277,7 @@ A segment's `rules` (schema: `segmentRulesSchema` in `packages/shared/src/segmen
 | `followUp` | `due` | none: an open task on the contact is due today or earlier |
 | `openDeal` | `exists`, `none` | none: the contact is on an open deal, or not |
 
-`match` is `all` or `any`; 1 to 20 conditions. Membership is worked out by `segmentMembers` in `packages/shared`, which the API, the `segments.refresh` job and the web app's live preview all use. `GET /segments` returns each segment with `memberCount`. Errors: `SEGMENT_NOT_FOUND`.
+`match` is `all` or `any`; 1 to 20 conditions. Membership is worked out by `segmentMembers` in `packages/shared`, which the API and the web app's live preview both use. `GET /segments` returns each segment with `memberCount`, worked out on every read, so a new matching contact counts at once. `color` defaults to `violet`. `GET /segments/:id/contacts` is paged like `GET /contacts` (sort defaults to `-lastTouchAt`). Create, edit and delete need the `segments` permission for that action; members can view. Delete is soft. Errors: `SEGMENT_NOT_FOUND`.
 
 ## Import
 
@@ -363,3 +363,5 @@ The CRM finds the contact by email, creates an `Activity`, and updates `lastTouc
 ## Background jobs (BullMQ)
 
 `import.process`, `ai.analyze`, `segments.refresh`, `notifications.send`.
+
+`segments.refresh` is not built yet: segment counts are computed live on each read, which is fast enough at our size. Add the job (cached counts) if workspaces grow large.

@@ -3,6 +3,10 @@ import {
   aiInsightSchema,
   aiRunSchema,
   aiSettingsSchema,
+  segmentCreateSchema,
+  segmentListItemSchema,
+  segmentSchema,
+  segmentUpdateSchema,
   consentSettingsSchema,
   customFieldCreateSchema,
   customFieldSchema,
@@ -93,6 +97,10 @@ const COMPONENT_NAMES = {
   NotificationSettings: notificationSettingsSchema,
   AiSettings: aiSettingsSchema,
   Overview: overviewSchema,
+  Segment: segmentSchema,
+  SegmentListItem: segmentListItemSchema,
+  SegmentCreate: segmentCreateSchema,
+  SegmentUpdate: segmentUpdateSchema,
 } as const satisfies Record<string, ZodType>;
 
 export type ComponentName = keyof typeof COMPONENT_NAMES;

@@ -41,3 +41,9 @@ export const SEED_ACTIVITY_DANIEL_CALL_ID = '4bc7b7c0-adce-4329-a978-ed10b763fbc
 export const SEED_ACTIVITY_TASK_DONE_ID = 'b9ddbe2d-d605-4498-b106-af0874f523a1';
 export const SEED_ACTIVITY_AI_SIGNAL_ID = '0ace3929-2653-4958-942d-afae30a73198';
 export const SEED_ACTIVITY_LEAD_CREATED_ID = 'b67259bb-0645-41b3-a16e-13fc8b8fed36';
+
+// The design's four sample segments (demoSegments in packages/shared/src/fixtures/segments.ts).
+export const SEED_SEGMENT_HIGH_INTENT_ID = 'f4ff2d0e-6b73-4682-9d0b-9f06e459eef0';
+export const SEED_SEGMENT_FOLLOW_UP_ID = '0a20ba95-901e-46e1-b0c0-60e64ea3ae21';
+export const SEED_SEGMENT_AT_RISK_ID = 'b1f97242-f7bc-4a75-b667-1bf256c60b50';
+export const SEED_SEGMENT_NEWSLETTER_ID = '97494993-eb33-4e4a-ab63-edfb3881e32a';

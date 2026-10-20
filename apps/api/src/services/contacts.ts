@@ -1,13 +1,10 @@
 import {
   ERROR_CODES,
-  segmentMembers,
-  segmentRulesSchema,
   type Contact,
   type ContactCreateInput,
   type ContactListQuery,
   type ContactUpdateInput,
   type Company,
-  type SegmentContext,
 } from '@lulu/shared';
 import { db } from '../db/prisma';
 import { scopedDb, type ScopedDb } from '../db/scoped';
@@ -16,8 +13,7 @@ import { AppError } from '../lib/errors';
 import type { RequestContext } from '../middleware/requestContext';
 import { toSharedCompany } from './companyMapper';
 import { toSharedContact } from './contactMapper';
-import { toSharedDeal, toSharedStage } from './dealMapper';
-import { toSharedTask } from './timeline';
+import { loadMembershipData, memberIds } from './segmentMembership';
 
 const SORTABLE = ['name', 'email', 'lifecycleStage', 'lastTouchAt', 'createdAt', 'updatedAt'];
 
@@ -101,29 +97,12 @@ async function tagMatchIds(workspaceId: string, q: string): Promise<string[]> {
   return rows.map((row) => row.id);
 }
 
-// The segment's live members, evaluated with the shared rules so the API, the mock and the
-// segment's own count agree (packages/shared/src/segment-logic.ts).
-async function segmentMemberIds(ctx: RequestContext, segmentId: string): Promise<string[]> {
+// The segment's live members, with the same shared rules as GET /segments (services/segmentMembership.ts).
+export async function segmentMemberIds(ctx: RequestContext, segmentId: string): Promise<string[]> {
   const scoped = scopedDb(ctx.workspaceId);
   const segment = await scoped.segment.findFirst({ where: { id: segmentId } });
   if (segment === null) throw AppError.notFound(ERROR_CODES.SEGMENT_NOT_FOUND);
-
-  const [contactRows, taskRows, dealRows, stageRows] = await Promise.all([
-    scoped.contact.findMany({}),
-    scoped.task.findMany({ where: { done: false } }),
-    scoped.deal.findMany({}),
-    scoped.stage.findMany({ orderBy: { order: 'asc' } }),
-  ]);
-
-  const context: SegmentContext = {
-    now: new Date(),
-    timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
-    tasks: taskRows.map(toSharedTask),
-    deals: dealRows.map(toSharedDeal),
-    stages: stageRows.map(toSharedStage),
-  };
-  const rules = segmentRulesSchema.parse(segment.rules);
-  return segmentMembers(contactRows.map(toSharedContact), rules, context).map((c) => c.id);
+  return memberIds(await loadMembershipData(scoped), segment.rules);
 }
 
 async function buildWhere(

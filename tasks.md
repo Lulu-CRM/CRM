@@ -16,7 +16,7 @@ Status values: `open`, `in progress`, `in review`, `done`.
 | 3 | Contacts and Companies API | Franklin | in review | 1, 2 |
 | 4 | Deals and pipeline API | theLady | done | 1 |
 | 5 | Tasks, Notes, Activities API | theLady | in progress | 1 |
-| 6 | Segments API | theLady | open | 3 |
+| 6 | Segments API | Sudais | in review | 3 |
 | 7 | Contact import | Sudais | in review | 3 |
 | 8 | AI analysis | Sudais | in review | 3 |
 | 9 | CRM settings API | Sudais | in review | 2 |

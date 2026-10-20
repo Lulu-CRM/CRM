@@ -538,6 +538,88 @@ const authPaths: OpenApiPaths = {
 
 // Machine-readable mirror of the "Operations and health" section in docs/api.md.
 // Add every newly implemented endpoint here in the same pull request.
+const segmentEditNote = (action: string) =>
+  `Needs permission to ${action} segments (segments: ${action}).`;
+
+const segmentsPaths: OpenApiPaths = {
+  '/api/v1/segments': {
+    get: {
+      operationId: 'listSegments',
+      summary: 'List segments',
+      security: bearer,
+      description:
+        'Every segment with its live memberCount. Members are worked out on each read with the shared rules (segmentMembers), so a new matching contact counts at once.',
+      tags: ['Segments'],
+      responses: {
+        '200': listDataResponse('All segments.', 'SegmentListItem'),
+        '401': errorResponse('Not authenticated.'),
+      },
+    },
+    post: {
+      operationId: 'createSegment',
+      summary: 'Create a segment',
+      security: bearer,
+      description: `Colour defaults to violet. ${segmentEditNote('create')}`,
+      tags: ['Segments'],
+      requestBody: jsonBody('SegmentCreate'),
+      responses: {
+        '201': dataResponse('The created segment.', 'Segment'),
+        '400': errorResponse('Invalid body or rules.'),
+        '401': errorResponse('Not authenticated.'),
+        '403': errorResponse('FORBIDDEN.'),
+      },
+    },
+  },
+  '/api/v1/segments/{id}': {
+    patch: {
+      operationId: 'updateSegment',
+      summary: 'Update a segment',
+      security: bearer,
+      description: segmentEditNote('edit'),
+      tags: ['Segments'],
+      parameters: [idParam],
+      requestBody: jsonBody('SegmentUpdate'),
+      responses: {
+        '200': dataResponse('The updated segment.', 'Segment'),
+        '400': errorResponse('Invalid body or rules.'),
+        '401': errorResponse('Not authenticated.'),
+        '403': errorResponse('FORBIDDEN.'),
+        '404': errorResponse('SEGMENT_NOT_FOUND.'),
+      },
+    },
+    delete: {
+      operationId: 'deleteSegment',
+      summary: 'Delete a segment',
+      security: bearer,
+      description: `Soft delete; the contacts are not touched. ${segmentEditNote('delete')}`,
+      tags: ['Segments'],
+      parameters: [idParam],
+      responses: {
+        '204': { description: 'Deleted.' },
+        '401': errorResponse('Not authenticated.'),
+        '403': errorResponse('FORBIDDEN.'),
+        '404': errorResponse('SEGMENT_NOT_FOUND.'),
+      },
+    },
+  },
+  '/api/v1/segments/{id}/contacts': {
+    get: {
+      operationId: 'listSegmentContacts',
+      summary: 'Contacts in a segment',
+      security: bearer,
+      description: 'The members, paged like GET /contacts; sort defaults to -lastTouchAt.',
+      tags: ['Segments'],
+      parameters: [idParam, ...listParams],
+      responses: {
+        '200': listDataResponse('A page of member contacts.', 'Contact'),
+        '400': errorResponse('Invalid query.'),
+        '401': errorResponse('Not authenticated.'),
+        '404': errorResponse('SEGMENT_NOT_FOUND.'),
+      },
+    },
+  },
+};
+
 const overviewPaths: OpenApiPaths = {
   '/api/v1/overview': {
     get: {
@@ -1028,4 +1110,5 @@ export const paths: OpenApiPaths = {
   ...importPaths,
   ...settingsPaths,
   ...overviewPaths,
+  ...segmentsPaths,
 };

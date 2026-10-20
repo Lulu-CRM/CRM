@@ -122,6 +122,9 @@ Response (`overviewSchema` in `packages/shared/src/overview.ts`, computed by `bu
 | `recentContacts` | 4 contacts touched most recently |
 | `recentActivity` | 5 newest activities, each with `recordName` |
 
+
+Implementation: `apps/api/src/services/overview.ts` feeds `buildOverview` with the workspace's data (the default pipeline's stages, open tasks, activities of the last 31 days plus the 5 newest, and deleted contacts for the change against last month). "Due today" uses UTC until workspaces have a time zone.
+
 ## Contacts
 
 | Method | Path | Purpose |

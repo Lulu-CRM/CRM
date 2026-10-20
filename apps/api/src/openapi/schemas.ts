@@ -8,6 +8,7 @@ import {
   customFieldSchema,
   customFieldUpdateSchema,
   notificationSettingsSchema,
+  overviewSchema,
   rolePermissionsSchema,
   stageCreateSchema,
   stageSchema,
@@ -91,6 +92,7 @@ const COMPONENT_NAMES = {
   ConsentSettings: consentSettingsSchema,
   NotificationSettings: notificationSettingsSchema,
   AiSettings: aiSettingsSchema,
+  Overview: overviewSchema,
 } as const satisfies Record<string, ZodType>;
 
 export type ComponentName = keyof typeof COMPONENT_NAMES;

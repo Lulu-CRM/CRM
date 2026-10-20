@@ -65,6 +65,7 @@ describe('OpenAPI document', () => {
       '/api/v1/imports/{id}/mapping',
       '/api/v1/imports/{id}/preview',
       '/api/v1/me',
+      '/api/v1/overview',
       '/api/v1/pipelines',
       '/api/v1/settings/ai',
       '/api/v1/settings/consent',
@@ -80,6 +81,7 @@ describe('OpenAPI document', () => {
     ]);
 
     const expectedMethods: Record<string, string[]> = {
+      '/api/v1/overview': ['get'],
       '/api/v1/settings/ai': ['get', 'put'],
       '/api/v1/settings/consent': ['get', 'put'],
       '/api/v1/settings/custom-fields': ['get', 'post'],

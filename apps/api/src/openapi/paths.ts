@@ -538,6 +538,173 @@ const authPaths: OpenApiPaths = {
 
 // Machine-readable mirror of the "Operations and health" section in docs/api.md.
 // Add every newly implemented endpoint here in the same pull request.
+const editNote = 'Needs permission to edit settings (settings: edit).';
+
+const readWriteSetting = (
+  name: string,
+  component: 'RolePermissions' | 'ConsentSettings' | 'NotificationSettings' | 'AiSettings',
+  readDescription: string,
+) => ({
+  get: {
+    operationId: `get${name}`,
+    summary: `Get ${name.toLowerCase()} settings`,
+    security: bearer,
+    description: `${readDescription} Any signed-in user can read it.`,
+    tags: ['Settings'],
+    responses: {
+      '200': dataResponse('The settings.', component),
+      '401': errorResponse('Not authenticated.'),
+    },
+  },
+  put: {
+    operationId: `put${name}`,
+    summary: `Replace ${name.toLowerCase()} settings`,
+    security: bearer,
+    description: `Replaces the whole object. ${editNote}`,
+    tags: ['Settings'],
+    requestBody: jsonBody(component),
+    responses: {
+      '200': dataResponse('The saved settings.', component),
+      '400': errorResponse('Invalid or incomplete body.'),
+      '401': errorResponse('Not authenticated.'),
+      '403': errorResponse('The role may not edit settings.'),
+    },
+  },
+});
+
+const settingsPaths: OpenApiPaths = {
+  '/api/v1/settings/custom-fields': {
+    get: {
+      operationId: 'listCustomFields',
+      summary: 'List custom contact fields',
+      security: bearer,
+      description: 'Any signed-in user can read them (the contact form shows them).',
+      tags: ['Settings'],
+      responses: {
+        '200': listDataResponse('The custom fields.', 'CustomField'),
+        '401': errorResponse('Not authenticated.'),
+      },
+    },
+    post: {
+      operationId: 'createCustomField',
+      summary: 'Add a custom contact field',
+      security: bearer,
+      description: `The key is set once (fieldKeyFromLabel in packages/shared). A select field needs options. ${editNote}`,
+      tags: ['Settings'],
+      requestBody: jsonBody('CustomFieldCreate'),
+      responses: {
+        '201': dataResponse('The created field.', 'CustomField'),
+        '400': errorResponse('Invalid body, for example a select without options.'),
+        '401': errorResponse('Not authenticated.'),
+        '403': errorResponse('The role may not edit settings.'),
+        '409': errorResponse('CUSTOM_FIELD_KEY_TAKEN.'),
+      },
+    },
+  },
+  '/api/v1/settings/custom-fields/{id}': {
+    patch: {
+      operationId: 'updateCustomField',
+      summary: 'Edit a custom contact field',
+      security: bearer,
+      description: `Only label and options; the key and type never change. ${editNote}`,
+      tags: ['Settings'],
+      parameters: [idParam],
+      requestBody: jsonBody('CustomFieldUpdate'),
+      responses: {
+        '200': dataResponse('The updated field.', 'CustomField'),
+        '400': errorResponse('Invalid body, including key or type.'),
+        '401': errorResponse('Not authenticated.'),
+        '403': errorResponse('The role may not edit settings.'),
+        '404': errorResponse('CUSTOM_FIELD_NOT_FOUND.'),
+      },
+    },
+    delete: {
+      operationId: 'deleteCustomField',
+      summary: 'Delete a custom contact field',
+      security: bearer,
+      description: `Soft delete; the key can be used again. ${editNote}`,
+      tags: ['Settings'],
+      parameters: [idParam],
+      responses: {
+        '204': { description: 'Deleted.' },
+        '401': errorResponse('Not authenticated.'),
+        '403': errorResponse('The role may not edit settings.'),
+        '404': errorResponse('CUSTOM_FIELD_NOT_FOUND.'),
+      },
+    },
+  },
+  '/api/v1/settings/stages': {
+    post: {
+      operationId: 'createStage',
+      summary: 'Add a deal stage',
+      security: bearer,
+      description: `A new open stage after the other open stages; Won and Lost stay last. ${editNote}`,
+      tags: ['Settings'],
+      requestBody: jsonBody('StageCreate'),
+      responses: {
+        '201': dataResponse('The created stage.', 'Stage'),
+        '400': errorResponse('Invalid body.'),
+        '401': errorResponse('Not authenticated.'),
+        '403': errorResponse('The role may not edit settings.'),
+        '404': errorResponse('PIPELINE_NOT_FOUND.'),
+      },
+    },
+  },
+  '/api/v1/settings/stages/{id}': {
+    patch: {
+      operationId: 'updateStage',
+      summary: 'Rename, reprice or move a stage',
+      security: bearer,
+      description: `name, probability, and order (position among the open stages). Renaming a default stage clears its key. Existing deals keep their probability. ${editNote}`,
+      tags: ['Settings'],
+      parameters: [idParam],
+      requestBody: jsonBody('StageUpdate'),
+      responses: {
+        '200': dataResponse('The updated stage.', 'Stage'),
+        '400': errorResponse('Invalid body.'),
+        '401': errorResponse('Not authenticated.'),
+        '403': errorResponse('The role may not edit settings.'),
+        '404': errorResponse('STAGE_NOT_FOUND.'),
+      },
+    },
+    delete: {
+      operationId: 'deleteStage',
+      summary: 'Delete a stage',
+      security: bearer,
+      description: `Only open stages without deals. ${editNote}`,
+      tags: ['Settings'],
+      parameters: [idParam],
+      responses: {
+        '204': { description: 'Deleted.' },
+        '401': errorResponse('Not authenticated.'),
+        '403': errorResponse('The role may not edit settings.'),
+        '404': errorResponse('STAGE_NOT_FOUND.'),
+        '409': errorResponse('STAGE_LOCKED (Won or Lost) or STAGE_IN_USE (has deals).'),
+      },
+    },
+  },
+  '/api/v1/settings/roles': readWriteSetting(
+    'Roles',
+    'RolePermissions',
+    'What admins and members may do per resource; owners can always do everything. The role guard uses it at once.',
+  ),
+  '/api/v1/settings/consent': readWriteSetting(
+    'Consent',
+    'ConsentSettings',
+    'Consent and privacy rules, including what imported contacts get.',
+  ),
+  '/api/v1/settings/notifications': readWriteSetting(
+    'Notifications',
+    'NotificationSettings',
+    'In-app and email channels per event.',
+  ),
+  '/api/v1/settings/ai': readWriteSetting(
+    'Ai',
+    'AiSettings',
+    'The AI switches shown on the AI Analysis page.',
+  ),
+};
+
 const importPaths: OpenApiPaths = {
   '/api/v1/imports': {
     post: {
@@ -842,4 +1009,5 @@ export const paths: OpenApiPaths = {
   ...dealPaths,
   ...aiPaths,
   ...importPaths,
+  ...settingsPaths,
 };

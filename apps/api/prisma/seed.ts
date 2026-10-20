@@ -11,6 +11,7 @@ import {
   SEED_ALEX_ID,
   SEED_COMPANY_ATLAS_ID,
   SEED_COMPANY_KLARWERK_ID,
+  SEED_COMPANY_HAUS_ID,
   SEED_COMPANY_NORTHSTAR_ID,
   SEED_COMPANY_ROAM_ID,
   SEED_CONTACT_DANIEL_ID,
@@ -147,6 +148,15 @@ const companies: WithId<Prisma.CompanyUncheckedCreateInput>[] = [
     industry: 'Finance',
     ownerId: SEED_JAMIE_ID,
   },
+  // Elena Schmidt's company in the design's contact list (the design's company cards show four).
+  {
+    id: SEED_COMPANY_HAUS_ID,
+    workspaceId: SEED_WORKSPACE_ID,
+    name: 'Haus am Fluss',
+    domain: 'hausamfluss.de',
+    industry: 'Hospitality',
+    ownerId: SEED_ALEX_ID,
+  },
 ];
 
 const contacts: WithId<Prisma.ContactUncheckedCreateInput>[] = [
@@ -220,7 +230,7 @@ const contacts: WithId<Prisma.ContactUncheckedCreateInput>[] = [
     name: 'Elena Schmidt',
     email: 'elena@hausamfluss.de',
     phone: '+49 172 105 819',
-    companyId: null,
+    companyId: SEED_COMPANY_HAUS_ID,
     jobRole: 'Managing Director',
     source: 'email',
     lifecycleStage: 'qualified',

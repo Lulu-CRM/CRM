@@ -1,8 +1,10 @@
+import { importFinished, notifyAfter } from "./contactsChanged";
 import { mockApi } from "./mock";
 import { realApi } from "./real";
 
 export { ApiError, type ListResult } from "./types";
 export { setAuthToken } from "./http";
+export { onContactsChanged } from "./contactsChanged";
 
 type Api = typeof realApi;
 export type ApiArea = keyof Api;
@@ -42,10 +44,27 @@ export function chooseApi(useMockSetting: string | undefined, realAreasSetting: 
   return { api, realAreas };
 }
 
+// Calls that add or remove contacts announce it (contactsChanged.ts), for mock and real alike.
+function withContactNotifications(api: Api): Api {
+  return {
+    ...api,
+    contacts: {
+      ...api.contacts,
+      create: notifyAfter(api.contacts.create),
+      remove: notifyAfter(api.contacts.remove),
+    },
+    imports: {
+      ...api.imports,
+      get: notifyAfter(api.imports.get, importFinished),
+      resolve: notifyAfter(api.imports.resolve),
+    },
+  };
+}
+
 // Next.js only inlines NEXT_PUBLIC_ variables written out in full, so read them here by name.
 const choice = chooseApi(process.env.NEXT_PUBLIC_USE_MOCK, process.env.NEXT_PUBLIC_REAL_API);
 
-export const api: Api = choice.api;
+export const api: Api = withContactNotifications(choice.api);
 
 // Areas on the real API right now (empty in full mock mode).
 export const realAreas: ApiArea[] = choice.realAreas;

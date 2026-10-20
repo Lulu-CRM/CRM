@@ -19,7 +19,7 @@ Status values: `open`, `in progress`, `in review`, `done`.
 | 6 | Segments API | theLady | open | 3 |
 | 7 | Contact import | Sudais | in review | 3 |
 | 8 | AI analysis | Sudais | in review | 3 |
-| 9 | CRM settings API | Franklin | open | 2 |
+| 9 | CRM settings API | Sudais | in review | 2 |
 | A1 | App shell and i18n | Abdul | done | |
 | A2 | Contacts page and profile drawer | Abdul | done | A1 |
 | B1 | Deals and pipeline board | Sudais | done | A1 |
@@ -29,7 +29,7 @@ Status values: `open`, `in progress`, `in review`, `done`.
 | D | Segments, Import wizard, AI Analysis, Settings | Sudais | done | A1 |
 | W1 | Sign-in page and per-area mock/real switch | Sudais | done | 2 |
 
-Franklin replaced Tobi and theLady replaced Brobot. The core (2, 3, 4, 5) comes first; after it, Franklin takes 9 and theLady 6. Sudais took 7 (import) and 8 (AI) off theLady; both are in review. Pages move to the real API one area at a time with `NEXT_PUBLIC_REAL_API` (`apps/web/README.md`).
+Franklin replaced Tobi and theLady replaced Brobot. The core (2, 3, 4, 5) comes first; after it, theLady takes 6. Sudais took 7 (import) and 8 (AI) off theLady and 9 (settings) off Franklin. Pages move to the real API one area at a time with `NEXT_PUBLIC_REAL_API` (`apps/web/README.md`).
 
 ## PM: Sudais
 

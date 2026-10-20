@@ -538,6 +538,23 @@ const authPaths: OpenApiPaths = {
 
 // Machine-readable mirror of the "Operations and health" section in docs/api.md.
 // Add every newly implemented endpoint here in the same pull request.
+const overviewPaths: OpenApiPaths = {
+  '/api/v1/overview': {
+    get: {
+      operationId: 'getOverview',
+      summary: 'Overview summary',
+      security: bearer,
+      description:
+        'One call for the Overview page: contact count and change against last month, open and weighted pipeline, follow-ups due, AI signals, pipeline by stage, recent contacts and activity. Computed by buildOverview in packages/shared; "due today" uses UTC.',
+      tags: ['Overview'],
+      responses: {
+        '200': dataResponse('The overview.', 'Overview'),
+        '401': errorResponse('Not authenticated.'),
+      },
+    },
+  },
+};
+
 const editNote = 'Needs permission to edit settings (settings: edit).';
 
 const readWriteSetting = (
@@ -1010,4 +1027,5 @@ export const paths: OpenApiPaths = {
   ...aiPaths,
   ...importPaths,
   ...settingsPaths,
+  ...overviewPaths,
 };

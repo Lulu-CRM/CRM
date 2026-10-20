@@ -28,6 +28,7 @@ Status values: `open`, `in progress`, `in review`, `done`.
 | C | Overview, Companies, Notes | Abdul | done | A1 |
 | D | Segments, Import wizard, AI Analysis, Settings | Sudais | done | A1 |
 | W1 | Sign-in page and per-area mock/real switch | Sudais | done | 2 |
+| W2 | Overview API (`GET /overview`) | Sudais | in review | 3, 4 |
 
 Franklin replaced Tobi and theLady replaced Brobot. The core (2, 3, 4, 5) comes first; after it, theLady takes 6. Sudais took 7 (import) and 8 (AI) off theLady and 9 (settings) off Franklin. Pages move to the real API one area at a time with `NEXT_PUBLIC_REAL_API` (`apps/web/README.md`).
 

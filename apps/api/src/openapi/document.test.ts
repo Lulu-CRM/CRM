@@ -57,6 +57,13 @@ describe('OpenAPI document', () => {
       '/api/v1/deals/{id}',
       '/api/v1/deals/{id}/move',
       '/api/v1/health',
+      '/api/v1/imports',
+      '/api/v1/imports/{id}',
+      '/api/v1/imports/{id}/confirm',
+      '/api/v1/imports/{id}/held',
+      '/api/v1/imports/{id}/held/{rowId}/resolve',
+      '/api/v1/imports/{id}/mapping',
+      '/api/v1/imports/{id}/preview',
       '/api/v1/me',
       '/api/v1/pipelines',
       '/api/v1/users',
@@ -65,6 +72,13 @@ describe('OpenAPI document', () => {
     ]);
 
     const expectedMethods: Record<string, string[]> = {
+      '/api/v1/imports': ['post'],
+      '/api/v1/imports/{id}': ['get'],
+      '/api/v1/imports/{id}/mapping': ['put'],
+      '/api/v1/imports/{id}/preview': ['get'],
+      '/api/v1/imports/{id}/confirm': ['post'],
+      '/api/v1/imports/{id}/held': ['get'],
+      '/api/v1/imports/{id}/held/{rowId}/resolve': ['post'],
       '/api/v1/ai-insights/{id}/accept': ['post'],
       '/api/v1/ai-insights/{id}/dismiss': ['post'],
       '/api/v1/contacts/{id}/ai-analysis': ['post'],

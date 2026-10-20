@@ -2,6 +2,12 @@ import {
   aiAcceptSchema,
   aiInsightSchema,
   aiRunSchema,
+  heldRowSchema,
+  importConfirmSchema,
+  importJobSchema,
+  importMappingInputSchema,
+  importPreviewSchema,
+  importResolveSchema,
   authSessionSchema,
   companyCreateSchema,
   companyDetailSchema,
@@ -59,6 +65,12 @@ const COMPONENT_NAMES = {
   AiInsight: aiInsightSchema,
   AiRun: aiRunSchema,
   AiAccept: aiAcceptSchema,
+  ImportJob: importJobSchema,
+  ImportMappingInput: importMappingInputSchema,
+  ImportPreview: importPreviewSchema,
+  ImportConfirm: importConfirmSchema,
+  HeldRow: heldRowSchema,
+  ImportResolve: importResolveSchema,
 } as const satisfies Record<string, ZodType>;
 
 export type ComponentName = keyof typeof COMPONENT_NAMES;

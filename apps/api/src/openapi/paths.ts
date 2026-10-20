@@ -538,6 +538,143 @@ const authPaths: OpenApiPaths = {
 
 // Machine-readable mirror of the "Operations and health" section in docs/api.md.
 // Add every newly implemented endpoint here in the same pull request.
+const importPaths: OpenApiPaths = {
+  '/api/v1/imports': {
+    post: {
+      operationId: 'uploadImport',
+      summary: 'Upload a contact file',
+      security: bearer,
+      description:
+        'multipart/form-data with the file in the field "file": CSV (comma, semicolon or tab) or XLSX (first sheet), up to 10,000 rows and 10 MB. Returns the job with its columns, the first row and a guessed mapping.',
+      tags: ['Import'],
+      requestBody: {
+        required: true,
+        content: {
+          'multipart/form-data': {
+            schema: {
+              type: 'object',
+              required: ['file'],
+              properties: { file: { type: 'string', format: 'binary' } },
+            },
+          },
+        },
+      },
+      responses: {
+        '201': dataResponse('The uploaded import job.', 'ImportJob'),
+        '400': errorResponse('IMPORT_FILE_UNREADABLE, IMPORT_EMPTY or IMPORT_TOO_MANY_ROWS.'),
+        '401': errorResponse('Not authenticated.'),
+        '403': errorResponse('The role may not create imports.'),
+      },
+    },
+  },
+  '/api/v1/imports/{id}': {
+    get: {
+      operationId: 'getImport',
+      summary: 'Get an import job',
+      security: bearer,
+      description:
+        'Status (uploaded, processing, done, failed), counts and mapping. Poll it while processing.',
+      tags: ['Import'],
+      parameters: [idParam],
+      responses: {
+        '200': dataResponse('The import job.', 'ImportJob'),
+        '401': errorResponse('Not authenticated.'),
+        '404': errorResponse('IMPORT_NOT_FOUND.'),
+      },
+    },
+  },
+  '/api/v1/imports/{id}/mapping': {
+    put: {
+      operationId: 'saveImportMapping',
+      summary: 'Save the field mapping',
+      security: bearer,
+      description:
+        'Only the columns of the uploaded file, and only before the import is confirmed.',
+      tags: ['Import'],
+      parameters: [idParam],
+      requestBody: jsonBody('ImportMappingInput'),
+      responses: {
+        '200': dataResponse('The updated job.', 'ImportJob'),
+        '400': errorResponse('Invalid mapping or an unknown column.'),
+        '401': errorResponse('Not authenticated.'),
+        '404': errorResponse('IMPORT_NOT_FOUND.'),
+        '409': errorResponse('IMPORT_ALREADY_STARTED.'),
+      },
+    },
+  },
+  '/api/v1/imports/{id}/preview': {
+    get: {
+      operationId: 'previewImport',
+      summary: 'Preview the import',
+      security: bearer,
+      description:
+        'Counts for the whole file (new, duplicates, problems) and the first 20 rows as they will be imported.',
+      tags: ['Import'],
+      parameters: [idParam],
+      responses: {
+        '200': dataResponse('The preview.', 'ImportPreview'),
+        '401': errorResponse('Not authenticated.'),
+        '404': errorResponse('IMPORT_NOT_FOUND.'),
+      },
+    },
+  },
+  '/api/v1/imports/{id}/confirm': {
+    post: {
+      operationId: 'confirmImport',
+      summary: 'Start the import',
+      security: bearer,
+      description:
+        'Saves the default owner, tag and duplicate handling (hold, skip, update), then queues the import.process background job and answers at once with status processing.',
+      tags: ['Import'],
+      parameters: [idParam],
+      requestBody: jsonBody('ImportConfirm'),
+      responses: {
+        '200': dataResponse('The job, now processing.', 'ImportJob'),
+        '400': errorResponse('Invalid options or an unknown owner.'),
+        '401': errorResponse('Not authenticated.'),
+        '404': errorResponse('IMPORT_NOT_FOUND.'),
+        '409': errorResponse('IMPORT_ALREADY_STARTED.'),
+      },
+    },
+  },
+  '/api/v1/imports/{id}/held': {
+    get: {
+      operationId: 'listHeldRows',
+      summary: 'Held duplicates',
+      security: bearer,
+      description: 'Rows held as possible duplicates, waiting for a decision.',
+      tags: ['Import'],
+      parameters: [idParam],
+      responses: {
+        '200': listDataResponse('The held rows.', 'HeldRow'),
+        '401': errorResponse('Not authenticated.'),
+        '404': errorResponse('IMPORT_NOT_FOUND.'),
+      },
+    },
+  },
+  '/api/v1/imports/{id}/held/{rowId}/resolve': {
+    post: {
+      operationId: 'resolveHeldRow',
+      summary: 'Resolve a held duplicate',
+      security: bearer,
+      description:
+        'skip drops the row; create adds it as a new contact; merge fills the empty fields of the existing contact and adds tags, never overwriting. Needs permission to edit contacts.',
+      tags: ['Import'],
+      parameters: [
+        idParam,
+        { name: 'rowId', in: 'path', required: true, schema: { type: 'string' } },
+      ],
+      requestBody: jsonBody('ImportResolve'),
+      responses: {
+        '200': dataResponse('The resolved row.', 'HeldRow'),
+        '401': errorResponse('Not authenticated.'),
+        '403': errorResponse('The role may not edit contacts.'),
+        '404': errorResponse('IMPORT_NOT_FOUND or IMPORT_ROW_NOT_FOUND.'),
+      },
+    },
+  },
+};
+
 const aiPaths: OpenApiPaths = {
   '/api/v1/contacts/{id}/ai-analysis': {
     post: {
@@ -704,4 +841,5 @@ export const paths: OpenApiPaths = {
   ...companiesPaths,
   ...dealPaths,
   ...aiPaths,
+  ...importPaths,
 };

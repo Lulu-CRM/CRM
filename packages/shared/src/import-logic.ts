@@ -54,6 +54,14 @@ export function parseCsv(text: string): { columns: string[]; rows: Record<string
     records.push(record);
   }
 
+  return tableFromRecords(records);
+}
+
+/**
+ * A table from rows of cells, the first row being the headers. Shared by CSV and spreadsheet reading,
+ * so both get the same rules: empty rows are skipped, blank or repeated headers get a number, cells are trimmed.
+ */
+export function tableFromRecords(records: string[][]): { columns: string[]; rows: Record<string, string>[] } {
   const nonEmpty = records.filter((r) => r.some((cell) => cell.trim() !== ""));
   const [header = [], ...body] = nonEmpty;
   const columns = uniqueHeaders(header.map((h) => h.trim()));

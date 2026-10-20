@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { demoCompanies, demoContacts } from "./fixtures/contacts";
 import { importConfirmSchema, importMappingSchema } from "./import";
-import { findDuplicate, guessMapping, mapRow, mergeIntoContact, parseCsv, planImport } from "./import-logic";
+import { findDuplicate, guessMapping, mapRow, mergeIntoContact, parseCsv, planImport, tableFromRecords } from "./import-logic";
 
 describe("parseCsv", () => {
   it("reads quoted fields, doubled quotes and line breaks inside quotes", () => {
@@ -24,6 +24,15 @@ describe("parseCsv", () => {
     const { columns, rows } = parseCsv("email,,email\n\na@b.co,x,c@d.co\n , , \n");
     expect(columns).toEqual(["email", "column_2", "email_2"]);
     expect(rows).toHaveLength(1);
+  });
+});
+
+describe("tableFromRecords", () => {
+  it("applies the same header and row rules as CSV (used for XLSX)", () => {
+    expect(tableFromRecords([["Name", "", "Name"], [" Ada ", "x", "y"], ["", "", ""]])).toEqual({
+      columns: ["Name", "column_2", "Name_2"],
+      rows: [{ Name: "Ada", column_2: "x", Name_2: "y" }],
+    });
   });
 });
 

@@ -77,18 +77,21 @@ enum SourceModule {
 
 enum ImportJobStatus {
   uploaded
-  mapped
   processing
-  completed
+  done
   failed
 
   @@map("import_job_status")
 }
 
+// pending: stored at upload, not processed yet (never returned by the API).
 enum ImportRowStatus {
+  pending
   added
+  updated
   held
   skipped
+  merged
 
   @@map("import_row_status")
 }
@@ -364,17 +367,25 @@ model Segment {
   @@map("segments")
 }
 
+// Contact import (packages/shared/src/import.ts). Rows are stored at upload and processed by the
+// import.process job; duplicateHandling is "hold", "skip" or "update" once the import is confirmed.
 model ImportJob {
-  id          String          @id @default(uuid())
-  workspaceId String
-  fileName    String
-  status      ImportJobStatus @default(uploaded)
-  mapping     Json?
-  rowsTotal   Int             @default(0)
-  rowsAdded   Int             @default(0)
-  rowsHeld    Int             @default(0)
-  ownerId     String?
-  tag         String?
+  id                String          @id @default(uuid())
+  workspaceId       String
+  fileName          String
+  status            ImportJobStatus @default(uploaded)
+  columns           String[]        @default([])
+  sampleRow         Json?
+  mapping           Json            @default("{}")
+  rowsTotal         Int             @default(0)
+  rowsAdded         Int             @default(0)
+  rowsUpdated       Int             @default(0)
+  rowsHeld          Int             @default(0)
+  rowsSkipped       Int             @default(0)
+  ownerId           String?
+  tag               String?
+  duplicateHandling String?
+  error             String?
   createdAt   DateTime        @default(now())
   updatedAt   DateTime        @updatedAt
   deletedAt   DateTime?
@@ -394,6 +405,9 @@ model ImportRow {
   rowNumber           Int
   raw                 Json
   status              ImportRowStatus
+  // For held rows: the row as a contact (importedContactSchema) and why it may be a duplicate.
+  contact             Json?
+  duplicateMatch      String?
   duplicateOfContactId String?
   createdAt           DateTime       @default(now())
   updatedAt           DateTime       @updatedAt

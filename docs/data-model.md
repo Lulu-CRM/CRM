@@ -44,8 +44,8 @@ Rules: `@@map` uses snake_case plural table names, model names are PascalCase si
 | Note | title, body, visibility (`shared`, `private`), authorId, linked record |
 | Activity | type, linked record, occurredAt, sourceModule, actorId, payload, summary |
 | Segment | name, description, rules (JSON, format in `docs/api.md`), color (`violet`, `coral`, `blue`, `mint`, `peach`) |
-| ImportJob | fileName, status (`uploaded`, `mapped`, `processing`, `completed`, `failed`), mapping (JSON), rowsTotal, rowsAdded, rowsHeld, ownerId, tag |
-| ImportRow | importJobId, rowNumber, raw (JSON), status (`added`, `held`, `skipped`), duplicateOfContactId |
+| ImportJob | fileName, status (`uploaded`, `processing`, `done`, `failed`), columns, sampleRow (JSON), mapping (JSON), rowsTotal, rowsAdded, rowsUpdated, rowsHeld, rowsSkipped, ownerId, tag, duplicateHandling (`hold`, `skip`, `update`), error |
+| ImportRow | importJobId, rowNumber, raw (JSON), status (`pending`, `added`, `updated`, `held`, `skipped`, `merged`), contact (JSON, for held rows), duplicateMatch, duplicateOfContactId |
 | AiInsight | contactId, provider, summary (JSON AI text), nextStep (JSON `{ title, detail }`), suggestedTask (JSON or null), suggestedStage, dataQualityScore, missingFields, status (`suggested`, `accepted`, `dismissed`) |
 | CustomField | entity, key, label, type, options |
 | Setting | key, value (JSON): consent rules, notification rules, AI switches |
@@ -65,8 +65,8 @@ These are the `enum` types in `schema.prisma`. The first block is database enums
 - **RecordType** (`record_type`): `contact`, `company`, `deal`
 - **ActivityType** (`activity_type`): `email`, `meeting`, `task`, `note`, `ai_signal`, `created`, `stage_changed`
 - **SourceModule** (`source_module`): `crm`, `email`, `calendar`, `online_presence`, `marketplace`
-- **ImportJobStatus** (`import_job_status`): `uploaded`, `mapped`, `processing`, `completed`, `failed`
-- **ImportRowStatus** (`import_row_status`): `added`, `held`, `skipped`
+- **ImportJobStatus** (`import_job_status`): `uploaded`, `processing`, `done`, `failed`
+- **ImportRowStatus** (`import_row_status`): `pending` (stored at upload, not processed yet), `added`, `updated`, `held`, `skipped`, `merged`
 - **AiInsightStatus** (`ai_insight_status`): `suggested`, `accepted`, `dismissed`
 
 Open value sets (`String` columns, not DB enums — validated in the API):
@@ -92,7 +92,7 @@ Open value sets (`String` columns, not DB enums — validated in the API):
 - **Delete.** Soft delete everywhere. Permanent deletion is a later feature. The API enforces this: `scopedDb` converts every `delete` into `deletedAt = now()`. All foreign keys are `onDelete: Restrict` in the schema, so a hard cascade can never remove rows behind the soft delete.
 - **Contact.customFields.** `Json` column defaulting to `{}` on Contact, so ST-1 custom field values have a place to live before the CustomField definition UI maps keys to types. The `CustomField` model defines the definitions; this column holds the values.
 - **Contact.source is a nullable String with no default.** Source values are open (`website_form`, `referral`, `email`, `import`, `marketplace`, `instagram`, plus custom), so the database assumes nothing; the API validates known values.
-- **ImportJobStatus enum values:** `uploaded`, `mapped`, `processing`, `completed`, `failed` — the import pipeline's five states (doc was silent).
+- **ImportJobStatus enum values:** `uploaded`, `processing`, `done`, `failed`, matching `importStatusSchema` in `packages/shared/src/import.ts` (migration `import_contract`; `mapped` folded into `uploaded`, `completed` renamed `done`).
 - **Decimal precision.** `Stage.probability` and `Deal.probability` are `Decimal(5,4)` (0 to 1, four decimals); `Deal.value` is `Decimal(14,2)`. The 0–1 range is validated in the API (Zod), not by a DB `CHECK` constraint — Prisma Migrate treats unknown checks as drift and would drop them in a later migration. Prisma returns `Decimal` columns as JS Decimal objects; the API serializes them per the money rule.
 - **Trigram search.** The migration creates `pg_trgm` and GIN trigram indexes on `lower(contacts.name)`, `lower(contacts.email)` and `lower(companies.name)` for case-insensitive search (the "text index" from the indexes section). Creating the extension needs a database user allowed to `CREATE EXTENSION`.
 - **Enum naming.** `Role` keeps its original DB type name (already migrated). New enums are mapped to snake_case DB type names with `@@map` (`lifecycle_stage`, `stage_type`, …).

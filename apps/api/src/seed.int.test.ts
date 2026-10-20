@@ -47,7 +47,7 @@ describe('seed (int)', () => {
       workspaces: 1,
       users: 2,
       contacts: 5,
-      companies: 4,
+      companies: 5,
       pipelines: 1,
       stages: 6,
       deals: 4,

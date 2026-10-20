@@ -10,6 +10,7 @@ export const SEED_COMPANY_NORTHSTAR_ID = 'f0b0c2ed-a8a5-42de-a5fe-101308ac87b1';
 export const SEED_COMPANY_ATLAS_ID = 'b7413935-227d-4706-9f6f-61cc8cc38ebd';
 export const SEED_COMPANY_ROAM_ID = '8bab035f-721b-4be4-a6aa-abf2bd50778d';
 export const SEED_COMPANY_KLARWERK_ID = '2471c11c-1ba9-4587-99d4-85037be06bfc';
+export const SEED_COMPANY_HAUS_ID = 'ba06fdd9-fa6d-411c-b83a-0de545f4e25d';
 
 export const SEED_CONTACT_SOPHIE_ID = '8dfc23f5-f4ba-4f52-8a9f-14401496bf8a';
 export const SEED_CONTACT_DANIEL_ID = 'a82a0243-7c7f-414c-81f7-a5b8f2192d00';

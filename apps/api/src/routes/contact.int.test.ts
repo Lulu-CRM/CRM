@@ -175,7 +175,7 @@ describe('contacts API (int)', () => {
     expect(withConsent.consentUpdatedAt).not.toBeNull();
   });
 
-  it('rejects duplicates by email, then by name at the same company', async () => {
+  it('rejects a duplicate email but allows two people with the same name', async () => {
     const t = await tenant('dupe');
     const company = await newCompany(t, 'Northstar Studio');
 
@@ -194,14 +194,14 @@ describe('contacts API (int)', () => {
     expect(byEmail.status).toBe(409);
     expect(responseBody<ErrorEnvelope>(byEmail).error.code).toBe('DUPLICATE_CONTACT');
 
-    const byName = await request(app)
+    // Same name at the same company can be a different person: allowed for manual creates.
+    const sameNameSameCompany = await request(app)
       .post('/contacts')
       .send({ name: 'sophie laurent', companyId: company.id });
 
-    expect(byName.status).toBe(409);
-    expect(responseBody<ErrorEnvelope>(byName).error.code).toBe('DUPLICATE_CONTACT');
+    expect(sameNameSameCompany.status).toBe(201);
 
-    // Same name without a company, or at another company, is a different person.
+    // Same name without a company, or at another company, is a different person too.
     const noCompany = await request(app).post('/contacts').send({ name: 'Sophie Laurent' });
     expect(noCompany.status).toBe(201);
 

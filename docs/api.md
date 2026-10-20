@@ -138,7 +138,7 @@ Response (`overviewSchema` in `packages/shared/src/overview.ts`, computed by `bu
 
 `GET /contacts/:id` returns the `contactSchema` fields plus `company`: the linked company (`companySchema`) or `null`. Per-contact counts are not returned yet.
 
-`POST /contacts/:id/convert` takes no body and returns the updated contact; it sets `lifecycleStage` to `customer` and logs a `stage_changed` activity. Duplicate creates and edits answer `DUPLICATE_CONTACT` (409): same email first (ignoring case), then the same name at the same company.
+`POST /contacts/:id/convert` takes no body and returns the updated contact; it sets `lifecycleStage` to `customer` and logs a `stage_changed` activity. Creates and edits with an email another contact already has (ignoring case) answer `DUPLICATE_CONTACT` (409). The same name at the same company is allowed here, because two people can share a name; imports still hold name + company matches for review (`findDuplicate`).
 
 ## Companies
 

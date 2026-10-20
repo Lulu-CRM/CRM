@@ -68,15 +68,12 @@ async function assertReferences(
   }
 }
 
-// Duplicate rule from docs/data-model.md: same email first (ignoring case), then the same name
-// at the same company. Mirrors findDuplicate in packages/shared/src/import-logic.ts.
+// Manual creates and edits block only an email that is already used (ignoring case). Two people
+// can share a name at one company, so name + company is only a hint for imports, where
+// findDuplicate (packages/shared/src/import-logic.ts) holds the row for review instead.
 async function assertNotDuplicate(
   scoped: ScopedDb,
-  candidate: {
-    name: string;
-    email?: string | null | undefined;
-    companyId?: string | null | undefined;
-  },
+  candidate: { email?: string | null | undefined },
   excludeId?: string,
 ): Promise<void> {
   const exclude = excludeId === undefined ? {} : { id: { not: excludeId } };
@@ -86,17 +83,6 @@ async function assertNotDuplicate(
       select: { id: true },
     });
     if (byEmail !== null) throw AppError.conflict(ERROR_CODES.DUPLICATE_CONTACT);
-  }
-  if (candidate.companyId !== null && candidate.companyId !== undefined) {
-    const byName = await scoped.contact.findFirst({
-      where: {
-        name: { equals: candidate.name, mode: 'insensitive' },
-        companyId: candidate.companyId,
-        ...exclude,
-      },
-      select: { id: true },
-    });
-    if (byName !== null) throw AppError.conflict(ERROR_CODES.DUPLICATE_CONTACT);
   }
 }
 
@@ -240,11 +226,7 @@ export async function updateContact(
   await assertReferences(scoped, input);
   await assertNotDuplicate(
     scoped,
-    {
-      name: input.name ?? existing.name,
-      email: input.email !== undefined ? input.email : existing.email,
-      companyId: input.companyId !== undefined ? input.companyId : existing.companyId,
-    },
+    { email: input.email !== undefined ? input.email : existing.email },
     id,
   );
 

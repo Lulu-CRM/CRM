@@ -1,25 +1,9 @@
 import type { Activity, ActivityCreateInput, ActivityListQuery } from '@lulu/shared';
 import { scopedDb } from '../db/scoped';
-import type { Activity as ActivityRow, Prisma } from '../generated/prisma/client';
+import type { Prisma } from '../generated/prisma/client';
 import type { RequestContext } from '../middleware/requestContext';
 import { assertRecordExists } from './recordLink';
-
-export function toSharedActivity(row: ActivityRow): Activity {
-  return {
-    id: row.id,
-    workspaceId: row.workspaceId,
-    type: row.type,
-    recordType: row.recordType,
-    recordId: row.recordId,
-    occurredAt: row.occurredAt.toISOString(),
-    sourceModule: row.sourceModule,
-    actorId: row.actorId,
-    payload: (row.payload ?? {}) as Record<string, unknown>,
-    createdAt: row.createdAt.toISOString(),
-    updatedAt: row.updatedAt.toISOString(),
-    deletedAt: row.deletedAt === null ? null : row.deletedAt.toISOString(),
-  };
-}
+import { toSharedActivity } from './timeline';
 
 /** GET /activities: newest first. */
 export async function listActivities(

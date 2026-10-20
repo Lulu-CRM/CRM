@@ -6,26 +6,11 @@ import {
   type NoteUpdateInput,
 } from '@lulu/shared';
 import { scopedDb, type ScopedDb } from '../db/scoped';
-import type { Note as NoteRow, Prisma } from '../generated/prisma/client';
+import type { Prisma } from '../generated/prisma/client';
 import { AppError } from '../lib/errors';
 import type { RequestContext } from '../middleware/requestContext';
 import { assertRecordExists } from './recordLink';
-
-export function toSharedNote(row: NoteRow): Note {
-  return {
-    id: row.id,
-    workspaceId: row.workspaceId,
-    title: row.title,
-    body: row.body,
-    visibility: row.visibility,
-    authorId: row.authorId,
-    recordType: row.recordType,
-    recordId: row.recordId,
-    createdAt: row.createdAt.toISOString(),
-    updatedAt: row.updatedAt.toISOString(),
-    deletedAt: row.deletedAt === null ? null : row.deletedAt.toISOString(),
-  };
-}
+import { toSharedNote } from './timeline';
 
 // Private notes of other people are invisible for every role (canSeeNote in note-logic.ts).
 const visibleTo = (userId: string) => ({

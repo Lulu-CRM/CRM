@@ -42,7 +42,4 @@ apiRouter.use('/segments', segmentsRouter);
 apiRouter.use('/tasks', tasksRouter);
 apiRouter.use('/notes', notesRouter);
 apiRouter.use('/activities', activitiesRouter);
-apiRouter.use('/tasks', tasksRouter);
-apiRouter.use('/notes', notesRouter);
-apiRouter.use('/activities', activitiesRouter);
 apiRouter.use('/events', eventsRouter);

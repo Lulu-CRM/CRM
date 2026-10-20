@@ -61,6 +61,8 @@ enum ActivityType {
   ai_signal
   created
   stage_changed
+  // Events from the Marketplace module (POST /events).
+  marketplace
 
   @@map("activity_type")
 }

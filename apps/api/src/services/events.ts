@@ -2,15 +2,15 @@ import { ERROR_CODES, type Activity, type ActivityType, type ModuleEvent } from 
 import { scopedDb } from '../db/scoped';
 import { AppError } from '../lib/errors';
 import type { RequestContext } from '../middleware/requestContext';
-import { toSharedActivity } from './activities';
+import { toSharedActivity } from './timeline';
 
-// The activity enum has no per-module types, so the module decides the type and the
-// original event type is kept in the payload (`eventType`) for the UI.
-const TYPE_BY_MODULE: Record<ModuleEvent['sourceModule'], ActivityType> = {
+// The activity type comes from the event type's prefix (email.*, calendar.*, marketplace.*); the
+// original event type is kept in the payload (`eventType`). The summary is one language only, so it
+// is stored in `summary` for reference; the UI builds the line from the type through translations.
+const TYPE_BY_PREFIX: Record<string, ActivityType> = {
   email: 'email',
   calendar: 'meeting',
-  online_presence: 'note',
-  marketplace: 'note',
+  marketplace: 'marketplace',
 };
 
 /** POST /events: finds the contact by email (ignoring case), logs an activity, updates lastTouchAt. */
@@ -29,14 +29,14 @@ export async function recordModuleEvent(
     const activity = await tx.activity.create({
       data: {
         workspaceId: ctx.workspaceId,
-        type: TYPE_BY_MODULE[input.sourceModule],
+        type: TYPE_BY_PREFIX[input.type.split('.')[0]!]!,
         recordType: 'contact',
         recordId: contact.id,
         occurredAt,
         sourceModule: input.sourceModule,
         actorId: null,
         summary: input.summary,
-        payload: { ...input.payload, eventType: input.type, summary: input.summary },
+        payload: { ...input.payload, eventType: input.type },
       },
     });
     if (contact.lastTouchAt === null || contact.lastTouchAt < occurredAt) {

@@ -10,6 +10,8 @@ export const activityTypeSchema = z.enum([
   "ai_signal",
   "created",
   "stage_changed",
+  // Events from the Marketplace module (POST /events).
+  "marketplace",
 ]);
 
 export const sourceModuleSchema = z.enum(["crm", "email", "calendar", "online_presence", "marketplace"]);

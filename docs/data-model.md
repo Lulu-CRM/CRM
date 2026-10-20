@@ -51,7 +51,7 @@ Rules: `@@map` uses snake_case plural table names, model names are PascalCase si
 | Setting | key, value (JSON): consent rules, notification rules, AI switches |
 | Permission | role, resource, actions |
 
-"Linked record" on Task, Note and Activity means `recordType` (`contact`, `company`, `deal`) plus `recordId`. Both are set or both are `null`: a task can stand on its own, but a half link is rejected.
+"Linked record" on Task, Note and Activity means `recordType` (`contact`, `company`, `deal`) plus `recordId`. Both are set or both are `null`: a task or a note can stand on its own (and ticking an unlinked task logs an activity without a record), but a half link is rejected.
 
 ## Enums
 
@@ -63,7 +63,7 @@ These are the `enum` types in `schema.prisma`. The first block is database enums
 - **TaskPriority** (`task_priority`): `high`, `normal`, `low`
 - **NoteVisibility** (`note_visibility`): `shared`, `private`
 - **RecordType** (`record_type`): `contact`, `company`, `deal`
-- **ActivityType** (`activity_type`): `email`, `meeting`, `task`, `note`, `ai_signal`, `created`, `stage_changed`
+- **ActivityType** (`activity_type`): `email`, `meeting`, `task`, `note`, `ai_signal`, `created`, `stage_changed`, `marketplace`
 - **SourceModule** (`source_module`): `crm`, `email`, `calendar`, `online_presence`, `marketplace`
 - **ImportJobStatus** (`import_job_status`): `uploaded`, `processing`, `done`, `failed`
 - **ImportRowStatus** (`import_row_status`): `pending` (stored at upload, not processed yet), `added`, `updated`, `held`, `skipped`, `merged`
@@ -85,7 +85,7 @@ Open value sets (`String` columns, not DB enums — validated in the API):
 - **Totals in one currency.** Deal summaries add up deals in the workspace's `defaultCurrency` only. Open deals in other currencies are counted, not converted, until we add exchange rates.
 - **Duplicates.** A possible duplicate of a contact is matched on email first, then on name plus company. Duplicates are held for review, never merged automatically.
 - **Consent.** `marketingConsent` and its timestamp are stored on the contact, and imported contacts inherit the workspace rules.
-- **Activity feed from other modules.** Email, Calendar and others create `Activity` rows through the event format in `docs/api.md`.
+- **Activity feed from other modules.** Email, Calendar and others create `Activity` rows through the event format in `docs/api.md`. The module's own event type stays in `payload.eventType`; its `summary` is kept in `summary` for reference, but the UI builds the line from `type` through the translation files.
 - **User table exists now.** Created in `init_base` migration with `passwordHash String?` (nullable) so the login task needs no extra migration. `User.email` is **globally unique** (`@unique`, not per-workspace): login uses email alone, and a user belongs to exactly one workspace.
 - **Auth is stateless.** The seed sets `passwordHash` (bcrypt, cost `PASSWORD_HASH_ROUNDS`). Login checks the password and returns a signed HS256 JWT (`AUTH_TOKEN_TTL`) carrying `userId`, `workspaceId`, `role`, `jti` and `exp`. No token is stored server-side: logout only remembers the revoked `jti` in Redis until the token's own expiry, so the denylist key is the single piece of session state.
 - **Role guard.** The workspace comes from the token, and the user row is reloaded on every request so a role change takes effect at once. Permissions are the shared `defaultPermissions`, overridden per role and resource by rows in the `Permission` table (`role`, `resource`, `actions`).

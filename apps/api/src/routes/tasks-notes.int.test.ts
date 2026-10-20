@@ -6,6 +6,7 @@ import { db } from '../db/prisma';
 import { errorHandler } from '../middleware/errorHandler';
 import type { RequestContext } from '../middleware/requestContext';
 import { activitiesRouter } from './activities';
+import { contactsRouter } from './contacts';
 import { notesRouter } from './notes';
 import { tasksRouter } from './tasks';
 import { eventsRouter } from './events';
@@ -23,6 +24,7 @@ app.use('/tasks', tasksRouter);
 app.use('/notes', notesRouter);
 app.use('/activities', activitiesRouter);
 app.use('/events', eventsRouter);
+app.use('/contacts', contactsRouter);
 app.use(errorHandler);
 
 const data = <T>(r: { body: unknown }) => (r.body as { data: T }).data;
@@ -65,7 +67,9 @@ describe('Tasks API (int)', () => {
     const t = await workspace();
     t.asOwner();
     const link = { recordType: 'contact', recordId: t.contact.id };
-    const res = await request(app).post('/tasks').send({ title: 'Call Ada', ...link });
+    const res = await request(app)
+      .post('/tasks')
+      .send({ title: 'Call Ada', ...link });
     expect(res.status).toBe(201);
     const task = data<{ id: string; ownerId: string; done: boolean }>(res);
     expect(task.ownerId).toBe(t.owner.id);
@@ -98,7 +102,7 @@ describe('Tasks API (int)', () => {
     const res = await request(app)
       .post('/tasks')
       .send({ title: 'x', recordType: 'contact', recordId: a.contact.id });
-    expect(res.status).toBe(404);
+    expect(res.status).toBe(422);
     expect(code(res)).toBe('RECORD_NOT_FOUND');
   });
 
@@ -118,9 +122,12 @@ describe('Notes API (int)', () => {
   it('hides private notes from other users, for every role', async () => {
     const t = await workspace();
     t.asMember();
-    const priv = await request(app)
-      .post('/notes')
-      .send({ title: 'Secret', visibility: 'private', recordType: 'contact', recordId: t.contact.id });
+    const priv = await request(app).post('/notes').send({
+      title: 'Secret',
+      visibility: 'private',
+      recordType: 'contact',
+      recordId: t.contact.id,
+    });
     expect(priv.status).toBe(201);
     const id = data<{ id: string }>(priv).id;
 
@@ -150,8 +157,12 @@ describe('Activities API (int)', () => {
     const t = await workspace();
     t.asOwner();
     const link = { recordType: 'contact', recordId: t.contact.id };
-    await request(app).post('/activities').send({ type: 'meeting', occurredAt: '2026-10-01T10:00:00Z', ...link });
-    await request(app).post('/activities').send({ type: 'email', occurredAt: '2026-10-02T10:00:00Z', ...link });
+    await request(app)
+      .post('/activities')
+      .send({ type: 'meeting', occurredAt: '2026-10-01T10:00:00Z', ...link });
+    await request(app)
+      .post('/activities')
+      .send({ type: 'email', occurredAt: '2026-10-02T10:00:00Z', ...link });
     const list = await request(app).get(`/activities?recordId=${t.contact.id}`);
     expect(data<{ type: string }[]>(list).map((a) => a.type)).toEqual(['email', 'meeting']);
   });
@@ -173,7 +184,7 @@ describe('Contract details (int)', () => {
     const b = await workspace();
     b.asOwner();
     const res = await request(app).post('/tasks').send({ title: 'x', ownerId: a.owner.id });
-    expect(res.status).toBe(404);
+    expect(res.status).toBe(422);
     expect(code(res)).toBe('RECORD_NOT_FOUND');
   });
 
@@ -192,13 +203,15 @@ describe('Contract details (int)', () => {
     const t = await workspace();
     t.asOwner();
     await db.contact.update({ where: { id: t.contact.id }, data: { email: 'Ada@Example.test' } });
-    const res = await request(app).post('/events').send({
-      type: 'email.received',
-      sourceModule: 'email',
-      occurredAt: '2026-10-17T09:42:00Z',
-      contact: { email: 'ada@example.test' },
-      summary: 'Reply received',
-    });
+    const res = await request(app)
+      .post('/events')
+      .send({
+        type: 'email.received',
+        sourceModule: 'email',
+        occurredAt: '2026-10-17T09:42:00Z',
+        contact: { email: 'ada@example.test' },
+        summary: 'Reply received',
+      });
     expect(res.status).toBe(201);
     const contact = await db.contact.findUniqueOrThrow({ where: { id: t.contact.id } });
     expect(contact.lastTouchAt?.toISOString()).toBe('2026-10-17T09:42:00.000Z');
@@ -206,16 +219,65 @@ describe('Contract details (int)', () => {
     expect(data<unknown[]>(acts)).toHaveLength(1);
   });
 
+  it('shows a posted event on the contact timeline (task 5 done when)', async () => {
+    const t = await workspace();
+    t.asOwner();
+    await db.contact.update({ where: { id: t.contact.id }, data: { email: 'ada@example.test' } });
+    const posted = await request(app)
+      .post('/events')
+      .send({
+        type: 'marketplace.order_placed',
+        sourceModule: 'marketplace',
+        occurredAt: new Date().toISOString(),
+        contact: { email: 'ada@example.test' },
+        summary: 'Order placed',
+        payload: { orderId: 'o-1' },
+      });
+    expect(posted.status).toBe(201);
+    const activity = data<{ id: string; type: string; payload: unknown }>(posted);
+    expect(activity.type).toBe('marketplace');
+    expect(activity.payload).toEqual({ orderId: 'o-1', eventType: 'marketplace.order_placed' });
+
+    const timeline = await request(app).get(`/contacts/${t.contact.id}/timeline`);
+    expect(timeline.status).toBe(200);
+    const items = data<Array<{ kind: string; activity?: { id: string } }>>(timeline);
+    expect(items[0]).toMatchObject({ kind: 'activity', activity: { id: activity.id } });
+  });
+
+  it('never moves lastTouchAt back for a late event', async () => {
+    const t = await workspace();
+    t.asOwner();
+    const recent = new Date('2026-10-18T10:00:00Z');
+    await db.contact.update({
+      where: { id: t.contact.id },
+      data: { email: 'ada@example.test', lastTouchAt: recent },
+    });
+    const res = await request(app)
+      .post('/events')
+      .send({
+        type: 'calendar.booked',
+        sourceModule: 'calendar',
+        occurredAt: '2026-10-01T09:00:00Z',
+        contact: { email: 'ada@example.test' },
+        summary: 'x',
+      });
+    expect(data<{ type: string }>(res).type).toBe('meeting');
+    const contact = await db.contact.findUniqueOrThrow({ where: { id: t.contact.id } });
+    expect(contact.lastTouchAt?.toISOString()).toBe(recent.toISOString());
+  });
+
   it('answers CONTACT_NOT_FOUND for an unknown email', async () => {
     const t = await workspace();
     t.asOwner();
-    const res = await request(app).post('/events').send({
-      type: 'email.received',
-      sourceModule: 'email',
-      occurredAt: '2026-10-17T09:42:00Z',
-      contact: { email: 'nobody@example.test' },
-      summary: 'x',
-    });
+    const res = await request(app)
+      .post('/events')
+      .send({
+        type: 'email.received',
+        sourceModule: 'email',
+        occurredAt: '2026-10-17T09:42:00Z',
+        contact: { email: 'nobody@example.test' },
+        summary: 'x',
+      });
     expect(res.status).toBe(404);
     expect(code(res)).toBe('CONTACT_NOT_FOUND');
   });

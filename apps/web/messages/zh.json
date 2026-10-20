@@ -267,6 +267,7 @@
       "ai_signal": "AI 信号",
       "created": "已创建联系人",
       "stage_changed": "状态已更改",
+      "marketplace": "Marketplace 动态",
       "task_completed": "任务已完成",
       "task_reopened": "任务已重新打开"
     },
@@ -276,6 +277,7 @@
       "ai_signal": "购买意向上升。",
       "created": "由 {actor} 添加。",
       "stage_changed": "由 {actor} 更改。",
+      "marketplace": "Marketplace 中有新动态。",
       "email": "通过邮件收到了回复。",
       "meeting": "会议已加入日历。",
       "task_completed": "{actor} 完成了一项跟进。",

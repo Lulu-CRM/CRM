@@ -804,7 +804,6 @@ const settingsPaths: OpenApiPaths = {
   ),
 };
 
-
 const taskListParams = [
   ['q', 'string'],
   ['sort', 'string'],
@@ -866,7 +865,9 @@ const tasksNotesActivitiesPaths: OpenApiPaths = {
         '400': errorResponse('Invalid body, including RECORD_LINK_INCOMPLETE.'),
         '401': errorResponse('Not authenticated.'),
         '403': errorResponse('FORBIDDEN.'),
-        '404': errorResponse('RECORD_NOT_FOUND: the linked record or owner is not in the workspace.'),
+        '422': errorResponse(
+          'RECORD_NOT_FOUND: the linked record or owner is not in the workspace.',
+        ),
       },
     },
   },
@@ -885,7 +886,8 @@ const tasksNotesActivitiesPaths: OpenApiPaths = {
         '400': errorResponse('Invalid body.'),
         '401': errorResponse('Not authenticated.'),
         '403': errorResponse('FORBIDDEN.'),
-        '404': errorResponse('TASK_NOT_FOUND, or RECORD_NOT_FOUND for an unknown owner.'),
+        '404': errorResponse('TASK_NOT_FOUND.'),
+        '422': errorResponse('RECORD_NOT_FOUND for an unknown owner.'),
       },
     },
     delete: {
@@ -931,7 +933,7 @@ const tasksNotesActivitiesPaths: OpenApiPaths = {
         '400': errorResponse('Invalid body, including RECORD_LINK_INCOMPLETE.'),
         '401': errorResponse('Not authenticated.'),
         '403': errorResponse('FORBIDDEN.'),
-        '404': errorResponse('RECORD_NOT_FOUND.'),
+        '422': errorResponse('RECORD_NOT_FOUND.'),
       },
     },
   },
@@ -950,9 +952,8 @@ const tasksNotesActivitiesPaths: OpenApiPaths = {
         '400': errorResponse('Invalid body, including RECORD_LINK_INCOMPLETE.'),
         '401': errorResponse('Not authenticated.'),
         '403': errorResponse('FORBIDDEN.'),
-        '404': errorResponse(
-          "NOTE_NOT_FOUND (also for someone else's private note) or RECORD_NOT_FOUND.",
-        ),
+        '404': errorResponse("NOTE_NOT_FOUND (also for someone else's private note)."),
+        '422': errorResponse('RECORD_NOT_FOUND.'),
       },
     },
     delete: {
@@ -997,7 +998,7 @@ const tasksNotesActivitiesPaths: OpenApiPaths = {
         '400': errorResponse('Invalid body.'),
         '401': errorResponse('Not authenticated.'),
         '403': errorResponse('FORBIDDEN.'),
-        '404': errorResponse('RECORD_NOT_FOUND.'),
+        '422': errorResponse('RECORD_NOT_FOUND.'),
       },
     },
   },
@@ -1330,4 +1331,3 @@ export const paths: OpenApiPaths = {
   ...segmentsPaths,
   ...tasksNotesActivitiesPaths,
 };
-

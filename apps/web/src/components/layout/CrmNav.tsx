@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useFormatter, useTranslations } from "next-intl";
-import { api } from "@/lib/api";
+import { api, onContactsChanged } from "@/lib/api";
 import { Link, usePathname } from "@/i18n/navigation";
 import { crmHref, crmPages, findCrmPage } from "@/config/navigation";
 
@@ -74,12 +74,17 @@ function useContactCount() {
   const [count, setCount] = useState<number | null>(null);
   useEffect(() => {
     let cancelled = false;
-    api.contacts
-      .list({ pageSize: 1 })
-      .then((result) => !cancelled && setCount(result.meta.total))
-      .catch(() => {}); // The badge is optional, so a failed count just hides it.
+    const load = () =>
+      api.contacts
+        .list({ pageSize: 1 })
+        .then((result) => !cancelled && setCount(result.meta.total))
+        .catch(() => {}); // The badge is optional, so a failed count just hides it.
+    void load();
+    // Reload as soon as a contact is added, deleted or imported anywhere in the app.
+    const stop = onContactsChanged(() => void load());
     return () => {
       cancelled = true;
+      stop();
     };
   }, []);
   return count;

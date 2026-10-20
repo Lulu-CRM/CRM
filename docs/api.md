@@ -297,6 +297,7 @@ Import details (schemas: `packages/shared/src/import.ts`, rules: `import-logic.t
 - **Held rows:** `merge` fills empty fields of the existing contact and adds tags (`mergeIntoContact`, mode `fill`); `create` adds the row as a new contact; `skip` drops it.
 - **Companies:** a company name that matches an existing company (ignoring case) links to it; otherwise a company is created.
 - **Errors:** `IMPORT_NOT_FOUND`, `IMPORT_EMPTY`, `IMPORT_TOO_MANY_ROWS` (over 10,000 rows), `IMPORT_FILE_UNREADABLE`, `IMPORT_ALREADY_STARTED`, `IMPORT_ROW_NOT_FOUND`.
+- **Implementation:** `apps/api/src/services/imports.ts`. Files up to 10 MB; XLSX reads the first sheet (`exceljs`), with the same header rules as CSV (`tableFromRecords`). Rows are stored at upload as `pending`; the `import.process` worker (`jobs/workers.ts`, in the API process) handles only pending rows, so a retried job carries on, and the counts are recounted from the rows. Uploading, mapping and confirming need `imports: create`; resolving needs `contacts: edit`. Imported contacts get marketing consent only when the workspace `consent` setting says `importedContactsConsent: granted`.
 
 ## AI analysis
 

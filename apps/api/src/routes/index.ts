@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import { requireAuth } from '../middleware/auth';
+import { aiRouter } from './ai';
 import { authRouter, loginRouter } from './auth';
 import { companiesRouter } from './companies';
 import { contactsRouter } from './contacts';
@@ -20,6 +21,8 @@ apiRouter.use(requireAuth);
 apiRouter.use(authRouter);
 apiRouter.use(meRouter);
 apiRouter.use(usersRouter);
+// AI routes live under /contacts/:id/... and /ai-insights/..., so they mount at the root.
+apiRouter.use(aiRouter);
 apiRouter.use('/companies', companiesRouter);
 apiRouter.use('/contacts', contactsRouter);
 apiRouter.use('/pipelines', pipelinesRouter);

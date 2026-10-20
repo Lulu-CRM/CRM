@@ -40,12 +40,16 @@ describe('OpenAPI document', () => {
     const paths = doc.paths as Json;
 
     expect(Object.keys(paths).sort()).toEqual([
+      '/api/v1/ai-insights/{id}/accept',
+      '/api/v1/ai-insights/{id}/dismiss',
       '/api/v1/auth/login',
       '/api/v1/auth/logout',
       '/api/v1/companies',
       '/api/v1/companies/{id}',
       '/api/v1/contacts',
       '/api/v1/contacts/{id}',
+      '/api/v1/contacts/{id}/ai-analysis',
+      '/api/v1/contacts/{id}/ai-insights',
       '/api/v1/contacts/{id}/convert',
       '/api/v1/contacts/{id}/timeline',
       '/api/v1/deals',
@@ -61,6 +65,10 @@ describe('OpenAPI document', () => {
     ]);
 
     const expectedMethods: Record<string, string[]> = {
+      '/api/v1/ai-insights/{id}/accept': ['post'],
+      '/api/v1/ai-insights/{id}/dismiss': ['post'],
+      '/api/v1/contacts/{id}/ai-analysis': ['post'],
+      '/api/v1/contacts/{id}/ai-insights': ['get'],
       '/api/v1/auth/login': ['post'],
       '/api/v1/auth/logout': ['post'],
       '/api/v1/companies': ['get', 'post'],

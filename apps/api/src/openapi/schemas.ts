@@ -1,4 +1,7 @@
 import {
+  aiAcceptSchema,
+  aiInsightSchema,
+  aiRunSchema,
   authSessionSchema,
   companyCreateSchema,
   companyDetailSchema,
@@ -53,6 +56,9 @@ const COMPONENT_NAMES = {
   CompanyUpdate: companyUpdateSchema,
   CompanyDetail: companyDetailSchema,
   TimelineItem: timelineItemSchema,
+  AiInsight: aiInsightSchema,
+  AiRun: aiRunSchema,
+  AiAccept: aiAcceptSchema,
 } as const satisfies Record<string, ZodType>;
 
 export type ComponentName = keyof typeof COMPONENT_NAMES;

@@ -46,7 +46,7 @@ Rules: `@@map` uses snake_case plural table names, model names are PascalCase si
 | Segment | name, description, rules (JSON, format in `docs/api.md`), color (`violet`, `coral`, `blue`, `mint`, `peach`) |
 | ImportJob | fileName, status (`uploaded`, `mapped`, `processing`, `completed`, `failed`), mapping (JSON), rowsTotal, rowsAdded, rowsHeld, ownerId, tag |
 | ImportRow | importJobId, rowNumber, raw (JSON), status (`added`, `held`, `skipped`), duplicateOfContactId |
-| AiInsight | contactId, summary, nextStep, dataQualityScore, missingFields, status (`suggested`, `accepted`, `dismissed`) |
+| AiInsight | contactId, provider, summary (JSON AI text), nextStep (JSON `{ title, detail }`), suggestedTask (JSON or null), suggestedStage, dataQualityScore, missingFields, status (`suggested`, `accepted`, `dismissed`) |
 | CustomField | entity, key, label, type, options |
 | Setting | key, value (JSON): consent rules, notification rules, AI switches |
 | Permission | role, resource, actions |

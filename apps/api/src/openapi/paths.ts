@@ -273,7 +273,7 @@ const contactsPaths: OpenApiPaths = {
       summary: 'Create a contact',
       security: bearer,
       description:
-        'Owner defaults to the current user, lifecycleStage to new. Duplicates (same email, then same name at the same company) answer 409 DUPLICATE_CONTACT.',
+        'Owner defaults to the current user, lifecycleStage to new. An email another contact already has (ignoring case) answers 409 DUPLICATE_CONTACT.',
       tags: ['Contacts'],
       requestBody: jsonBody('ContactCreate'),
       responses: {
@@ -538,6 +538,77 @@ const authPaths: OpenApiPaths = {
 
 // Machine-readable mirror of the "Operations and health" section in docs/api.md.
 // Add every newly implemented endpoint here in the same pull request.
+const aiPaths: OpenApiPaths = {
+  '/api/v1/contacts/{id}/ai-analysis': {
+    post: {
+      operationId: 'runAiAnalysis',
+      summary: 'Analyse a contact',
+      security: bearer,
+      description:
+        'Queues the ai.analyze background job and answers at once. Poll GET /contacts/{id}/ai-insights for the result. The simulated provider answers until a model is connected.',
+      tags: ['AI'],
+      parameters: [idParam],
+      responses: {
+        '200': dataResponse('The queued job.', 'AiRun'),
+        '401': errorResponse('Not authenticated.'),
+        '404': errorResponse('CONTACT_NOT_FOUND.'),
+      },
+    },
+  },
+  '/api/v1/contacts/{id}/ai-insights': {
+    get: {
+      operationId: 'getLatestAiInsight',
+      summary: 'Latest insight for a contact',
+      security: bearer,
+      description:
+        'The newest insight (suggested, accepted or dismissed), or data: null. AI text is { key, params } from the simulated provider or { text, language } from a model.',
+      tags: ['AI'],
+      parameters: [idParam],
+      responses: {
+        '200': dataResponse('The latest insight, or null.', 'AiInsight'),
+        '401': errorResponse('Not authenticated.'),
+        '404': errorResponse('CONTACT_NOT_FOUND.'),
+      },
+    },
+  },
+  '/api/v1/ai-insights/{id}/accept': {
+    post: {
+      operationId: 'acceptAiInsight',
+      summary: 'Accept an insight',
+      security: bearer,
+      description:
+        'The only way an insight changes a record: saves only the ticked changes (the suggested task with the confirmed title, the suggested stage) in one transaction and logs an ai_signal activity. Needs permission to edit contacts.',
+      tags: ['AI'],
+      parameters: [idParam],
+      requestBody: jsonBody('AiAccept'),
+      responses: {
+        '200': dataResponse('The accepted insight.', 'AiInsight'),
+        '400': errorResponse('Invalid body, for example createTask without taskTitle.'),
+        '401': errorResponse('Not authenticated.'),
+        '403': errorResponse('The role may not edit contacts.'),
+        '404': errorResponse('AI_INSIGHT_NOT_FOUND.'),
+        '409': errorResponse('AI_INSIGHT_CLOSED: already accepted or dismissed.'),
+      },
+    },
+  },
+  '/api/v1/ai-insights/{id}/dismiss': {
+    post: {
+      operationId: 'dismissAiInsight',
+      summary: 'Dismiss an insight',
+      security: bearer,
+      description: 'Closes the insight; nothing is saved.',
+      tags: ['AI'],
+      parameters: [idParam],
+      responses: {
+        '204': { description: 'Dismissed.' },
+        '401': errorResponse('Not authenticated.'),
+        '404': errorResponse('AI_INSIGHT_NOT_FOUND.'),
+        '409': errorResponse('AI_INSIGHT_CLOSED.'),
+      },
+    },
+  },
+};
+
 export const paths: OpenApiPaths = {
   '/health': {
     get: {
@@ -632,4 +703,5 @@ export const paths: OpenApiPaths = {
   ...contactsPaths,
   ...companiesPaths,
   ...dealPaths,
+  ...aiPaths,
 };

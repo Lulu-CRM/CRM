@@ -72,11 +72,11 @@ Done when: a test user logs in and calls a protected endpoint, and a member cann
 
 ### 3. Contacts and Companies API
 
-- [ ] All endpoints in `api.md` under Contacts and Companies
-- [ ] Search `q` across name, email, company name and tags; filters, sort and paging
-- [ ] Create, edit, soft delete, convert lead to customer, contact timeline
-- [ ] Every query filters by `workspaceId`
-- [ ] Tests for list, create and the filters
+- [x] All endpoints in `api.md` under Contacts and Companies
+- [x] Search `q` across name, email, company name and tags; filters, sort and paging
+- [x] Create, edit, soft delete, convert lead to customer, contact timeline
+- [x] Every query filters by `workspaceId`
+- [x] Tests for list, create and the filters
 
 Done when: the frontend can switch the Contacts page from mock to real.
 

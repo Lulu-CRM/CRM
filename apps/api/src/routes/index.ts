@@ -1,6 +1,8 @@
 import { Router } from 'express';
 import { requireAuth } from '../middleware/auth';
 import { authRouter, loginRouter } from './auth';
+import { companiesRouter } from './companies';
+import { contactsRouter } from './contacts';
 import { dealsRouter } from './deals';
 import { createHealthHandler } from './health';
 import { meRouter } from './me';
@@ -18,5 +20,7 @@ apiRouter.use(requireAuth);
 apiRouter.use(authRouter);
 apiRouter.use(meRouter);
 apiRouter.use(usersRouter);
+apiRouter.use('/companies', companiesRouter);
+apiRouter.use('/contacts', contactsRouter);
 apiRouter.use('/pipelines', pipelinesRouter);
 apiRouter.use('/deals', dealsRouter);

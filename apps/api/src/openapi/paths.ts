@@ -36,6 +36,30 @@ const listParams = [
   ['status', 'string'],
 ].map(([name, type]) => ({ name, in: 'query', required: false, schema: { type } }));
 
+const contactListParams = [
+  ['q', 'string'],
+  ['sort', 'string'],
+  ['page', 'integer'],
+  ['pageSize', 'integer'],
+  ['stage', 'string'],
+  ['ownerId', 'string'],
+  ['companyId', 'string'],
+  ['tag', 'string'],
+  ['needsFollowUp', 'boolean'],
+  ['createdSince', 'string'],
+  ['segmentId', 'string'],
+].map(([name, type]) => ({ name, in: 'query', required: false, schema: { type } }));
+
+const companyListParams = [
+  ['q', 'string'],
+  ['sort', 'string'],
+  ['page', 'integer'],
+  ['pageSize', 'integer'],
+  ['ownerId', 'string'],
+  ['industry', 'string'],
+  ['health', 'string'],
+].map(([name, type]) => ({ name, in: 'query', required: false, schema: { type } }));
+
 const errorResponse = (description: string) => ({
   description,
   content: { 'application/json': { schema: { $ref: schemaRef('ErrorEnvelope') } } },
@@ -228,6 +252,208 @@ const dealPaths: OpenApiPaths = {
   },
 };
 
+const contactsPaths: OpenApiPaths = {
+  '/api/v1/contacts': {
+    get: {
+      operationId: 'listContacts',
+      summary: 'List contacts',
+      security: bearer,
+      description:
+        'Filters: stage, ownerId, companyId, tag, needsFollowUp, createdSince, segmentId. q searches name, email, company name and tags. sort defaults to -lastTouchAt.',
+      tags: ['Contacts'],
+      parameters: contactListParams,
+      responses: {
+        '200': listDataResponse('A page of contacts.', 'Contact'),
+        '400': errorResponse('Invalid query, including an unsupported sort.'),
+        '401': errorResponse('Not authenticated.'),
+      },
+    },
+    post: {
+      operationId: 'createContact',
+      summary: 'Create a contact',
+      security: bearer,
+      description:
+        'Owner defaults to the current user, lifecycleStage to new. Duplicates (same email, then same name at the same company) answer 409 DUPLICATE_CONTACT.',
+      tags: ['Contacts'],
+      requestBody: jsonBody('ContactCreate'),
+      responses: {
+        '201': dataResponse('The created contact.', 'Contact'),
+        '400': errorResponse('Invalid body or an unknown company/owner.'),
+        '401': errorResponse('Not authenticated.'),
+        '409': errorResponse('DUPLICATE_CONTACT.'),
+      },
+    },
+  },
+  '/api/v1/contacts/{id}': {
+    get: {
+      operationId: 'getContact',
+      summary: 'Get a contact',
+      security: bearer,
+      description: 'The contact plus its linked company (or null). Counts are not returned yet.',
+      tags: ['Contacts'],
+      parameters: [idParam],
+      responses: {
+        '200': dataResponse('The contact.', 'Contact'),
+        '401': errorResponse('Not authenticated.'),
+        '404': errorResponse('CONTACT_NOT_FOUND.'),
+      },
+    },
+    patch: {
+      operationId: 'updateContact',
+      summary: 'Edit a contact',
+      security: bearer,
+      description: 'Partial update. Duplicate email or name+company answers 409 DUPLICATE_CONTACT.',
+      tags: ['Contacts'],
+      parameters: [idParam],
+      requestBody: jsonBody('ContactUpdate'),
+      responses: {
+        '200': dataResponse('The updated contact.', 'Contact'),
+        '400': errorResponse('Invalid body.'),
+        '401': errorResponse('Not authenticated.'),
+        '404': errorResponse('CONTACT_NOT_FOUND.'),
+        '409': errorResponse('DUPLICATE_CONTACT.'),
+      },
+    },
+    delete: {
+      operationId: 'deleteContact',
+      summary: 'Delete a contact',
+      security: bearer,
+      description: 'Soft delete.',
+      tags: ['Contacts'],
+      parameters: [idParam],
+      responses: {
+        '204': { description: 'Deleted.' },
+        '401': errorResponse('Not authenticated.'),
+        '403': errorResponse('FORBIDDEN: the role may not delete contacts.'),
+        '404': errorResponse('CONTACT_NOT_FOUND.'),
+      },
+    },
+  },
+  '/api/v1/contacts/{id}/convert': {
+    post: {
+      operationId: 'convertContact',
+      summary: 'Convert a lead to a customer',
+      security: bearer,
+      description:
+        'Sets lifecycleStage to customer and logs a stage_changed activity. Takes no body.',
+      tags: ['Contacts'],
+      parameters: [idParam],
+      responses: {
+        '200': dataResponse('The converted contact.', 'Contact'),
+        '401': errorResponse('Not authenticated.'),
+        '404': errorResponse('CONTACT_NOT_FOUND.'),
+      },
+    },
+  },
+  '/api/v1/contacts/{id}/timeline': {
+    get: {
+      operationId: 'getContactTimeline',
+      summary: 'Contact timeline',
+      security: bearer,
+      description:
+        'Activities, notes and open tasks for this contact, newest first by `at`. Private notes are only returned to their author.',
+      tags: ['Contacts'],
+      parameters: [idParam],
+      responses: {
+        '200': {
+          description: 'Timeline items (activities, notes, tasks).',
+          content: {
+            'application/json': {
+              schema: {
+                type: 'object',
+                required: ['data'],
+                properties: {
+                  data: { type: 'array', items: { $ref: schemaRef('TimelineItem') } },
+                },
+              },
+            },
+          },
+        },
+        '401': errorResponse('Not authenticated.'),
+        '404': errorResponse('CONTACT_NOT_FOUND.'),
+      },
+    },
+  },
+};
+
+const companiesPaths: OpenApiPaths = {
+  '/api/v1/companies': {
+    get: {
+      operationId: 'listCompanies',
+      summary: 'List companies',
+      security: bearer,
+      description:
+        'Each company with its contact count and open deal value. Filters: ownerId, industry, health. q searches name, domain and industry. sort: name, contactCount, openDealValue or lastTouchAt, default -openDealValue.',
+      tags: ['Companies'],
+      parameters: companyListParams,
+      responses: {
+        '200': listDataResponse('A page of companies with computed numbers.', 'Company'),
+        '400': errorResponse('Invalid query, including an unsupported sort.'),
+        '401': errorResponse('Not authenticated.'),
+      },
+    },
+    post: {
+      operationId: 'createCompany',
+      summary: 'Create a company',
+      security: bearer,
+      description:
+        'Owner defaults to the current user. domain is a bare lower-case host. Returns the computed list-item shape.',
+      tags: ['Companies'],
+      requestBody: jsonBody('CompanyCreate'),
+      responses: {
+        '201': dataResponse('The created company.', 'Company'),
+        '400': errorResponse('Invalid body or an unknown owner.'),
+        '401': errorResponse('Not authenticated.'),
+      },
+    },
+  },
+  '/api/v1/companies/{id}': {
+    get: {
+      operationId: 'getCompany',
+      summary: 'Get a company',
+      security: bearer,
+      description:
+        'The company with its people (most recent touch first) and deals, plus the computed numbers.',
+      tags: ['Companies'],
+      parameters: [idParam],
+      responses: {
+        '200': dataResponse('The company detail.', 'CompanyDetail'),
+        '401': errorResponse('Not authenticated.'),
+        '404': errorResponse('COMPANY_NOT_FOUND.'),
+      },
+    },
+    patch: {
+      operationId: 'updateCompany',
+      summary: 'Edit a company',
+      security: bearer,
+      description: 'Partial update. Returns the computed list-item shape.',
+      tags: ['Companies'],
+      parameters: [idParam],
+      requestBody: jsonBody('CompanyUpdate'),
+      responses: {
+        '200': dataResponse('The updated company.', 'Company'),
+        '400': errorResponse('Invalid body.'),
+        '401': errorResponse('Not authenticated.'),
+        '404': errorResponse('COMPANY_NOT_FOUND.'),
+      },
+    },
+    delete: {
+      operationId: 'deleteCompany',
+      summary: 'Delete a company',
+      security: bearer,
+      description: 'Soft delete. Its contacts and deals keep their link.',
+      tags: ['Companies'],
+      parameters: [idParam],
+      responses: {
+        '204': { description: 'Deleted.' },
+        '401': errorResponse('Not authenticated.'),
+        '403': errorResponse('FORBIDDEN: the role may not delete companies.'),
+        '404': errorResponse('COMPANY_NOT_FOUND.'),
+      },
+    },
+  },
+};
+
 const authPaths: OpenApiPaths = {
   '/api/v1/auth/login': {
     post: {
@@ -403,5 +629,7 @@ export const paths: OpenApiPaths = {
     },
   },
   ...authPaths,
+  ...contactsPaths,
+  ...companiesPaths,
   ...dealPaths,
 };

@@ -56,8 +56,8 @@ Days count from the day the repo is ready. Sudais adjusts them once everyone has
 
 | Target | Milestone | Lead |
 | --- | --- | --- |
-| Day 1 | Organisation, repo, `AGENTS.md`, shared schemas, app shell and mock mode ready | Sudais, Abdul, Tobi |
-| Day 3 | Core pages clickable on mock data; login, Contacts and Companies API running | Frontend devs, Tobi |
+| Day 1 | Organisation, repo, `AGENTS.md`, shared schemas, app shell and mock mode ready | Sudais, Abdul, Franklin |
+| Day 3 | Core pages clickable on mock data; login, Contacts and Companies API running | Frontend devs, Franklin |
 | Day 5 | Core pages connected to the real API; Deals, Tasks and Activities endpoints done | All devs |
 | Day 7 | Demo of the core to Dave, and a list of what moves to the next round | Sudais |
 
@@ -69,8 +69,8 @@ We plan with the devs who are active and have given their GitHub handle, and add
 | --- | --- | --- | --- |
 | Sudais Jr. | Project manager, frontend | Create the GitHub organisation and repo, write `AGENTS.md`, then the Pipeline and Leads boards with drag and drop, Deals and Tasks | A deal moves between stages on the board in mock mode |
 | Abdul Samad | Frontend, supports the PM | App shell, routing, design tokens and i18n setup, then the Contacts page | Everyone can clone and run `apps/web` with mock data |
-| Tobi | Backend (Express) | API base, database schema with workspace id, login, then the Contacts and Companies endpoints | Others can run the API, log in with a test user and create a contact |
-| Brobot | Backend | Deals, pipeline stages, Tasks and Activities endpoints | Moving a deal updates the pipeline totals |
+| Franklin (replaced Tobi) | Backend (Express) | API base, database schema with workspace id, login, then the Contacts and Companies endpoints | Others can run the API, log in with a test user and create a contact |
+| theLady (replaced Brobot) | Backend | Deals, pipeline stages, Tasks and Activities endpoints | Moving a deal updates the pipeline totals |
 
 Task numbers for the backend (1 to 9) and frontend (A to D) are in the group message.
 
@@ -98,9 +98,9 @@ The biggest risk is a thin team: four devs for 11 pages, and the CRM is the most
 
 We keep building on the default below while we ask:
 
-- [x] **Second backend dev:** Brobot joined and takes backend tasks 4 to 9; Tobi keeps 1 to 3.
+- [x] **Backend team:** Franklin (tasks 1 to 3, then 9) and theLady (4 and 5, then 6). Tasks 7 and 8 move to the next round.
 - [ ] **AI provider and key:** Sudais asks Dave. Until then AI Analysis runs on a simulated reply, so nothing is blocked.
-- [ ] **App shell:** ask Satyam whether his shell (login, sign-up, settings, language switch) is the base the CRM plugs into. Until then Tobi builds a simple login that can be swapped out.
+- [ ] **App shell:** ask Satyam whether his shell (login, sign-up, settings, language switch) is the base the CRM plugs into. Until then the CRM uses its own login (task 2) and sign-in page, which can be swapped out.
 
 ## Decisions from Dave (18 Oct)
 

@@ -11,24 +11,25 @@ Status values: `open`, `in progress`, `in review`, `done`.
 | ID | Task | Owner | Status | Waits for |
 | --- | --- | --- | --- | --- |
 | PM | Organisation, repo, invites, task list, daily status | Sudais | in progress | |
-| 1 | API base and database | Tobi | open | |
-| 2 | Auth, workspace, roles | Tobi | in review | |
-| 3 | Contacts and Companies API | Tobi | open | 1, 2 |
-| 4 | Deals and pipeline API | Brobot | open | 1 |
-| 5 | Tasks, Notes, Activities API | Brobot | open | 1 |
-| 6 | Segments API | Brobot | open | 3 |
-| 7 | Contact import | Brobot | open | 3 |
-| 8 | AI analysis | Brobot | open | 3 |
-| 9 | CRM settings API | Brobot | open | 2 |
-| A1 | App shell and i18n | Abdul | in progress | |
-| A2 | Contacts page and profile drawer | Abdul | open | A1 |
-| B1 | Deals and pipeline board | Sudais | open | A1 |
-| B2 | Leads board | Sudais | open | A1 |
-| B3 | Tasks page | Sudais | open | A1 |
-| C | Overview, Companies, Notes | open | open | A1 |
-| D | Segments, Import wizard, AI Analysis, Settings | open | open | A1 |
+| 1 | API base and database | Franklin | done | |
+| 2 | Auth, workspace, roles | Franklin | done | |
+| 3 | Contacts and Companies API | Franklin | in review | 1, 2 |
+| 4 | Deals and pipeline API | theLady | done | 1 |
+| 5 | Tasks, Notes, Activities API | theLady | in progress | 1 |
+| 6 | Segments API | theLady | open | 3 |
+| 7 | Contact import | next round | open | 3 |
+| 8 | AI analysis | next round | open | 3 |
+| 9 | CRM settings API | Franklin | open | 2 |
+| A1 | App shell and i18n | Abdul | done | |
+| A2 | Contacts page and profile drawer | Abdul | done | A1 |
+| B1 | Deals and pipeline board | Sudais | done | A1 |
+| B2 | Leads board | Sudais | done | A1 |
+| B3 | Tasks page | Sudais | done | A1 |
+| C | Overview, Companies, Notes | Abdul | done | A1 |
+| D | Segments, Import wizard, AI Analysis, Settings | Sudais | done | A1 |
+| W1 | Sign-in page and per-area mock/real switch | Sudais | done | 2 |
 
-Brobot joined as the second backend dev and starts on 4 and 5 once 1 is merged, while Tobi continues with 2 and 3.
+Franklin replaced Tobi and theLady replaced Brobot. The core (2, 3, 4, 5) comes first; after it, Franklin takes 9 and theLady 6. Tasks 7 (import) and 8 (AI) move to the next round, and their pages keep running on sample data until then. Pages move to the real API one area at a time with `NEXT_PUBLIC_REAL_API` (`apps/web/README.md`).
 
 ## PM: Sudais
 

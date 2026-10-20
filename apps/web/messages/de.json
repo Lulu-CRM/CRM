@@ -267,6 +267,7 @@
       "ai_signal": "KI-Signal",
       "created": "Kontakt angelegt",
       "stage_changed": "Status geändert",
+      "marketplace": "Marketplace-Aktivität",
       "task_completed": "Aufgabe erledigt",
       "task_reopened": "Aufgabe wieder geöffnet"
     },
@@ -276,6 +277,7 @@
       "ai_signal": "Die Kaufabsicht ist gestiegen.",
       "created": "Angelegt von {actor}.",
       "stage_changed": "Geändert von {actor}.",
+      "marketplace": "Im Marketplace ist etwas passiert.",
       "email": "Eine Antwort ist per E-Mail eingegangen.",
       "meeting": "Der Termin steht im Kalender.",
       "task_completed": "{actor} hat eine Nachfassaktion erledigt.",

@@ -267,6 +267,7 @@
       "ai_signal": "AI signal",
       "created": "Contact created",
       "stage_changed": "Status changed",
+      "marketplace": "Marketplace activity",
       "task_completed": "Task completed",
       "task_reopened": "Task reopened"
     },
@@ -276,6 +277,7 @@
       "ai_signal": "Buying intent increased.",
       "created": "Added by {actor}.",
       "stage_changed": "Changed by {actor}.",
+      "marketplace": "Something happened in Marketplace.",
       "email": "A reply came in through Email.",
       "meeting": "The call is on the calendar.",
       "task_completed": "{actor} completed a follow-up.",

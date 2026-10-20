@@ -1,0 +1,3 @@
+-- AlterTable
+ALTER TABLE "notes" ALTER COLUMN "recordType" DROP NOT NULL,
+ALTER COLUMN "recordId" DROP NOT NULL;

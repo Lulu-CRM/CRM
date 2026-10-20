@@ -61,6 +61,8 @@ enum ActivityType {
   ai_signal
   created
   stage_changed
+  // Events from the Marketplace module (POST /events).
+  marketplace
 
   @@map("activity_type")
 }
@@ -313,8 +315,8 @@ model Note {
   body        String         @db.Text
   visibility  NoteVisibility @default(shared)
   authorId    String
-  recordType  RecordType
-  recordId    String
+  recordType  RecordType?
+  recordId    String?
   createdAt   DateTime       @default(now())
   updatedAt   DateTime       @updatedAt
   deletedAt   DateTime?
@@ -331,8 +333,8 @@ model Activity {
   id            String       @id @default(uuid())
   workspaceId   String
   type          ActivityType
-  recordType    RecordType
-  recordId      String
+  recordType    RecordType?
+  recordId      String?
   occurredAt    DateTime     @default(now())
   sourceModule  SourceModule @default(crm)
   actorId       String?

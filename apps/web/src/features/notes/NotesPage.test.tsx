@@ -4,6 +4,11 @@ import { NextIntlClientProvider } from "next-intl";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import messages from "../../../messages/en.json";
 
+// The sample notes are dated relative to "now" (one is "today 09:18"). Pin the clock (Date only, so the
+// mock API's timers still run) to the afternoon, so a note created in the test is always the newest.
+// Without this, the test failed between midnight and 09:18 UTC.
+const NOW = new Date("2026-10-17T14:00:00.000Z");
+
 // Each test gets a fresh copy of the mock data.
 let NotesPage: typeof import("./NotesPage").NotesPage;
 let ToastProvider: typeof import("@/components/ui").ToastProvider;
@@ -11,6 +16,7 @@ let api: typeof import("@/lib/api").api;
 let ApiError: typeof import("@/lib/api").ApiError;
 
 beforeEach(async () => {
+  vi.useFakeTimers({ now: NOW, toFake: ["Date"] });
   vi.resetModules();
   ({ NotesPage } = await import("./NotesPage"));
   ({ ToastProvider } = await import("@/components/ui"));
@@ -20,6 +26,7 @@ beforeEach(async () => {
 afterEach(() => {
   cleanup();
   vi.restoreAllMocks();
+  vi.useRealTimers();
 });
 
 const renderPage = async () => {

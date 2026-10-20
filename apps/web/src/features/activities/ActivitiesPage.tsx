@@ -4,7 +4,7 @@ import { useMemo, useState } from "react";
 import { useTranslations } from "next-intl";
 import { filterTasks, type DueFilter, type Task } from "@lulu/shared";
 import { PageHeader } from "@/components/layout/PageHeader";
-import { Button, Card, EmptyState, SkeletonRows, useToast } from "@/components/ui";
+import { Button, Card, ConfirmDialog, EmptyState, SkeletonRows, useToast } from "@/components/ui";
 import { useErrorMessage } from "@/lib/errors";
 import { ActivityItem } from "./ActivityItem";
 import { DueChip, userTimeZone } from "./DueChip";
@@ -25,6 +25,23 @@ export function ActivitiesPage() {
   const [due, setDue] = useState<DueFilter>("all");
   const [showDone, setShowDone] = useState(true);
   const [form, setForm] = useState<{ task: Task | null } | null>(null);
+  const [deleting, setDeleting] = useState<Task | null>(null);
+  const [busy, setBusy] = useState(false);
+
+  const confirmDelete = async () => {
+    if (!deleting) return;
+    setBusy(true);
+    try {
+      await page.remove(deleting);
+      toast(t("deleted"));
+      setDeleting(null);
+      setForm(null);
+    } catch (error) {
+      toast(errorMessage(error), "error");
+    } finally {
+      setBusy(false);
+    }
+  };
 
   const now = new Date();
   const timeZone = userTimeZone();
@@ -177,6 +194,7 @@ export function ActivitiesPage() {
         deals={page.deals}
         defaultOwnerId={lookups.me?.id ?? lookups.users[0]?.id ?? ""}
         onClose={() => setForm(null)}
+        onDelete={() => form?.task && setDeleting(form.task)}
         onSubmit={async (input) => {
           try {
             if (form?.task) await page.update(form.task, input);
@@ -187,6 +205,16 @@ export function ActivitiesPage() {
             toast(errorMessage(error), "error");
           }
         }}
+      />
+
+      <ConfirmDialog
+        open={deleting !== null}
+        title={t("deleteTitle")}
+        message={t("deleteMessage", { title: deleting?.title ?? "" })}
+        confirmLabel={tCommon("delete")}
+        busy={busy}
+        onConfirm={confirmDelete}
+        onCancel={() => setDeleting(null)}
       />
     </>
   );

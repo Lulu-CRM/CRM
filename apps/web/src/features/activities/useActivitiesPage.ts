@@ -75,6 +75,12 @@ export function useActivitiesPage() {
     remember(await api.tasks.update(task.id, { title, dueAt, ownerId, priority }));
   };
 
+  const remove = async (task: Task) => {
+    await api.tasks.remove(task.id);
+    forget(task.id);
+    tasks.reload();
+  };
+
   const contactList = contacts.data?.data ?? [];
   const dealList = deals.data?.data ?? [];
   const recordName = (task: Pick<Task, "recordType" | "recordId">) => {
@@ -94,5 +100,6 @@ export function useActivitiesPage() {
     toggle,
     create,
     update,
+    remove,
   };
 }

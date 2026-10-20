@@ -1,4 +1,4 @@
-import { demoSegments } from '@lulu/shared';
+import { demoSegments, demoTasks } from '@lulu/shared';
 import type { Prisma } from '../src/generated/prisma/client';
 import { db, disconnectDb } from '../src/db/prisma';
 import { env } from '../src/config/env';
@@ -33,6 +33,10 @@ import {
   SEED_SEGMENT_FOLLOW_UP_ID,
   SEED_SEGMENT_HIGH_INTENT_ID,
   SEED_SEGMENT_NEWSLETTER_ID,
+  SEED_TASK_ATLAS_NOTES_ID,
+  SEED_TASK_KLARWERK_REVIEW_ID,
+  SEED_TASK_ROAM_REQUIREMENTS_ID,
+  SEED_TASK_SOPHIE_PROPOSAL_ID,
   SEED_STAGE_LOST_ID,
   SEED_STAGE_NEGOTIATION_ID,
   SEED_STAGE_NEW_ID,
@@ -486,6 +490,33 @@ const segments: WithId<Prisma.SegmentUncheckedCreateInput>[] = demoSegments.map(
   color: segment.color,
 }));
 
+// The design's sample tasks, due relative to today like in mock mode, so the Activities page and the
+// "Needs follow-up" segment have something to show on real data.
+const seedIds: Record<string, string> = {
+  task_sophie_proposal: SEED_TASK_SOPHIE_PROPOSAL_ID,
+  task_atlas_notes: SEED_TASK_ATLAS_NOTES_ID,
+  task_roam_requirements: SEED_TASK_ROAM_REQUIREMENTS_ID,
+  task_klarwerk_review: SEED_TASK_KLARWERK_REVIEW_ID,
+  user_jamie: SEED_JAMIE_ID,
+  user_alex: SEED_ALEX_ID,
+  contact_sophie: SEED_CONTACT_SOPHIE_ID,
+  contact_mila: SEED_CONTACT_MILA_ID,
+  company_atlas: SEED_COMPANY_ATLAS_ID,
+  company_klarwerk: SEED_COMPANY_KLARWERK_ID,
+};
+const tasks: WithId<Prisma.TaskUncheckedCreateInput>[] = demoTasks().map((task) => ({
+  id: seedIds[task.id]!,
+  workspaceId: SEED_WORKSPACE_ID,
+  title: task.title,
+  dueAt: task.dueAt === null ? null : new Date(task.dueAt),
+  priority: task.priority,
+  ownerId: seedIds[task.ownerId]!,
+  done: task.done,
+  doneAt: task.doneAt === null ? null : new Date(task.doneAt),
+  recordType: task.recordType,
+  recordId: task.recordId === null ? null : seedIds[task.recordId]!,
+}));
+
 async function upsertMany<T extends { id: string }>(
   rows: T[],
   upsert: (id: string, data: Omit<T, 'id'>, create: T) => Promise<unknown>,
@@ -557,6 +588,9 @@ export async function runSeed(): Promise<void> {
   await upsertMany(segments, (id, data, create) =>
     db.segment.upsert({ where: { id }, update: data, create }),
   );
+  await upsertMany(tasks, (id, data, create) =>
+    db.task.upsert({ where: { id }, update: data, create }),
+  );
 
   const { openValue, weightedValue } = await openDealTotals();
 
@@ -569,6 +603,8 @@ export async function runSeed(): Promise<void> {
   console.log(`Deals: ${deals.length}`);
   console.log(`Notes: ${notes.length}`);
   console.log(`Activities: ${activities.length}`);
+  console.log(`Tasks: ${tasks.length}`);
+  console.log(`Segments: ${segments.length}`);
   console.log(`Open deal value: ${openValue.toFixed(2)} EUR`);
   console.log(`Weighted value (stage probability, open only): ${weightedValue.toFixed(2)} EUR`);
   console.log('Seed complete');

@@ -31,6 +31,7 @@ describe('seed (int)', () => {
       notes,
       activities,
       segments,
+      tasks,
     ] = await Promise.all([
       db.workspace.count({ where: { id: SEED_WORKSPACE_ID } }),
       db.user.count({ where }),
@@ -42,6 +43,7 @@ describe('seed (int)', () => {
       db.note.count({ where }),
       db.activity.count({ where }),
       db.segment.count({ where }),
+      db.task.count({ where }),
     ]);
 
     expect({
@@ -55,6 +57,7 @@ describe('seed (int)', () => {
       notes,
       activities,
       segments,
+      tasks,
     }).toEqual({
       workspaces: 1,
       users: 2,
@@ -66,6 +69,7 @@ describe('seed (int)', () => {
       notes: 3,
       activities: 5,
       segments: 4,
+      tasks: 4,
     });
   });
 

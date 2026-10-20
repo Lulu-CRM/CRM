@@ -512,6 +512,12 @@ export const mockApi = {
       db.tasks[index] = task;
       return delay(task);
     },
+    async remove(id: string) {
+      const task = db.tasks.find((t) => t.id === id && !t.deletedAt);
+      if (!task) throw new ApiError("TASK_NOT_FOUND", 404);
+      task.deletedAt = new Date().toISOString();
+      return delay(undefined);
+    },
   },
 
   notes: {

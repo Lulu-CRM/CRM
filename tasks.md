@@ -13,13 +13,13 @@ Status values: `open`, `in progress`, `in review`, `done`.
 | PM | Organisation, repo, invites, task list, daily status | Sudais | in progress | |
 | 1 | API base and database | Franklin | done | |
 | 2 | Auth, workspace, roles | Franklin | done | |
-| 3 | Contacts and Companies API | Franklin | in review | 1, 2 |
+| 3 | Contacts and Companies API | Franklin | done | 1, 2 |
 | 4 | Deals and pipeline API | theLady | done | 1 |
-| 5 | Tasks, Notes, Activities API | theLady | in review | 1 |
-| 6 | Segments API | Sudais | in review | 3 |
-| 7 | Contact import | Sudais | in review | 3 |
-| 8 | AI analysis | Sudais | in review | 3 |
-| 9 | CRM settings API | Sudais | in review | 2 |
+| 5 | Tasks, Notes, Activities API | theLady | done | 1 |
+| 6 | Segments API | Sudais | done | 3 |
+| 7 | Contact import | Sudais | done | 3 |
+| 8 | AI analysis | Sudais | done | 3 |
+| 9 | CRM settings API | Sudais | done | 2 |
 | A1 | App shell and i18n | Abdul | done | |
 | A2 | Contacts page and profile drawer | Abdul | done | A1 |
 | B1 | Deals and pipeline board | Sudais | done | A1 |
@@ -28,18 +28,18 @@ Status values: `open`, `in progress`, `in review`, `done`.
 | C | Overview, Companies, Notes | Abdul | done | A1 |
 | D | Segments, Import wizard, AI Analysis, Settings | Sudais | done | A1 |
 | W1 | Sign-in page and per-area mock/real switch | Sudais | done | 2 |
-| W2 | Overview API (`GET /overview`) | Sudais | in review | 3, 4 |
+| W2 | Overview API (`GET /overview`) | Sudais | done | 3, 4 |
 
-Franklin replaced Tobi and theLady replaced Brobot. The core (2, 3, 4, 5) comes first; after it, theLady takes 6. Sudais took 7 (import) and 8 (AI) off theLady and 9 (settings) off Franklin. Pages move to the real API one area at a time with `NEXT_PUBLIC_REAL_API` (`apps/web/README.md`).
+Franklin replaced Tobi and theLady replaced Brobot. Sudais took 6 (segments), 7 (import) and 8 (AI) off theLady and 9 (settings) off Franklin. Every task above is merged. Pages move to the real API one area at a time with `NEXT_PUBLIC_REAL_API` (`apps/web/README.md`).
 
 ## PM: Sudais
 
 First hour:
 
-- [ ] Create the GitHub organisation and the repo
-- [ ] Add `AGENTS.md`, `docs/`, `design/` and `.env.example`, and protect `main`
-- [ ] Invite everyone who sent a GitHub username
-- [ ] Post the tasks and keep this board up to date
+- [x] Create the GitHub organisation and the repo
+- [x] Add `AGENTS.md`, `docs/`, `design/` and `.env.example`, and protect `main`
+- [x] Invite everyone who sent a GitHub username
+- [x] Post the tasks and keep this board up to date
 
 Every day:
 
@@ -50,14 +50,14 @@ Every day:
 
 ### 1. API base and database
 
-- [ ] Create `apps/api`: TypeScript and Express, folders `routes`, `services`, `middleware`, `jobs`, eslint and prettier
-- [ ] Postgres (Neon or Docker) and Prisma. First migration: Workspace, User, and the base fields on every table (`workspaceId`, `createdAt`, `updatedAt`, `deletedAt`), as in `data-model.md`
-- [ ] Redis and BullMQ connection (Upstash), and `GET /health`
-- [ ] Response helpers and a global error handler using the format in `AGENTS.md`. Validate requests with the Zod schemas in `packages/shared`
-- [ ] Complete `.env.example`, and send the real `.env` to the team privately
-- [ ] Dockerfile and docker-compose (api, postgres, redis)
-- [ ] Seed script with the design's sample data (5 contacts, 4 companies, 4 deals, 3 notes, 5 activities)
-- [ ] Vitest set up with one passing test
+- [x] Create `apps/api`: TypeScript and Express, folders `routes`, `services`, `middleware`, `jobs`, eslint and prettier
+- [x] Postgres (Neon or Docker) and Prisma. First migration: Workspace, User, and the base fields on every table (`workspaceId`, `createdAt`, `updatedAt`, `deletedAt`), as in `data-model.md`
+- [x] Redis and BullMQ connection (Upstash), and `GET /health`
+- [x] Response helpers and a global error handler using the format in `AGENTS.md`. Validate requests with the Zod schemas in `packages/shared`
+- [x] Complete `.env.example`, and send the real `.env` to the team privately
+- [x] Dockerfile and docker-compose (api, postgres, redis)
+- [x] Seed script with the design's sample data (5 contacts, 4 companies, 4 deals, 3 notes, 5 activities)
+- [x] Vitest set up with one passing test
 
 Done when: everyone can start the API with one command, `/health` returns ok and the seed runs.
 
@@ -83,10 +83,10 @@ Done when: the frontend can switch the Contacts page from mock to real.
 
 ### 4. Deals and pipeline API
 
-- [ ] Default pipeline with stages New, Qualified, Proposal, Negotiation, Won, Lost, with probabilities
-- [ ] Endpoints in `api.md` under Deals and pipeline: list with filters, create, edit, soft delete, `POST /deals/:id/move`
-- [ ] `GET /deals/summary`: open value, weighted value, win rate, active deals, average days to close, computed on the server
-- [ ] Tests for move and summary
+- [x] Default pipeline with stages New, Qualified, Proposal, Negotiation, Won, Lost, with probabilities
+- [x] Endpoints in `api.md` under Deals and pipeline: list with filters, create, edit, soft delete, `POST /deals/:id/move`
+- [x] `GET /deals/summary`: open value, weighted value, win rate, active deals, average days to close, computed on the server
+- [x] Tests for move and summary
 
 Done when: moving a deal updates the totals.
 
@@ -100,96 +100,98 @@ Done when: a posted event shows on the contact's timeline.
 
 ### 6. Segments API
 
-- [ ] Saved filter rules, live member count, contacts in a segment
-- [ ] Background job `segments.refresh`
+- [x] Saved filter rules, live member count, contacts in a segment
+- [x] Background job `segments.refresh`: not needed yet. Counts are worked out live on every read (`docs/api.md`, "Background jobs")
 
 Done when: a segment's count changes when a matching contact is added.
 
 ### 7. Contact import
 
-- [ ] Upload CSV or XLSX (up to 10,000 rows), save mapping, preview
-- [ ] Duplicate check on email, then name plus company
-- [ ] BullMQ job `import.process`, held duplicates, resolve (skip, create, merge)
-- [ ] Tests with a 1,000-row file
+- [x] Upload CSV or XLSX (up to 10,000 rows), save mapping, preview
+- [x] Duplicate check on email, then name plus company
+- [x] BullMQ job `import.process`, held duplicates, resolve (skip, create, merge)
+- [x] Tests with a 1,000-row file
 
 Done when: a 1,000-row file imports and duplicates wait for review.
 
 ### 8. AI analysis
 
-- [ ] Provider interface with a simulated provider
-- [ ] Background job `ai.analyze`, summary, next step, data quality
-- [ ] Accept and dismiss. Nothing is saved without the user's confirmation
+- [x] Provider interface with a simulated provider
+- [x] Background job `ai.analyze`, summary, next step, data quality
+- [x] Accept and dismiss. Nothing is saved without the user's confirmation
 
 Done when: running an analysis returns an insight, and accepting it saves the change.
 
 ### 9. CRM settings API
 
-- [ ] Custom fields, stages and pipelines, roles, consent, notifications, AI switches
+- [x] Custom fields, stages and pipelines, roles, consent, notifications, AI switches
 
 Done when: a custom field appears on the contact form.
+
+Still open after the merge: custom fields are saved and listed but the contact form does not show them yet, and the API keeps one pipeline (no create or delete of pipelines).
 
 ## Frontend
 
 ### A1. App shell and i18n (first, everyone builds on it)
 
-- [ ] Create `apps/web`: Next.js, TypeScript, Tailwind
-- [ ] Move the design's colours, fonts (Poppins) and spacing from `design/src/components/generated/LuluCRM.css` into CSS variables
-- [ ] i18n: English, German, Chinese. Translation files, language switcher, dates, numbers and currency through `Intl`. Match Satyam's library once we know it
-- [ ] Layout from the design: left rail with the modules, CRM sub-navigation with the 11 pages, top bar with breadcrumb, search and user card. Works on mobile
-- [ ] Routes `/crm/overview`, `/crm/contacts` and so on. Pages not built yet show a placeholder
-- [ ] Shared components: Button, Avatar, Pill, Modal, Drawer, Toast, Table, EmptyState, Skeleton
-- [ ] API client with a mock switch (`NEXT_PUBLIC_USE_MOCK`) and mock data from the design, typed with the Zod schemas in `packages/shared`
+- [x] Create `apps/web`: Next.js, TypeScript, Tailwind
+- [x] Move the design's colours, fonts (Poppins) and spacing from `design/src/components/generated/LuluCRM.css` into CSS variables
+- [x] i18n: English, German, Chinese. Translation files, language switcher, dates, numbers and currency through `Intl`. Match Satyam's library once we know it
+- [x] Layout from the design: left rail with the modules, CRM sub-navigation with the 11 pages, top bar with breadcrumb, search and user card. Works on mobile
+- [x] Routes `/crm/overview`, `/crm/contacts` and so on. Pages not built yet show a placeholder
+- [x] Shared components: Button, Avatar, Pill, Modal, Drawer, Toast, Table, EmptyState, Skeleton
+- [x] API client with a mock switch (`NEXT_PUBLIC_USE_MOCK`) and mock data from the design, typed with the Zod schemas in `packages/shared`
 
 Done when: `apps/web` runs in mock mode, the language switches, and all 11 routes open.
 
 ### A2. Contacts page and profile drawer
 
-- [ ] Table with search, filter chips (all, mine, needs follow-up, new this month), sorting, paging, row select
-- [ ] Add contact modal (react-hook-form and zod), edit, delete with confirm
-- [ ] Profile drawer: details, owner, source, timeline, notes, tasks, email and task buttons
-- [ ] Empty, loading and error states
+- [x] Table with search, filter chips (all, mine, needs follow-up, new this month), sorting, paging, row select
+- [x] Add contact modal (react-hook-form and zod), edit, delete with confirm
+- [x] Profile drawer: details, owner, source, timeline, notes, tasks, email and task buttons
+- [x] Empty, loading and error states
 
 Done when: every Contacts action works on mock data, then on the real API.
 
 ### B1. Deals and pipeline board
 
-- [ ] Board with the stages from the API (New, Qualified, Proposal, Negotiation, plus Won and Lost)
-- [ ] Drag and drop with dnd-kit, optimistic update, totals recalculate
-- [ ] Deal card: name, company, contact, value, probability bar, close date
-- [ ] Summary strip: open value, win rate, active deals, average days to close
-- [ ] Add deal modal, edit, delete, table view toggle
+- [x] Board with the stages from the API (New, Qualified, Proposal, Negotiation, plus Won and Lost)
+- [x] Drag and drop with dnd-kit, optimistic update, totals recalculate
+- [x] Deal card: name, company, contact, value, probability bar, close date
+- [x] Summary strip: open value, win rate, active deals, average days to close
+- [x] Add deal modal, edit, delete, table view toggle
 
 Done when: a deal moves between stages and the totals update, on mock data.
 
 ### B2. Leads board
 
-- [ ] Four columns by lifecycle stage (New, Qualified, Follow-up, Customer), drag to change stage
-- [ ] Lead card with owner, source and last touch, add lead button, convert to customer
+- [x] Four columns by lifecycle stage (New, Qualified, Follow-up, Customer), drag to change stage
+- [x] Lead card with owner, source and last touch, add lead button, convert to customer
 
 Done when: dragging a lead changes its stage.
 
 ### B3. Tasks (Activities & Tasks page)
 
-- [ ] Task list with checkbox, due chips (today, tomorrow, overdue) and owner
-- [ ] New task modal, edit, filters by owner and due date
-- [ ] Activity timeline next to it
+- [x] Task list with checkbox, due chips (today, tomorrow, overdue) and owner
+- [x] New task modal, edit, filters by owner and due date
+- [x] Activity timeline next to it
 
 Done when: ticking a task updates the timeline.
 
 ### C. Overview, Companies, Notes
 
-- [ ] Overview: four KPI cards, recent contacts, pipeline snapshot bars, activity stream, all from `GET /overview`
-- [ ] Companies: directory cards with health, contact count and pipeline value, add company modal, company page with people and deals
-- [ ] Notes: cards with shared or private, add and edit note modal, link a note to a contact, company or deal
+- [x] Overview: four KPI cards, recent contacts, pipeline snapshot bars, activity stream, all from `GET /overview`
+- [x] Companies: directory cards with health, contact count and pipeline value, add company modal, company page with people and deals
+- [x] Notes: cards with shared or private, add and edit note modal, link a note to a contact, company or deal
 
 Done when: all three pages run on mock data with empty, loading and error states.
 
 ### D. Segments, Import wizard, AI Analysis, Settings
 
-- [ ] Segments: list with live counts, filter-rule builder, view contacts
-- [ ] Import wizard: upload, map fields, check quality and duplicates, confirm. Held duplicates screen
-- [ ] AI Analysis: pick a contact, summary, next step and data quality cards, confirm before saving, AI switches
-- [ ] Settings: custom fields, statuses and pipelines, roles, consent, notifications
+- [x] Segments: list with live counts, filter-rule builder, view contacts
+- [x] Import wizard: upload, map fields, check quality and duplicates, confirm. Held duplicates screen
+- [x] AI Analysis: pick a contact, summary, next step and data quality cards, confirm before saving, AI switches
+- [x] Settings: custom fields, statuses and pipelines, roles, consent, notifications
 
 Done when: the wizard runs end to end on mock data and every settings row opens a real screen.
 

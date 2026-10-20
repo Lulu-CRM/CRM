@@ -490,8 +490,12 @@
       "errors": {
         "titleRequired": "请输入任务标题",
         "ownerRequired": "请选择负责人"
-      }
-    }
+      },
+      "delete": "删除任务"
+    },
+    "deleteTitle": "删除此任务？",
+    "deleteMessage": "“{title}”将对整个团队删除。",
+    "deleted": "任务已删除。"
   },
   "companies": {
     "add": "添加公司",

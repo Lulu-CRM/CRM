@@ -92,6 +92,7 @@ export const realApi = {
     list: (query: Partial<TaskListQuery> = {}) => getList(taskSchema, "/tasks", query),
     create: (input: TaskCreateInput) => write(taskSchema, "POST", "/tasks", input),
     update: (id: string, input: TaskUpdateInput) => write(taskSchema, "PATCH", `/tasks/${id}`, input),
+    remove: (id: string) => remove(`/tasks/${id}`),
   },
 
   notes: {

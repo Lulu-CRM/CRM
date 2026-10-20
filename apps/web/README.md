@@ -16,7 +16,7 @@ Copy `.env.example` to `apps/web/.env.local`. `NEXT_PUBLIC_USE_MOCK=true` (the d
 
 ### Signing in
 
-As soon as any area uses the real API, the CRM pages ask you to sign in at `/<locale>/login` (`src/features/auth`). Locally, use the seeded owner from `docs/api.md` (`jamie.morgan@lulu.test`). The token is kept in the browser until it expires; when it expires or the API rejects it, you are sent back to sign in. In full mock mode there is no sign-in.
+As soon as any area uses the real API, the CRM pages ask you to sign in at `/<locale>/login` (`src/features/auth`). Locally, use the seeded owner from `docs/api.md` (`jamie.morgan@lulu.test`). The token is kept in the browser until it expires; when it expires or the API rejects it, you are sent back to sign in. In full mock mode there is no sign-in. Login and logout use the real API automatically whenever any area does, so `auth` never needs listing.
 
 ### Moving to the real API one area at a time
 

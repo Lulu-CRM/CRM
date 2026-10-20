@@ -17,6 +17,7 @@ export const apiAreas = Object.keys(realApi) as ApiArea[];
  * - NEXT_PUBLIC_USE_MOCK=false: every area uses the real API.
  * - NEXT_PUBLIC_USE_MOCK=true (the default): every area uses the design's sample data,
  *   except the areas listed in NEXT_PUBLIC_REAL_API, for example "me,users,contacts,companies".
+ *   As soon as any area is real, `auth` (login and logout) is real too: a real area needs a real token.
  *
  * Unknown names in the list are reported in the console and ignored.
  */
@@ -31,6 +32,8 @@ export function chooseApi(useMockSetting: string | undefined, realAreasSetting: 
   if (unknown.length > 0) {
     console.warn(`NEXT_PUBLIC_REAL_API: unknown area(s) ${unknown.join(", ")}. Known: ${apiAreas.join(", ")}`);
   }
+  // Any real area needs a real token, so sign-in follows automatically.
+  if (requested.length > 0 && !requested.includes("auth")) requested.push("auth");
   const realAreas = apiAreas.filter((area) => requested.includes(area));
 
   const api = Object.fromEntries(

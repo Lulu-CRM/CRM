@@ -22,7 +22,9 @@ describe("chooseApi", () => {
 
   it("switches only the listed areas to the real API", () => {
     const { api, realAreas } = chooseApi("true", " me, users ,contacts,companies,");
-    expect(realAreas.sort()).toEqual(["companies", "contacts", "me", "users"]);
+    expect(realAreas.sort()).toEqual(["auth", "companies", "contacts", "me", "users"]);
+    // Sign-in follows any real area, so login gets a real token.
+    expect(api.auth).toBe(realApi.auth);
     expect(api.contacts).toBe(realApi.contacts);
     expect(api.me).toBe(realApi.me);
     expect(api.deals).toBe(mockApi.deals);
@@ -32,7 +34,7 @@ describe("chooseApi", () => {
   it("ignores and reports unknown areas", () => {
     const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
     const { realAreas } = chooseApi(undefined, "contacts,dealz");
-    expect(realAreas).toEqual(["contacts"]);
+    expect(realAreas.sort()).toEqual(["auth", "contacts"]);
     expect(warn).toHaveBeenCalledWith(expect.stringContaining("dealz"));
   });
 

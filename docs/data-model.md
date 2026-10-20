@@ -43,7 +43,7 @@ Rules: `@@map` uses snake_case plural table names, model names are PascalCase si
 | Task | title, dueAt, priority (`high`, `normal`, `low`), ownerId, done, doneAt, linked record |
 | Note | title, body, visibility (`shared`, `private`), authorId, linked record |
 | Activity | type, linked record, occurredAt, sourceModule, actorId, payload, summary |
-| Segment | name, description, rules (JSON, format in `docs/api.md`), color (`violet`, `coral`, `blue`, `mint`, `peach`) |
+| Segment | name, description, rules (JSON, format in `docs/api.md`), color (`violet`, `coral`, `blue`, `mint`, `peach`; defaults to `violet`) |
 | ImportJob | fileName, status (`uploaded`, `processing`, `done`, `failed`), columns, sampleRow (JSON), mapping (JSON), rowsTotal, rowsAdded, rowsUpdated, rowsHeld, rowsSkipped, ownerId, tag, duplicateHandling (`hold`, `skip`, `update`), error |
 | ImportRow | importJobId, rowNumber, raw (JSON), status (`pending`, `added`, `updated`, `held`, `skipped`, `merged`), contact (JSON, for held rows), duplicateMatch, duplicateOfContactId |
 | AiInsight | contactId, provider, summary (JSON AI text), nextStep (JSON `{ title, detail }`), suggestedTask (JSON or null), suggestedStage, dataQualityScore, missingFields, status (`suggested`, `accepted`, `dismissed`) |

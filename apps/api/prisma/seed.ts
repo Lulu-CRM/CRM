@@ -1,3 +1,4 @@
+import { demoSegments } from '@lulu/shared';
 import type { Prisma } from '../src/generated/prisma/client';
 import { db, disconnectDb } from '../src/db/prisma';
 import { env } from '../src/config/env';
@@ -28,6 +29,10 @@ import {
   SEED_NOTE_NORTHSTAR_ID,
   SEED_NOTE_ROAM_ID,
   SEED_PIPELINE_SALES_ID,
+  SEED_SEGMENT_AT_RISK_ID,
+  SEED_SEGMENT_FOLLOW_UP_ID,
+  SEED_SEGMENT_HIGH_INTENT_ID,
+  SEED_SEGMENT_NEWSLETTER_ID,
   SEED_STAGE_LOST_ID,
   SEED_STAGE_NEGOTIATION_ID,
   SEED_STAGE_NEW_ID,
@@ -465,6 +470,22 @@ const activities: WithId<Prisma.ActivityUncheckedCreateInput>[] = [
   },
 ];
 
+// The design's sample segments with their real rules, so the Segments page has live counts on real data.
+const segmentIds: Record<string, string> = {
+  segment_high_intent: SEED_SEGMENT_HIGH_INTENT_ID,
+  segment_follow_up: SEED_SEGMENT_FOLLOW_UP_ID,
+  segment_at_risk: SEED_SEGMENT_AT_RISK_ID,
+  segment_newsletter: SEED_SEGMENT_NEWSLETTER_ID,
+};
+const segments: WithId<Prisma.SegmentUncheckedCreateInput>[] = demoSegments.map((segment) => ({
+  id: segmentIds[segment.id]!,
+  workspaceId: SEED_WORKSPACE_ID,
+  name: segment.name,
+  description: segment.description,
+  rules: segment.rules,
+  color: segment.color,
+}));
+
 async function upsertMany<T extends { id: string }>(
   rows: T[],
   upsert: (id: string, data: Omit<T, 'id'>, create: T) => Promise<unknown>,
@@ -532,6 +553,9 @@ export async function runSeed(): Promise<void> {
   );
   await upsertMany(activities, (id, data, create) =>
     db.activity.upsert({ where: { id }, update: data, create }),
+  );
+  await upsertMany(segments, (id, data, create) =>
+    db.segment.upsert({ where: { id }, update: data, create }),
   );
 
   const { openValue, weightedValue } = await openDealTotals();

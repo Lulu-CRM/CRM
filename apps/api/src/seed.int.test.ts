@@ -20,18 +20,29 @@ describe('seed (int)', () => {
 
   it('seeds the exact counts, with no duplicates after a second run', async () => {
     const where = { workspaceId: SEED_WORKSPACE_ID, deletedAt: null };
-    const [workspaces, users, contacts, companies, pipelines, stages, deals, notes, activities] =
-      await Promise.all([
-        db.workspace.count({ where: { id: SEED_WORKSPACE_ID } }),
-        db.user.count({ where }),
-        db.contact.count({ where }),
-        db.company.count({ where }),
-        db.pipeline.count({ where }),
-        db.stage.count({ where }),
-        db.deal.count({ where }),
-        db.note.count({ where }),
-        db.activity.count({ where }),
-      ]);
+    const [
+      workspaces,
+      users,
+      contacts,
+      companies,
+      pipelines,
+      stages,
+      deals,
+      notes,
+      activities,
+      segments,
+    ] = await Promise.all([
+      db.workspace.count({ where: { id: SEED_WORKSPACE_ID } }),
+      db.user.count({ where }),
+      db.contact.count({ where }),
+      db.company.count({ where }),
+      db.pipeline.count({ where }),
+      db.stage.count({ where }),
+      db.deal.count({ where }),
+      db.note.count({ where }),
+      db.activity.count({ where }),
+      db.segment.count({ where }),
+    ]);
 
     expect({
       workspaces,
@@ -43,6 +54,7 @@ describe('seed (int)', () => {
       deals,
       notes,
       activities,
+      segments,
     }).toEqual({
       workspaces: 1,
       users: 2,
@@ -53,6 +65,7 @@ describe('seed (int)', () => {
       deals: 4,
       notes: 3,
       activities: 5,
+      segments: 4,
     });
   });
 

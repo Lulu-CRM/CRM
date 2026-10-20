@@ -67,6 +67,9 @@ describe('OpenAPI document', () => {
       '/api/v1/me',
       '/api/v1/overview',
       '/api/v1/pipelines',
+      '/api/v1/segments',
+      '/api/v1/segments/{id}',
+      '/api/v1/segments/{id}/contacts',
       '/api/v1/settings/ai',
       '/api/v1/settings/consent',
       '/api/v1/settings/custom-fields',
@@ -82,6 +85,9 @@ describe('OpenAPI document', () => {
 
     const expectedMethods: Record<string, string[]> = {
       '/api/v1/overview': ['get'],
+      '/api/v1/segments': ['get', 'post'],
+      '/api/v1/segments/{id}': ['patch', 'delete'],
+      '/api/v1/segments/{id}/contacts': ['get'],
       '/api/v1/settings/ai': ['get', 'put'],
       '/api/v1/settings/consent': ['get', 'put'],
       '/api/v1/settings/custom-fields': ['get', 'post'],

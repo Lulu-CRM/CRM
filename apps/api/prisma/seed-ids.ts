@@ -47,3 +47,9 @@ export const SEED_SEGMENT_HIGH_INTENT_ID = 'f4ff2d0e-6b73-4682-9d0b-9f06e459eef0
 export const SEED_SEGMENT_FOLLOW_UP_ID = '0a20ba95-901e-46e1-b0c0-60e64ea3ae21';
 export const SEED_SEGMENT_AT_RISK_ID = 'b1f97242-f7bc-4a75-b667-1bf256c60b50';
 export const SEED_SEGMENT_NEWSLETTER_ID = '97494993-eb33-4e4a-ab63-edfb3881e32a';
+
+// The design's four sample tasks (demoTasks in packages/shared/src/fixtures/tasks.ts).
+export const SEED_TASK_SOPHIE_PROPOSAL_ID = 'c3bb6a73-9574-486e-815f-2a47d4be09d8';
+export const SEED_TASK_ATLAS_NOTES_ID = '39367806-04d3-445a-bc3d-9549e919ebe2';
+export const SEED_TASK_ROAM_REQUIREMENTS_ID = '341927e8-9c50-4deb-bb4d-ee5cb4430ba6';
+export const SEED_TASK_KLARWERK_REVIEW_ID = 'bba95866-8be9-4da2-b209-23833f56b05e';

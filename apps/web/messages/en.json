@@ -490,8 +490,12 @@
       "errors": {
         "titleRequired": "Give the task a title",
         "ownerRequired": "Choose an owner"
-      }
-    }
+      },
+      "delete": "Delete task"
+    },
+    "deleteTitle": "Delete this task?",
+    "deleteMessage": "“{title}” will be removed for the whole team.",
+    "deleted": "Task deleted."
   },
   "companies": {
     "add": "Add company",

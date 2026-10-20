@@ -490,8 +490,12 @@
       "errors": {
         "titleRequired": "Gib der Aufgabe einen Titel",
         "ownerRequired": "Wähle einen Verantwortlichen"
-      }
-    }
+      },
+      "delete": "Aufgabe löschen"
+    },
+    "deleteTitle": "Diese Aufgabe löschen?",
+    "deleteMessage": "„{title}“ wird für das ganze Team entfernt.",
+    "deleted": "Aufgabe gelöscht."
   },
   "companies": {
     "add": "Unternehmen hinzufügen",

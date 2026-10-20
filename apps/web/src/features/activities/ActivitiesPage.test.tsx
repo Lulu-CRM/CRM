@@ -167,6 +167,23 @@ describe("Activities & Tasks page", () => {
     expect(within(row("Review Atlas onboarding plan")).getByText("Atlas Logistics · Jamie Morgan")).toBeTruthy();
   });
 
+  it("deletes a task after confirming", async () => {
+    await renderPage();
+    const before = (await api.tasks.list()).meta.total;
+    fireEvent.click(screen.getByRole("button", { name: "Edit Review Atlas onboarding notes" }));
+    const dialog = screen.getByRole("dialog", { name: "Update this follow-up" });
+    fireEvent.click(within(dialog).getByRole("button", { name: "Delete task" }));
+
+    const confirm = await screen.findByRole("dialog", { name: "Delete this task?" });
+    await act(async () => {
+      fireEvent.click(within(confirm).getByRole("button", { name: "Delete" }));
+    });
+
+    await screen.findByText("Task deleted.");
+    await waitFor(() => expect(screen.queryByText("Review Atlas onboarding notes")).toBeNull());
+    expect((await api.tasks.list()).meta.total).toBe(before - 1);
+  });
+
   it("shows an error with a retry when tasks cannot load", async () => {
     vi.spyOn(api.tasks, "list").mockRejectedValueOnce(new ApiError("NETWORK_ERROR", 0));
     render(

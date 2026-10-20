@@ -24,6 +24,7 @@ export function TaskFormModal({
   defaultOwnerId,
   onClose,
   onSubmit,
+  onDelete,
 }: {
   open: boolean;
   task: Task | null;
@@ -34,6 +35,7 @@ export function TaskFormModal({
   defaultOwnerId: string;
   onClose: () => void;
   onSubmit: (input: TaskCreateInput) => Promise<void>;
+  onDelete: () => void;
 }) {
   const t = useTranslations("tasks.form");
   const tPriority = useTranslations("tasks.priority");
@@ -153,7 +155,13 @@ export function TaskFormModal({
         )}
 
         <div className="mt-1.5 flex flex-col items-end justify-between gap-3 border-t border-[#efedf4] pt-4 sm:col-span-2 sm:flex-row sm:items-center">
-          <span className="text-[10px] text-text-subtle">{t("hint")}</span>
+          {task ? (
+            <Button variant="ghost" onClick={onDelete} disabled={isSubmitting} className="text-[#c2413d]">
+              {t("delete")}
+            </Button>
+          ) : (
+            <span className="text-[10px] text-text-subtle">{t("hint")}</span>
+          )}
           <div className="flex gap-2">
             <Button variant="outline" onClick={onClose} disabled={isSubmitting}>
               {tCommon("cancel")}

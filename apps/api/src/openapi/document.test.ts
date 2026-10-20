@@ -40,6 +40,7 @@ describe('OpenAPI document', () => {
     const paths = doc.paths as Json;
 
     expect(Object.keys(paths).sort()).toEqual([
+      '/api/v1/activities',
       '/api/v1/ai-insights/{id}/accept',
       '/api/v1/ai-insights/{id}/dismiss',
       '/api/v1/auth/login',
@@ -56,6 +57,7 @@ describe('OpenAPI document', () => {
       '/api/v1/deals/summary',
       '/api/v1/deals/{id}',
       '/api/v1/deals/{id}/move',
+      '/api/v1/events',
       '/api/v1/health',
       '/api/v1/imports',
       '/api/v1/imports/{id}',
@@ -65,6 +67,8 @@ describe('OpenAPI document', () => {
       '/api/v1/imports/{id}/mapping',
       '/api/v1/imports/{id}/preview',
       '/api/v1/me',
+      '/api/v1/notes',
+      '/api/v1/notes/{id}',
       '/api/v1/overview',
       '/api/v1/pipelines',
       '/api/v1/segments',
@@ -78,6 +82,8 @@ describe('OpenAPI document', () => {
       '/api/v1/settings/roles',
       '/api/v1/settings/stages',
       '/api/v1/settings/stages/{id}',
+      '/api/v1/tasks',
+      '/api/v1/tasks/{id}',
       '/api/v1/users',
       '/health',
       '/health/live',
@@ -85,6 +91,12 @@ describe('OpenAPI document', () => {
 
     const expectedMethods: Record<string, string[]> = {
       '/api/v1/overview': ['get'],
+      '/api/v1/tasks': ['get', 'post'],
+      '/api/v1/tasks/{id}': ['patch', 'delete'],
+      '/api/v1/notes': ['get', 'post'],
+      '/api/v1/notes/{id}': ['patch', 'delete'],
+      '/api/v1/activities': ['get', 'post'],
+      '/api/v1/events': ['post'],
       '/api/v1/segments': ['get', 'post'],
       '/api/v1/segments/{id}': ['patch', 'delete'],
       '/api/v1/segments/{id}/contacts': ['get'],

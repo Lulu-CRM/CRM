@@ -15,7 +15,7 @@ Status values: `open`, `in progress`, `in review`, `done`.
 | 2 | Auth, workspace, roles | Franklin | done | |
 | 3 | Contacts and Companies API | Franklin | in review | 1, 2 |
 | 4 | Deals and pipeline API | theLady | done | 1 |
-| 5 | Tasks, Notes, Activities API | theLady | in progress | 1 |
+| 5 | Tasks, Notes, Activities API | Sudais | in review | 1 |
 | 6 | Segments API | Sudais | in review | 3 |
 | 7 | Contact import | Sudais | in review | 3 |
 | 8 | AI analysis | Sudais | in review | 3 |
@@ -92,9 +92,9 @@ Done when: moving a deal updates the totals.
 
 ### 5. Tasks, Notes, Activities API
 
-- [ ] Endpoints for tasks, notes (private notes only for their author) and activities
-- [ ] `POST /events` so other modules can post activities (format in `api.md`)
-- [ ] `GET /contacts/:id/timeline` combines all three
+- [x] Endpoints for tasks, notes (private notes only for their author) and activities
+- [x] `POST /events` so other modules can post activities (format in `api.md`)
+- [x] `GET /contacts/:id/timeline` combines all three
 
 Done when: a posted event shows on the contact's timeline.
 

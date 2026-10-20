@@ -13,6 +13,7 @@ const look: Record<ActivityType, { icon: string; className: string }> = {
   ai_signal: { icon: "✦", className: "bg-[#fff0e7] text-[#bc7655]" },
   created: { icon: "◈", className: "bg-[#fff0e7] text-[#bc7655]" },
   stage_changed: { icon: "↗", className: "bg-[#e4f3fc] text-[#4a91bd]" },
+  marketplace: { icon: "◇", className: "bg-[#e3f5eb] text-[#4d9b72]" },
 };
 
 // Within the last hours the design says "12 min ago", later "Yesterday, 16:18".

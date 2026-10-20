@@ -236,6 +236,12 @@ Schemas: `packages/shared/src/pipeline.ts` and `deal.ts`.
 | POST | `/activities` | Log an activity by hand |
 | POST | `/events` | Other modules post an event (see below) |
 
+`GET /tasks` returns open tasks first by due date (undated last), then done ones. `q` searches the title; `dueBefore` is exclusive. `POST /tasks`: owner defaults to the current user, priority to `normal`. Ticking or unticking (`done`) sets `doneAt` and logs a `task` activity (`payload.action` is `completed` or `reopened`) in the same transaction, with the same rule as the web app (`setTaskDone` in `task-logic.ts`). Errors: `TASK_NOT_FOUND`.
+
+A linked record (`recordType` plus `recordId`) must be a live record in the workspace, or the API answers 422 `RECORD_NOT_FOUND`. Tasks and notes check the `tasks` and `notes` permissions; members cannot delete. Any signed-in user may log an activity.
+
+`GET /activities` is newest first. `POST /activities` logs one with `sourceModule: "crm"` and the current user as actor; on a contact it moves `lastTouchAt` forward.
+
 `GET /notes` returns `noteSchema` rows, most recently edited first. Filters: `q` (title and body), `visibility`, `recordType` with `recordId`. Private notes of other users are left out, for every role.
 
 - `POST /notes` takes `title` (required, up to 200 characters), `body` (up to 10,000), `visibility` (`shared` by default) and an optional link (`recordType` plus `recordId`). The author is the current user.
@@ -358,7 +364,7 @@ Email, Calendar and other modules tell the CRM something happened with `POST /ev
 }
 ```
 
-The CRM finds the contact by email, creates an `Activity`, and updates `lastTouchAt`. Event types start with `email.`, `calendar.` or `marketplace.`. The CRM can send events the other way (for example "prepare a follow-up in Email") through the same format.
+The CRM finds the contact by email (ignoring case), creates an `Activity`, and moves `lastTouchAt` forward (never back, so a late event changes nothing). `email.*` is logged as `email`, `calendar.*` as `meeting` and `marketplace.*` as `marketplace`; the event type is kept in `payload.event`. It answers 201 with the activity, or 404 `CONTACT_NOT_FOUND` when no contact has that email, so the module knows nothing was recorded. Event types start with `email.`, `calendar.` or `marketplace.`. The CRM can send events the other way (for example "prepare a follow-up in Email") through the same format.
 
 ## Background jobs (BullMQ)
 

@@ -104,7 +104,7 @@ export function SegmentsPage() {
                     type="button"
                     onClick={() => setForm({ segment })}
                     aria-label={t("edit", { name: segment.name })}
-                    className="rounded px-1.5 py-1 text-[11px] text-text-subtle hover:bg-surface-muted hover:text-primary"
+                    className="grid min-h-8 min-w-8 place-items-center rounded px-1.5 py-1 text-[11px] text-text-subtle hover:bg-surface-muted hover:text-primary"
                   >
                     ✎
                   </button>

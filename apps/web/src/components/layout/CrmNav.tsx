@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useFormatter, useTranslations } from "next-intl";
 import { api, onContactsChanged } from "@/lib/api";
 import { Link, usePathname } from "@/i18n/navigation";
@@ -94,12 +94,19 @@ function useContactCount() {
 export function CrmTabs() {
   const t = useTranslations("nav");
   const active = findCrmPage(usePathname());
+  const activeTab = useRef<HTMLAnchorElement>(null);
+
+  // On a phone the tabs scroll sideways: bring the current page's tab into view.
+  useEffect(() => {
+    activeTab.current?.scrollIntoView?.({ block: "nearest", inline: "center" });
+  }, [active?.key]);
 
   return (
     <nav className="flex gap-1 overflow-x-auto border-b border-border bg-surface px-4 py-2 md:hidden">
       {crmPages.map((page) => (
         <Link
           key={page.key}
+          ref={page.key === active?.key ? activeTab : undefined}
           href={crmHref(page.slug)}
           aria-current={page.key === active?.key ? "page" : undefined}
           className={`rounded-md px-3 py-1.5 text-xs whitespace-nowrap ${

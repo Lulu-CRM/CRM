@@ -106,10 +106,10 @@ export function AiAnalysisPage() {
             <>
               <div className="mt-5 flex flex-wrap items-center gap-3 rounded-xl border border-border p-3">
                 <Avatar initials={initials(selected.name)} tone={avatarTone(selected.id)} />
-                <label className="grid min-w-0 flex-1 gap-1">
+                <label className="grid min-w-0 flex-1 basis-48 gap-1">
                   <span className="text-[9px] font-extrabold text-neutral">{t("pickContact")}</span>
                   <select
-                    className="rounded-md border border-border-strong bg-surface px-2 py-2 text-[11px] text-text outline-none focus:border-[#8e83de]"
+                    className="w-full min-w-0 rounded-md border border-border-strong bg-surface px-2 py-2 text-[11px] text-text outline-none focus:border-[#8e83de]"
                     value={selected.id}
                     disabled={running}
                     onChange={(e) => setContactId(e.target.value)}

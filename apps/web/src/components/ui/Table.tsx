@@ -56,10 +56,14 @@ export function Table<T>({
     return sort.direction === "asc" ? { key, direction: "desc" } : null;
   };
 
+  // Below the md breakpoint each row becomes a card: the first column is the title and the others
+  // show their header as a label (data-label), so nothing hides behind a sideways scroll on a phone.
+  const label = (column: Column<T>) => (typeof column.header === "string" ? column.header : undefined);
+
   return (
     <div className="overflow-x-auto">
-      <table className="w-full min-w-[760px] border-collapse">
-        <thead>
+      <table className="w-full border-collapse max-md:block md:min-w-[760px]">
+        <thead className="max-md:hidden">
           <tr>
             {selectable && (
               <th className="w-10 border-y border-[#efedf4] bg-[#fafaff] px-3 py-3 text-left">
@@ -98,17 +102,17 @@ export function Table<T>({
             })}
           </tr>
         </thead>
-        <tbody>
+        <tbody className="max-md:grid max-md:gap-2.5 max-md:pt-3">
           {rows.map((row) => {
             const id = rowKey(row);
             return (
               <tr
                 key={id}
                 onClick={onRowClick ? () => onRowClick(row) : undefined}
-                className={`border-b border-surface-muted ${onRowClick ? "cursor-pointer hover:bg-surface-soft" : ""}`}
+                className={`border-b border-surface-muted max-md:relative max-md:block max-md:rounded-xl max-md:border max-md:p-3 ${selectable ? "max-md:pl-10" : ""} ${onRowClick ? "cursor-pointer hover:bg-surface-soft" : ""}`}
               >
                 {selectable && (
-                  <td className="px-3 py-3" onClick={(event) => event.stopPropagation()}>
+                  <td className="px-3 py-3 max-md:absolute max-md:top-3 max-md:left-0 max-md:py-1" onClick={(event) => event.stopPropagation()}>
                     <input
                       type="checkbox"
                       checked={selected.has(id)}
@@ -118,11 +122,22 @@ export function Table<T>({
                     />
                   </td>
                 )}
-                {columns.map((column) => (
-                  <td key={column.key} className={`px-3 py-3 align-middle text-[10px] text-text-muted ${column.className ?? ""}`}>
-                    {column.cell(row)}
-                  </td>
-                ))}
+                {columns.map((column, index) => {
+                  const text = index === 0 ? undefined : label(column);
+                  return (
+                    <td
+                      key={column.key}
+                      data-label={text}
+                      className={`px-3 py-3 align-middle text-[10px] text-text-muted max-md:flex max-md:items-center max-md:gap-3 max-md:px-0 max-md:py-1 ${
+                        text
+                          ? "max-md:justify-between max-md:text-right max-md:before:shrink-0 max-md:before:text-left max-md:before:text-[9px] max-md:before:font-semibold max-md:before:tracking-[0.08em] max-md:before:text-[#9e9baa] max-md:before:uppercase max-md:before:content-[attr(data-label)]"
+                          : "max-md:justify-start"
+                      } ${index === 0 ? "max-md:pb-2" : ""} ${column.className ?? ""}`}
+                    >
+                      {column.cell(row)}
+                    </td>
+                  );
+                })}
               </tr>
             );
           })}
@@ -151,7 +166,7 @@ export function Pagination({
 }) {
   const pages = Math.max(1, Math.ceil(total / pageSize));
   const button =
-    "grid h-[26px] min-w-[26px] place-items-center rounded-md border border-border-strong bg-surface px-1.5 text-[10px] text-text-subtle disabled:opacity-40";
+    "grid h-[26px] min-w-[26px] place-items-center rounded-md border border-border-strong bg-surface px-1.5 text-[10px] text-text-subtle disabled:opacity-40 max-md:h-9 max-md:min-w-9 max-md:text-xs";
 
   return (
     <div className="flex flex-wrap items-center justify-between gap-3 pt-4 text-[10px] text-text-subtle">

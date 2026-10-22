@@ -40,7 +40,7 @@ export function CardMenu({ label, entries }: { label: string; entries: CardMenuE
         aria-expanded={open}
         aria-label={label}
         onClick={() => setOpen((value) => !value)}
-        className="rounded px-1 text-[#9e9aaa] hover:bg-surface-muted"
+        className="grid min-h-8 min-w-8 place-items-center rounded px-1 text-[#9e9aaa] hover:bg-surface-muted"
       >
         •••
       </button>

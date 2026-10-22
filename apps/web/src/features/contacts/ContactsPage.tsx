@@ -213,7 +213,7 @@ export function ContactsPage() {
             event.stopPropagation();
             setOpen(c);
           }}
-          className="rounded px-1.5 py-1 text-[11px] tracking-widest text-text-subtle hover:bg-surface-muted"
+          className="min-h-8 min-w-8 rounded px-1.5 py-1 text-[11px] tracking-widest text-text-subtle hover:bg-surface-muted"
         >
           •••
         </button>

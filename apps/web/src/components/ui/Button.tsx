@@ -29,7 +29,7 @@ export function Button({
       type={type}
       disabled={disabled || loading}
       aria-busy={loading || undefined}
-      className={`inline-flex items-center justify-center gap-1.5 rounded-md border px-3.5 py-2.5 text-[11px] font-extrabold transition-colors disabled:cursor-not-allowed disabled:opacity-60 ${variants[variant]} ${className}`}
+      className={`inline-flex shrink-0 items-center justify-center gap-1.5 rounded-md whitespace-nowrap border px-3.5 py-2.5 text-[11px] font-extrabold transition-colors disabled:cursor-not-allowed disabled:opacity-60 ${variants[variant]} ${className}`}
       {...props}
     >
       {loading ? (

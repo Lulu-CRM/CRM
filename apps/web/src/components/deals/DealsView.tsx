@@ -13,12 +13,13 @@ import { DealTable } from "./DealTable";
 import { DeleteDealModal } from "./DeleteDealModal";
 import { useDealsBoard, type DealsData } from "./useDealsBoard";
 
-export function DealsView() {
+/** The deal board. `embedded` leaves out the page header, for Leads & Deals. */
+export function DealsView({ embedded = false }: { embedded?: boolean } = {}) {
   const { state, reload, ...actions } = useDealsBoard();
 
   return (
     <>
-      <PageHeader page="deals" />
+      {!embedded && <PageHeader page="deals" />}
       <Card>
         {state.status === "loading" && <BoardSkeleton />}
         {state.status === "error" && <LoadError error={state.error} onRetry={reload} />}

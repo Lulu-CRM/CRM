@@ -62,9 +62,9 @@ describe("session storage", () => {
 
   it("only returns to paths inside the app", () => {
     expect(auth.safeNext("/crm/deals")).toBe("/crm/deals");
-    expect(auth.safeNext("https://evil.example")).toBe("/crm/overview");
-    expect(auth.safeNext("//evil.example")).toBe("/crm/overview");
-    expect(auth.safeNext(null)).toBe("/crm/overview");
+    expect(auth.safeNext("https://evil.example")).toBe("/crm/directory");
+    expect(auth.safeNext("//evil.example")).toBe("/crm/directory");
+    expect(auth.safeNext(null)).toBe("/crm/directory");
   });
 });
 

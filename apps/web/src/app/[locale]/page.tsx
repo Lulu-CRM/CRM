@@ -1,3 +1,4 @@
+import { CRM_HOME } from "@/config/navigation";
 import { redirect } from "@/i18n/navigation";
 
 export default async function Home({
@@ -6,5 +7,5 @@ export default async function Home({
   params: Promise<{ locale: string }>;
 }) {
   const { locale } = await params;
-  redirect({ href: "/crm/overview", locale });
+  redirect({ href: CRM_HOME, locale });
 }

@@ -53,6 +53,12 @@ function withContactNotifications(api: Api): Api {
       create: notifyAfter(api.contacts.create),
       remove: notifyAfter(api.contacts.remove),
     },
+    // The menu badge counts companies too.
+    companies: {
+      ...api.companies,
+      create: notifyAfter(api.companies.create),
+      remove: notifyAfter(api.companies.remove),
+    },
     imports: {
       ...api.imports,
       get: notifyAfter(api.imports.get, importFinished),

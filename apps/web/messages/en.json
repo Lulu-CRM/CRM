@@ -14,7 +14,9 @@
     "segments": "Segments",
     "import": "Import Contacts",
     "ai": "AI Analysis",
-    "settings": "CRM Settings"
+    "settings": "CRM Settings",
+    "directory": "Contacts & Companies",
+    "pipeline": "Leads & Deals"
   },
   "common": {
     "save": "Save",
@@ -37,7 +39,7 @@
     "noResults": "No results"
   },
   "layout": {
-    "tagline": "Intelligence workspace",
+    "tagline": "Growth OS",
     "workspace": "Workspace",
     "modules": "Modules",
     "active": "Active",
@@ -99,6 +101,12 @@
     },
     "settings": {
       "description": "Shape fields, statuses, roles and consent rules around your workspace."
+    },
+    "directory": {
+      "description": "Manage people and company accounts together, without losing the context between them."
+    },
+    "pipeline": {
+      "description": "Qualify relationships and move opportunities forward in one connected workflow."
     }
   },
   "errors": {
@@ -423,7 +431,8 @@
     "column": {
       "add": "Add lead",
       "addLead": "Add lead to {stage}",
-      "empty": "No leads here"
+      "empty": "No leads here",
+      "converted": "Converted"
     },
     "card": {
       "actions": "Actions for {name}",
@@ -1126,5 +1135,77 @@
       "missing": "Enter your email and password.",
       "wrong": "Email or password is incorrect."
     }
+  },
+  "pipeline": {
+    "eyebrow": "Connected pipeline",
+    "title": "Leads become opportunities.",
+    "intro": "Switch between qualification and revenue without leaving the same workflow.",
+    "switchLabel": "Show leads or deals",
+    "leads": "Leads",
+    "deals": "Deals & Pipeline"
+  },
+  "directory": {
+    "eyebrow": "Relationship directory",
+    "title": "People and companies, together.",
+    "intro": "Connect every person to the account, context and commercial history behind the relationship.",
+    "importContacts": "Import contacts",
+    "addCompany": "Add company",
+    "addContact": "Add contact",
+    "search": "Search people, companies, domains or tags",
+    "filtersLabel": "Show records",
+    "tabs": {
+      "all": "All",
+      "contacts": "Contacts",
+      "companies": "Companies",
+      "followUp": "Needs follow-up"
+    },
+    "columns": {
+      "record": "Record",
+      "context": "Relationship context",
+      "status": "Status",
+      "owner": "Owner",
+      "activity": "Last activity / value",
+      "actions": "Actions"
+    },
+    "kind": {
+      "contact": "Contact",
+      "company": "Company"
+    },
+    "contactCount": "{count, plural, one {# contact} other {# contacts}}",
+    "open": "Open {name}",
+    "showing": "Showing {count} of {total} records",
+    "empty": "No people or companies yet",
+    "emptyHint": "Add your first contact or import a list.",
+    "noMatches": "No people or companies match",
+    "noMatchesHint": "Try another search or filter.",
+    "deleteTitle": "{count, plural, one {Delete this record?} other {Delete # records?}}",
+    "deleteMessage": "{name} will be removed for everyone in the workspace.",
+    "deleted": "{name} was deleted.",
+    "notes": {
+      "eyebrow": "Notes",
+      "title": "Keep context on the record",
+      "intro": "Add a shared or private note directly from Contacts & Companies.",
+      "record": "Record for the note",
+      "contacts": "Contacts",
+      "companies": "Companies",
+      "add": "Add note",
+      "saved": "Note saved."
+    },
+    "ai": {
+      "eyebrow": "AI analysis",
+      "title": "Generate relationship intelligence",
+      "intro": "Review signals, data quality and the next best action without leaving the directory.",
+      "contact": "Contact to analyze",
+      "run": "Generate AI analysis",
+      "running": "Analyzing…",
+      "ready": "AI analysis ready. Review the recommendations before saving.",
+      "nextStep": "Next step",
+      "quality": "{filled} of {total} profile fields complete",
+      "review": "Review and save"
+    },
+    "selected": "{count} selected",
+    "deleteSelected": "Delete selected",
+    "deleteManyMessage": "{count} records will be removed for everyone in the workspace.",
+    "deletedMany": "{count} records were deleted."
   }
 }

@@ -102,7 +102,7 @@ function LeadColumn({
   const tStage = useTranslations("lifecycleStages");
   const format = useFormat();
   const { setNodeRef, isOver } = useDroppable({ id: stage });
-  const label = tStage(stage);
+  const label = stage === "customer" ? t("converted") : tStage(stage);
 
   return (
     <section

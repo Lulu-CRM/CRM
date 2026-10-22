@@ -1,15 +1,16 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
 import type { CompanyListItem, Contact } from "@lulu/shared";
 import { PageHeader } from "@/components/layout/PageHeader";
-import { Avatar, Button, Card, ConfirmDialog, EmptyState, Pill, SkeletonRows, Table, useToast, type Column, type PillTone } from "@/components/ui";
+import { Avatar, Button, Card, ConfirmDialog, EmptyState, Pagination, Pill, SkeletonRows, Table, useToast, type Column, type PillTone } from "@/components/ui";
 import { CompanyDrawer } from "@/features/companies/CompanyDrawer";
 import { CompanyFormModal } from "@/features/companies/CompanyFormModal";
 import { companyMark } from "@/features/companies/options";
 import { ContactDrawer } from "@/features/contacts/ContactDrawer";
 import { ContactFormModal } from "@/features/contacts/ContactFormModal";
+import { FilterMenu, type ExtraFilters } from "@/features/contacts/FilterMenu";
 import { stageTone } from "@/features/contacts/options";
 import { useLookups } from "@/features/contacts/useLookups";
 import { useFormat } from "@/i18n/format";
@@ -20,6 +21,7 @@ import { avatarTone, initials } from "@/lib/initials";
 import { useApi } from "@/lib/useApi";
 import { DirectoryActions } from "./DirectoryActions";
 
+const PAGE_SIZE = 25;
 const tabs = ["all", "contacts", "companies", "followUp"] as const;
 type Tab = (typeof tabs)[number];
 
@@ -44,14 +46,25 @@ export function DirectoryPage() {
   const [tab, setTab] = useState<Tab>("all");
   const [search, setSearch] = useState("");
   const q = search.trim() || undefined;
+  // "+ Filter": lifecycle stage (people only) and owner (people and companies).
+  const [extra, setExtra] = useState<ExtraFilters>({});
+  const withCompanies = tab !== "contacts" && tab !== "followUp" && !extra.stage;
 
   const list = useApi(
     () =>
       Promise.all([
-        tab === "companies" ? null : api.contacts.list({ q, pageSize: 100, ...(tab === "followUp" ? { needsFollowUp: true } : {}) }),
-        tab === "contacts" || tab === "followUp" ? null : api.companies.list({ q, pageSize: 100 }),
+        tab === "companies"
+          ? null
+          : api.contacts.list({
+              q,
+              pageSize: 100,
+              ...(tab === "followUp" ? { needsFollowUp: true } : {}),
+              ...(extra.stage ? { stage: extra.stage } : {}),
+              ...(extra.ownerId ? { ownerId: extra.ownerId } : {}),
+            }),
+        withCompanies ? api.companies.list({ q, pageSize: 100, ...(extra.ownerId ? { ownerId: extra.ownerId } : {}) }) : null,
       ]),
-    [tab, q],
+    [tab, q, extra.stage, extra.ownerId],
   );
   // Totals for the tab badges, independent of the search.
   const counts = useApi(
@@ -77,11 +90,23 @@ export function DirectoryPage() {
   ];
   const total = (contacts?.meta.total ?? 0) + (companies?.meta.total ?? 0);
 
+  // People and companies come from two lists, so the merged table pages here.
+  const [page, setPage] = useState(1);
+  const [selected, setSelected] = useState<Set<string>>(new Set());
+  useEffect(() => {
+    setPage(1);
+    setSelected(new Set());
+  }, [tab, q, extra.stage, extra.ownerId]);
+  const pages = Math.max(1, Math.ceil(rows.length / PAGE_SIZE));
+  const current = Math.min(page, pages);
+  const shown = rows.slice((current - 1) * PAGE_SIZE, current * PAGE_SIZE);
+  const selectedRows = rows.filter((row) => selected.has(row.id));
+
   const [openContact, setOpenContact] = useState<Contact | null>(null);
   const [openCompany, setOpenCompany] = useState<CompanyListItem | null>(null);
   const [contactForm, setContactForm] = useState<{ contact: Contact | null } | null>(null);
   const [companyForm, setCompanyForm] = useState<{ company: CompanyListItem | null } | null>(null);
-  const [toDelete, setToDelete] = useState<Row | null>(null);
+  const [toDelete, setToDelete] = useState<Row[] | null>(null);
   const [deleting, setDeleting] = useState(false);
 
   const reload = () => {
@@ -95,10 +120,13 @@ export function DirectoryPage() {
     if (!toDelete) return;
     setDeleting(true);
     try {
-      if (toDelete.kind === "contact") await api.contacts.remove(toDelete.contact.id);
-      else await api.companies.remove(toDelete.company.id);
-      toast(t("deleted", { name: nameOf(toDelete) }));
+      for (const row of toDelete) {
+        if (row.kind === "contact") await api.contacts.remove(row.contact.id);
+        else await api.companies.remove(row.company.id);
+      }
+      toast(toDelete.length === 1 ? t("deleted", { name: nameOf(toDelete[0]!) }) : t("deletedMany", { count: toDelete.length }));
       setToDelete(null);
+      setSelected(new Set());
       setOpenContact(null);
       setOpenCompany(null);
       reload();
@@ -204,7 +232,7 @@ export function DirectoryPage() {
     },
   ];
 
-  const filtered = q !== undefined || tab !== "all";
+  const filtered = q !== undefined || tab !== "all" || !!extra.stage || !!extra.ownerId;
 
   return (
     <>
@@ -228,15 +256,30 @@ export function DirectoryPage() {
             <h2 className="mt-1.5 text-[17px] font-semibold tracking-tight text-[#363347]">{t("title")}</h2>
             <p className="mt-1.5 max-w-[610px] text-[10px] leading-relaxed text-[#9190a0]">{t("intro")}</p>
           </div>
-          <div className="flex flex-wrap gap-2">
-            <Link
-              href="/crm/import"
-              className="inline-flex items-center gap-1.5 rounded-md border border-[#dad8ec] bg-surface px-3.5 py-2.5 text-[11px] font-extrabold whitespace-nowrap text-primary-hover hover:bg-[#f7f5ff]"
-            >
-              <span aria-hidden>⇧</span>
-              {t("importContacts")}
-            </Link>
-          </div>
+          {selectedRows.length > 0 ? (
+            <div className="flex items-center gap-2 text-[11px] text-text-muted">
+              {t("selected", { count: selectedRows.length })}
+              <Button variant="outline" onClick={() => setToDelete(selectedRows)}>
+                {t("deleteSelected")}
+              </Button>
+            </div>
+          ) : (
+            <div className="flex flex-wrap gap-2">
+              <Link
+                href="/crm/import"
+                className="inline-flex items-center gap-1.5 rounded-md border border-[#dad8ec] bg-surface px-3.5 py-2.5 text-[11px] font-extrabold whitespace-nowrap text-primary-hover hover:bg-[#f7f5ff]"
+              >
+                <span aria-hidden>⇧</span>
+                {t("importContacts")}
+              </Link>
+              <Button variant="outline" icon="＋" onClick={() => setCompanyForm({ company: null })}>
+                {t("addCompany")}
+              </Button>
+              <Button icon="＋" onClick={() => setContactForm({ contact: null })}>
+                {t("addContact")}
+              </Button>
+            </div>
+          )}
         </div>
 
         <div className="mt-[19px] flex flex-col gap-1 border-t border-[#f0eff5] pt-3 md:flex-row md:items-center md:justify-between md:gap-4">
@@ -267,6 +310,7 @@ export function DirectoryPage() {
                 {countOf[key] != null && <b className="ml-1.5 text-[9px]">{format.number(countOf[key]!)}</b>}
               </button>
             ))}
+            <FilterMenu value={extra} lookups={lookups} onChange={setExtra} />
           </div>
         </div>
 
@@ -292,8 +336,25 @@ export function DirectoryPage() {
           )
         ) : (
           <div aria-busy={list.loading} className={`mt-2 ${list.loading ? "opacity-60 transition-opacity" : ""}`}>
-            <Table columns={columns} rows={rows} rowKey={(row) => row.id} onRowClick={open} />
-            <p className="pt-4 text-[10px] text-text-subtle">{t("showing", { count: rows.length, total })}</p>
+            <Table
+              columns={columns}
+              rows={shown}
+              rowKey={(row) => row.id}
+              onRowClick={open}
+              selected={selected}
+              onSelectedChange={setSelected}
+              selectAllLabel={tCommon("selectAll")}
+              selectRowLabel={(row) => tCommon("selectRow", { name: nameOf(row) })}
+            />
+            <Pagination
+              page={current}
+              pageSize={PAGE_SIZE}
+              total={rows.length}
+              onPageChange={setPage}
+              summary={t("showing", { count: shown.length, total })}
+              previousLabel={tCommon("previous")}
+              nextLabel={tCommon("next")}
+            />
           </div>
         )}
       </Card>
@@ -329,7 +390,7 @@ export function DirectoryPage() {
         lookups={lookups}
         onClose={() => setOpenContact(null)}
         onEdit={(contact) => setContactForm({ contact })}
-        onDelete={(contact) => setToDelete({ kind: "contact", id: `contact:${contact.id}`, contact })}
+        onDelete={(contact) => setToDelete([{ kind: "contact", id: `contact:${contact.id}`, contact }])}
         onChanged={(contact) => {
           setOpenContact(contact);
           reload();
@@ -340,13 +401,17 @@ export function DirectoryPage() {
         lookups={lookups}
         onClose={() => setOpenCompany(null)}
         onEdit={(company) => setCompanyForm({ company })}
-        onDelete={(company) => setToDelete({ kind: "company", id: `company:${company.id}`, company })}
+        onDelete={(company) => setToDelete([{ kind: "company", id: `company:${company.id}`, company }])}
       />
 
       <ConfirmDialog
         open={toDelete !== null}
-        title={t("deleteTitle")}
-        message={toDelete ? t("deleteMessage", { name: nameOf(toDelete) }) : ""}
+        title={t("deleteTitle", { count: toDelete?.length ?? 1 })}
+        message={
+          toDelete?.length === 1
+            ? t("deleteMessage", { name: nameOf(toDelete[0]!) })
+            : t("deleteManyMessage", { count: toDelete?.length ?? 0 })
+        }
         confirmLabel={tCommon("delete")}
         busy={deleting}
         onConfirm={confirmDelete}

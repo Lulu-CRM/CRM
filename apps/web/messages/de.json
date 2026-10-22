@@ -39,7 +39,7 @@
     "noResults": "Keine Ergebnisse"
   },
   "layout": {
-    "tagline": "Intelligenter Arbeitsbereich",
+    "tagline": "Growth OS",
     "workspace": "Arbeitsbereich",
     "modules": "Module",
     "active": "Aktiv",
@@ -1178,7 +1178,7 @@
     "emptyHint": "Füge deinen ersten Kontakt hinzu oder importiere eine Liste.",
     "noMatches": "Keine passenden Personen oder Unternehmen",
     "noMatchesHint": "Versuche eine andere Suche oder einen anderen Filter.",
-    "deleteTitle": "Diesen Eintrag löschen?",
+    "deleteTitle": "{count, plural, one {Diesen Eintrag löschen?} other {# Einträge löschen?}}",
     "deleteMessage": "{name} wird für alle im Workspace entfernt.",
     "deleted": "{name} wurde gelöscht.",
     "notes": {
@@ -1202,6 +1202,10 @@
       "nextStep": "Nächster Schritt",
       "quality": "{filled} von {total} Profilfeldern ausgefüllt",
       "review": "Prüfen und speichern"
-    }
+    },
+    "selected": "{count} ausgewählt",
+    "deleteSelected": "Auswahl löschen",
+    "deleteManyMessage": "{count} Einträge werden für alle im Workspace entfernt.",
+    "deletedMany": "{count} Einträge wurden gelöscht."
   }
 }

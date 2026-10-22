@@ -39,7 +39,7 @@
     "noResults": "没有结果"
   },
   "layout": {
-    "tagline": "智能工作区",
+    "tagline": "Growth OS",
     "workspace": "工作区",
     "modules": "模块",
     "active": "当前",
@@ -1178,7 +1178,7 @@
     "emptyHint": "添加第一位联系人或导入一个列表。",
     "noMatches": "没有匹配的人员或公司",
     "noMatchesHint": "换个搜索词或筛选条件试试。",
-    "deleteTitle": "删除这条记录？",
+    "deleteTitle": "{count, plural, one {删除这条记录？} other {删除 # 条记录？}}",
     "deleteMessage": "{name} 将对工作区中的所有人删除。",
     "deleted": "{name} 已删除。",
     "notes": {
@@ -1202,6 +1202,10 @@
       "nextStep": "下一步",
       "quality": "已填写 {filled}/{total} 个资料字段",
       "review": "查看并保存"
-    }
+    },
+    "selected": "已选择 {count} 条",
+    "deleteSelected": "删除所选",
+    "deleteManyMessage": "{count} 条记录将对工作区中的所有人删除。",
+    "deletedMany": "已删除 {count} 条记录。"
   }
 }

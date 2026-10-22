@@ -78,6 +78,28 @@ describe("Contacts & Companies page", () => {
     expect(await screen.findByRole("dialog", { name: "Atlas Logistics" })).toBeTruthy();
   });
 
+  it("filters people by status from + Filter, leaving companies out", async () => {
+    await waitFor(() => expect(names()).toContain("Atlas Logistics"), slow);
+    fireEvent.click(screen.getByRole("button", { name: /Filter/ }));
+    fireEvent.change(screen.getByLabelText("Status"), { target: { value: "qualified" } });
+    await waitFor(() => expect(names()).toEqual(["Sophie Laurent", "Elena Schmidt"]), slow);
+  });
+
+  it("deletes the selected records after confirming", async () => {
+    await waitFor(() => expect(names()).toContain("Mila Rossi"), slow);
+    fireEvent.click(screen.getByRole("checkbox", { name: "Select Mila Rossi" }));
+    fireEvent.click(screen.getByRole("checkbox", { name: "Select Roam & Root" }));
+    expect(screen.getByText("2 selected")).toBeTruthy();
+    fireEvent.click(screen.getByRole("button", { name: "Delete selected" }));
+    const confirm = await screen.findByRole("dialog", { name: "Delete 2 records?" });
+    await act(async () => {
+      fireEvent.click(within(confirm).getByRole("button", { name: "Delete" }));
+    });
+    await screen.findByText("2 records were deleted.");
+    await waitFor(() => expect(names()).not.toContain("Mila Rossi"), slow);
+    expect(names()).not.toContain("Roam & Root");
+  });
+
   it("adds a contact and shows it in the table", async () => {
     await waitFor(() => expect(names()).toContain("Sophie Laurent"), slow);
     fireEvent.click(screen.getAllByRole("button", { name: /Add contact/ })[0]!);

@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useState } from "react";
 import { useFormatter, useTranslations } from "next-intl";
 import { Link, usePathname } from "@/i18n/navigation";
@@ -29,12 +30,11 @@ export function Rail({ onNavigate }: { onNavigate?: () => void }) {
   return (
     <aside className="flex h-full w-[var(--rail-width)] flex-col overflow-y-auto bg-rail px-3.5 pt-6 pb-4.5 text-rail-text">
       <div className="flex items-center gap-2.5 px-2.5 pb-7 text-white">
-        <span className="grid size-[34px] place-items-center rounded-[11px] bg-gradient-to-br from-primary-light to-primary text-lg font-black shadow-brand">
-          L
-        </span>
+        {/* The Lulu mark from the MagicPath design (public/brand), cut from its logo file. */}
+        <Image src="/brand/lulu-mark.png" alt="" width={28} height={28} priority className="flex-none" />
         <div>
           <strong className="block text-base tracking-tight">Lulu</strong>
-          <span className="block text-[9px] tracking-[0.12em] text-rail-label uppercase">
+          <span className="block text-[9px] tracking-[0.12em] text-[#8b8ca5] uppercase">
             {t("tagline")}
           </span>
         </div>
@@ -48,6 +48,9 @@ export function Rail({ onNavigate }: { onNavigate?: () => void }) {
           <Link key={module.key} href={module.href} onClick={onNavigate} className={linkClass}>
             <span className="w-4 text-center text-[13px]">{module.icon}</span>
             {tModules(module.key)}
+            <span className="ml-auto text-[9px] text-[#7d87a9]" aria-hidden>
+              ⌄
+            </span>
           </Link>
         ))}
       </nav>
@@ -57,7 +60,7 @@ export function Rail({ onNavigate }: { onNavigate?: () => void }) {
         onClick={() => setCrmOpen((open) => !open)}
         aria-expanded={crmOpen}
         aria-controls="crm-menu"
-        className="mt-1 flex min-h-[39px] items-center gap-2.5 rounded-[9px] bg-rail-active px-2.5 text-left text-[11px] font-extrabold text-white shadow-[inset_3px_0_var(--color-rail-indicator)]"
+        className="mt-1 flex min-h-[39px] items-center gap-2.5 rounded-[9px] bg-rail-active px-2.5 text-left text-[11px] font-extrabold text-white shadow-[inset_3px_0_var(--color-accent)]"
       >
         <span className="w-4 text-center text-[13px] text-accent">♧</span>
         {tModules("crm")}
@@ -78,14 +81,14 @@ export function Rail({ onNavigate }: { onNavigate?: () => void }) {
                 aria-current={isActive ? "page" : undefined}
                 className={`flex min-h-8 items-center gap-2.5 rounded-lg px-2.5 text-[11px] ${
                   isActive
-                    ? "bg-rail-active font-bold text-white shadow-[inset_2px_0_var(--color-rail-indicator)]"
-                    : "text-rail-text hover:bg-rail-hover hover:text-white"
+                    ? "bg-rail-active font-bold text-white shadow-[inset_2px_0_var(--color-accent)]"
+                    : "text-rail-text hover:bg-[#252746] hover:text-white"
                 }`}
               >
-                <span className={`w-4 text-center text-xs ${isActive ? "text-accent" : ""}`}>{page.icon}</span>
+                <span className={`w-4 text-center text-xs ${isActive ? "text-accent" : "text-[#8292b8]"}`}>{page.icon}</span>
                 {tNav(key)}
                 {key === "directory" && recordCount !== null && (
-                  <b className="ml-auto rounded-[9px] border border-[#41415d] bg-rail-hover px-1.5 py-0.5 text-[8px] text-accent">
+                  <b className="ml-auto rounded-[9px] border border-[#41415d] bg-[#252746] px-1.5 py-0.5 text-[8px] text-accent">
                     {format.number(recordCount)}
                   </b>
                 )}
@@ -106,6 +109,11 @@ export function Rail({ onNavigate }: { onNavigate?: () => void }) {
             <Link key={module.key} href={module.href} onClick={onNavigate} className={linkClass}>
               <span className="w-4 text-center text-[13px]">{module.icon}</span>
               {tModules(module.key)}
+              {module.key === "marketplace" && (
+                <span className="ml-auto text-[9px] text-[#7d87a9]" aria-hidden>
+                  ⌄
+                </span>
+              )}
             </Link>
           ))}
         </nav>

@@ -39,7 +39,7 @@
     "noResults": "No results"
   },
   "layout": {
-    "tagline": "Intelligence workspace",
+    "tagline": "Growth OS",
     "workspace": "Workspace",
     "modules": "Modules",
     "active": "Active",
@@ -1178,7 +1178,7 @@
     "emptyHint": "Add your first contact or import a list.",
     "noMatches": "No people or companies match",
     "noMatchesHint": "Try another search or filter.",
-    "deleteTitle": "Delete this record?",
+    "deleteTitle": "{count, plural, one {Delete this record?} other {Delete # records?}}",
     "deleteMessage": "{name} will be removed for everyone in the workspace.",
     "deleted": "{name} was deleted.",
     "notes": {
@@ -1202,6 +1202,10 @@
       "nextStep": "Next step",
       "quality": "{filled} of {total} profile fields complete",
       "review": "Review and save"
-    }
+    },
+    "selected": "{count} selected",
+    "deleteSelected": "Delete selected",
+    "deleteManyMessage": "{count} records will be removed for everyone in the workspace.",
+    "deletedMany": "{count} records were deleted."
   }
 }

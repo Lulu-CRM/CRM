@@ -14,7 +14,9 @@
     "segments": "Segmente",
     "import": "Kontakte importieren",
     "ai": "KI-Analyse",
-    "settings": "CRM-Einstellungen"
+    "settings": "CRM-Einstellungen",
+    "directory": "Kontakte & Unternehmen",
+    "pipeline": "Leads & Deals"
   },
   "common": {
     "save": "Speichern",
@@ -99,6 +101,12 @@
     },
     "settings": {
       "description": "Felder, Status, Rollen und Einwilligungsregeln für Ihren Arbeitsbereich festlegen."
+    },
+    "directory": {
+      "description": "Personen und Unternehmenskonten gemeinsam verwalten, ohne den Zusammenhang zu verlieren."
+    },
+    "pipeline": {
+      "description": "Beziehungen qualifizieren und Chancen in einem durchgehenden Ablauf voranbringen."
     }
   },
   "errors": {
@@ -423,7 +431,8 @@
     "column": {
       "add": "Lead hinzufügen",
       "addLead": "Lead zu {stage} hinzufügen",
-      "empty": "Keine Leads hier"
+      "empty": "Keine Leads hier",
+      "converted": "Konvertiert"
     },
     "card": {
       "actions": "Aktionen für {name}",
@@ -1125,6 +1134,74 @@
     "errors": {
       "missing": "Gib deine E-Mail-Adresse und dein Passwort ein.",
       "wrong": "E-Mail-Adresse oder Passwort ist falsch."
+    }
+  },
+  "pipeline": {
+    "eyebrow": "Verbundene Pipeline",
+    "title": "Aus Leads werden Chancen.",
+    "intro": "Zwischen Qualifizierung und Umsatz wechseln, ohne den Ablauf zu verlassen.",
+    "switchLabel": "Leads oder Deals anzeigen",
+    "leads": "Leads",
+    "deals": "Deals & Pipeline"
+  },
+  "directory": {
+    "eyebrow": "Beziehungsverzeichnis",
+    "title": "Personen und Unternehmen, zusammen.",
+    "intro": "Jede Person mit dem Konto, dem Kontext und der Geschäftshistorie hinter der Beziehung verbinden.",
+    "importContacts": "Kontakte importieren",
+    "addCompany": "Unternehmen hinzufügen",
+    "addContact": "Kontakt hinzufügen",
+    "search": "Personen, Unternehmen, Domains oder Tags suchen",
+    "filtersLabel": "Einträge anzeigen",
+    "tabs": {
+      "all": "Alle",
+      "contacts": "Kontakte",
+      "companies": "Unternehmen",
+      "followUp": "Follow-up nötig"
+    },
+    "columns": {
+      "record": "Eintrag",
+      "context": "Beziehungskontext",
+      "status": "Status",
+      "owner": "Verantwortlich",
+      "activity": "Letzte Aktivität / Wert",
+      "actions": "Aktionen"
+    },
+    "kind": {
+      "contact": "Kontakt",
+      "company": "Unternehmen"
+    },
+    "contactCount": "{count, plural, one {# Kontakt} other {# Kontakte}}",
+    "open": "{name} öffnen",
+    "showing": "{count} von {total} Einträgen",
+    "empty": "Noch keine Personen oder Unternehmen",
+    "emptyHint": "Füge deinen ersten Kontakt hinzu oder importiere eine Liste.",
+    "noMatches": "Keine passenden Personen oder Unternehmen",
+    "noMatchesHint": "Versuche eine andere Suche oder einen anderen Filter.",
+    "deleteTitle": "Diesen Eintrag löschen?",
+    "deleteMessage": "{name} wird für alle im Workspace entfernt.",
+    "deleted": "{name} wurde gelöscht.",
+    "notes": {
+      "eyebrow": "Notizen",
+      "title": "Kontext am Eintrag festhalten",
+      "intro": "Eine geteilte oder private Notiz direkt aus Kontakte & Unternehmen hinzufügen.",
+      "record": "Eintrag für die Notiz",
+      "contacts": "Kontakte",
+      "companies": "Unternehmen",
+      "add": "Notiz hinzufügen",
+      "saved": "Notiz gespeichert."
+    },
+    "ai": {
+      "eyebrow": "KI-Analyse",
+      "title": "Beziehungswissen erzeugen",
+      "intro": "Signale, Datenqualität und den nächsten Schritt prüfen, ohne das Verzeichnis zu verlassen.",
+      "contact": "Zu analysierender Kontakt",
+      "run": "KI-Analyse erstellen",
+      "running": "Wird analysiert…",
+      "ready": "KI-Analyse fertig. Prüfe die Empfehlungen vor dem Speichern.",
+      "nextStep": "Nächster Schritt",
+      "quality": "{filled} von {total} Profilfeldern ausgefüllt",
+      "review": "Prüfen und speichern"
     }
   }
 }

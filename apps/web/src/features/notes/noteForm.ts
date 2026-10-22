@@ -12,12 +12,13 @@ export const noteFormSchema = z.object({
 
 export type NoteFormValues = z.infer<typeof noteFormSchema>;
 
-export function toFormValues(note: Note | null): NoteFormValues {
+// `related` pre-links a new note, e.g. "company:<id>" when it is added from that record.
+export function toFormValues(note: Note | null, related = ""): NoteFormValues {
   return {
     title: note?.title ?? "",
     body: note?.body ?? "",
     visibility: note?.visibility ?? "shared",
-    related: note?.recordType && note.recordId ? `${note.recordType}:${note.recordId}` : "",
+    related: note?.recordType && note.recordId ? `${note.recordType}:${note.recordId}` : related,
   };
 }
 

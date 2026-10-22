@@ -23,6 +23,7 @@ export function NoteFormModal({
   onClose,
   onSubmit,
   onDelete,
+  related = "",
 }: {
   open: boolean;
   note: Note | null;
@@ -32,6 +33,8 @@ export function NoteFormModal({
   onClose: () => void;
   onSubmit: (input: NoteCreateInput) => Promise<void>;
   onDelete: () => void;
+  // Pre-links a new note to a record ("contact:<id>" or "company:<id>").
+  related?: string;
 }) {
   const t = useTranslations("notes.form");
   const tVisibility = useTranslations("notes.visibility");
@@ -44,12 +47,12 @@ export function NoteFormModal({
     formState: { errors, isSubmitting },
   } = useForm<NoteFormValues>({
     resolver: zodResolver(noteFormSchema),
-    defaultValues: toFormValues(note),
+    defaultValues: toFormValues(note, related),
   });
 
   useEffect(() => {
-    if (open) reset(toFormValues(note));
-  }, [open, note, reset]);
+    if (open) reset(toFormValues(note, related));
+  }, [open, note, related, reset]);
 
   const field = (name: keyof NoteFormValues, label: React.ReactNode, input: React.ReactNode, wide = false) => {
     const message = errors[name]?.message;

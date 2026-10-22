@@ -1,5 +1,6 @@
 import { authSessionSchema, type AuthSession } from "@lulu/shared";
 import { realAreas, setAuthToken } from "@/lib/api";
+import { CRM_HOME } from "@/config/navigation";
 
 // The sign-in session: the token from POST /auth/login and when it expires.
 // Kept in localStorage so a reload stays signed in; every read checks the expiry.
@@ -52,6 +53,6 @@ export function restoreSession(): AuthSession | null {
 }
 
 /** Where to go after signing in: only paths inside this app, never another site. */
-export function safeNext(next: string | null | undefined, fallback = "/crm/overview"): string {
+export function safeNext(next: string | null | undefined, fallback = CRM_HOME): string {
   return next && next.startsWith("/") && !next.startsWith("//") ? next : fallback;
 }

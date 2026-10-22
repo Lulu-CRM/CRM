@@ -1,6 +1,7 @@
-import { useMemo, useState } from 'react';
+import { useState } from 'react';
 import './LuluCRM.css';
-type View = 'Overview' | 'Contacts' | 'Companies' | 'Leads' | 'Deals & Pipeline' | 'Activities & Tasks' | 'Notes' | 'Segments' | 'Import Contacts' | 'AI Analysis' | 'CRM Settings';
+const brandLogo = 'https://storage.googleapis.com/storage.magicpath.ai/component-assets/459460805365215232/459469391319404544/b4feb3c352cac3371dae319dc728f39e63154139ef00c4ce88f05cd3a714fe43.png';
+type View = 'Contacts & Companies' | 'Leads & Deals' | 'Notes' | 'Import Contacts';
 type Contact = {
   id: number;
   name: string;
@@ -25,17 +26,13 @@ const workspaceLinks = [{
   icon: '▤',
   href: 'https://designs.magicpath.ai/v1/wildly-forest-1045'
 }, {
-  label: 'Email',
-  icon: '✉',
-  href: 'https://designs.magicpath.ai/v1/sharply-time-8371'
-}, {
   label: 'Calendar',
   icon: '◷',
   href: 'https://designs.magicpath.ai/v1/warmly-time-4098'
 }, {
-  label: 'CRM',
-  icon: '♧',
-  href: 'https://designs.magicpath.ai/v1/serenely-gate-7492'
+  label: 'Email',
+  icon: '✉',
+  href: 'https://designs.magicpath.ai/v1/sharply-time-8371'
 }];
 const moduleLinks = [{
   label: 'Marketplace',
@@ -50,38 +47,17 @@ const views: {
   label: View;
   icon: string;
 }[] = [{
-  label: 'Overview',
-  icon: '⌂'
-}, {
-  label: 'Contacts',
+  label: 'Contacts & Companies',
   icon: '♙'
 }, {
-  label: 'Companies',
-  icon: '▣'
-}, {
-  label: 'Leads',
+  label: 'Leads & Deals',
   icon: '◈'
-}, {
-  label: 'Deals & Pipeline',
-  icon: '↗'
-}, {
-  label: 'Activities & Tasks',
-  icon: '✓'
 }, {
   label: 'Notes',
   icon: '▤'
 }, {
-  label: 'Segments',
-  icon: '◌'
-}, {
   label: 'Import Contacts',
   icon: '⇧'
-}, {
-  label: 'AI Analysis',
-  icon: '✦'
-}, {
-  label: 'CRM Settings',
-  icon: '⚙'
 }];
 const initialContacts: Contact[] = [{
   id: 1,
@@ -304,10 +280,12 @@ function Modal({
   return <div className="crm-overlay" onMouseDown={event => event.target === event.currentTarget && onClose()}><div className={`crm-modal ${wide ? 'wide' : ''}`} role="dialog" aria-modal="true"><div className="crm-modal-head"><div><span className="crm-eyebrow">{eyebrow}</span><h2>{title}</h2></div><button className="crm-close" type="button" onClick={onClose} aria-label="Close">×</button></div>{children}</div></div>;
 }
 export const LuluCRM = () => {
-  const [view, setView] = useState<View>('Overview');
+  const [view, setView] = useState<View>('Contacts & Companies');
   const [contacts, setContacts] = useState<Contact[]>(initialContacts);
   const [selectedContact, setSelectedContact] = useState<Contact | null>(null);
-  const [contactSearch, setContactSearch] = useState('');
+  const [directoryTab, setDirectoryTab] = useState<'All' | 'Contacts' | 'Companies'>('All');
+  const [directorySearch, setDirectorySearch] = useState('');
+  const [pipelineTab, setPipelineTab] = useState<'Leads' | 'Deals'>('Leads');
   const [showContactModal, setShowContactModal] = useState(false);
   const [showImportModal, setShowImportModal] = useState(false);
   const [showTaskModal, setShowTaskModal] = useState(false);
@@ -330,25 +308,19 @@ export const LuluCRM = () => {
     body: '',
     visibility: 'Shared'
   });
+  const [noteTarget, setNoteTarget] = useState('Workspace');
   const [importStep, setImportStep] = useState<'upload' | 'preview'>('upload');
   const [importFile, setImportFile] = useState('');
   const [aiContact, setAiContact] = useState(initialContacts[0].id);
   const [aiRunning, setAiRunning] = useState(false);
-  const [activeSegment, setActiveSegment] = useState('High-intent leads');
-  const filteredContacts = useMemo(() => contacts.filter(contact => `${contact.name} ${contact.email} ${contact.company} ${contact.tags.join(' ')}`.toLowerCase().includes(contactSearch.toLowerCase())), [contacts, contactSearch]);
-  const currentTitle = view === 'Deals & Pipeline' ? 'Deals & Pipeline' : view;
+  const [directoryAiGenerated, setDirectoryAiGenerated] = useState(false);
+  const [railOpen, setRailOpen] = useState(true);
+  const currentTitle = view;
   const currentDescription: Record<View, string> = {
-    Overview: 'Keep every relationship, follow-up and opportunity in one calm workspace.',
-    Contacts: 'Build a complete, usable source of truth for every relationship.',
-    Companies: 'Understand the people, context and commercial value behind every account.',
-    Leads: 'Qualify interest and move the right conversations forward.',
-    'Deals & Pipeline': 'See every opportunity, owner and next step without losing context.',
-    'Activities & Tasks': 'Turn conversations into visible follow-through for the whole team.',
+    'Contacts & Companies': 'Manage people and company accounts together, without losing the context between them.',
+    'Leads & Deals': 'Qualify relationships and move opportunities forward in one connected workflow.',
     Notes: 'Capture decisions and context where the team can actually use them.',
-    Segments: 'Create focused audiences from the data already in your workspace.',
-    'Import Contacts': 'Bring existing relationships into Lulu with a safe, reviewable import.',
-    'AI Analysis': 'Let Lulu surface context and next actions while people stay in control.',
-    'CRM Settings': 'Shape fields, statuses, roles and consent rules around your workspace.'
+    'Import Contacts': 'Bring existing relationships into Lulu with a safe, reviewable import.'
   };
   function showToast(message: string) {
     setToast(message);
@@ -399,9 +371,11 @@ export const LuluCRM = () => {
     showToast('Import complete. 24 contacts were added and 3 duplicates were held for review.');
   }
   function runAiAnalysis() {
+    setDirectoryAiGenerated(false);
     setAiRunning(true);
     window.setTimeout(() => {
       setAiRunning(false);
+      setDirectoryAiGenerated(true);
       showToast('AI analysis ready. Review the recommendations before saving.');
     }, 850);
   }
@@ -413,39 +387,71 @@ export const LuluCRM = () => {
       body: '',
       visibility: 'Shared'
     });
-    showToast('Note saved to the CRM workspace.');
+    showToast(`Note saved to ${noteTarget}.`);
   }
-  function renderOverview() {
-    return <>
-      <div className="crm-stat-grid">
-        <div className="crm-stat-card"><div className="crm-stat-top"><span>All contacts</span><span className="crm-stat-dot violet" /></div><strong>{contacts.length.toLocaleString('en-US')}</strong><small><b className="positive">+12%</b> vs last month</small></div>
-        <div className="crm-stat-card"><div className="crm-stat-top"><span>Open pipeline</span><span className="crm-stat-dot blue" /></div><strong>€97.9k</strong><small><b className="positive">+8.4%</b> weighted value</small></div>
-        <div className="crm-stat-card"><div className="crm-stat-top"><span>Follow-ups due</span><span className="crm-stat-dot coral" /></div><strong>07</strong><small><b className="warning">3</b> due today</small></div>
-        <div className="crm-stat-card"><div className="crm-stat-top"><span>AI signals</span><span className="crm-stat-dot mint" /></div><strong>18</strong><small><b className="positive">+5</b> since Monday</small></div>
-      </div>
-      <div className="crm-overview-grid">
-        <section className="crm-card crm-contact-card"><div className="crm-card-head"><div><span className="crm-eyebrow">RECENT CONTACTS</span><h2>Keep relationships moving.</h2></div><button className="crm-text-button" type="button" onClick={() => setView('Contacts')}>View all →</button></div><div className="crm-contact-list">{contacts.slice(0, 4).map(contact => <button className="crm-contact-row" type="button" key={contact.id} onClick={() => setSelectedContact(contact)}><Avatar initials={contact.initials} tone={contact.tone} small /><span className="crm-contact-copy"><strong>{contact.name}</strong><small>{contact.company} · {contact.role}</small></span><Pill tone={contact.stage === 'Customer' ? 'success' : contact.stage === 'Qualified' ? 'violet' : 'neutral'}>{contact.stage}</Pill><time>{contact.lastTouch}</time><span className="crm-row-arrow">›</span></button>)}</div></section>
-        <section className="crm-card crm-pipeline-card"><div className="crm-card-head"><div><span className="crm-eyebrow">PIPELINE SNAPSHOT</span><h2>What needs attention.</h2></div><button className="crm-icon-button" type="button" onClick={() => setView('Deals & Pipeline')}>↗</button></div><div className="crm-pipeline-bars"><div><span><b>New</b><small>€18.6k</small></span><i><em style={{
-                  width: '35%'
-                }} /></i></div><div><span><b>Qualified</b><small>€12.8k</small></span><i><em className="blue" style={{
-                  width: '48%'
-                }} /></i></div><div><span><b>Proposal</b><small>€24k</small></span><i><em className="violet" style={{
-                  width: '68%'
-                }} /></i></div><div><span><b>Negotiation</b><small>€42.5k</small></span><i><em className="mint" style={{
-                  width: '84%'
-                }} /></i></div></div><div className="crm-card-footer"><span><span className="crm-live-dot" /> 4 active opportunities</span><button className="crm-outline-button" type="button" onClick={() => setShowDealModal(true)}>＋ Add deal</button></div></section>
-      </div>
-      <section className="crm-card crm-activity-card"><div className="crm-card-head"><div><span className="crm-eyebrow">ACTIVITY STREAM</span><h2>The team is in motion.</h2></div><button className="crm-text-button" type="button" onClick={() => setView('Activities & Tasks')}>Open activities →</button></div><div className="crm-activity-list">{initialActivities.map(activity => <div className="crm-activity-row" key={activity.title}><span className={`crm-activity-icon ${activity.tone}`}>{activity.icon}</span><span className="crm-contact-copy"><strong>{activity.title}</strong><small>{activity.meta}</small></span><time>{activity.time}</time></div>)}</div></section>
-    </>;
-  }
-  function renderContacts() {
-    return <section className="crm-card crm-table-card"><div className="crm-toolbar"><div className="crm-search"><span>⌕</span><input value={contactSearch} onChange={event => setContactSearch(event.target.value)} placeholder="Search contacts, companies or tags" /></div><div className="crm-toolbar-actions"><button className="crm-outline-button" type="button" onClick={() => setShowImportModal(true)}>⇧ Import contacts</button><button className="crm-primary-button" type="button" onClick={() => setShowContactModal(true)}>＋ Add contact</button></div></div><div className="crm-filter-row"><button className="crm-filter active" type="button">All contacts <b>{contacts.length}</b></button><button className="crm-filter" type="button">My contacts <b>18</b></button><button className="crm-filter" type="button">Needs follow-up <b>7</b></button><button className="crm-filter" type="button">New this month <b>12</b></button><button className="crm-filter" type="button">＋ Filter</button></div><div className="crm-table-scroll"><table className="crm-table"><thead><tr><th><input type="checkbox" aria-label="Select all contacts" /></th><th>Contact</th><th>Company</th><th>Status</th><th>Owner</th><th>Last touch</th><th /></tr></thead><tbody>{filteredContacts.map(contact => <tr key={contact.id} onClick={() => setSelectedContact(contact)}><td><input type="checkbox" onClick={event => event.stopPropagation()} aria-label={`Select ${contact.name}`} /></td><td><div className="crm-table-person"><Avatar initials={contact.initials} tone={contact.tone} small /><span><strong>{contact.name}</strong><small>{contact.email}</small></span></div></td><td><strong>{contact.company}</strong><small>{contact.role}</small></td><td><Pill tone={contact.stage === 'Customer' ? 'success' : contact.stage === 'Qualified' ? 'violet' : contact.stage === 'Follow-up' ? 'warning' : 'neutral'}>{contact.stage}</Pill></td><td><div className="crm-owner"><Avatar initials={contact.owner.split(' ').map(part => part[0]).join('')} tone="mint" small />{contact.owner}</div></td><td>{contact.lastTouch}</td><td><button className="crm-row-menu" type="button" onClick={event => {
+  function renderDirectory() {
+    type DirectoryRow = {
+      kind: 'Contact' | 'Company';
+      id: string;
+      name: string;
+      initials: string;
+      tone: string;
+      detail: string;
+      context: string;
+      status: string;
+      owner: string;
+      lastActivity: string;
+      contact?: Contact;
+      company?: typeof companies[number];
+    };
+    const query = directorySearch.trim().toLowerCase();
+    const rows: DirectoryRow[] = [...contacts.map(contact => ({
+      kind: 'Contact' as const,
+      id: `contact-${contact.id}`,
+      name: contact.name,
+      initials: contact.initials,
+      tone: contact.tone,
+      detail: contact.email,
+      context: `${contact.company} · ${contact.role}`,
+      status: contact.stage,
+      owner: contact.owner,
+      lastActivity: contact.lastTouch,
+      contact
+    })), ...companies.map(company => ({
+      kind: 'Company' as const,
+      id: `company-${company.name}`,
+      name: company.name,
+      initials: company.name.split(' ').map(part => part[0]).join('').slice(0, 2),
+      tone: 'blue',
+      detail: company.domain,
+      context: `${company.people} contacts · ${company.segment}`,
+      status: company.health,
+      owner: company.owner,
+      lastActivity: company.value,
+      company
+    }))].filter(row => {
+      const kindMatches = directoryTab === 'All' || directoryTab === 'Contacts' && row.kind === 'Contact' || directoryTab === 'Companies' && row.kind === 'Company';
+      const textMatches = !query || `${row.name} ${row.detail} ${row.context} ${row.owner} ${row.status}`.toLowerCase().includes(query);
+      return kindMatches && textMatches;
+    });
+    return <section className="crm-card crm-table-card"><div className="crm-toolbar"><div><span className="crm-eyebrow">RELATIONSHIP DIRECTORY</span><h2>People and companies, together.</h2><p className="crm-toolbar-copy">Connect every person to the account, context and commercial history behind the relationship.</p></div><div className="crm-toolbar-actions"><button className="crm-outline-button" type="button" onClick={() => setShowImportModal(true)}>⇧ Import contacts</button><button className="crm-outline-button" type="button" onClick={() => setShowCompanyModal(true)}>＋ Add company</button><button className="crm-primary-button" type="button" onClick={() => setShowContactModal(true)}>＋ Add contact</button></div></div><div className="crm-directory-controls"><div className="crm-search"><span>⌕</span><input value={directorySearch} onChange={event => setDirectorySearch(event.target.value)} placeholder="Search people, companies, domains or tags" /></div><div className="crm-filter-row"><button className={`crm-filter ${directoryTab === 'All' ? 'active' : ''}`} type="button" onClick={() => setDirectoryTab('All')}>All <b>{contacts.length + companies.length}</b></button><button className={`crm-filter ${directoryTab === 'Contacts' ? 'active' : ''}`} type="button" onClick={() => setDirectoryTab('Contacts')}>Contacts <b>{contacts.length}</b></button><button className={`crm-filter ${directoryTab === 'Companies' ? 'active' : ''}`} type="button" onClick={() => setDirectoryTab('Companies')}>Companies <b>{companies.length}</b></button><button className="crm-filter" type="button" onClick={() => showToast('Showing records that need follow-up.')}>Needs follow-up <b>7</b></button><button className="crm-filter" type="button" onClick={() => showToast('More relationship filters opened.')}>＋ Filter</button></div></div><div className="crm-table-scroll"><table className="crm-table"><thead><tr><th><input type="checkbox" aria-label="Select all records" /></th><th>Record</th><th>Relationship context</th><th>Status</th><th>Owner</th><th>Last activity / value</th><th /></tr></thead><tbody>{rows.map(row => <tr key={row.id} onClick={() => row.kind === 'Contact' && row.contact ? setSelectedContact(row.contact) : showToast(`${row.name} company profile opened.`)}><td><input type="checkbox" onClick={event => event.stopPropagation()} aria-label={`Select ${row.name}`} /></td><td><div className="crm-table-person"><Avatar initials={row.initials} tone={row.tone} small /><span><strong>{row.name}</strong><small>{row.kind} · {row.detail}</small></span></div></td><td><strong>{row.context.split(' · ')[0]}</strong><small>{row.context.split(' · ').slice(1).join(' · ')}</small></td><td><Pill tone={row.kind === 'Company' ? row.status === 'Strong' ? 'success' : row.status === 'Watch' ? 'warning' : 'violet' : row.status === 'Customer' ? 'success' : row.status === 'Qualified' ? 'violet' : row.status === 'Follow-up' ? 'warning' : 'neutral'}>{row.status}</Pill></td><td><div className="crm-owner"><Avatar initials={row.owner.split(' ').map(part => part[0]).join('')} tone="mint" small />{row.owner}</div></td><td>{row.lastActivity}</td><td><button className="crm-row-menu" type="button" onClick={event => {
                   event.stopPropagation();
-                  setSelectedContact(contact);
-                }}>•••</button></td></tr>)}</tbody></table></div>{filteredContacts.length === 0 && <div className="crm-empty">No contacts match your search.</div>}<div className="crm-table-footer"><span>Showing {filteredContacts.length} of {contacts.length} contacts</span><div><button className="crm-page-button" type="button">‹</button><button className="crm-page-button active" type="button">1</button><button className="crm-page-button" type="button">2</button><button className="crm-page-button" type="button">›</button></div></div></section>;
+                  row.kind === 'Contact' && row.contact ? setSelectedContact(row.contact) : showToast(`${row.name} company profile opened.`);
+                }}>•••</button></td></tr>)}</tbody></table></div>{rows.length === 0 && <div className="crm-empty">No people or companies match your search.</div>}<div className="crm-table-footer"><span>Showing {rows.length} of {contacts.length + companies.length} records</span><div><button className="crm-page-button" type="button">‹</button><button className="crm-page-button active" type="button">1</button><button className="crm-page-button" type="button">2</button><button className="crm-page-button" type="button">›</button></div></div></section>;
   }
-  function renderCompanies() {
-    return <section className="crm-card crm-table-card"><div className="crm-toolbar"><div><span className="crm-eyebrow">COMPANY DIRECTORY</span><h2>Accounts with context.</h2><p className="crm-toolbar-copy">Connect people, pipeline and commercial history around each company.</p></div><button className="crm-primary-button" type="button" onClick={() => setShowCompanyModal(true)}>＋ Add company</button></div><div className="crm-company-grid">{companies.map(company => <button className="crm-company-card" type="button" key={company.name}><span className="crm-company-mark">{company.name.split(' ').map(part => part[0]).join('').slice(0, 2)}</span><span className="crm-company-copy"><strong>{company.name}</strong><small>{company.domain}</small><span>{company.people} contacts · {company.segment}</span></span><span className={`crm-health ${company.health.toLowerCase()}`}>{company.health}</span><span className="crm-company-value"><small>Pipeline value</small><strong>{company.value}</strong></span><span className="crm-row-arrow">›</span></button>)}</div></section>;
+  function renderDirectoryActions() {
+    const selectedAiContact = contacts.find(item => item.id === aiContact) || contacts[0];
+    const recordOptions = [...contacts.map(item => item.name), ...companies.map(item => item.name)];
+    return <div className="crm-directory-actions"><section className="crm-card crm-directory-action-card"><div className="crm-directory-action-icon">▤</div><div className="crm-directory-action-copy"><span className="crm-eyebrow">NOTES</span><h3>Keep context on the record</h3><p>Add a shared or private note directly from Contacts &amp; Companies.</p><select value={noteTarget} onChange={event => setNoteTarget(event.target.value)}>{recordOptions.map(record => <option value={record} key={record}>{record}</option>)}</select><button className="crm-outline-button" type="button" onClick={() => setShowNoteModal(true)}>＋ Add note</button></div></section><section className="crm-card crm-directory-action-card crm-directory-ai-card"><div className="crm-directory-action-icon ai">✦</div><div className="crm-directory-action-copy"><span className="crm-eyebrow">AI ANALYSIS</span><h3>Generate relationship intelligence</h3><p>Review signals, data quality and the next best action without leaving the directory.</p><select value={aiContact} onChange={event => {
+            setAiContact(Number(event.target.value));
+            setDirectoryAiGenerated(false);
+          }}>{contacts.map(item => <option value={item.id} key={item.id}>{item.name} · {item.company}</option>)}</select><button className="crm-primary-button" type="button" onClick={runAiAnalysis}>{aiRunning ? 'Analyzing…' : 'Generate AI analysis'}</button>{directoryAiGenerated && <div className="crm-inline-ai-result"><strong>{selectedAiContact.name}</strong><span>Active relationship · recommended next step: send a tailored follow-up.</span><small>4 of 5 profile fields complete · review before saving.</small></div>}</div></section></div>;
+  }
+  function renderLeadsDeals() {
+    return <>
+      <section className="crm-card crm-pipeline-switcher"><div className="crm-card-head"><div><span className="crm-eyebrow">CONNECTED PIPELINE</span><h2>Leads become opportunities.</h2><p className="crm-toolbar-copy">Switch between qualification and revenue without leaving the same workflow.</p></div><div className="crm-segmented-control"><button className={pipelineTab === 'Leads' ? 'active' : ''} type="button" onClick={() => setPipelineTab('Leads')}>Leads <b>31</b></button><button className={pipelineTab === 'Deals' ? 'active' : ''} type="button" onClick={() => setPipelineTab('Deals')}>Deals &amp; Pipeline <b>{deals.length}</b></button></div></div></section>
+      {pipelineTab === 'Leads' ? renderLeads() : renderDeals()}
+    </>;
   }
   function renderLeads() {
     const leadColumns = [{
@@ -473,112 +479,35 @@ export const LuluCRM = () => {
                 width: deal.probability
               }} /></div><footer><span>{deal.probability} likely</span><span>Close {deal.close}</span></footer></button>)}<button className="crm-add-card" type="button" onClick={() => setShowDealModal(true)}>＋ Add deal</button></div>)}</div></section>;
   }
-  function renderActivities() {
-    return <div className="crm-two-column"><section className="crm-card crm-task-card"><div className="crm-card-head"><div><span className="crm-eyebrow">TASKS</span><h2>Follow-through stays visible.</h2></div><button className="crm-primary-button" type="button" onClick={() => setShowTaskModal(true)}>＋ New task</button></div><div className="crm-task-list"><label><input type="checkbox" /><span><strong>Send proposal to Sophie Laurent</strong><small>Northstar Studio · Due today · Jamie Morgan</small></span><Pill tone="warning">Due today</Pill></label><label><input type="checkbox" /><span><strong>Review Atlas onboarding notes</strong><small>Atlas Logistics · Due tomorrow · Jamie Morgan</small></span><Pill tone="violet">Tomorrow</Pill></label><label><input type="checkbox" defaultChecked /><span><strong>Confirm Roam & Root requirements</strong><small>Roam & Root · Completed yesterday · Alex Rivera</small></span><Pill tone="success">Done</Pill></label><label><input type="checkbox" /><span><strong>Schedule Klarwerk finance review</strong><small>Klarwerk GmbH · Due Friday · Alex Rivera</small></span><Pill tone="neutral">Friday</Pill></label></div></section><section className="crm-card"><div className="crm-card-head"><div><span className="crm-eyebrow">ACTIVITY TIMELINE</span><h2>Every touchpoint, together.</h2></div><button className="crm-text-button" type="button" onClick={() => showToast('Activity log opened.')}>Log activity →</button></div><div className="crm-activity-list detailed">{initialActivities.concat([{
-            icon: '◈',
-            title: 'Lead created from website form',
-            meta: 'Sophie Laurent · Contact',
-            time: 'Mon, 15:22',
-            tone: 'coral'
-          }]).map(activity => <div className="crm-activity-row" key={activity.title}><span className={`crm-activity-icon ${activity.tone}`}>{activity.icon}</span><span className="crm-contact-copy"><strong>{activity.title}</strong><small>{activity.meta}</small></span><time>{activity.time}</time></div>)}</div></section></div>;
-  }
   function renderNotes() {
     return <section className="crm-card crm-notes-card"><div className="crm-toolbar"><div><span className="crm-eyebrow">WORKSPACE NOTES</span><h2>Context that does not get lost.</h2><p className="crm-toolbar-copy">Keep shared decisions and private reminders next to the relationships they belong to.</p></div><button className="crm-primary-button" type="button" onClick={() => setShowNoteModal(true)}>＋ Add note</button></div><div className="crm-notes-grid">{initialNotes.map(note => <button className="crm-note-card" type="button" key={note.title} onClick={() => setShowNoteModal(true)}><div className="crm-note-card-top"><span className="crm-note-mark">▤</span><Pill tone={note.visibility === 'Shared' ? 'violet' : 'neutral'}>{note.visibility}</Pill></div><h3>{note.title}</h3><p>{note.body}</p><footer><Avatar initials={note.author.split(' ').map(part => part[0]).join('')} tone="mint" small /><span>{note.author}<small>{note.time}</small></span></footer></button>)}</div></section>;
-  }
-  function renderSegments() {
-    const segmentData = [{
-      name: 'High-intent leads',
-      count: 18,
-      description: 'Qualified leads with recent activity or an open deal.',
-      color: 'violet',
-      criteria: 'Stage is Qualified · Activity in last 14 days'
-    }, {
-      name: 'Needs follow-up',
-      count: 7,
-      description: 'People with a next action that is due or overdue.',
-      color: 'coral',
-      criteria: 'Next follow-up is today or earlier'
-    }, {
-      name: 'Customers at risk',
-      count: 4,
-      description: 'Customers whose last touchpoint is more than 30 days old.',
-      color: 'blue',
-      criteria: 'Stage is Customer · Last touch > 30 days'
-    }, {
-      name: 'Newsletter consent',
-      count: 32,
-      description: 'Contacts who opted into marketing communication.',
-      color: 'mint',
-      criteria: 'Marketing consent is granted'
-    }];
-    return <section className="crm-card crm-segment-card"><div className="crm-toolbar"><div><span className="crm-eyebrow">SEGMENTS</span><h2>Turn your data into focus.</h2><p className="crm-toolbar-copy">Saved audiences stay live as your workspace changes.</p></div><button className="crm-primary-button" type="button" onClick={() => showToast('Segment builder opened.')}>＋ Create segment</button></div><div className="crm-segment-grid">{segmentData.map(segment => <button className={`crm-segment-row ${activeSegment === segment.name ? 'active' : ''}`} type="button" key={segment.name} onClick={() => setActiveSegment(segment.name)}><span className={`crm-segment-icon ${segment.color}`}>◌</span><span className="crm-segment-copy"><strong>{segment.name}</strong><small>{segment.description}</small><em>{segment.criteria}</em></span><b className="crm-segment-count">{segment.count}</b><span className="crm-row-arrow">›</span></button>)}</div><div className="crm-segment-footer"><span><span className="crm-live-dot" /> {activeSegment} is updating automatically</span><button className="crm-outline-button" type="button" onClick={() => showToast(`${activeSegment} opened in Contacts.`)}>View contacts →</button></div></section>;
   }
   function renderImport() {
     return <div className="crm-import-layout"><section className="crm-card crm-import-card"><div className="crm-card-head"><div><span className="crm-eyebrow">CONTACT IMPORT</span><h2>Bring your relationships into Lulu.</h2><p className="crm-toolbar-copy">Upload a CSV or Excel file, map the fields, review duplicates and confirm only when everything looks right.</p></div><button className="crm-primary-button" type="button" onClick={() => setShowImportModal(true)}>⇧ Open import wizard</button></div><div className="crm-upload-panel" onClick={() => setShowImportModal(true)}><span className="crm-upload-icon">⇧</span><strong>Drop a CSV or Excel file here</strong><small>or choose a file from your computer · maximum 10,000 rows</small><span className="crm-outline-button">Choose file</span></div><div className="crm-import-stages"><div className="active"><span>1</span><strong>Upload</strong><small>CSV or XLSX</small></div><div><span>2</span><strong>Map fields</strong><small>Review matches</small></div><div><span>3</span><strong>Check quality</strong><small>Find duplicates</small></div><div><span>4</span><strong>Confirm</strong><small>Save contacts</small></div></div></section><section className="crm-card crm-import-side"><span className="crm-eyebrow">SAFE BY DEFAULT</span><h2>Nothing changes before review.</h2><ul className="crm-check-list"><li><span>✓</span> Preview every mapped field</li><li><span>✓</span> Hold possible duplicates</li><li><span>✓</span> Keep the original source</li><li><span>✓</span> Assign owners and tags</li></ul><div className="crm-info-strip"><span>i</span><p>Imported contacts inherit your workspace privacy and consent rules.</p></div></section></div>;
   }
-  function renderAI() {
-    const contact = contacts.find(item => item.id === aiContact) || contacts[0];
-    return <div className="crm-ai-layout"><section className="crm-card crm-ai-main"><div className="crm-toolbar"><div><span className="crm-eyebrow">CONTACT INTELLIGENCE</span><h2>Understand the next best action.</h2><p className="crm-toolbar-copy">Lulu reviews the context already in your workspace and keeps suggestions explainable.</p></div><span className="crm-ai-badge">✦ AI assisted</span></div><div className="crm-ai-selector"><Avatar initials={contact.initials} tone={contact.tone} /><div><span>Analyze contact</span><select value={aiContact} onChange={event => setAiContact(Number(event.target.value))}>{contacts.map(item => <option value={item.id} key={item.id}>{item.name} · {item.company}</option>)}</select></div><button className="crm-primary-button" type="button" onClick={runAiAnalysis}>{aiRunning ? 'Analyzing…' : 'Run analysis'}</button></div><div className="crm-ai-insight-grid"><div className="crm-insight-card violet"><span>Relationship summary</span><strong>{contact.name} is an active {contact.role.toLowerCase()} at {contact.company}.</strong><p>Recent activity suggests they are comparing options and need a clear proposal with approval details.</p></div><div className="crm-insight-card mint"><span>Recommended next step</span><strong>Send a tailored follow-up</strong><p>Reference their approval workflow and offer a 20-minute review this week.</p><button className="crm-text-button" type="button" onClick={() => showToast('Follow-up draft prepared in Email.')}>Prepare in Email →</button></div><div className="crm-insight-card blue"><span>Data quality</span><strong>4 of 5 fields complete</strong><div className="crm-progress"><i style={{
-                width: '80%'
-              }} /></div><p>Missing: preferred language. Add it from the contact drawer.</p></div></div></section><section className="crm-card crm-ai-side"><span className="crm-eyebrow">AI CONTROLS</span><h2>People stay in control.</h2><p>AI can suggest, summarize and prioritize. Saving changes always requires confirmation.</p><label className="crm-switch-row"><span><strong>Analyze new activity</strong><small>Suggest insights when new context arrives</small></span><input type="checkbox" defaultChecked /></label><label className="crm-switch-row"><span><strong>Suggest follow-ups</strong><small>Show next actions on contact records</small></span><input type="checkbox" defaultChecked /></label><label className="crm-switch-row"><span><strong>Auto-update fields</strong><small>Always ask before writing to a record</small></span><input type="checkbox" /></label><div className="crm-ai-footnote"><span>⌁</span> Analysis uses only workspace-approved data.</div></section></div>;
-  }
-  function renderSettings() {
-    const settings = [{
-      icon: '⊹',
-      title: 'Custom contact fields',
-      copy: 'Add fields such as preferred language, customer tier or renewal date.',
-      action: 'Manage fields'
-    }, {
-      icon: '◈',
-      title: 'Statuses and pipelines',
-      copy: 'Shape lifecycle, lead and deal stages around how your team works.',
-      action: 'Configure statuses'
-    }, {
-      icon: '♙',
-      title: 'Roles and permissions',
-      copy: 'Choose who can see, edit, assign or delete CRM records.',
-      action: 'Manage access'
-    }, {
-      icon: '✓',
-      title: 'Consent and privacy',
-      copy: 'Keep communication preferences and consent evidence explicit.',
-      action: 'Review consent'
-    }, {
-      icon: '♧',
-      title: 'Notifications',
-      copy: 'Choose which owners receive follow-up and assignment alerts.',
-      action: 'Set notifications'
-    }];
-    return <section className="crm-card crm-settings-card"><div className="crm-toolbar"><div><span className="crm-eyebrow">CRM SETTINGS</span><h2>Make the workspace fit your team.</h2><p className="crm-toolbar-copy">CRM configuration stays here, while records remain easy to use for everyone.</p></div><Pill tone="success">Workspace protected</Pill></div><div className="crm-settings-list">{settings.map(setting => <button className="crm-settings-row" type="button" key={setting.title} onClick={() => showToast(`${setting.title} opened.`)}><span className="crm-settings-icon">{setting.icon}</span><span><strong>{setting.title}</strong><small>{setting.copy}</small></span><span className="crm-row-arrow">›</span></button>)}</div></section>;
-  }
   function renderView() {
-    if (view === 'Overview') return renderOverview();
-    if (view === 'Contacts') return renderContacts();
-    if (view === 'Companies') return renderCompanies();
-    if (view === 'Leads') return renderLeads();
-    if (view === 'Deals & Pipeline') return renderDeals();
-    if (view === 'Activities & Tasks') return renderActivities();
+    if (view === 'Contacts & Companies') return <>{renderDirectory()}{renderDirectoryActions()}</>;
+    if (view === 'Leads & Deals') return renderLeadsDeals();
     if (view === 'Notes') return renderNotes();
-    if (view === 'Segments') return renderSegments();
     if (view === 'Import Contacts') return renderImport();
-    if (view === 'AI Analysis') return renderAI();
-    return renderSettings();
+    return renderDirectory();
   }
   return <div className="crm-app-shell">
     <aside className="crm-rail">
-      <div className="crm-brand"><span className="crm-brand-mark">L</span><div><strong>Lulu</strong><span>Intelligence workspace</span></div></div>
+      <div className="crm-brand"><img src={brandLogo} alt="Lulu" /><div><strong>Lulu</strong><span>Growth OS</span></div></div>
       <span className="crm-rail-label">WORKSPACE</span>
-      <nav className="crm-global-nav">{workspaceLinks.map(link => <a className={`crm-global-link ${link.label === 'CRM' ? 'active' : ''}`} href={link.href} key={link.label}><span className="crm-global-icon">{link.icon}</span>{link.label}{link.label === 'CRM' && <b>Active</b>}</a>)}</nav>
+      <nav className="crm-global-top">{workspaceLinks.map(link => <button className="crm-muted-nav" type="button" onClick={() => window.location.assign(link.href)} key={link.label}><span className="crm-global-icon">{link.icon}</span><span>{link.label}</span><b>⌄</b></button>)}</nav>
+      <button className="crm-module-switcher" type="button" onClick={() => setRailOpen(open => !open)}><span className="crm-module-icon">♧</span><span>CRM</span><span className="crm-chevron">{railOpen ? '⌃' : '⌄'}</span></button>
+      {railOpen && <nav className="crm-nav">{views.map(item => <button className={`crm-nav-item ${view === item.label ? 'active' : ''}`} type="button" key={item.label} onClick={() => {
+          setView(item.label);
+          setSelectedContact(null);
+        }}><span className="crm-nav-icon">{item.icon}</span><span>{item.label}</span>{item.label === 'Contacts & Companies' && <b>{contacts.length + companies.length}</b>}</button>)}</nav>}
       <div className="crm-rail-spacer" />
-      <div className="crm-rail-section"><span className="crm-rail-label">MODULES</span><nav className="crm-global-nav">{moduleLinks.map(link => <a className="crm-global-link" href={link.href} key={link.label}><span className="crm-global-icon">{link.icon}</span>{link.label}</a>)}</nav></div>
-      <div className="crm-user-card"><Avatar initials="JM" tone="violet" small /><span><strong>Jamie Morgan</strong><small>Workspace owner</small></span><button type="button" onClick={() => showToast('Profile menu opened.')}>⌄</button></div>
+      <div className="crm-rail-section crm-global-modules"><span className="crm-rail-label">MODULES</span>{moduleLinks.map(link => <button className="crm-muted-nav" type="button" onClick={() => window.location.assign(link.href)} key={link.label}><span className="crm-global-icon">{link.icon}</span><span>{link.label}</span>{link.label === 'Marketplace' && <b>⌄</b>}</button>)}</div>
     </aside>
     <main className="crm-main">
-      <header className="crm-topbar"><div className="crm-breadcrumb"><span>Workspace</span><i>/</i><strong>CRM</strong><i>/</i><strong>{currentTitle}</strong></div><div className="crm-top-actions"><div className="crm-top-search"><span>⌕</span><input placeholder="Search workspace" /></div><button className="crm-help-button" type="button" onClick={() => showToast('Help center opened.')}>? Help</button><button className="crm-notification" type="button" onClick={() => showToast('You have 3 new notifications.')}>♢<i /></button><Avatar initials="JM" tone="violet" small /></div></header>
-      <div className="crm-layout"><aside className="crm-subnav"><div className="crm-module-heading"><span className="crm-module-mark">♧</span><div><strong>CRM</strong><small>Relationships</small></div><span className="crm-chevron">⌃</span></div><span className="crm-subnav-label">CRM WORKSPACE</span><nav>{views.map(item => <button className={`crm-subnav-item ${view === item.label ? 'active' : ''}`} type="button" key={item.label} onClick={() => {
-              setView(item.label);
-              setSelectedContact(null);
-            }}><span>{item.icon}</span>{item.label}{item.label === 'Contacts' && <b>{contacts.length}</b>}</button>)}</nav><div className="crm-subnav-tip"><span>✦</span><div><strong>AI-ready context</strong><small>Every record can carry the full story.</small></div></div></aside><div className="crm-content"><div className="crm-page-intro"><div><span className="crm-eyebrow">LULU CRM · {currentTitle.toUpperCase()}</span><h1>{currentTitle}</h1><p>{currentDescription[view]}</p></div><div className="crm-intro-actions">{view === 'Overview' || view === 'Contacts' ? <><button className="crm-outline-button" type="button" onClick={() => setShowImportModal(true)}>⇧ Import</button><button className="crm-primary-button" type="button" onClick={() => setShowContactModal(true)}>＋ Add contact</button></> : view === 'Notes' ? <button className="crm-primary-button" type="button" onClick={() => setShowNoteModal(true)}>＋ Add note</button> : view === 'Deals & Pipeline' ? <button className="crm-primary-button" type="button" onClick={() => setShowDealModal(true)}>＋ Add deal</button> : null}</div></div>{renderView()}</div></div>
+      <header className="crm-topbar"><div className="crm-breadcrumb"><span>Lulu</span><i>/</i><strong>CRM</strong><i>/</i><strong>{currentTitle}</strong></div><div className="crm-top-actions"><div className="crm-top-search"><span>⌕</span><input placeholder="Search this workspace" /></div></div></header>
+      <div className="crm-layout"><div className="crm-content"><div className="crm-page-intro"><div><span className="crm-eyebrow">LULU CRM · {currentTitle.toUpperCase()}</span><h1>{currentTitle}</h1><p>{currentDescription[view]}</p></div><div className="crm-intro-actions">{view === 'Contacts & Companies' ? <><button className="crm-outline-button" type="button" onClick={() => setShowCompanyModal(true)}>＋ Add company</button><button className="crm-primary-button" type="button" onClick={() => setShowContactModal(true)}>＋ Add contact</button></> : view === 'Leads & Deals' ? pipelineTab === 'Leads' ? <button className="crm-primary-button" type="button" onClick={() => setShowContactModal(true)}>＋ Add lead</button> : <button className="crm-primary-button" type="button" onClick={() => setShowDealModal(true)}>＋ Add deal</button> : view === 'Notes' ? <button className="crm-primary-button" type="button" onClick={() => setShowNoteModal(true)}>＋ Add note</button> : null}</div></div>{renderView()}</div></div>
     </main>
 
     {selectedContact && <div className="crm-overlay" onMouseDown={event => event.target === event.currentTarget && setSelectedContact(null)}><aside className="crm-drawer"><div className="crm-modal-head"><div><span className="crm-eyebrow">CONTACT PROFILE</span><h2>{selectedContact.name}</h2></div><button className="crm-close" type="button" onClick={() => setSelectedContact(null)}>×</button></div><div className="crm-drawer-profile"><Avatar initials={selectedContact.initials} tone={selectedContact.tone} /><div><strong>{selectedContact.role}</strong><span>{selectedContact.company}</span><Pill tone={selectedContact.stage === 'Customer' ? 'success' : 'violet'}>{selectedContact.stage}</Pill></div></div><div className="crm-drawer-actions"><button className="crm-outline-button" type="button" onClick={() => showToast('Email composer opened.')}>✉ Email</button><button className="crm-outline-button" type="button" onClick={() => showToast('Task created for this contact.')}>＋ Task</button><button className="crm-primary-button" type="button" onClick={() => showToast('Contact editing opened.')}>Edit contact</button></div><div className="crm-detail-list"><div><span>Email</span><strong>{selectedContact.email}</strong></div><div><span>Phone</span><strong>{selectedContact.phone}</strong></div><div><span>Owner</span><strong>{selectedContact.owner}</strong></div><div><span>Source</span><strong>{selectedContact.source}</strong></div><div><span>Last touch</span><strong>{selectedContact.lastTouch}</strong></div></div><div className="crm-drawer-section"><div className="crm-card-head"><div><span className="crm-eyebrow">TIMELINE</span><h3>Relationship context</h3></div><button className="crm-text-button" type="button" onClick={() => setShowNoteModal(true)}>＋ Note</button></div><div className="crm-mini-timeline"><p><b>✉</b><span><strong>Email received</strong><small>Sophie replied to the latest proposal.</small></span><time>12 min ago</time></p><p><b>◷</b><span><strong>Meeting scheduled</strong><small>Discovery call is on the calendar.</small></span><time>Yesterday</time></p><p><b>✦</b><span><strong>AI signal</strong><small>Buying intent increased after the reply.</small></span><time>Yesterday</time></p></div></div></aside></div>}
@@ -616,16 +545,16 @@ export const LuluCRM = () => {
         setShowTaskModal(false);
         showToast('Task added to Activities.');
       }}><div className="crm-form-grid"><label className="full"><span>Task title</span><input autoFocus placeholder="What needs to happen?" required /></label><label><span>Related contact</span><select defaultValue="Sophie Laurent"><option>Sophie Laurent · Northstar Studio</option><option>Daniel Chen · Atlas Logistics</option><option>Mila Rossi · Roam & Root</option></select></label><label><span>Due date</span><input type="date" defaultValue="2026-10-17" /></label><label><span>Owner</span><select defaultValue="Jamie Morgan"><option>Jamie Morgan</option><option>Alex Rivera</option></select></label><label><span>Priority</span><select defaultValue="High"><option>High</option><option>Normal</option><option>Low</option></select></label></div><div className="crm-form-foot"><span>Tasks appear in the shared activity timeline.</span><div><button className="crm-outline-button" type="button" onClick={() => setShowTaskModal(false)}>Cancel</button><button className="crm-primary-button" type="submit">Create task</button></div></div></form></Modal>}
-    {showNoteModal && <Modal eyebrow="NEW NOTE" title="Keep the context close" onClose={() => setShowNoteModal(false)}><form className="crm-form" onSubmit={createNote}><div className="crm-form-grid"><label className="full"><span>Title</span><input autoFocus value={noteDraft.title} onChange={event => setNoteDraft({
+    {showNoteModal && <Modal eyebrow="NEW NOTE" title="Keep the context close" onClose={() => setShowNoteModal(false)}><form className="crm-form" onSubmit={createNote}><div className="crm-form-grid"><label><span>Related record</span><select value={noteTarget} onChange={event => setNoteTarget(event.target.value)}>{[...contacts.map(item => item.name), ...companies.map(item => item.name)].map(record => <option value={record} key={record}>{record}</option>)}</select></label><label><span>Visibility</span><select value={noteDraft.visibility} onChange={event => setNoteDraft({
+              ...noteDraft,
+              visibility: event.target.value
+            })}><option>Shared</option><option>Private</option></select></label><label className="full"><span>Title</span><input autoFocus value={noteDraft.title} onChange={event => setNoteDraft({
               ...noteDraft,
               title: event.target.value
             })} placeholder="What should the team remember?" required /></label><label className="full"><span>Note</span><textarea value={noteDraft.body} onChange={event => setNoteDraft({
               ...noteDraft,
               body: event.target.value
-            })} placeholder="Add a decision, handoff or next action" rows={6} /></label><label><span>Visibility</span><select value={noteDraft.visibility} onChange={event => setNoteDraft({
-              ...noteDraft,
-              visibility: event.target.value
-            })}><option>Shared</option><option>Private</option></select></label></div><div className="crm-form-foot"><span>Notes can be linked to a contact after saving.</span><div><button className="crm-outline-button" type="button" onClick={() => setShowNoteModal(false)}>Cancel</button><button className="crm-primary-button" type="submit">Save note</button></div></div></form></Modal>}
+            })} placeholder="Add a decision, handoff or next action" rows={6} /></label></div><div className="crm-form-foot"><span>This note will stay connected to {noteTarget}.</span><div><button className="crm-outline-button" type="button" onClick={() => setShowNoteModal(false)}>Cancel</button><button className="crm-primary-button" type="submit">Save note</button></div></div></form></Modal>}
     {showDealModal && <Modal eyebrow="NEW DEAL" title="Add an opportunity" onClose={() => setShowDealModal(false)}><form className="crm-form" onSubmit={event => {
         event.preventDefault();
         setShowDealModal(false);

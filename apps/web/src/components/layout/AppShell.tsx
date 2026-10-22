@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
 import { usePathname } from "@/i18n/navigation";
-import { CrmNav, CrmTabs } from "./CrmNav";
+import { CrmTabs } from "./CrmNav";
 import { Rail } from "./Rail";
 import { TopBar } from "./TopBar";
 
@@ -46,7 +46,6 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         <TopBar onOpenMenu={() => setMenuOpen(true)} />
         <CrmTabs />
         <div className="flex flex-1">
-          <CrmNav />
           <main className="mx-auto w-full max-w-[1540px] min-w-0 flex-1 px-4 py-6 md:px-10 md:py-8">
             {children}
           </main>

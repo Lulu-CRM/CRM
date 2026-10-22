@@ -14,7 +14,9 @@
     "segments": "客户分组",
     "import": "导入联系人",
     "ai": "AI 分析",
-    "settings": "CRM 设置"
+    "settings": "CRM 设置",
+    "directory": "联系人与公司",
+    "pipeline": "线索与交易"
   },
   "common": {
     "save": "保存",
@@ -99,6 +101,12 @@
     },
     "settings": {
       "description": "根据你的工作区设置字段、状态、角色和授权规则。"
+    },
+    "directory": {
+      "description": "一起管理人员和公司账户，不丢失它们之间的关联。"
+    },
+    "pipeline": {
+      "description": "在一个连贯的流程中筛选关系并推进商机。"
     }
   },
   "errors": {
@@ -423,7 +431,8 @@
     "column": {
       "add": "添加潜在客户",
       "addLead": "添加潜在客户到{stage}",
-      "empty": "这里还没有潜在客户"
+      "empty": "这里还没有潜在客户",
+      "converted": "已转化"
     },
     "card": {
       "actions": "{name} 的操作",
@@ -1125,6 +1134,74 @@
     "errors": {
       "missing": "请输入邮箱和密码。",
       "wrong": "邮箱或密码不正确。"
+    }
+  },
+  "pipeline": {
+    "eyebrow": "连通的销售管道",
+    "title": "线索变成商机。",
+    "intro": "在筛选与成交之间切换，无需离开同一流程。",
+    "switchLabel": "显示线索或交易",
+    "leads": "线索",
+    "deals": "交易与管道"
+  },
+  "directory": {
+    "eyebrow": "关系目录",
+    "title": "人员与公司，一处管理。",
+    "intro": "把每个人与其背后的账户、背景和商业往来联系起来。",
+    "importContacts": "导入联系人",
+    "addCompany": "添加公司",
+    "addContact": "添加联系人",
+    "search": "搜索人员、公司、域名或标签",
+    "filtersLabel": "显示记录",
+    "tabs": {
+      "all": "全部",
+      "contacts": "联系人",
+      "companies": "公司",
+      "followUp": "需要跟进"
+    },
+    "columns": {
+      "record": "记录",
+      "context": "关系背景",
+      "status": "状态",
+      "owner": "负责人",
+      "activity": "最近活动 / 金额",
+      "actions": "操作"
+    },
+    "kind": {
+      "contact": "联系人",
+      "company": "公司"
+    },
+    "contactCount": "{count, plural, other {# 位联系人}}",
+    "open": "打开 {name}",
+    "showing": "显示 {count} / {total} 条记录",
+    "empty": "还没有人员或公司",
+    "emptyHint": "添加第一位联系人或导入一个列表。",
+    "noMatches": "没有匹配的人员或公司",
+    "noMatchesHint": "换个搜索词或筛选条件试试。",
+    "deleteTitle": "删除这条记录？",
+    "deleteMessage": "{name} 将对工作区中的所有人删除。",
+    "deleted": "{name} 已删除。",
+    "notes": {
+      "eyebrow": "笔记",
+      "title": "把背景记在记录上",
+      "intro": "直接在“联系人与公司”中添加共享或私人笔记。",
+      "record": "笔记所属记录",
+      "contacts": "联系人",
+      "companies": "公司",
+      "add": "添加笔记",
+      "saved": "笔记已保存。"
+    },
+    "ai": {
+      "eyebrow": "AI 分析",
+      "title": "生成关系洞察",
+      "intro": "无需离开目录即可查看信号、数据质量和下一步最佳行动。",
+      "contact": "要分析的联系人",
+      "run": "生成 AI 分析",
+      "running": "分析中…",
+      "ready": "AI 分析已完成。保存前请先查看建议。",
+      "nextStep": "下一步",
+      "quality": "已填写 {filled}/{total} 个资料字段",
+      "review": "查看并保存"
     }
   }
 }

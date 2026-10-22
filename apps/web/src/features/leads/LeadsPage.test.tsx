@@ -47,7 +47,7 @@ describe("Leads page", () => {
     expect(namesIn("New")).toEqual(["Mila Rossi"]);
     expect(namesIn("Qualified")).toEqual(expect.arrayContaining(["Sophie Laurent", "Elena Schmidt"]));
     expect(namesIn("Follow-up")).toEqual(["Tobias Klein"]);
-    expect(namesIn("Customer")).toEqual(["Daniel Chen"]);
+    expect(namesIn("Converted")).toEqual(["Daniel Chen"]);
     const mila = screen.getByRole("button", { name: "Mila Rossi" }).closest("article")!;
     expect(within(mila).getByText("Roam & Root")).toBeTruthy();
     expect(within(mila).getByText("Founder · Instagram")).toBeTruthy();
@@ -60,10 +60,10 @@ describe("Leads page", () => {
     await waitFor(async () => expect((await api.contacts.get("contact_mila")).lifecycleStage).toBe("qualified"));
   });
 
-  it("moving a lead to Customer converts it", async () => {
+  it("moving a lead to Customer converts it (the column is shown as Converted)", async () => {
     const convert = vi.spyOn(api.contacts, "convert");
     moveVia("Tobias Klein", "Customer");
-    expect(namesIn("Customer")).toContain("Tobias Klein");
+    expect(namesIn("Converted")).toContain("Tobias Klein");
     expect(await screen.findByText("Converted to customer")).toBeTruthy();
     expect(convert).toHaveBeenCalledWith("contact_tobias");
   });

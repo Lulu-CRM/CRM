@@ -14,6 +14,8 @@ The design is the MagicPath export in `design/`. It is a clickable prototype wit
 
 Overview, Contacts, Companies, Leads, Deals & Pipeline, Activities & Tasks, Notes, Segments, Import Contacts, AI Analysis, CRM Settings. Details are in `docs/plan.md`.
 
+**Design update (Oct 22, 2026):** the MagicPath design now shows a CRM menu of four: Contacts & Companies (`/crm/directory`, with Notes and AI Analysis cards), Leads & Deals (`/crm/pipeline`), Notes and Import Contacts. The menu follows it; the other pages keep their routes and stay reachable by link until the team decides whether to remove them.
+
 ## Repository layout
 
 ```

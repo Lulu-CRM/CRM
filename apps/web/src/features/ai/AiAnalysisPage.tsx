@@ -32,6 +32,12 @@ export function AiAnalysisPage() {
   const [contactId, setContactId] = useState("");
   const selected = list.find((c) => c.id === contactId) ?? list[0];
 
+  // ?contact=<id> opens on that contact (the link from the AI card on Contacts & Companies).
+  useEffect(() => {
+    const fromLink = new URLSearchParams(window.location.search).get("contact");
+    if (fromLink) setContactId(fromLink);
+  }, []);
+
   const insight = useApi(() => (selected ? api.ai.latest(selected.id) : Promise.resolve(null)), [selected?.id]);
   const [running, setRunning] = useState(false);
   const [confirming, setConfirming] = useState(false);

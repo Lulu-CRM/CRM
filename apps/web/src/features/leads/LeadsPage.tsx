@@ -13,7 +13,8 @@ import { useErrorMessage } from "@/lib/errors";
 import { LeadBoard } from "./LeadBoard";
 import { useLeads } from "./useLeads";
 
-export function LeadsPage() {
+/** The lead board. `embedded` leaves out the page header, for Leads & Deals. */
+export function LeadsPage({ embedded = false }: { embedded?: boolean } = {}) {
   const t = useTranslations("leads");
   const tContacts = useTranslations("contacts");
   const tDrawer = useTranslations("contacts.drawer");
@@ -55,7 +56,7 @@ export function LeadsPage() {
 
   return (
     <>
-      <PageHeader page="leads" />
+      {!embedded && <PageHeader page="leads" />}
       <Card>
         <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
           <div>

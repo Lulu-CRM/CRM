@@ -1157,13 +1157,6 @@
     "addCompany": "Add company",
     "addContact": "Add contact",
     "search": "Search people, companies, domains or tags",
-    "filtersLabel": "Show records",
-    "tabs": {
-      "all": "All",
-      "contacts": "Contacts",
-      "companies": "Companies",
-      "followUp": "Needs follow-up"
-    },
     "columns": {
       "record": "Record",
       "context": "Relationship context",

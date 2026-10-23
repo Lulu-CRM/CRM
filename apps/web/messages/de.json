@@ -1157,13 +1157,6 @@
     "addCompany": "Unternehmen hinzufügen",
     "addContact": "Kontakt hinzufügen",
     "search": "Personen, Unternehmen, Domains oder Tags suchen",
-    "filtersLabel": "Einträge anzeigen",
-    "tabs": {
-      "all": "Alle",
-      "contacts": "Kontakte",
-      "companies": "Unternehmen",
-      "followUp": "Follow-up nötig"
-    },
     "columns": {
       "record": "Eintrag",
       "context": "Beziehungskontext",

@@ -43,29 +43,24 @@ const names = () =>
     .map((row) => row.querySelector("strong")?.textContent);
 
 describe("Contacts & Companies page", () => {
-  it("lists people and companies together, with tab counts from the data", async () => {
+  it("lists people and companies together, with no page header or filter row", async () => {
     const [contacts, companies] = await Promise.all([api.contacts.list({ pageSize: 100 }), api.companies.list({ pageSize: 100 })]);
     const total = contacts.meta.total + companies.meta.total;
     await waitFor(() => expect(names()).toHaveLength(total), slow);
     expect(names()).toContain("Sophie Laurent");
     expect(names()).toContain("Atlas Logistics");
     expect(screen.getByText(`Showing ${total} of ${total} records`)).toBeTruthy();
-    await waitFor(() => {
-      expect(screen.getByRole("tab", { name: /^All/ }).textContent).toContain(String(total));
-      expect(screen.getByRole("tab", { name: /^Contacts/ }).textContent).toContain(String(contacts.meta.total));
-    }, slow);
+    // Removed at Dave's request: the page header (its description) and the All / Contacts / ... tabs.
+    expect(screen.queryByText(messages.pages.directory.description)).toBeNull();
+    expect(screen.queryByRole("tab")).toBeNull();
+    expect(screen.queryByRole("button", { name: /Filter/ })).toBeNull();
   });
 
-  it("filters to companies only, and searches", async () => {
+  it("searches people and companies together", async () => {
     await waitFor(() => expect(names()).toContain("Sophie Laurent"), slow);
-    fireEvent.click(screen.getByRole("tab", { name: /^Companies/ }));
+    fireEvent.change(screen.getByRole("searchbox", { name: messages.directory.search }), { target: { value: "atlas" } });
     await waitFor(() => expect(names()).not.toContain("Sophie Laurent"), slow);
     expect(names()).toContain("Atlas Logistics");
-
-    fireEvent.click(screen.getByRole("tab", { name: /^All/ }));
-    fireEvent.change(screen.getByRole("searchbox", { name: messages.directory.search }), { target: { value: "atlas" } });
-    await waitFor(() => expect(names()).toEqual(expect.arrayContaining(["Atlas Logistics"])), slow);
-    expect(names()).not.toContain("Sophie Laurent");
   });
 
   it("opens the contact drawer for a person and the company drawer for a company", async () => {
@@ -76,13 +71,6 @@ describe("Contacts & Companies page", () => {
 
     fireEvent.click(screen.getByRole("button", { name: "Open Atlas Logistics" }));
     expect(await screen.findByRole("dialog", { name: "Atlas Logistics" })).toBeTruthy();
-  });
-
-  it("filters people by status from + Filter, leaving companies out", async () => {
-    await waitFor(() => expect(names()).toContain("Atlas Logistics"), slow);
-    fireEvent.click(screen.getByRole("button", { name: /Filter/ }));
-    fireEvent.change(screen.getByLabelText("Status"), { target: { value: "qualified" } });
-    await waitFor(() => expect(names()).toEqual(["Sophie Laurent", "Elena Schmidt"]), slow);
   });
 
   it("deletes the selected records after confirming", async () => {

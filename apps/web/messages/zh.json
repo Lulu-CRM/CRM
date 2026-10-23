@@ -1157,13 +1157,6 @@
     "addCompany": "添加公司",
     "addContact": "添加联系人",
     "search": "搜索人员、公司、域名或标签",
-    "filtersLabel": "显示记录",
-    "tabs": {
-      "all": "全部",
-      "contacts": "联系人",
-      "companies": "公司",
-      "followUp": "需要跟进"
-    },
     "columns": {
       "record": "记录",
       "context": "关系背景",

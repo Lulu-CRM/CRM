@@ -28,6 +28,7 @@ export function CompanyDrawer({
 }) {
   const t = useTranslations("companies.drawer");
   const tCompanies = useTranslations("companies");
+  const tForm = useTranslations("companies.form");
   const tStage = useTranslations("lifecycleStages");
   const tCommon = useTranslations("common");
   const format = useFormat();
@@ -52,6 +53,13 @@ export function CompanyDrawer({
     [t("size"), company.size ? tCompanies("sizeValue", { size: company.size }) : "–"],
     [t("owner"), lookups.userName(company.ownerId) ?? "–"],
     [t("lastTouch"), company.lastTouchAt ? format.recent(company.lastTouchAt) : "–"],
+    // Added Oct 23, 2026 (labels shared with the company form).
+    [tForm("leadStatus"), company.leadStatus ? tStage(company.leadStatus) : "–"],
+    [tForm("whatsapp"), company.whatsapp ?? "–"],
+    [tForm("instagram"), company.instagram ?? "–"],
+    [tForm("facebook"), company.facebook ?? "–"],
+    [tForm("productService"), company.productService ?? "–"],
+    [tForm("aiNotes"), company.aiNotes ?? "–"],
   ];
 
   return (

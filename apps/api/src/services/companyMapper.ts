@@ -10,6 +10,12 @@ export interface CompanyRow {
   industry: string | null;
   size: string | null;
   ownerId: string | null;
+  leadStatus: Company['leadStatus'];
+  whatsapp: string | null;
+  instagram: string | null;
+  facebook: string | null;
+  productService: string | null;
+  aiNotes: string | null;
   createdAt: Date;
   updatedAt: Date;
   deletedAt: Date | null;
@@ -26,6 +32,12 @@ export function toSharedCompany(row: CompanyRow): Company {
     size: row.size as Company['size'],
     // The database allows a null owner, the shared schema does not.
     ownerId: row.ownerId ?? '',
+    leadStatus: row.leadStatus,
+    whatsapp: row.whatsapp,
+    instagram: row.instagram,
+    facebook: row.facebook,
+    productService: row.productService,
+    aiNotes: row.aiNotes,
     createdAt: row.createdAt.toISOString(),
     updatedAt: row.updatedAt.toISOString(),
     deletedAt: iso(row.deletedAt),

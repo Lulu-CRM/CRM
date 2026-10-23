@@ -19,12 +19,15 @@ export const demoUsers: User[] = [
   { ...base, id: "user_alex", name: "Alex Rivera", email: "alex@lulu.demo", role: "member", language: "en" },
 ];
 
+// Fields added on Oct 23, 2026; the design's sample companies have none of them yet.
+const companyExtras = { leadStatus: null, whatsapp: null, instagram: null, facebook: null, productService: null, aiNotes: null };
+
 export const demoCompanies: Company[] = [
-  { ...base, id: "company_northstar", name: "Northstar Studio", domain: "northstar.studio", industry: "Creative services", size: "1-10", ownerId: "user_jamie" },
-  { ...base, id: "company_atlas", name: "Atlas Logistics", domain: "atlaslogistics.co", industry: "Logistics", size: "11-50", ownerId: "user_jamie" },
-  { ...base, id: "company_roam", name: "Roam & Root", domain: "roamandroot.com", industry: "Retail", size: "1-10", ownerId: "user_alex" },
-  { ...base, id: "company_klarwerk", name: "Klarwerk GmbH", domain: "klarwerk.de", industry: "Finance", size: "11-50", ownerId: "user_jamie" },
-  { ...base, id: "company_haus", name: "Haus am Fluss", domain: "hausamfluss.de", industry: "Hospitality", size: "11-50", ownerId: "user_alex" },
+  { ...base, ...companyExtras, id: "company_northstar", name: "Northstar Studio", domain: "northstar.studio", industry: "Creative services", size: "1-10", ownerId: "user_jamie" },
+  { ...base, ...companyExtras, id: "company_atlas", name: "Atlas Logistics", domain: "atlaslogistics.co", industry: "Logistics", size: "11-50", ownerId: "user_jamie" },
+  { ...base, ...companyExtras, id: "company_roam", name: "Roam & Root", domain: "roamandroot.com", industry: "Retail", size: "1-10", ownerId: "user_alex" },
+  { ...base, ...companyExtras, id: "company_klarwerk", name: "Klarwerk GmbH", domain: "klarwerk.de", industry: "Finance", size: "11-50", ownerId: "user_jamie" },
+  { ...base, ...companyExtras, id: "company_haus", name: "Haus am Fluss", domain: "hausamfluss.de", industry: "Hospitality", size: "11-50", ownerId: "user_alex" },
 ];
 
 const contact = (fields: Omit<Contact, keyof typeof base | "marketingConsent" | "consentUpdatedAt">): Contact => ({

@@ -29,7 +29,8 @@ Status values: `open`, `in progress`, `in review`, `done`.
 | D | Segments, Import wizard, AI Analysis, Settings | Sudais | done | A1 |
 | W1 | Sign-in page and per-area mock/real switch | Sudais | done | 2 |
 | W2 | Overview API (`GET /overview`) | Sudais | done | 3, 4 |
-| W3 | New design: 4-page CRM menu, Contacts & Companies, Leads & Deals | Sudais | in review | |
+| W3 | New design: 4-page CRM menu, Contacts & Companies, Leads & Deals | Sudais | done | |
+| W4 | Dave's review: company lead status, WhatsApp, Instagram, Facebook, product/service, notes, AI notes; Notes and AI cards removed | Sudais | in review | |
 
 Franklin replaced Tobi and theLady replaced Brobot. Sudais took 6 (segments), 7 (import) and 8 (AI) off theLady and 9 (settings) off Franklin. Every task above is merged. Pages move to the real API one area at a time with `NEXT_PUBLIC_REAL_API` (`apps/web/README.md`).
 

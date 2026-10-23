@@ -568,8 +568,23 @@
       "errors": {
         "nameRequired": "Enter a company name",
         "domainInvalid": "Enter a domain like company.com",
-        "ownerRequired": "Choose an owner"
-      }
+        "ownerRequired": "Choose an owner",
+        "tooLong": "This is too long"
+      },
+      "leadStatus": "Lead status",
+      "noLeadStatus": "Not set",
+      "whatsapp": "WhatsApp number",
+      "whatsappPlaceholder": "+49 …",
+      "instagram": "Instagram",
+      "instagramPlaceholder": "@handle or link",
+      "facebook": "Facebook",
+      "facebookPlaceholder": "Page name or link",
+      "productService": "Product / service",
+      "productServicePlaceholder": "What they buy or need",
+      "note": "Notes",
+      "notePlaceholder": "Context for the team. Saved as a shared note on the company.",
+      "aiNotes": "AI notes",
+      "aiNotesPlaceholder": "What the AI should know about this account."
     },
     "drawer": {
       "eyebrow": "Company profile",
@@ -1179,28 +1194,6 @@
     "deleteTitle": "{count, plural, one {Delete this record?} other {Delete # records?}}",
     "deleteMessage": "{name} will be removed for everyone in the workspace.",
     "deleted": "{name} was deleted.",
-    "notes": {
-      "eyebrow": "Notes",
-      "title": "Keep context on the record",
-      "intro": "Add a shared or private note directly from Contacts & Companies.",
-      "record": "Record for the note",
-      "contacts": "Contacts",
-      "companies": "Companies",
-      "add": "Add note",
-      "saved": "Note saved."
-    },
-    "ai": {
-      "eyebrow": "AI analysis",
-      "title": "Generate relationship intelligence",
-      "intro": "Review signals, data quality and the next best action without leaving the directory.",
-      "contact": "Contact to analyze",
-      "run": "Generate AI analysis",
-      "running": "Analyzing…",
-      "ready": "AI analysis ready. Review the recommendations before saving.",
-      "nextStep": "Next step",
-      "quality": "{filled} of {total} profile fields complete",
-      "review": "Review and save"
-    },
     "selected": "{count} selected",
     "deleteSelected": "Delete selected",
     "deleteManyMessage": "{count} records will be removed for everyone in the workspace.",

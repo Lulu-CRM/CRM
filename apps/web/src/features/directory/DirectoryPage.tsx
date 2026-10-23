@@ -17,7 +17,6 @@ import { api } from "@/lib/api";
 import { useErrorMessage } from "@/lib/errors";
 import { avatarTone, initials } from "@/lib/initials";
 import { useApi } from "@/lib/useApi";
-import { DirectoryActions } from "./DirectoryActions";
 
 const PAGE_SIZE = 25;
 
@@ -292,8 +291,6 @@ export function DirectoryPage() {
           </div>
         )}
       </Card>
-
-      <DirectoryActions lookups={lookups} />
 
       <ContactFormModal
         open={contactForm !== null}

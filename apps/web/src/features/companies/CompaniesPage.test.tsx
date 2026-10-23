@@ -86,7 +86,19 @@ describe("Companies page", () => {
     fireEvent.change(within(dialog).getByLabelText("Company size"), { target: { value: "11-50" } });
     fireEvent.click(within(dialog).getByRole("button", { name: "Create company" }));
     expect(await screen.findByText("Company added", {}, slow)).toBeTruthy();
-    expect(create.mock.calls[0][0]).toEqual({ name: "Acme", domain: "acme.com", industry: null, size: "11-50", ownerId: "user_jamie" });
+    expect(create.mock.calls[0][0]).toEqual({
+      name: "Acme",
+      domain: "acme.com",
+      industry: null,
+      size: "11-50",
+      ownerId: "user_jamie",
+      leadStatus: null,
+      whatsapp: null,
+      instagram: null,
+      facebook: null,
+      productService: null,
+      aiNotes: null,
+    });
     await waitForRows(6);
   });
 

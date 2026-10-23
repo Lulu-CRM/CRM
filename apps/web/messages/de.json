@@ -568,8 +568,23 @@
       "errors": {
         "nameRequired": "Geben Sie einen Namen ein",
         "domainInvalid": "Geben Sie eine Domain wie firma.de ein",
-        "ownerRequired": "Wählen Sie eine verantwortliche Person"
-      }
+        "ownerRequired": "Wählen Sie eine verantwortliche Person",
+        "tooLong": "Das ist zu lang"
+      },
+      "leadStatus": "Lead-Status",
+      "noLeadStatus": "Nicht gesetzt",
+      "whatsapp": "WhatsApp-Nummer",
+      "whatsappPlaceholder": "+49 …",
+      "instagram": "Instagram",
+      "instagramPlaceholder": "@Name oder Link",
+      "facebook": "Facebook",
+      "facebookPlaceholder": "Seitenname oder Link",
+      "productService": "Produkt / Dienstleistung",
+      "productServicePlaceholder": "Was sie kaufen oder brauchen",
+      "note": "Notizen",
+      "notePlaceholder": "Kontext für das Team. Wird als geteilte Notiz beim Unternehmen gespeichert.",
+      "aiNotes": "KI-Notizen",
+      "aiNotesPlaceholder": "Was die KI über dieses Konto wissen sollte."
     },
     "drawer": {
       "eyebrow": "Unternehmensprofil",
@@ -1179,28 +1194,6 @@
     "deleteTitle": "{count, plural, one {Diesen Eintrag löschen?} other {# Einträge löschen?}}",
     "deleteMessage": "{name} wird für alle im Workspace entfernt.",
     "deleted": "{name} wurde gelöscht.",
-    "notes": {
-      "eyebrow": "Notizen",
-      "title": "Kontext am Eintrag festhalten",
-      "intro": "Eine geteilte oder private Notiz direkt aus Kontakte & Unternehmen hinzufügen.",
-      "record": "Eintrag für die Notiz",
-      "contacts": "Kontakte",
-      "companies": "Unternehmen",
-      "add": "Notiz hinzufügen",
-      "saved": "Notiz gespeichert."
-    },
-    "ai": {
-      "eyebrow": "KI-Analyse",
-      "title": "Beziehungswissen erzeugen",
-      "intro": "Signale, Datenqualität und den nächsten Schritt prüfen, ohne das Verzeichnis zu verlassen.",
-      "contact": "Zu analysierender Kontakt",
-      "run": "KI-Analyse erstellen",
-      "running": "Wird analysiert…",
-      "ready": "KI-Analyse fertig. Prüfe die Empfehlungen vor dem Speichern.",
-      "nextStep": "Nächster Schritt",
-      "quality": "{filled} von {total} Profilfeldern ausgefüllt",
-      "review": "Prüfen und speichern"
-    },
     "selected": "{count} ausgewählt",
     "deleteSelected": "Auswahl löschen",
     "deleteManyMessage": "{count} Einträge werden für alle im Workspace entfernt.",

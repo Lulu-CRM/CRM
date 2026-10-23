@@ -219,6 +219,43 @@ describe('companies API (int)', () => {
     });
   });
 
+  it('saves, edits and clears the lead and social fields (Oct 23, 2026)', async () => {
+    const t = await tenant('extra-fields');
+    const company = await newCompany(t, {
+      name: 'Blue Harbor',
+      leadStatus: 'qualified',
+      whatsapp: '+49 151 000 111',
+      instagram: '@blueharbor',
+      facebook: 'facebook.com/blueharbor',
+      productService: 'Boat rentals',
+      aiNotes: 'Seasonal business, busy in summer.',
+    });
+    expect(company).toMatchObject({
+      leadStatus: 'qualified',
+      whatsapp: '+49 151 000 111',
+      instagram: '@blueharbor',
+      facebook: 'facebook.com/blueharbor',
+      productService: 'Boat rentals',
+      aiNotes: 'Seasonal business, busy in summer.',
+    });
+
+    as(t);
+    const edited = await request(app)
+      .patch(`/companies/${company.id}`)
+      .send({ leadStatus: 'customer', instagram: null });
+    expect(edited.status).toBe(200);
+    expect(responseBody<{ data: Record<string, unknown> }>(edited).data).toMatchObject({
+      leadStatus: 'customer',
+      instagram: null,
+      whatsapp: '+49 151 000 111',
+    });
+
+    const badStatus = await request(app)
+      .post('/companies')
+      .send({ name: 'Bad', leadStatus: 'hot' });
+    expect(badStatus.status).toBe(400);
+  });
+
   it('validates the domain, the size band and the owner', async () => {
     const t = await tenant('validation');
 

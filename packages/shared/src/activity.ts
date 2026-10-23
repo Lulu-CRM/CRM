@@ -46,6 +46,9 @@ export const activityListQuerySchema = listQuerySchema.extend({
 
 // POST /events from other modules (format in docs/api.md).
 export const moduleEventSchema = z.object({
+  // The sending module's own id for this event. Sending the same id again records nothing new
+  // (at-least-once delivery is safe). Optional for now so existing senders keep working.
+  eventId: z.string().trim().min(1).max(200).optional(),
   type: z.string().regex(/^(email|calendar|marketplace)\.[a-z_]+$/),
   sourceModule: sourceModuleSchema.exclude(["crm"]),
   occurredAt: timestampSchema,

@@ -1008,11 +1008,15 @@ const tasksNotesActivitiesPaths: OpenApiPaths = {
       summary: 'Event from another module',
       security: bearer,
       description:
-        'Email, Calendar and other modules report something that happened. Finds the contact by email (ignoring case), logs an activity and moves lastTouchAt forward. Email events log type email, calendar events log meeting, others log note; the original type is kept as eventType in the payload. Needs contacts: edit.',
+        "Email, Calendar and Marketplace report something that happened. Finds the contact by email (ignoring case), logs an activity and moves lastTouchAt forward. Email events log type email, calendar events meeting, marketplace events marketplace; the original type is kept as eventType in the payload. Send eventId (the sender's own id) so a retry is safe: the same eventId again returns the activity already recorded with 200 and changes nothing. Needs contacts: edit.",
       tags: ['Activities'],
       requestBody: jsonBody('ModuleEvent'),
       responses: {
         '201': dataResponse('The logged activity.', 'Activity'),
+        '200': dataResponse(
+          'This eventId was already recorded: the earlier activity, nothing changed.',
+          'Activity',
+        ),
         '400': errorResponse('Invalid event.'),
         '401': errorResponse('Not authenticated.'),
         '403': errorResponse('FORBIDDEN.'),
@@ -1230,6 +1234,39 @@ const aiPaths: OpenApiPaths = {
   },
 };
 
+const auditPaths: OpenApiPaths = {
+  '/api/v1/audit-log': {
+    get: {
+      operationId: 'listAuditLog',
+      summary: 'Audit log',
+      security: bearer,
+      description:
+        'Who changed what and when, newest first: one entry per create, update or delete of a CRM record, written by the server (also for AI and background work). Filters: entityType with entityId, actorId, correlationId (the X-Request-Id of the request that made the change). Needs settings: edit.',
+      tags: ['Audit'],
+      parameters: [
+        ...['entityType', 'entityId', 'actorId', 'correlationId'].map((name) => ({
+          name,
+          in: 'query',
+          required: false,
+          schema: { type: 'string' },
+        })),
+        ...['page', 'pageSize'].map((name) => ({
+          name,
+          in: 'query',
+          required: false,
+          schema: { type: 'integer' },
+        })),
+      ],
+      responses: {
+        '200': listDataResponse('A page of audit entries.', 'AuditEntry'),
+        '400': errorResponse('Invalid query.'),
+        '401': errorResponse('Not authenticated.'),
+        '403': errorResponse('FORBIDDEN.'),
+      },
+    },
+  },
+};
+
 export const paths: OpenApiPaths = {
   '/health': {
     get: {
@@ -1330,4 +1367,5 @@ export const paths: OpenApiPaths = {
   ...overviewPaths,
   ...segmentsPaths,
   ...tasksNotesActivitiesPaths,
+  ...auditPaths,
 };

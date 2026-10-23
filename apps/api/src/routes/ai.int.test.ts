@@ -127,11 +127,14 @@ describe('AI analysis API (int)', () => {
 
     // The job is on the queue with what the worker needs (a running worker may already have it).
     const job = await aiAnalyzeQueue.getJob(run.jobId);
-    expect(job?.data).toEqual({
+    const { correlationId, ...rest } = job?.data ?? {};
+    expect(rest).toEqual({
       contactId: t.contactId,
       workspaceId: t.workspaceId,
       requestedById: t.userId,
     });
+    // The id of the request that queued it, so the AI's changes trace back to it.
+    expect(typeof correlationId).toBe('string');
   });
 
   it("refuses an unknown contact and another workspace's contact", async () => {

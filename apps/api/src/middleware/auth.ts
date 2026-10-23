@@ -15,6 +15,7 @@ import {
 } from '@lulu/shared';
 import type { RequestHandler } from 'express';
 import { scopedDb } from '../db/scoped';
+import { setActor } from '../lib/actorContext';
 import { AppError } from '../lib/errors';
 import { isTokenDenied } from '../lib/tokenDenylist';
 import { getUserById, verifyToken } from '../services/auth';
@@ -45,6 +46,7 @@ export const requireAuth: RequestHandler = (req, _res, next) => {
         throw AppError.unauthorized();
       }
       req.ctx = { workspaceId: user.workspaceId, userId: user.id, role: user.role };
+      setActor({ actorType: 'user', actorId: user.id, workspaceId: user.workspaceId });
       next();
     } catch (err) {
       next(err);

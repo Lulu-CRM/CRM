@@ -357,6 +357,7 @@ Email, Calendar and other modules tell the CRM something happened with `POST /ev
 
 ```json
 {
+  "eventId": "email-7f3c2a",
   "type": "email.received",
   "sourceModule": "email",
   "occurredAt": "2026-10-17T09:42:00Z",
@@ -366,7 +367,29 @@ Email, Calendar and other modules tell the CRM something happened with `POST /ev
 }
 ```
 
-The CRM finds the contact by email (ignoring case), creates an `Activity`, and moves `lastTouchAt` forward (never back, so a late event changes nothing). `email.*` is logged as `email`, `calendar.*` as `meeting` and `marketplace.*` as `marketplace`; the event type is kept in `payload.eventType`. It answers 201 with the activity, or 404 `CONTACT_NOT_FOUND` when no contact has that email, so the module knows nothing was recorded. Event types start with `email.`, `calendar.` or `marketplace.`. The CRM can send events the other way (for example "prepare a follow-up in Email") through the same format.
+The CRM finds the contact by email (ignoring case), creates an `Activity`, and moves `lastTouchAt` forward (never back, so a late event changes nothing). `email.*` is logged as `email`, `calendar.*` as `meeting` and `marketplace.*` as `marketplace`; the event type is kept in `payload.eventType`. It answers 201 with the activity, or 404 `CONTACT_NOT_FOUND` when no contact has that email, so the module knows nothing was recorded.
+
+`eventId` is the sender's own id for the event (optional for now, recommended). The same `eventId` from the same module again answers 200 with the activity recorded the first time and changes nothing, so a sender can retry safely (at-least-once delivery). Without `eventId`, every call is recorded. Event types start with `email.`, `calendar.` or `marketplace.`. The CRM can send events the other way (for example "prepare a follow-up in Email") through the same format.
+
+## Audit log
+
+| Method | Path | Purpose |
+| --- | --- | --- |
+| GET | `/audit-log` | Who changed what, newest first. Needs `settings: edit` |
+
+Every create, update and delete of a CRM record (contact, company, deal, task, note, segment, custom field, setting, permission, stage, pipeline, AI insight, import job, user) writes one entry, whoever made it: a person (`actorType: user`), the AI worker (`ai`) or the system (`system`, e.g. imports). Schema: `auditEntrySchema` in `packages/shared/src/audit.ts`. `changes` holds the fields the change set; secrets such as password hashes are never copied. Filters: `entityType` with `entityId`, `actorId`, `correlationId`.
+
+**Correlation id:** every response carries `X-Request-Id`. A caller may send its own (8 to 128 letters, digits, `.`, `_`, `:` or `-`), for example to trace a flow across Lulu modules; otherwise the API makes one. It is stored on audit entries and domain events, and background jobs carry the id of the request that queued them.
+
+## Domain events (outbox)
+
+Next to every audit entry the CRM writes a domain event to its outbox: `<entity>.created`, `<entity>.updated` or `<entity>.deleted` (for example `contact.updated`), with `schemaVersion`, `workspaceId`, `actorType`, `actorId`, `correlationId`, `occurredAt` and a payload `{ id, fields }` (the names of the fields that changed, not their values; consumers read the record through the API). A dispatcher publishes pending events every 2 seconds, at least once, oldest first; a failing event is retried and set aside as `failed` after 5 attempts. Listeners are in-process for now (`onDomainEvent` in `apps/api/src/jobs/outbox.ts`); Lulu's platform event bus plugs in there when it exists.
+
+Known limit: the audit entry and the event are written right after the change in their own transaction, not inside the change's transaction. A change that is kept always has both; a change rolled back by an outer transaction can leave an entry behind.
+
+## Bundle manifest
+
+`GET /manifest.json` (public, outside `/api/v1`): the CRM described as a Lulu bundle — id `lulu.crm`, version, platform range, permissions, UI routes, every API operation, published and consumed events, entities, AI tools with their risk level, jobs, migrations and health checks. It is built from the code (`apps/api/src/manifest.ts`), and a test keeps it equal to the documented API. The field names follow the Lulu platform architecture until the platform publishes its manifest schema.
 
 ## Background jobs (BullMQ)
 

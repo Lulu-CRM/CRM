@@ -1,4 +1,5 @@
 import { Queue, type JobsOptions } from 'bullmq';
+import { currentActor } from '../lib/actorContext';
 import { createRedisConnection, disconnectRedis } from '../lib/redis';
 
 export const QUEUE_NAMES = {
@@ -11,12 +12,14 @@ export const QUEUE_NAMES = {
 export interface ImportProcessPayload {
   importJobId: string;
   workspaceId: string;
+  correlationId?: string;
 }
 
 export interface AiAnalyzePayload {
   contactId: string;
   workspaceId: string;
   requestedById: string;
+  correlationId?: string;
 }
 
 export interface SegmentsRefreshPayload {
@@ -65,11 +68,14 @@ export const notificationsSendQueue = new Queue<NotificationPayload>(
 );
 
 export async function enqueueImportProcess(payload: ImportProcessPayload) {
-  return importProcessQueue.add('process', payload);
+  return importProcessQueue.add('process', {
+    correlationId: currentActor().correlationId,
+    ...payload,
+  });
 }
 
 export async function enqueueAiAnalyze(payload: AiAnalyzePayload) {
-  return aiAnalyzeQueue.add('analyze', payload);
+  return aiAnalyzeQueue.add('analyze', { correlationId: currentActor().correlationId, ...payload });
 }
 
 export async function enqueueSegmentsRefresh(payload: SegmentsRefreshPayload) {

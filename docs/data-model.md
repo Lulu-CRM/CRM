@@ -42,7 +42,9 @@ Rules: `@@map` uses snake_case plural table names, model names are PascalCase si
 | Deal | name, value (number), currency, stageId, probability, expectedCloseAt, contactId, companyId, ownerId, closedAt |
 | Task | title, dueAt, priority (`high`, `normal`, `low`), ownerId, done, doneAt, linked record |
 | Note | title, body, visibility (`shared`, `private`), authorId, linked record |
-| Activity | type, linked record, occurredAt, sourceModule, actorId, payload, summary |
+| Activity | type, linked record, occurredAt, sourceModule, actorId, payload, summary, externalEventId (the sender's event id; unique per workspace and module) |
+| AuditLog | actorType (`user`, `ai`, `system`), actorId, action (`create`, `update`, `delete`), entityType, entityId, changes (JSON), correlationId. Append-only; plain workspaceId without a foreign key, so it outlives the records it describes |
+| OutboxEvent | eventType, schemaVersion, aggregateType, aggregateId, actorType, actorId, correlationId, payload (JSON), occurredAt, status (`pending`, `dispatched`, `failed`), attempts, lastError, dispatchedAt |
 | Segment | name, description, rules (JSON, format in `docs/api.md`), color (`violet`, `coral`, `blue`, `mint`, `peach`; defaults to `violet`) |
 | ImportJob | fileName, status (`uploaded`, `processing`, `done`, `failed`), columns, sampleRow (JSON), mapping (JSON), rowsTotal, rowsAdded, rowsUpdated, rowsHeld, rowsSkipped, ownerId, tag, duplicateHandling (`hold`, `skip`, `update`), error |
 | ImportRow | importJobId, rowNumber, raw (JSON), status (`pending`, `added`, `updated`, `held`, `skipped`, `merged`), contact (JSON, for held rows), duplicateMatch, duplicateOfContactId |

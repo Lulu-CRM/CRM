@@ -1,4 +1,6 @@
 import { Worker } from 'bullmq';
+import { runAs } from '../lib/actorContext';
+import { startOutboxDispatcher, stopOutboxDispatcher } from './outbox';
 import { createRedisConnection } from '../lib/redis';
 import { processAiAnalyze } from '../services/ai';
 import { processImport } from '../services/imports';
@@ -14,7 +16,11 @@ export function startWorkers(): Worker[] {
   const aiAnalyze = new Worker<AiAnalyzePayload>(
     QUEUE_NAMES.AI_ANALYZE,
     async (job) => {
-      await processAiAnalyze(job.data);
+      const { workspaceId, correlationId } = job.data;
+      await runAs(
+        { actorType: 'ai', workspaceId, ...(correlationId ? { correlationId } : {}) },
+        () => processAiAnalyze(job.data),
+      );
     },
     { connection: createRedisConnection() },
   );
@@ -25,7 +31,11 @@ export function startWorkers(): Worker[] {
   const importProcess = new Worker<ImportProcessPayload>(
     QUEUE_NAMES.IMPORT_PROCESS,
     async (job) => {
-      await processImport(job.data);
+      const { workspaceId, correlationId } = job.data;
+      await runAs(
+        { actorType: 'system', workspaceId, ...(correlationId ? { correlationId } : {}) },
+        () => processImport(job.data),
+      );
     },
     { connection: createRedisConnection() },
   );
@@ -34,10 +44,13 @@ export function startWorkers(): Worker[] {
   });
 
   workers = [aiAnalyze, importProcess];
+  // Domain events written next to every change (db/audit.ts) are published from here.
+  startOutboxDispatcher();
   return workers;
 }
 
 export async function stopWorkers(): Promise<void> {
+  stopOutboxDispatcher();
   await Promise.all(workers.map((worker) => worker.close()));
   workers = [];
 }

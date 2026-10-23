@@ -262,3 +262,10 @@ export function scopedDb(workspaceId: string): Db {
 }
 
 export type ScopedDb = Db;
+
+/**
+ * A database handle inside a transaction, for services that a caller runs as part of a larger change
+ * (AI acceptance, imports). Pass one opened on scopedDb(workspaceId), never on the base client, so
+ * the workspace rules still apply.
+ */
+export type DbTx = Prisma.TransactionClient;

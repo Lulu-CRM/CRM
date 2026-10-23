@@ -5,7 +5,7 @@ import {
   type TaskListQuery,
   type TaskUpdateInput,
 } from '@lulu/shared';
-import { scopedDb, type ScopedDb } from '../db/scoped';
+import { scopedDb, type DbTx, type ScopedDb } from '../db/scoped';
 import type { Prisma } from '../generated/prisma/client';
 import { AppError } from '../lib/errors';
 import type { RequestContext } from '../middleware/requestContext';
@@ -18,7 +18,7 @@ async function findTask(scoped: ScopedDb, id: string) {
   return row;
 }
 
-async function assertOwnerExists(scoped: ScopedDb, ownerId: string | undefined) {
+async function assertOwnerExists(scoped: DbTx, ownerId: string | undefined) {
   if (ownerId === undefined) return;
   const owner = await scoped.user.findFirst({ where: { id: ownerId } });
   if (owner === null) throw recordNotFound();
@@ -57,8 +57,13 @@ export async function listTasks(
   return { items: rows.map(toSharedTask), total };
 }
 
-export async function createTask(ctx: RequestContext, input: TaskCreateInput): Promise<Task> {
-  const scoped = scopedDb(ctx.workspaceId);
+/** POST /tasks. `tx` runs it inside a caller's transaction (AI acceptance uses the same path). */
+export async function createTask(
+  ctx: RequestContext,
+  input: TaskCreateInput,
+  tx?: DbTx,
+): Promise<Task> {
+  const scoped: DbTx = tx ?? scopedDb(ctx.workspaceId);
   await assertRecordExists(scoped, input.recordType, input.recordId);
   await assertOwnerExists(scoped, input.ownerId);
   const row = await scoped.task.create({

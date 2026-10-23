@@ -1,4 +1,5 @@
 import {
+  auditEntrySchema,
   aiAcceptSchema,
   aiInsightSchema,
   aiRunSchema,
@@ -67,6 +68,7 @@ const COMPONENT_NAMES = {
   HealthStatus: healthStatusSchema,
   HealthLiveStatus: healthLiveSchema,
   ListMeta: listMetaSchema,
+  AuditEntry: auditEntrySchema,
   ErrorEnvelope: errorSchema,
   LoginInput: loginInputSchema,
   AuthSession: authSessionSchema,

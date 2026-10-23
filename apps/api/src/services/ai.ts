@@ -13,6 +13,8 @@ import type { AiInsight as AiInsightRow } from '../generated/prisma/client';
 import type { AiAnalyzePayload } from '../jobs/queues';
 import { enqueueAiAnalyze } from '../jobs/queues';
 import { AppError } from '../lib/errors';
+import { updateContact } from './contacts';
+import { createTask } from './tasks';
 import type { RequestContext } from '../middleware/requestContext';
 import { toSharedCompany } from './companyMapper';
 import { toSharedContact } from './contactMapper';
@@ -144,25 +146,25 @@ export async function acceptInsight(
     const contact = await tx.contact.findFirst({ where: { id: insight.contactId } });
     if (contact === null) throw AppError.notFound(ERROR_CODES.CONTACT_NOT_FOUND);
 
+    // The same canonical services as the screens (POST /tasks, PATCH /contacts/:id), so every rule
+    // they enforce applies here too. They run in this transaction: all of it is saved, or none.
     const saved: string[] = [];
     if (options.createTask && insight.suggestedTask !== null) {
-      const task = await tx.task.create({
-        data: {
-          workspaceId: ctx.workspaceId,
+      const task = await createTask(
+        ctx,
+        {
           title: options.taskTitle!,
-          dueAt: new Date(insight.suggestedTask.dueAt),
-          ownerId: contact.ownerId ?? ctx.userId,
+          dueAt: insight.suggestedTask.dueAt,
+          ...(contact.ownerId ? { ownerId: contact.ownerId } : {}),
           recordType: 'contact',
           recordId: contact.id,
         },
-      });
+        tx,
+      );
       saved.push(`task:${task.id}`);
     }
     if (options.applyStage && insight.suggestedStage !== null) {
-      await tx.contact.update({
-        where: { id: contact.id },
-        data: { lifecycleStage: insight.suggestedStage },
-      });
+      await updateContact(ctx, contact.id, { lifecycleStage: insight.suggestedStage }, tx);
       saved.push(`stage:${insight.suggestedStage}`);
     }
 

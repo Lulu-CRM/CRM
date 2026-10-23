@@ -8,6 +8,7 @@ import { notFound } from './middleware/notFound';
 import { requestId } from './middleware/requestId';
 import { requestLog } from './middleware/requestLog';
 import './middleware/requestContext';
+import { buildManifest } from './manifest';
 import { buildOpenApiDocument } from './openapi/document';
 import { swaggerUiCsp } from './openapi/ui';
 import { apiRouter } from './routes';
@@ -24,6 +25,11 @@ export function createApp(): Express {
 
   app.get('/health', createHealthHandler());
   app.get('/health/live', liveHandler);
+  // The bundle manifest for the Lulu platform (src/manifest.ts). Public, like /health and /docs.json.
+  const manifest = buildManifest();
+  app.get('/manifest.json', (_req, res) => {
+    res.json(manifest);
+  });
   app.use('/api/v1', apiRouter);
 
   const openApiDocument = buildOpenApiDocument();

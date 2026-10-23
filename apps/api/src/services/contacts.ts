@@ -7,7 +7,7 @@ import {
   type Company,
 } from '@lulu/shared';
 import { db } from '../db/prisma';
-import { scopedDb, type ScopedDb } from '../db/scoped';
+import { scopedDb, type DbTx } from '../db/scoped';
 import type { Prisma } from '../generated/prisma/client';
 import { AppError } from '../lib/errors';
 import type { RequestContext } from '../middleware/requestContext';
@@ -47,7 +47,7 @@ async function assertExists(path: string, lookup: Promise<unknown>): Promise<voi
 }
 
 async function assertReferences(
-  scoped: ScopedDb,
+  scoped: DbTx,
   input: { companyId?: string | null | undefined; ownerId?: string | undefined },
 ): Promise<void> {
   if (input.companyId) {
@@ -68,7 +68,7 @@ async function assertReferences(
 // can share a name at one company, so name + company is only a hint for imports, where
 // findDuplicate (packages/shared/src/import-logic.ts) holds the row for review instead.
 async function assertNotDuplicate(
-  scoped: ScopedDb,
+  scoped: DbTx,
   candidate: { email?: string | null | undefined },
   excludeId?: string,
 ): Promise<void> {
@@ -194,12 +194,14 @@ export async function createContact(
   return toSharedContact(row);
 }
 
+/** PATCH /contacts/:id. `tx` runs it inside a caller's transaction (AI acceptance uses the same path). */
 export async function updateContact(
   ctx: RequestContext,
   id: string,
   input: ContactUpdateInput,
+  tx?: DbTx,
 ): Promise<Contact> {
-  const scoped = scopedDb(ctx.workspaceId);
+  const scoped: DbTx = tx ?? scopedDb(ctx.workspaceId);
   const existing = await scoped.contact.findFirst({ where: { id } });
   if (existing === null) throw notFound();
   await assertReferences(scoped, input);

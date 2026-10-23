@@ -1,5 +1,6 @@
 import { ERROR_CODES, type Activity, type ActivityType, type ModuleEvent } from '@lulu/shared';
 import { scopedDb } from '../db/scoped';
+import { Prisma } from '../generated/prisma/client';
 import { AppError } from '../lib/errors';
 import type { RequestContext } from '../middleware/requestContext';
 import { toSharedActivity } from './timeline';
@@ -13,36 +14,62 @@ const TYPE_BY_PREFIX: Record<string, ActivityType> = {
   marketplace: 'marketplace',
 };
 
-/** POST /events: finds the contact by email (ignoring case), logs an activity, updates lastTouchAt. */
+/**
+ * POST /events: finds the contact by email (ignoring case), logs an activity, updates lastTouchAt.
+ * With an eventId, the same event sent again returns the activity already recorded (`duplicate`)
+ * and changes nothing, so a sender can safely retry.
+ */
 export async function recordModuleEvent(
   ctx: RequestContext,
   input: ModuleEvent,
-): Promise<Activity> {
+): Promise<{ activity: Activity; duplicate: boolean }> {
   const scoped = scopedDb(ctx.workspaceId);
+  const earlier = () =>
+    input.eventId === undefined
+      ? Promise.resolve(null)
+      : scoped.activity.findFirst({
+          where: { sourceModule: input.sourceModule, externalEventId: input.eventId },
+        });
+  const seen = await earlier();
+  if (seen !== null) return { activity: toSharedActivity(seen), duplicate: true };
+
   const contact = await scoped.contact.findFirst({
     where: { email: { equals: input.contact.email, mode: 'insensitive' } },
   });
   if (contact === null) throw AppError.notFound(ERROR_CODES.CONTACT_NOT_FOUND);
 
+  const found = contact;
   const occurredAt = new Date(input.occurredAt);
-  const row = await scoped.$transaction(async (tx) => {
-    const activity = await tx.activity.create({
-      data: {
-        workspaceId: ctx.workspaceId,
-        type: TYPE_BY_PREFIX[input.type.split('.')[0]!]!,
-        recordType: 'contact',
-        recordId: contact.id,
-        occurredAt,
-        sourceModule: input.sourceModule,
-        actorId: null,
-        summary: input.summary,
-        payload: { ...input.payload, eventType: input.type },
-      },
+  const save = () =>
+    scoped.$transaction(async (tx) => {
+      const activity = await tx.activity.create({
+        data: {
+          workspaceId: ctx.workspaceId,
+          type: TYPE_BY_PREFIX[input.type.split('.')[0]!]!,
+          recordType: 'contact',
+          recordId: found.id,
+          occurredAt,
+          sourceModule: input.sourceModule,
+          actorId: null,
+          summary: input.summary,
+          payload: { ...input.payload, eventType: input.type },
+          externalEventId: input.eventId ?? null,
+        },
+      });
+      if (found.lastTouchAt === null || found.lastTouchAt < occurredAt) {
+        await tx.contact.update({ where: { id: found.id }, data: { lastTouchAt: occurredAt } });
+      }
+      return activity;
     });
-    if (contact.lastTouchAt === null || contact.lastTouchAt < occurredAt) {
-      await tx.contact.update({ where: { id: contact.id }, data: { lastTouchAt: occurredAt } });
+
+  try {
+    return { activity: toSharedActivity(await save()), duplicate: false };
+  } catch (error) {
+    // The same event arrived twice at once: the unique index let one through; return that one.
+    if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2002') {
+      const winner = await earlier();
+      if (winner !== null) return { activity: toSharedActivity(winner), duplicate: true };
     }
-    return activity;
-  });
-  return toSharedActivity(row);
+    throw error;
+  }
 }

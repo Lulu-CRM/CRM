@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import { requireAuth } from '../middleware/auth';
 import { aiRouter } from './ai';
+import { auditRouter } from './audit';
 import { authRouter, loginRouter } from './auth';
 import { companiesRouter } from './companies';
 import { contactsRouter } from './contacts';
@@ -43,3 +44,4 @@ apiRouter.use('/tasks', tasksRouter);
 apiRouter.use('/notes', notesRouter);
 apiRouter.use('/activities', activitiesRouter);
 apiRouter.use('/events', eventsRouter);
+apiRouter.use('/audit-log', auditRouter);

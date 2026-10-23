@@ -3,14 +3,12 @@
 import { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
 import type { CompanyListItem, Contact } from "@lulu/shared";
-import { PageHeader } from "@/components/layout/PageHeader";
 import { Avatar, Button, Card, ConfirmDialog, EmptyState, Pagination, Pill, SkeletonRows, Table, useToast, type Column, type PillTone } from "@/components/ui";
 import { CompanyDrawer } from "@/features/companies/CompanyDrawer";
 import { CompanyFormModal } from "@/features/companies/CompanyFormModal";
 import { companyMark } from "@/features/companies/options";
 import { ContactDrawer } from "@/features/contacts/ContactDrawer";
 import { ContactFormModal } from "@/features/contacts/ContactFormModal";
-import { FilterMenu, type ExtraFilters } from "@/features/contacts/FilterMenu";
 import { stageTone } from "@/features/contacts/options";
 import { useLookups } from "@/features/contacts/useLookups";
 import { useFormat } from "@/i18n/format";
@@ -22,8 +20,6 @@ import { useApi } from "@/lib/useApi";
 import { DirectoryActions } from "./DirectoryActions";
 
 const PAGE_SIZE = 25;
-const tabs = ["all", "contacts", "companies", "followUp"] as const;
-type Tab = (typeof tabs)[number];
 
 type Row = { kind: "contact"; id: string; contact: Contact } | { kind: "company"; id: string; company: CompanyListItem };
 
@@ -38,50 +34,20 @@ export function DirectoryPage() {
   const tStage = useTranslations("lifecycleStages");
   const tCompanies = useTranslations("companies");
   const tCommon = useTranslations("common");
+  const tNav = useTranslations("nav");
   const toast = useToast();
   const errorMessage = useErrorMessage();
   const format = useFormat();
   const lookups = useLookups();
 
-  const [tab, setTab] = useState<Tab>("all");
   const [search, setSearch] = useState("");
   const q = search.trim() || undefined;
-  // "+ Filter": lifecycle stage (people only) and owner (people and companies).
-  const [extra, setExtra] = useState<ExtraFilters>({});
-  const withCompanies = tab !== "contacts" && tab !== "followUp" && !extra.stage;
 
+  // No filter row (removed at Dave's request): people and companies always show together; search narrows both.
   const list = useApi(
-    () =>
-      Promise.all([
-        tab === "companies"
-          ? null
-          : api.contacts.list({
-              q,
-              pageSize: 100,
-              ...(tab === "followUp" ? { needsFollowUp: true } : {}),
-              ...(extra.stage ? { stage: extra.stage } : {}),
-              ...(extra.ownerId ? { ownerId: extra.ownerId } : {}),
-            }),
-        withCompanies ? api.companies.list({ q, pageSize: 100, ...(extra.ownerId ? { ownerId: extra.ownerId } : {}) }) : null,
-      ]),
-    [tab, q, extra.stage, extra.ownerId],
+    () => Promise.all([api.contacts.list({ q, pageSize: 100 }), api.companies.list({ q, pageSize: 100 })]),
+    [q],
   );
-  // Totals for the tab badges, independent of the search.
-  const counts = useApi(
-    () =>
-      Promise.all([
-        api.contacts.list({ pageSize: 1 }),
-        api.companies.list({ pageSize: 1 }),
-        api.contacts.list({ pageSize: 1, needsFollowUp: true }),
-      ]),
-    [],
-  );
-  const countOf: Record<Tab, number | undefined> = {
-    all: counts.data ? counts.data[0].meta.total + counts.data[1].meta.total : undefined,
-    contacts: counts.data?.[0].meta.total,
-    companies: counts.data?.[1].meta.total,
-    followUp: counts.data?.[2].meta.total,
-  };
 
   const [contacts, companies] = list.data ?? [null, null];
   const rows: Row[] = [
@@ -96,7 +62,7 @@ export function DirectoryPage() {
   useEffect(() => {
     setPage(1);
     setSelected(new Set());
-  }, [tab, q, extra.stage, extra.ownerId]);
+  }, [q]);
   const pages = Math.max(1, Math.ceil(rows.length / PAGE_SIZE));
   const current = Math.min(page, pages);
   const shown = rows.slice((current - 1) * PAGE_SIZE, current * PAGE_SIZE);
@@ -109,10 +75,7 @@ export function DirectoryPage() {
   const [toDelete, setToDelete] = useState<Row[] | null>(null);
   const [deleting, setDeleting] = useState(false);
 
-  const reload = () => {
-    list.reload();
-    counts.reload();
-  };
+  const reload = () => list.reload();
   const open = (row: Row) => (row.kind === "contact" ? setOpenContact(row.contact) : setOpenCompany(row.company));
   const nameOf = (row: Row) => (row.kind === "contact" ? row.contact.name : row.company.name);
 
@@ -232,23 +195,12 @@ export function DirectoryPage() {
     },
   ];
 
-  const filtered = q !== undefined || tab !== "all" || !!extra.stage || !!extra.ownerId;
+  const filtered = q !== undefined;
 
   return (
     <>
-      <PageHeader
-        page="directory"
-        actions={
-          <>
-            <Button variant="outline" icon="＋" onClick={() => setCompanyForm({ company: null })}>
-              {t("addCompany")}
-            </Button>
-            <Button icon="＋" onClick={() => setContactForm({ contact: null })}>
-              {t("addContact")}
-            </Button>
-          </>
-        }
-      />
+      {/* No page header here (removed at Dave's request): the card's own title leads the page. */}
+      <h1 className="sr-only">{tNav("directory")}</h1>
       <Card>
         <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
           <div>
@@ -264,7 +216,7 @@ export function DirectoryPage() {
               </Button>
             </div>
           ) : (
-            <div className="flex flex-wrap gap-2">
+            <div className="flex flex-wrap gap-2 lg:flex-none lg:flex-nowrap">
               <Link
                 href="/crm/import"
                 className="inline-flex items-center gap-1.5 rounded-md border border-[#dad8ec] bg-surface px-3.5 py-2.5 text-[11px] font-extrabold whitespace-nowrap text-primary-hover hover:bg-[#f7f5ff]"
@@ -282,7 +234,7 @@ export function DirectoryPage() {
           )}
         </div>
 
-        <div className="mt-[19px] flex flex-col gap-1 border-t border-[#f0eff5] pt-3 md:flex-row md:items-center md:justify-between md:gap-4">
+        <div className="mt-[19px] border-t border-[#f0eff5] pt-3">
           <label className="flex h-[38px] items-center gap-2 rounded-lg border border-border-strong px-3 text-text-subtle md:w-[330px] md:flex-none">
             <span aria-hidden>⌕</span>
             <input
@@ -294,24 +246,6 @@ export function DirectoryPage() {
               className="w-full min-w-0 bg-transparent text-[11px] text-text outline-none"
             />
           </label>
-          <div role="tablist" aria-label={t("filtersLabel")} className="flex min-w-0 gap-1 overflow-x-auto py-1">
-            {tabs.map((key) => (
-              <button
-                key={key}
-                type="button"
-                role="tab"
-                aria-selected={tab === key}
-                onClick={() => setTab(key)}
-                className={`rounded-md px-2.5 py-1.5 text-[10px] whitespace-nowrap ${
-                  tab === key ? "bg-primary-soft font-extrabold text-primary-hover" : "text-text-muted hover:bg-surface-muted"
-                }`}
-              >
-                {t(`tabs.${key}`)}
-                {countOf[key] != null && <b className="ml-1.5 text-[9px]">{format.number(countOf[key]!)}</b>}
-              </button>
-            ))}
-            <FilterMenu value={extra} lookups={lookups} onChange={setExtra} />
-          </div>
         </div>
 
         {list.error ? (

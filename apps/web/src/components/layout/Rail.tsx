@@ -4,12 +4,9 @@ import Image from "next/image";
 import { useState } from "react";
 import { useFormatter, useTranslations } from "next-intl";
 import { Link, usePathname } from "@/i18n/navigation";
-import { Avatar } from "@/components/ui/Avatar";
 import { crmHref, crmMenu, crmPage, extraModules, findCrmMenuItem, workspaceModules } from "@/config/navigation";
+import { ProfileMenu } from "./ProfileMenu";
 import { useRecordCount } from "./useRecordCount";
-
-// Placeholder until auth (backend task 2) gives us the signed-in user.
-const currentUser = { name: "Jamie Morgan", initials: "JM" };
 
 const linkClass =
   "flex min-h-9 items-center gap-2.5 rounded-[9px] px-2.5 text-[11px] font-medium text-rail-text hover:bg-rail-hover hover:text-white";
@@ -119,16 +116,7 @@ export function Rail({ onNavigate }: { onNavigate?: () => void }) {
         </nav>
       </div>
 
-      <div className="mt-3.5 flex items-center gap-2.5 border-t border-[#2d2c3d] px-1 pt-4">
-        <Avatar initials={currentUser.initials} small />
-        <span>
-          <strong className="block text-[11px] text-white">{currentUser.name}</strong>
-          <small className="block text-[9px] text-rail-label">{t("workspaceOwner")}</small>
-        </span>
-        <button type="button" aria-label={t("profileMenu")} className="ml-auto text-[#85869b]">
-          ⌄
-        </button>
-      </div>
+      <ProfileMenu />
     </aside>
   );
 }

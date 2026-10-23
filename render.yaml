@@ -27,9 +27,10 @@ services:
         sync: false
       - key: JWT_SECRET
         generateValue: true
-      # The entrypoint runs migrations, then the seed (the design's sample data) on every start.
+      # "true" loads the design's sample data on every start (the entrypoint runs the seed).
+      # Off since Oct 23, 2026: the live workspace was emptied of sample data at Dave's request.
       - key: SEED_ON_START
-        value: "true"
+        value: "false"
       - key: SEED_OWNER_PASSWORD
         sync: false
       - key: SEED_MEMBER_PASSWORD

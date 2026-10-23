@@ -3,21 +3,18 @@
 import { useTranslations } from "next-intl";
 import { usePathname } from "@/i18n/navigation";
 import { findCrmPage } from "@/config/navigation";
-import { Avatar } from "@/components/ui/Avatar";
-import { useSignOut } from "@/features/auth/AuthGate";
-import { api } from "@/lib/api";
-import { loginRequired } from "@/lib/auth";
-import { LanguageSwitcher } from "./LanguageSwitcher";
 
+/**
+ * The top bar from the MagicPath design: breadcrumb (Lulu / CRM / page) and the workspace search.
+ * Language and sign-out live in the profile menu at the bottom of the rail (Rail.tsx).
+ */
 export function TopBar({ onOpenMenu }: { onOpenMenu: () => void }) {
   const t = useTranslations("layout");
   const tNav = useTranslations("nav");
   const page = findCrmPage(usePathname());
-  const tAuth = useTranslations("auth");
-  const signOut = useSignOut();
 
   return (
-    <header className="flex h-[69px] items-center justify-between gap-4 border-b border-border bg-surface px-4 md:px-8">
+    <header className="flex h-[69px] items-center justify-between gap-4 border-b border-border bg-surface px-5 md:px-[34px]">
       <div className="flex min-w-0 items-center gap-3">
         <button
           type="button"
@@ -27,44 +24,28 @@ export function TopBar({ onOpenMenu }: { onOpenMenu: () => void }) {
         >
           ☰
         </button>
-        <nav aria-label={t("breadcrumb")} className="flex min-w-0 items-center gap-2 text-[11px] text-text-subtle">
-          <span className="hidden sm:inline">{t("workspace")}</span>
-          <i className="hidden not-italic text-text-faint sm:inline">/</i>
-          <strong className="text-text-strong">{t("crm")}</strong>
+        <nav aria-label={t("breadcrumb")} className="flex min-w-0 items-center gap-[9px] text-[9px] text-[#9998a9] md:text-[11px]">
+          <span className="hidden sm:inline">Lulu</span>
+          <i className="hidden not-italic text-[#c8c7d2] sm:inline">/</i>
+          <strong className="text-[#353448]">{t("crm")}</strong>
           {page && (
             <>
-              <i className="not-italic text-text-faint">/</i>
-              <strong className="truncate text-text-strong">{tNav(page.key)}</strong>
+              <i className="not-italic text-[#c8c7d2]">/</i>
+              <strong className="truncate text-[#353448]">{tNav(page.key)}</strong>
             </>
           )}
         </nav>
       </div>
 
-      <div className="flex items-center gap-4">
-        <label className="hidden h-[38px] w-[218px] items-center gap-2 rounded-lg border border-border-strong px-3 text-text-subtle md:flex">
-          <span aria-hidden>⌕</span>
-          <input
-            type="search"
-            placeholder={t("searchWorkspace")}
-            aria-label={t("searchWorkspace")}
-            className="w-full min-w-0 bg-transparent text-[11px] text-text outline-none"
-          />
-        </label>
-        <LanguageSwitcher />
-        <button type="button" className="hidden text-[11px] text-text-muted sm:block">
-          ? {t("help")}
-        </button>
-        <button type="button" aria-label={t("notifications")} className="relative text-lg text-text-muted">
-          ♢
-          <i className="absolute top-0 right-0 size-[5px] rounded-full bg-[#ee7968]" />
-        </button>
-        <Avatar initials="JM" small />
-        {loginRequired && (
-          <button type="button" onClick={() => signOut(api.auth.logout)} className="text-[11px] font-semibold text-text-muted hover:text-primary">
-            {tAuth("signOut")}
-          </button>
-        )}
-      </div>
+      <label className="flex h-[38px] w-[160px] flex-none items-center gap-2 rounded-[10px] border border-[#e4e3ec] bg-surface px-[11px] text-[13px] text-[#9290a1] md:w-[218px]">
+        <span aria-hidden>⌕</span>
+        <input
+          type="search"
+          placeholder={t("searchWorkspace")}
+          aria-label={t("searchWorkspace")}
+          className="w-full min-w-0 bg-transparent text-[10px] text-[#474556] outline-none"
+        />
+      </label>
     </header>
   );
 }

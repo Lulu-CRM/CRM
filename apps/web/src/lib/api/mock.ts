@@ -220,6 +220,12 @@ function companyIdFor(name: string | null, ownerId: string) {
     industry: null,
     size: null,
     ownerId,
+    leadStatus: null,
+    whatsapp: null,
+    instagram: null,
+    facebook: null,
+    productService: null,
+    aiNotes: null,
   };
   db.companies.push(company);
   return company.id;
@@ -442,6 +448,12 @@ export const mockApi = {
         industry: input.industry ?? null,
         size: input.size ?? null,
         ownerId: input.ownerId ?? CURRENT_USER_ID,
+        leadStatus: input.leadStatus ?? null,
+        whatsapp: input.whatsapp ?? null,
+        instagram: input.instagram ?? null,
+        facebook: input.facebook ?? null,
+        productService: input.productService ?? null,
+        aiNotes: input.aiNotes ?? null,
       };
       db.companies.push(company);
       return delay(summarize(company));

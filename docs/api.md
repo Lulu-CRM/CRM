@@ -153,6 +153,8 @@ Implementation: `apps/api/src/services/overview.ts` feeds `buildOverview` with t
 | PATCH | `/companies/:id` | Edit |
 | DELETE | `/companies/:id` | Soft delete. The company's contacts and deals keep their link |
 
+`POST /companies` and `PATCH /companies/:id` take `name`, `domain`, `industry`, `size`, `ownerId` and, since Oct 23, 2026, `leadStatus` (`new`, `qualified`, `follow_up`, `customer`), `whatsapp`, `instagram`, `facebook`, `productService` and `aiNotes`, all optional except `name` on create; `null` clears a field. The Add company form also takes a first note: the web app saves it as a shared note linked to the new company (`POST /notes`), so it is not a company field.
+
 `GET /companies` filters: `ownerId`, `industry`, `health` (`strong`, `watch`, `new`). `q` searches name, domain and industry. `sort`: `name`, `contactCount`, `openDealValue` or `lastTouchAt`, default `-openDealValue`. Each item is the company plus numbers computed from its records (`summarizeCompany` in `packages/shared`):
 
 ```json

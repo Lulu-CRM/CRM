@@ -202,6 +202,13 @@ model Company {
   industry    String?
   size        String?
   ownerId     String?
+  // Added Oct 23, 2026 (docs/data-model.md, Company).
+  leadStatus     LifecycleStage?
+  whatsapp       String?
+  instagram      String?
+  facebook       String?
+  productService String?
+  aiNotes        String?   @db.Text
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
   deletedAt   DateTime?

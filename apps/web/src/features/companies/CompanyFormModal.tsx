@@ -8,8 +8,9 @@ import { companySizes, type Company, type CompanyListItem } from "@lulu/shared";
 import { Button, Modal, useToast } from "@/components/ui";
 import { api } from "@/lib/api";
 import { useErrorMessage } from "@/lib/errors";
+import { lifecycleStages } from "@/features/contacts/options";
 import type { Lookups } from "@/features/contacts/useLookups";
-import { companyFormSchema, toCompanyInput, toFormValues, type CompanyFormValues } from "./companyForm";
+import { companyFormSchema, toCompanyInput, toFirstNote, toFormValues, type CompanyFormValues } from "./companyForm";
 
 const inputClass =
   "w-full rounded-md border border-border-strong bg-surface px-[11px] py-2.5 text-[11px] text-text outline-none focus:border-[#8e83de] focus:shadow-[0_0_0_3px_#eeecff] aria-[invalid=true]:border-[#d9534f]";
@@ -33,6 +34,7 @@ export function CompanyFormModal({
   const t = useTranslations("companies.form");
   const tCompanies = useTranslations("companies");
   const tCommon = useTranslations("common");
+  const tStage = useTranslations("lifecycleStages");
   const toast = useToast();
   const errorMessage = useErrorMessage();
   const defaultOwner = lookups.me?.id ?? "";
@@ -55,6 +57,8 @@ export function CompanyFormModal({
     try {
       const input = toCompanyInput(values);
       const saved = company ? await api.companies.update(company.id, input) : await api.companies.create(input);
+      const note = company ? null : toFirstNote(values, saved.id);
+      if (note) await api.notes.create(note);
       toast(company ? t("updated") : t("created"));
       onSaved(saved);
     } catch (error) {
@@ -128,6 +132,26 @@ export function CompanyFormModal({
             ))}
           </select>,
         )}
+
+        {field(
+          "leadStatus",
+          t("leadStatus"),
+          <select className={inputClass} {...register("leadStatus")} {...aria("leadStatus")}>
+            <option value="">{t("noLeadStatus")}</option>
+            {lifecycleStages.map((stage) => (
+              <option key={stage} value={stage}>
+                {tStage(stage)}
+              </option>
+            ))}
+          </select>,
+        )}
+        {field("whatsapp", t("whatsapp"), <input className={inputClass} type="tel" autoComplete="off" placeholder={t("whatsappPlaceholder")} {...register("whatsapp")} {...aria("whatsapp")} />)}
+        {field("instagram", t("instagram"), <input className={inputClass} autoComplete="off" placeholder={t("instagramPlaceholder")} {...register("instagram")} {...aria("instagram")} />)}
+        {field("facebook", t("facebook"), <input className={inputClass} autoComplete="off" placeholder={t("facebookPlaceholder")} {...register("facebook")} {...aria("facebook")} />)}
+        {field("productService", t("productService"), <input className={inputClass} autoComplete="off" placeholder={t("productServicePlaceholder")} {...register("productService")} {...aria("productService")} />, true)}
+        {!company &&
+          field("note", t("note"), <textarea className={inputClass} rows={3} placeholder={t("notePlaceholder")} {...register("note")} {...aria("note")} />, true)}
+        {field("aiNotes", t("aiNotes"), <textarea className={inputClass} rows={3} placeholder={t("aiNotesPlaceholder")} {...register("aiNotes")} {...aria("aiNotes")} />, true)}
 
         <div className="mt-1.5 flex flex-col items-end justify-between gap-3 border-t border-[#efedf4] pt-4 sm:col-span-2 sm:flex-row sm:items-center">
           <span className="text-[10px] text-text-subtle">{t("requiredHint")}</span>

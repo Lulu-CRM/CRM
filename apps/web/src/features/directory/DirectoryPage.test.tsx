@@ -99,31 +99,42 @@ describe("Contacts & Companies page", () => {
     await waitFor(() => expect(names()).toContain("Ada Lovelace"), slow);
   });
 
-  it("runs an AI analysis from the card and links to review it", async () => {
-    await waitFor(() => expect(screen.getByRole("combobox", { name: messages.directory.ai.contact })).toBeTruthy(), slow);
-    await waitFor(
-      () => expect((screen.getByRole("combobox", { name: messages.directory.ai.contact }) as HTMLSelectElement).options.length).toBeGreaterThan(0),
-      slow,
-    );
-    fireEvent.click(screen.getByRole("button", { name: messages.directory.ai.run }));
-    const review = await screen.findByRole("link", { name: /Review and save/ }, { timeout: 5000 });
-    expect(review.getAttribute("href")).toMatch(/^\/crm\/ai-analysis\?contact=/);
-    expect(review.parentElement?.textContent).toContain(messages.directory.ai.nextStep);
+  it("has no Notes or AI Analysis cards under the table", async () => {
+    await waitFor(() => expect(names()).toContain("Sophie Laurent"), slow);
+    expect(screen.queryByRole("button", { name: /Add note/ })).toBeNull();
+    expect(screen.queryByRole("button", { name: /Generate AI analysis/ })).toBeNull();
   });
 
-  it("adds a note linked to the chosen record from the notes card", async () => {
-    const select = await screen.findByRole("combobox", { name: messages.directory.notes.record });
-    await waitFor(() => expect((select as HTMLSelectElement).options.length).toBeGreaterThan(1), slow);
-    const company = (await api.companies.list({ pageSize: 100 })).data.find((c) => c.name === "Atlas Logistics")!;
-    fireEvent.change(select, { target: { value: `company:${company.id}` } });
-    fireEvent.click(screen.getByRole("button", { name: /Add note/ }));
+  it("adds a company with the new fields, and its notes become a shared note on it", async () => {
+    await waitFor(() => expect(names()).toContain("Sophie Laurent"), slow);
+    fireEvent.click(screen.getByRole("button", { name: /Add company/ }));
     const dialog = await screen.findByRole("dialog");
-    fireEvent.change(within(dialog).getByLabelText(/Title/), { target: { value: "Renewal context" } });
+    const form = messages.companies.form;
+    const type = (label: string, value: string) =>
+      fireEvent.change(within(dialog).getByLabelText(label), { target: { value } });
+    fireEvent.change(within(dialog).getByLabelText(/Company name/), { target: { value: "Blue Harbor" } });
+    fireEvent.change(within(dialog).getByLabelText(form.leadStatus), { target: { value: "qualified" } });
+    type(form.whatsapp, "+49 151 000 111");
+    type(form.instagram, "@blueharbor");
+    type(form.facebook, "facebook.com/blueharbor");
+    type(form.productService, "Boat rentals");
+    type(form.note, "Met at the expo\nWants a demo in May");
+    type(form.aiNotes, "Seasonal business, busy in summer.");
     await act(async () => {
-      fireEvent.click(within(dialog).getByRole("button", { name: /Save note/ }));
+      fireEvent.click(within(dialog).getByRole("button", { name: form.submit }));
     });
-    await screen.findByText(messages.directory.notes.saved);
+    await waitFor(() => expect(names()).toContain("Blue Harbor"), slow);
+
+    const company = (await api.companies.list({ q: "Blue Harbor" })).data[0]!;
+    expect(company).toMatchObject({
+      leadStatus: "qualified",
+      whatsapp: "+49 151 000 111",
+      instagram: "@blueharbor",
+      facebook: "facebook.com/blueharbor",
+      productService: "Boat rentals",
+      aiNotes: "Seasonal business, busy in summer.",
+    });
     const notes = await api.notes.list({ recordType: "company", recordId: company.id });
-    expect(notes.data.map((n) => n.title)).toContain("Renewal context");
+    expect(notes.data.map((n) => [n.title, n.visibility])).toEqual([["Met at the expo", "shared"]]);
   });
 });

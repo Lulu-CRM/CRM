@@ -568,8 +568,23 @@
       "errors": {
         "nameRequired": "请输入公司名称",
         "domainInvalid": "请输入类似 company.com 的域名",
-        "ownerRequired": "请选择负责人"
-      }
+        "ownerRequired": "请选择负责人",
+        "tooLong": "内容太长"
+      },
+      "leadStatus": "线索状态",
+      "noLeadStatus": "未设置",
+      "whatsapp": "WhatsApp 号码",
+      "whatsappPlaceholder": "+49 …",
+      "instagram": "Instagram",
+      "instagramPlaceholder": "@用户名或链接",
+      "facebook": "Facebook",
+      "facebookPlaceholder": "主页名称或链接",
+      "productService": "产品 / 服务",
+      "productServicePlaceholder": "他们购买或需要的内容",
+      "note": "笔记",
+      "notePlaceholder": "团队需要了解的背景。将作为共享笔记保存在该公司下。",
+      "aiNotes": "AI 笔记",
+      "aiNotesPlaceholder": "AI 应该了解的关于该客户的信息。"
     },
     "drawer": {
       "eyebrow": "公司资料",
@@ -1179,28 +1194,6 @@
     "deleteTitle": "{count, plural, one {删除这条记录？} other {删除 # 条记录？}}",
     "deleteMessage": "{name} 将对工作区中的所有人删除。",
     "deleted": "{name} 已删除。",
-    "notes": {
-      "eyebrow": "笔记",
-      "title": "把背景记在记录上",
-      "intro": "直接在“联系人与公司”中添加共享或私人笔记。",
-      "record": "笔记所属记录",
-      "contacts": "联系人",
-      "companies": "公司",
-      "add": "添加笔记",
-      "saved": "笔记已保存。"
-    },
-    "ai": {
-      "eyebrow": "AI 分析",
-      "title": "生成关系洞察",
-      "intro": "无需离开目录即可查看信号、数据质量和下一步最佳行动。",
-      "contact": "要分析的联系人",
-      "run": "生成 AI 分析",
-      "running": "分析中…",
-      "ready": "AI 分析已完成。保存前请先查看建议。",
-      "nextStep": "下一步",
-      "quality": "已填写 {filled}/{total} 个资料字段",
-      "review": "查看并保存"
-    },
     "selected": "已选择 {count} 条",
     "deleteSelected": "删除所选",
     "deleteManyMessage": "{count} 条记录将对工作区中的所有人删除。",

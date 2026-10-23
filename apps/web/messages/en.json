@@ -49,14 +49,19 @@
     "crmWorkspace": "CRM workspace",
     "aiTipTitle": "AI-ready context",
     "aiTipBody": "Every record can carry the full story.",
-    "searchWorkspace": "Search workspace",
+    "searchWorkspace": "Search this workspace",
     "help": "Help",
     "notifications": "Notifications",
     "menu": "Menu",
     "openMenu": "Open menu",
     "closeMenu": "Close menu",
     "breadcrumb": "Breadcrumb",
-    "profileMenu": "Profile menu"
+    "profileMenu": "Profile menu",
+    "role": {
+      "owner": "Workspace owner",
+      "admin": "Admin",
+      "member": "Member"
+    }
   },
   "modules": {
     "onlinePresence": "Online Presence",

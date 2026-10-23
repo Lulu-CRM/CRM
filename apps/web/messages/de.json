@@ -49,14 +49,19 @@
     "crmWorkspace": "CRM-Arbeitsbereich",
     "aiTipTitle": "KI-bereiter Kontext",
     "aiTipBody": "Jeder Datensatz kann die ganze Geschichte enthalten.",
-    "searchWorkspace": "Arbeitsbereich durchsuchen",
+    "searchWorkspace": "Diesen Arbeitsbereich durchsuchen",
     "help": "Hilfe",
     "notifications": "Benachrichtigungen",
     "menu": "Menü",
     "openMenu": "Menü öffnen",
     "closeMenu": "Menü schließen",
     "breadcrumb": "Navigationspfad",
-    "profileMenu": "Profilmenü"
+    "profileMenu": "Profilmenü",
+    "role": {
+      "owner": "Workspace-Inhaber",
+      "admin": "Admin",
+      "member": "Mitglied"
+    }
   },
   "modules": {
     "onlinePresence": "Online-Präsenz",

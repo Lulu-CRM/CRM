@@ -569,12 +569,13 @@
         "nameRequired": "Geben Sie einen Namen ein",
         "domainInvalid": "Geben Sie eine Domain wie firma.de ein",
         "ownerRequired": "Wählen Sie eine verantwortliche Person",
-        "tooLong": "Das ist zu lang"
+        "tooLong": "Das ist zu lang",
+        "countryInvalid": "Wähle ein Land"
       },
       "leadStatus": "Lead-Status",
       "noLeadStatus": "Nicht gesetzt",
       "whatsapp": "WhatsApp-Nummer",
-      "whatsappPlaceholder": "+49 …",
+      "whatsappPlaceholder": "176 41474606",
       "instagram": "Instagram",
       "instagramPlaceholder": "@Name oder Link",
       "facebook": "Facebook",
@@ -583,8 +584,13 @@
       "productServicePlaceholder": "Was sie kaufen oder brauchen",
       "note": "Notizen",
       "notePlaceholder": "Kontext für das Team. Wird als geteilte Notiz beim Unternehmen gespeichert.",
-      "aiNotes": "KI-Notizen",
-      "aiNotesPlaceholder": "Was die KI über dieses Konto wissen sollte."
+      "whatsappCountry": "Ländervorwahl",
+      "contacts": "Kontakte in diesem Unternehmen",
+      "contactsNone": "Vorhandene Kontakte auswählen",
+      "contactsCount": "{count} Kontakte",
+      "contactsSearch": "Kontakte suchen",
+      "contactsEmpty": "Noch keine Kontakte",
+      "aiNotesHint": "✦ KI-Notizen schreibt die KI nach dem Speichern aus allem, was das CRM über dieses Unternehmen weiß."
     },
     "drawer": {
       "eyebrow": "Unternehmensprofil",
@@ -603,7 +609,19 @@
       "noDeals": "Noch keine Deals",
       "edit": "Unternehmen bearbeiten",
       "delete": "Unternehmen löschen",
-      "website": "Website"
+      "website": "Website",
+      "openWhatsapp": "WhatsApp-Chat öffnen",
+      "openInstagram": "Instagram-Profil öffnen",
+      "openFacebook": "Facebook-Seite öffnen"
+    },
+    "aiNotes": {
+      "eyebrow": "KI-Notizen",
+      "title": "Was die KI über dieses Konto weiß",
+      "refresh": "Aktualisieren",
+      "write": "KI-Notizen schreiben",
+      "written": "Von der KI geschrieben {when}",
+      "writing": "Die KI schreibt die Notizen …",
+      "none": "Noch keine KI-Notizen."
     }
   },
   "notes": {
@@ -1137,7 +1155,22 @@
       "taskFollowUpDeal": "Bei {name} zu {deal} nachfassen",
       "taskQualify": "Qualifizierungsgespräch mit {name}",
       "taskReconnect": "Wieder Kontakt mit {name} aufnehmen",
-      "taskCheckIn": "Kurzer Austausch mit {name}"
+      "taskCheckIn": "Kurzer Austausch mit {name}",
+      "companyOverview": "{name} ist ein Konto in deinem CRM.",
+      "companyIndustry": "Branche: {industry}.",
+      "companyProduct": "Sie kaufen oder brauchen: {product}.",
+      "companyNoPeople": "Mit diesem Unternehmen sind noch keine Kontakte verknüpft.",
+      "companyPeople": "{count, plural, one {# Kontakt} other {# Kontakte}} in diesem Unternehmen: {names}.",
+      "companyNoDeals": "Keine offenen Deals.",
+      "companyDeals": "{count, plural, one {# offener Deal} other {# offene Deals}} im Wert von {amount, number} {currency}.",
+      "companyNoActivity": "Mit diesem Unternehmen wurde noch kein Kontakt erfasst.",
+      "companyLastTouch": "Letzter Kontakt {days, plural, =0 {heute} one {gestern} other {vor # Tagen}}.",
+      "companyNotes": "{count, plural, one {# geteilte Notiz} other {# geteilte Notizen}}; die neueste ist „{title}“.",
+      "companyNoChannels": "Noch kein WhatsApp, Instagram oder Facebook: füge eines hinzu, um sie schneller zu erreichen.",
+      "companyNextAddPeople": "Als Nächstes: verknüpfe die Personen, mit denen du in diesem Unternehmen sprichst.",
+      "companyNextDeal": "Als Nächstes: bring {deal} voran und vereinbart den nächsten Schritt.",
+      "companyNextReconnect": "Als Nächstes: es war ruhig, melde dich beim Hauptkontakt.",
+      "companyNextCheckIn": "Als Nächstes: ein kurzes Nachfragen hält die Beziehung warm."
     }
   },
   "auth": {

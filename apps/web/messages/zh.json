@@ -569,12 +569,13 @@
         "nameRequired": "请输入公司名称",
         "domainInvalid": "请输入类似 company.com 的域名",
         "ownerRequired": "请选择负责人",
-        "tooLong": "内容太长"
+        "tooLong": "内容太长",
+        "countryInvalid": "请选择国家"
       },
       "leadStatus": "线索状态",
       "noLeadStatus": "未设置",
       "whatsapp": "WhatsApp 号码",
-      "whatsappPlaceholder": "+49 …",
+      "whatsappPlaceholder": "176 41474606",
       "instagram": "Instagram",
       "instagramPlaceholder": "@用户名或链接",
       "facebook": "Facebook",
@@ -583,8 +584,13 @@
       "productServicePlaceholder": "他们购买或需要的内容",
       "note": "笔记",
       "notePlaceholder": "团队需要了解的背景。将作为共享笔记保存在该公司下。",
-      "aiNotes": "AI 笔记",
-      "aiNotesPlaceholder": "AI 应该了解的关于该客户的信息。"
+      "whatsappCountry": "国家区号",
+      "contacts": "该公司的联系人",
+      "contactsNone": "选择已有联系人",
+      "contactsCount": "{count} 位联系人",
+      "contactsSearch": "搜索联系人",
+      "contactsEmpty": "还没有联系人",
+      "aiNotesHint": "✦ 保存后，AI 会根据 CRM 中关于该公司的全部信息撰写 AI 笔记。"
     },
     "drawer": {
       "eyebrow": "公司资料",
@@ -603,7 +609,19 @@
       "noDeals": "还没有交易",
       "edit": "编辑公司",
       "delete": "删除公司",
-      "website": "网站"
+      "website": "网站",
+      "openWhatsapp": "打开 WhatsApp 聊天",
+      "openInstagram": "打开 Instagram 主页",
+      "openFacebook": "打开 Facebook 主页"
+    },
+    "aiNotes": {
+      "eyebrow": "AI 笔记",
+      "title": "AI 对该客户的了解",
+      "refresh": "刷新",
+      "write": "生成 AI 笔记",
+      "written": "AI 撰写于 {when}",
+      "writing": "AI 正在撰写笔记…",
+      "none": "还没有 AI 笔记。"
     }
   },
   "notes": {
@@ -1137,7 +1155,22 @@
       "taskFollowUpDeal": "就 {deal} 跟进 {name}",
       "taskQualify": "与 {name} 进行确认通话",
       "taskReconnect": "重新联系 {name}",
-      "taskCheckIn": "与 {name} 简短沟通"
+      "taskCheckIn": "与 {name} 简短沟通",
+      "companyOverview": "{name} 是您 CRM 中的一个客户。",
+      "companyIndustry": "行业：{industry}。",
+      "companyProduct": "他们购买或需要：{product}。",
+      "companyNoPeople": "该公司还没有关联的联系人。",
+      "companyPeople": "该公司有 {count} 位联系人：{names}。",
+      "companyNoDeals": "没有进行中的交易。",
+      "companyDeals": "{count} 笔进行中的交易，总额 {amount, number} {currency}。",
+      "companyNoActivity": "还没有与该公司的联系记录。",
+      "companyLastTouch": "最近一次联系：{days, plural, =0 {今天} one {昨天} other {# 天前}}。",
+      "companyNotes": "{count} 条共享笔记；最新一条是“{title}”。",
+      "companyNoChannels": "还没有 WhatsApp、Instagram 或 Facebook：添加一个以便更快联系。",
+      "companyNextAddPeople": "下一步：关联您在该公司的对接人。",
+      "companyNextDeal": "下一步：推进 {deal}，并约定下一步。",
+      "companyNextReconnect": "下一步：已经有一段时间没联系了，请联系主要对接人。",
+      "companyNextCheckIn": "下一步：简短问候一下，保持关系热度。"
     }
   },
   "auth": {

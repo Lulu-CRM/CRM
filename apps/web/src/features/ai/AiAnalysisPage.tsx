@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
-import type { AiInsight, AiSettings, AiText } from "@lulu/shared";
+import type { AiInsight, AiSettings } from "@lulu/shared";
 import { PageHeader } from "@/components/layout/PageHeader";
 import { Avatar, Button, Card, EmptyState, Modal, Pill, Skeleton, useToast } from "@/components/ui";
 import { useLookups } from "@/features/contacts/useLookups";
@@ -12,15 +12,10 @@ import { api } from "@/lib/api";
 import { useErrorMessage } from "@/lib/errors";
 import { avatarTone, initials } from "@/lib/initials";
 import { useApi } from "@/lib/useApi";
+import { AI_POLL_MS, useAiText } from "./aiText";
 
-// How often to check whether the background analysis has written its insight.
-export const AI_POLL_MS = 700;
-
-/** Shows AI-written text: a translation key from the simulated provider, or a real model's text as written. */
-export function useAiText() {
-  const t = useTranslations("aiAnalysis.generated");
-  return (text: AiText) => ("key" in text ? (t.has(text.key) ? t(text.key, text.params) : "") : text.text);
-}
+// Shared with the company AI notes; re-exported for existing imports.
+export { AI_POLL_MS, useAiText } from "./aiText";
 
 export function AiAnalysisPage() {
   const t = useTranslations("aiAnalysis");

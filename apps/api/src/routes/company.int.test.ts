@@ -7,6 +7,8 @@ import { errorHandler } from '../middleware/errorHandler';
 import type { RequestContext } from '../middleware/requestContext';
 import { companiesRouter } from './companies';
 import { contactsRouter } from './contacts';
+import { aiCompanyNotesQueue } from '../jobs/queues';
+import { processCompanyNotes } from '../services/companyNotes';
 import { dealsRouter } from './deals';
 
 const STAGES = [
@@ -188,6 +190,7 @@ afterAll(async () => {
   const where = { workspaceId: { in: ids } };
 
   await db.activity.deleteMany({ where });
+  await db.note.deleteMany({ where });
   await db.deal.deleteMany({ where });
   await db.contact.deleteMany({ where });
   await db.company.deleteMany({ where });
@@ -228,7 +231,8 @@ describe('companies API (int)', () => {
       instagram: '@blueharbor',
       facebook: 'facebook.com/blueharbor',
       productService: 'Boat rentals',
-      aiNotes: 'Seasonal business, busy in summer.',
+      // People cannot write AI notes: the field is ignored on create.
+      aiNotes: 'Typed by a person',
     });
     expect(company).toMatchObject({
       leadStatus: 'qualified',
@@ -236,7 +240,8 @@ describe('companies API (int)', () => {
       instagram: '@blueharbor',
       facebook: 'facebook.com/blueharbor',
       productService: 'Boat rentals',
-      aiNotes: 'Seasonal business, busy in summer.',
+      aiNotes: null,
+      aiNotesUpdatedAt: null,
     });
 
     as(t);
@@ -254,6 +259,109 @@ describe('companies API (int)', () => {
       .post('/companies')
       .send({ name: 'Bad', leadStatus: 'hot' });
     expect(badStatus.status).toBe(400);
+  });
+
+  it('has the AI write the notes from the account data, leaving private notes out (Oct 24, 2026)', async () => {
+    const t = await tenant('ai-notes');
+    const company = await newCompany(t, {
+      name: 'Blue Harbor',
+      industry: 'Boating',
+      productService: 'Rentals',
+    });
+    const contact = await db.contact.create({
+      data: {
+        workspaceId: t.workspaceId,
+        name: 'Ada',
+        companyId: company.id,
+        ownerId: t.userId,
+        lastTouchAt: new Date(),
+      },
+    });
+    await db.deal.create({
+      data: {
+        workspaceId: t.workspaceId,
+        name: 'Summer fleet',
+        value: 5000,
+        currency: 'EUR',
+        stageId: t.stages.new,
+        probability: 0.1,
+        ownerId: t.userId,
+        companyId: company.id,
+      },
+    });
+    await db.note.create({
+      data: {
+        workspaceId: t.workspaceId,
+        title: 'Shared plan',
+        body: '',
+        authorId: t.userId,
+        visibility: 'shared',
+        recordType: 'company',
+        recordId: company.id,
+      },
+    });
+    await db.note.create({
+      data: {
+        workspaceId: t.workspaceId,
+        title: 'SECRET private note',
+        body: '',
+        authorId: t.userId,
+        visibility: 'private',
+        recordType: 'contact',
+        recordId: contact.id,
+      },
+    });
+
+    // The endpoint queues the job (the worker runs it in the background).
+    as(t);
+    const run = await request(app).post(`/companies/${company.id}/ai-notes`);
+    expect(run.status).toBe(200);
+    const job = await aiCompanyNotesQueue.getJob(
+      responseBody<{ data: { jobId: string } }>(run).data.jobId,
+    );
+    expect(job?.data).toMatchObject({
+      companyId: company.id,
+      workspaceId: t.workspaceId,
+      requestedById: t.userId,
+    });
+
+    // What the job writes.
+    const now = new Date();
+    const lines = await processCompanyNotes(
+      { companyId: company.id, workspaceId: t.workspaceId, requestedById: t.userId },
+      now,
+    );
+    const keys = lines.map((line) => ('key' in line ? line.key : 'text'));
+    expect(keys).toEqual([
+      'companyOverview',
+      'companyIndustry',
+      'companyProduct',
+      'companyPeople',
+      'companyDeals',
+      'companyLastTouch',
+      'companyNotes',
+      'companyNoChannels',
+      'companyNextDeal',
+    ]);
+    expect(lines[4]).toEqual({
+      key: 'companyDeals',
+      params: { count: 1, amount: 5000, currency: 'EUR' },
+    });
+    expect(JSON.stringify(lines)).not.toContain('SECRET');
+
+    const saved = await request(app).get(`/companies/${company.id}`);
+    const body = responseBody<{ data: { aiNotes: unknown; aiNotesUpdatedAt: string } }>(saved).data;
+    expect(body.aiNotes).toEqual(lines);
+    expect(body.aiNotesUpdatedAt).toBe(now.toISOString());
+  });
+
+  it('answers COMPANY_NOT_FOUND for AI notes on a company of another workspace', async () => {
+    const a = await tenant('ai-notes-a');
+    const company = await newCompany(a, { name: 'Theirs' });
+    const b = await tenant('ai-notes-b');
+    as(b);
+    const res = await request(app).post(`/companies/${company.id}/ai-notes`);
+    expect(res.status).toBe(404);
   });
 
   it('validates the domain, the size band and the owner', async () => {

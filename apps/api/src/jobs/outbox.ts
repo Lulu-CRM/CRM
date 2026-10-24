@@ -1,4 +1,5 @@
 import { db } from '../db/prisma';
+import { Prisma } from '../generated/prisma/client';
 
 // Publishes the domain events db/audit.ts writes to the outbox. Delivery is at least once, so
 // listeners must be idempotent (use the event id). Listeners are in-process for now; when Lulu's
@@ -39,11 +40,14 @@ type Claimed = DomainEvent & { attempts: number };
  * this at once), hands each to its listeners, and marks it dispatched. A failing event is retried on
  * the next run and parked as failed after MAX_ATTEMPTS. Returns how many events were dispatched.
  */
-export async function dispatchOutbox(limit = 100): Promise<number> {
+// `workspaceId` limits a run to one workspace (replaying one customer's events, or a test).
+export async function dispatchOutbox(limit = 100, workspaceId?: string): Promise<number> {
+  const scope =
+    workspaceId === undefined ? Prisma.empty : Prisma.sql`AND "workspaceId" = ${workspaceId}`;
   const claimed = await db.$queryRaw<Claimed[]>`
     UPDATE outbox_events SET attempts = attempts + 1
     WHERE id IN (
-      SELECT id FROM outbox_events WHERE status = 'pending'
+      SELECT id FROM outbox_events WHERE status = 'pending' ${scope}
       ORDER BY "occurredAt", id LIMIT ${limit} FOR UPDATE SKIP LOCKED
     )
     RETURNING id, "workspaceId", "eventType", "schemaVersion", "aggregateType", "aggregateId",

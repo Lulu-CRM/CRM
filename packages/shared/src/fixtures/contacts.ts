@@ -20,7 +20,7 @@ export const demoUsers: User[] = [
 ];
 
 // Fields added on Oct 23, 2026; the design's sample companies have none of them yet.
-const companyExtras = { leadStatus: null, whatsapp: null, instagram: null, facebook: null, productService: null, aiNotes: null };
+const companyExtras = { leadStatus: null, whatsapp: null, instagram: null, facebook: null, productService: null, aiNotes: null, aiNotesUpdatedAt: null };
 
 export const demoCompanies: Company[] = [
   { ...base, ...companyExtras, id: "company_northstar", name: "Northstar Studio", domain: "northstar.studio", industry: "Creative services", size: "1-10", ownerId: "user_jamie" },

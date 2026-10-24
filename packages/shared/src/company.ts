@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { baseRecordSchema, idSchema, listQuerySchema, moneySchema, timestampSchema } from "./common";
+import { aiTextSchema } from "./ai";
 import { contactSchema, lifecycleStageSchema } from "./contact";
 import { dealSchema } from "./deal";
 
@@ -29,8 +30,10 @@ export const companySchema = baseRecordSchema.extend({
   instagram: z.string().trim().min(1).max(200).nullable(),
   facebook: z.string().trim().min(1).max(200).nullable(),
   productService: z.string().trim().min(1).max(200).nullable(),
-  // Context people write for the AI about this account. Not written by the AI.
-  aiNotes: z.string().trim().min(1).max(5000).nullable(),
+  // Written by the AI from everything the CRM holds about the account (Dave, Oct 24, 2026), one line
+  // per point; never typed by people. POST /companies/:id/ai-notes writes a new version.
+  aiNotes: z.array(aiTextSchema).nullable(),
+  aiNotesUpdatedAt: timestampSchema.nullable(),
 });
 
 // GET /companies returns each company with numbers computed from its contacts and deals.
@@ -63,7 +66,6 @@ export const companyCreateSchema = z.object({
   instagram: companySchema.shape.instagram.optional(),
   facebook: companySchema.shape.facebook.optional(),
   productService: companySchema.shape.productService.optional(),
-  aiNotes: companySchema.shape.aiNotes.optional(),
 });
 
 // PATCH /companies/:id

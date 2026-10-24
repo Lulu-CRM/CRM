@@ -153,7 +153,7 @@ describe('Audit log and outbox (int)', () => {
       seen.push(event);
     });
     try {
-      for (let i = 0; i < MAX_ATTEMPTS + 1; i++) await dispatchOutbox(100_000);
+      for (let i = 0; i < MAX_ATTEMPTS + 1; i++) await dispatchOutbox(100, t.ws.id);
     } finally {
       stop();
     }

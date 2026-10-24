@@ -407,6 +407,23 @@ const companiesPaths: OpenApiPaths = {
       },
     },
   },
+  '/api/v1/companies/{id}/ai-notes': {
+    post: {
+      operationId: 'runCompanyAiNotes',
+      summary: 'Write the AI notes',
+      security: bearer,
+      description:
+        'Queues the AI (job ai.company_notes) to write the company aiNotes from everything the CRM holds about it: details, people, deals, tasks, shared notes and recent activity. Private notes never reach the AI. When the job is done, aiNotes and aiNotesUpdatedAt change on the company. Needs companies: edit.',
+      tags: ['AI analysis'],
+      parameters: [idParam],
+      responses: {
+        '200': dataResponse('The queued job.', 'AiRun'),
+        '401': errorResponse('Not authenticated.'),
+        '403': errorResponse('FORBIDDEN.'),
+        '404': errorResponse('COMPANY_NOT_FOUND.'),
+      },
+    },
+  },
   '/api/v1/companies/{id}': {
     get: {
       operationId: 'getCompany',

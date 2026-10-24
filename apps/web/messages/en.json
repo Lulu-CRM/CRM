@@ -569,12 +569,13 @@
         "nameRequired": "Enter a company name",
         "domainInvalid": "Enter a domain like company.com",
         "ownerRequired": "Choose an owner",
-        "tooLong": "This is too long"
+        "tooLong": "This is too long",
+        "countryInvalid": "Choose a country"
       },
       "leadStatus": "Lead status",
       "noLeadStatus": "Not set",
       "whatsapp": "WhatsApp number",
-      "whatsappPlaceholder": "+49 …",
+      "whatsappPlaceholder": "176 41474606",
       "instagram": "Instagram",
       "instagramPlaceholder": "@handle or link",
       "facebook": "Facebook",
@@ -583,8 +584,13 @@
       "productServicePlaceholder": "What they buy or need",
       "note": "Notes",
       "notePlaceholder": "Context for the team. Saved as a shared note on the company.",
-      "aiNotes": "AI notes",
-      "aiNotesPlaceholder": "What the AI should know about this account."
+      "whatsappCountry": "Country code",
+      "contacts": "Contacts at this company",
+      "contactsNone": "Pick existing contacts",
+      "contactsCount": "{count} contacts",
+      "contactsSearch": "Search contacts",
+      "contactsEmpty": "No contacts yet",
+      "aiNotesHint": "✦ AI notes are written by the AI from everything the CRM knows about this company, after you save."
     },
     "drawer": {
       "eyebrow": "Company profile",
@@ -603,7 +609,19 @@
       "noDeals": "No deals yet",
       "edit": "Edit company",
       "delete": "Delete company",
-      "website": "Website"
+      "website": "Website",
+      "openWhatsapp": "Open WhatsApp chat",
+      "openInstagram": "Open Instagram profile",
+      "openFacebook": "Open Facebook page"
+    },
+    "aiNotes": {
+      "eyebrow": "AI notes",
+      "title": "What the AI knows about this account",
+      "refresh": "Refresh",
+      "write": "Write AI notes",
+      "written": "Written by the AI {when}",
+      "writing": "The AI is writing the notes…",
+      "none": "No AI notes yet."
     }
   },
   "notes": {
@@ -1137,7 +1155,22 @@
       "taskFollowUpDeal": "Follow up with {name} on {deal}",
       "taskQualify": "Qualification call with {name}",
       "taskReconnect": "Reconnect with {name}",
-      "taskCheckIn": "Check in with {name}"
+      "taskCheckIn": "Check in with {name}",
+      "companyOverview": "{name} is an account in your CRM.",
+      "companyIndustry": "Industry: {industry}.",
+      "companyProduct": "They buy or need: {product}.",
+      "companyNoPeople": "No contacts are linked to this company yet.",
+      "companyPeople": "{count, plural, one {# contact} other {# contacts}} at this company: {names}.",
+      "companyNoDeals": "No open deals.",
+      "companyDeals": "{count, plural, one {# open deal} other {# open deals}} worth {amount, number} {currency}.",
+      "companyNoActivity": "No contact with this company has been recorded yet.",
+      "companyLastTouch": "Last contact {days, plural, =0 {today} one {yesterday} other {# days ago}}.",
+      "companyNotes": "{count, plural, one {# shared note} other {# shared notes}}; the latest is \"{title}\".",
+      "companyNoChannels": "No WhatsApp, Instagram or Facebook yet: add one to reach them faster.",
+      "companyNextAddPeople": "Next: link the people you talk to at this company.",
+      "companyNextDeal": "Next: move {deal} forward and agree on the next step.",
+      "companyNextReconnect": "Next: it has been quiet, so reconnect with the main contact.",
+      "companyNextCheckIn": "Next: a short check-in keeps the relationship warm."
     }
   },
   "auth": {

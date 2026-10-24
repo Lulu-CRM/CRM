@@ -10,6 +10,7 @@ import {
   demoNotes,
   demoSegments,
   aiAcceptSchema,
+  simulateCompanyNotes,
   simulateInsight,
   aiSettingsSchema,
   consentSettingsSchema,
@@ -220,6 +221,7 @@ function companyIdFor(name: string | null, ownerId: string) {
     industry: null,
     size: null,
     ownerId,
+    aiNotesUpdatedAt: null,
     leadStatus: null,
     whatsapp: null,
     instagram: null,
@@ -453,7 +455,8 @@ export const mockApi = {
         instagram: input.instagram ?? null,
         facebook: input.facebook ?? null,
         productService: input.productService ?? null,
-        aiNotes: input.aiNotes ?? null,
+        aiNotes: null,
+        aiNotesUpdatedAt: null,
       };
       db.companies.push(company);
       return delay(summarize(company));
@@ -466,6 +469,28 @@ export const mockApi = {
     async remove(id: string) {
       findCompany(id).deletedAt = new Date().toISOString();
       return delay(undefined);
+    },
+    // Same rules as the server's ai.company_notes job, run after a short delay like a background job.
+    async aiNotes(id: string): Promise<AiRun> {
+      const company = findCompany(id);
+      setTimeout(() => {
+        const records = (r: { recordType: string | null; recordId: string | null }) =>
+          (r.recordType === "company" && r.recordId === company.id) ||
+          (r.recordType === "contact" && alive(db.contacts).some((c) => c.id === r.recordId && c.companyId === company.id));
+        company.aiNotes = simulateCompanyNotes({
+          company,
+          contacts: alive(db.contacts).filter((c) => c.companyId === company.id),
+          deals: alive(db.deals),
+          stages: liveStages(),
+          tasks: alive(db.tasks).filter(records),
+          notes: alive(db.notes).filter((n) => n.visibility === "shared" && records(n)),
+          activities: db.activities.filter(records),
+          now: new Date(),
+          language: "en",
+        });
+        company.aiNotesUpdatedAt = new Date().toISOString();
+      }, MOCK_AI_DELAY_MS);
+      return delay({ jobId: newId("job"), status: "queued" });
     },
   },
 

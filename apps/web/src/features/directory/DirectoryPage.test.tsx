@@ -105,7 +105,7 @@ describe("Contacts & Companies page", () => {
     expect(screen.queryByRole("button", { name: /Generate AI analysis/ })).toBeNull();
   });
 
-  it("adds a company with the new fields, and its notes become a shared note on it", async () => {
+  it("adds a company: WhatsApp with a country, existing contacts linked, notes saved, AI notes written", async () => {
     await waitFor(() => expect(names()).toContain("Sophie Laurent"), slow);
     fireEvent.click(screen.getByRole("button", { name: /Add company/ }));
     const dialog = await screen.findByRole("dialog");
@@ -114,12 +114,18 @@ describe("Contacts & Companies page", () => {
       fireEvent.change(within(dialog).getByLabelText(label), { target: { value } });
     fireEvent.change(within(dialog).getByLabelText(/Company name/), { target: { value: "Blue Harbor" } });
     fireEvent.change(within(dialog).getByLabelText(form.leadStatus), { target: { value: "qualified" } });
-    type(form.whatsapp, "+49 151 000 111");
+    // Dave, Oct 24: a country picker for the WhatsApp number.
+    type(form.whatsappCountry, "NG");
+    type(form.whatsapp, "0803 123 4567");
     type(form.instagram, "@blueharbor");
     type(form.facebook, "facebook.com/blueharbor");
     type(form.productService, "Boat rentals");
     type(form.note, "Met at the expo\nWants a demo in May");
-    type(form.aiNotes, "Seasonal business, busy in summer.");
+    // No AI notes box any more: the AI writes them.
+    expect(within(dialog).queryByLabelText(/AI notes/)).toBeNull();
+    // Dave, Oct 24: pick existing contacts for the company.
+    fireEvent.click(within(dialog).getByLabelText(form.contacts));
+    fireEvent.click(await within(dialog).findByRole("checkbox", { name: /Sophie Laurent/ }));
     await act(async () => {
       fireEvent.click(within(dialog).getByRole("button", { name: form.submit }));
     });
@@ -128,13 +134,42 @@ describe("Contacts & Companies page", () => {
     const company = (await api.companies.list({ q: "Blue Harbor" })).data[0]!;
     expect(company).toMatchObject({
       leadStatus: "qualified",
-      whatsapp: "+49 151 000 111",
+      whatsapp: "+2348031234567",
       instagram: "@blueharbor",
       facebook: "facebook.com/blueharbor",
       productService: "Boat rentals",
-      aiNotes: "Seasonal business, busy in summer.",
     });
     const notes = await api.notes.list({ recordType: "company", recordId: company.id });
     expect(notes.data.map((n) => [n.title, n.visibility])).toEqual([["Met at the expo", "shared"]]);
+    const sophie = (await api.contacts.list({ q: "Sophie Laurent" })).data[0]!;
+    expect(sophie.companyId).toBe(company.id);
+
+    // The AI writes the notes in the background after the save.
+    await waitFor(async () => expect((await api.companies.get(company.id)).aiNotes).not.toBeNull(), { timeout: 5000 });
+    const written = (await api.companies.get(company.id)).aiNotes!;
+    expect(written.map((line) => ("key" in line ? line.key : "text"))).toContain("companyPeople");
+  });
+
+  it("opens WhatsApp, Instagram and Facebook from the company, and shows its AI notes", async () => {
+    await waitFor(() => expect(names()).toContain("Atlas Logistics"), slow);
+    const atlas = (await api.companies.list({ q: "Atlas Logistics" })).data[0]!;
+    await api.companies.update(atlas.id, { whatsapp: "+4917641474606", instagram: "atlas_logistics", facebook: "Atlas.Logistics" });
+    await act(async () => {
+      await api.companies.aiNotes(atlas.id);
+    });
+    fireEvent.change(screen.getByRole("searchbox", { name: messages.directory.search }), { target: { value: "atlas" } });
+    await waitFor(() => expect(names()).toContain("Atlas Logistics"), slow);
+    fireEvent.click(screen.getByRole("button", { name: "Open Atlas Logistics" }));
+    const drawer = await screen.findByRole("dialog", { name: "Atlas Logistics" });
+
+    const drawerText = messages.companies.drawer;
+    // The drawer shows the fresh copy it loads, so wait for it.
+    const whatsapp = await within(drawer).findByTitle(drawerText.openWhatsapp, {}, slow);
+    expect(whatsapp.getAttribute("href")).toBe("https://wa.me/4917641474606");
+    expect(within(drawer).getByTitle(drawerText.openInstagram).getAttribute("href")).toBe("https://instagram.com/atlas_logistics");
+    expect(within(drawer).getByTitle(drawerText.openFacebook).getAttribute("href")).toBe("https://facebook.com/Atlas.Logistics");
+
+    const notes = within(drawer).getByRole("region", { name: messages.companies.aiNotes.title });
+    await waitFor(() => expect(within(notes).getByText(/Atlas Logistics is an account in your CRM/)).toBeTruthy(), { timeout: 5000 });
   });
 });

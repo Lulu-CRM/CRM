@@ -1,6 +1,6 @@
 "use client";
 
-import { useId, useRef, useState } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
 import { importFieldSchema, MAX_IMPORT_ROWS, type ImportField, type ImportPreviewRow } from "@lulu/shared";
 import { PageHeader } from "@/components/layout/PageHeader";
@@ -22,6 +22,29 @@ const labelClass = "mb-1.5 block text-[10px] font-extrabold text-neutral";
 
 export function ImportPage() {
   const t = useTranslations("import");
+
+  return (
+    <>
+      <PageHeader page="import" />
+      <div className="grid gap-[17px] xl:grid-cols-[minmax(0,2fr)_minmax(0,1fr)]">
+        <Card className="min-w-0">
+          <span className="text-[9px] font-black tracking-[0.16em] text-rail-label uppercase">{t("eyebrow")}</span>
+          <h2 className="mt-1.5 text-[17px] font-semibold tracking-tight text-[#363347]">{t("title")}</h2>
+          <p className="mt-1.5 max-w-[610px] text-[10px] leading-relaxed text-[#9190a0]">{t("intro")}</p>
+          <ImportWizard />
+        </Card>
+        <SafeByDefault />
+      </div>
+    </>
+  );
+}
+
+/**
+ * The import steps (upload, map, check, confirm, then held duplicates). Used by the Import page and by
+ * the import pop-up on Contacts & Companies (Dave, Oct 24, 2026). `onFinished` runs once an import ends.
+ */
+export function ImportWizard({ onFinished }: { onFinished?: () => void } = {}) {
+  const t = useTranslations("import");
   const toast = useToast();
   const errorMessage = useErrorMessage();
   const lookups = useLookups();
@@ -37,15 +60,16 @@ export function ImportPage() {
   const current = wizard.step === "done" ? stageOrder.length : stageOrder.indexOf(wizard.step);
   const ownerId = options.ownerId || lookups.me?.id || "";
 
+  // Tell the caller once the import has run (the contacts list then reloads).
+  const finished = wizard.step === "done";
+  useEffect(() => {
+    if (finished) onFinished?.();
+    // onFinished may be a new function each render; only the moment the import ends matters.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [finished]);
+
   return (
     <>
-      <PageHeader page="import" />
-      <div className="grid gap-[17px] xl:grid-cols-[minmax(0,2fr)_minmax(0,1fr)]">
-        <Card className="min-w-0">
-          <span className="text-[9px] font-black tracking-[0.16em] text-rail-label uppercase">{t("eyebrow")}</span>
-          <h2 className="mt-1.5 text-[17px] font-semibold tracking-tight text-[#363347]">{t("title")}</h2>
-          <p className="mt-1.5 max-w-[610px] text-[10px] leading-relaxed text-[#9190a0]">{t("intro")}</p>
-
           <ol className="mt-5 grid grid-cols-2 gap-2 sm:grid-cols-4" aria-label={t("stepsLabel")}>
             {(["upload", "map", "check", "confirm"] as const).map((key, index) => (
               <li
@@ -123,8 +147,14 @@ export function ImportPage() {
               />
             )}
           </div>
-        </Card>
+    </>
+  );
+}
 
+/** The "Safe by default" card beside the Import page's wizard. */
+function SafeByDefault() {
+  const t = useTranslations("import");
+  return (
         <Card className="min-w-0 self-start">
           <span className="text-[9px] font-black tracking-[0.16em] text-rail-label uppercase">{t("safe.eyebrow")}</span>
           <h2 className="mt-1.5 text-[17px] font-semibold tracking-tight text-[#363347]">{t("safe.title")}</h2>
@@ -141,8 +171,6 @@ export function ImportPage() {
             {t("safe.consent")}
           </p>
         </Card>
-      </div>
-    </>
   );
 }
 

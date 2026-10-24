@@ -12,11 +12,11 @@ import { ContactFormModal } from "@/features/contacts/ContactFormModal";
 import { stageTone } from "@/features/contacts/options";
 import { useLookups } from "@/features/contacts/useLookups";
 import { useFormat } from "@/i18n/format";
-import { Link } from "@/i18n/navigation";
 import { api } from "@/lib/api";
 import { useErrorMessage } from "@/lib/errors";
 import { avatarTone, initials } from "@/lib/initials";
 import { useApi } from "@/lib/useApi";
+import { ImportModal } from "@/features/import/ImportModal";
 
 const PAGE_SIZE = 25;
 
@@ -73,6 +73,7 @@ export function DirectoryPage() {
   const [companyForm, setCompanyForm] = useState<{ company: CompanyListItem | null } | null>(null);
   const [toDelete, setToDelete] = useState<Row[] | null>(null);
   const [deleting, setDeleting] = useState(false);
+  const [importing, setImporting] = useState(false);
 
   const reload = () => list.reload();
   const open = (row: Row) => (row.kind === "contact" ? setOpenContact(row.contact) : setOpenCompany(row.company));
@@ -216,13 +217,9 @@ export function DirectoryPage() {
             </div>
           ) : (
             <div className="flex flex-wrap gap-2 lg:flex-none lg:flex-nowrap">
-              <Link
-                href="/crm/import"
-                className="inline-flex items-center gap-1.5 rounded-md border border-[#dad8ec] bg-surface px-3.5 py-2.5 text-[11px] font-extrabold whitespace-nowrap text-primary-hover hover:bg-[#f7f5ff]"
-              >
-                <span aria-hidden>⇧</span>
+              <Button variant="outline" icon="⇧" onClick={() => setImporting(true)}>
                 {t("importContacts")}
-              </Link>
+              </Button>
               <Button variant="outline" icon="＋" onClick={() => setCompanyForm({ company: null })}>
                 {t("addCompany")}
               </Button>
@@ -291,6 +288,8 @@ export function DirectoryPage() {
           </div>
         )}
       </Card>
+
+      <ImportModal open={importing} onClose={() => setImporting(false)} onImported={reload} />
 
       <ContactFormModal
         open={contactForm !== null}

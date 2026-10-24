@@ -99,6 +99,15 @@ describe("Contacts & Companies page", () => {
     await waitFor(() => expect(names()).toContain("Ada Lovelace"), slow);
   });
 
+  it("opens Import Contacts as a pop-up with the import steps (Dave, Oct 24)", async () => {
+    await waitFor(() => expect(names()).toContain("Sophie Laurent"), slow);
+    fireEvent.click(screen.getByRole("button", { name: new RegExp(messages.directory.importContacts) }));
+    const dialog = await screen.findByRole("dialog", { name: messages.import.title });
+    expect(within(dialog).getByRole("list", { name: messages.import.stepsLabel })).toBeTruthy();
+    fireEvent.click(within(dialog).getByRole("button", { name: messages.common.close }));
+    await waitFor(() => expect(screen.queryByRole("dialog", { name: messages.import.title })).toBeNull());
+  });
+
   it("has no Notes or AI Analysis cards under the table", async () => {
     await waitFor(() => expect(names()).toContain("Sophie Laurent"), slow);
     expect(screen.queryByRole("button", { name: /Add note/ })).toBeNull();

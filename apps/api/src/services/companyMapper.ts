@@ -15,7 +15,8 @@ export interface CompanyRow {
   instagram: string | null;
   facebook: string | null;
   productService: string | null;
-  aiNotes: string | null;
+  aiNotes: unknown;
+  aiNotesUpdatedAt: Date | null;
   createdAt: Date;
   updatedAt: Date;
   deletedAt: Date | null;
@@ -37,7 +38,8 @@ export function toSharedCompany(row: CompanyRow): Company {
     instagram: row.instagram,
     facebook: row.facebook,
     productService: row.productService,
-    aiNotes: row.aiNotes,
+    aiNotes: (row.aiNotes ?? null) as Company['aiNotes'],
+    aiNotesUpdatedAt: iso(row.aiNotesUpdatedAt),
     createdAt: row.createdAt.toISOString(),
     updatedAt: row.updatedAt.toISOString(),
     deletedAt: iso(row.deletedAt),

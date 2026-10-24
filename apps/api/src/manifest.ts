@@ -79,8 +79,17 @@ export function buildManifest() {
         approval: 'required_before_save',
         api: 'POST /api/v1/contacts/{id}/ai-analysis',
       },
+      {
+        id: 'crm.ai.company_notes',
+        description:
+          'AI notes for a company, from everything the CRM holds about it (shared notes only).',
+        // R1: writes only the AI-owned aiNotes field; no business record changes.
+        risk: 'R1',
+        approval: 'not_required',
+        api: 'POST /api/v1/companies/{id}/ai-notes',
+      },
     ],
-    jobs: ['import.process', 'ai.analyze'],
+    jobs: ['import.process', 'ai.analyze', 'ai.company_notes'],
     migrations: migrationNames(),
     healthChecks: { live: '/health/live', ready: '/health' },
     entitlements: { plan: 'any', limits: {} },

@@ -189,7 +189,6 @@ export async function createCompany(
       instagram: input.instagram ?? null,
       facebook: input.facebook ?? null,
       productService: input.productService ?? null,
-      aiNotes: input.aiNotes ?? null,
       ownerId: input.ownerId ?? ctx.userId,
     },
   });
@@ -218,7 +217,6 @@ export async function updateCompany(
       ...(input.instagram === undefined ? {} : { instagram: input.instagram }),
       ...(input.facebook === undefined ? {} : { facebook: input.facebook }),
       ...(input.productService === undefined ? {} : { productService: input.productService }),
-      ...(input.aiNotes === undefined ? {} : { aiNotes: input.aiNotes }),
       ...(input.ownerId === undefined ? {} : { ownerId: input.ownerId }),
     },
   });

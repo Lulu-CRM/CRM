@@ -36,7 +36,7 @@ Rules: `@@map` uses snake_case plural table names, model names are PascalCase si
 | Workspace | name, defaultCurrency, defaultLanguage |
 | User | name, email, language, role (`owner`, `admin`, `member`), workspaceId |
 | Contact | name, email, phone, companyId, jobRole, source, lifecycleStage, ownerId, tags, marketingConsent, consentUpdatedAt, lastTouchAt, customFields (JSON) |
-| Company | name, domain (bare host name, lower case), industry, size (`1-10`, `11-50`, `51-200`, `201+`), ownerId, leadStatus (a lifecycle stage), whatsapp, instagram, facebook, productService, aiNotes (context people write for the AI). Contact count, open deal value, last touch and health are computed, not stored |
+| Company | name, domain (bare host name, lower case), industry, size (`1-10`, `11-50`, `51-200`, `201+`), ownerId, leadStatus (a lifecycle stage), whatsapp, instagram, facebook, productService, aiNotes (JSON list of AI texts, written by the AI job `ai.company_notes`, never typed), aiNotesUpdatedAt. Contact count, open deal value, last touch and health are computed, not stored |
 | Pipeline | key, name, isDefault |
 | Stage | pipelineId, key, name, order, probability, type (`open`, `won`, `lost`) |
 | Deal | name, value (number), currency, stageId, probability, expectedCloseAt, contactId, companyId, ownerId, closedAt |

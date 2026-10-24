@@ -153,7 +153,11 @@ Implementation: `apps/api/src/services/overview.ts` feeds `buildOverview` with t
 | PATCH | `/companies/:id` | Edit |
 | DELETE | `/companies/:id` | Soft delete. The company's contacts and deals keep their link |
 
-`POST /companies` and `PATCH /companies/:id` take `name`, `domain`, `industry`, `size`, `ownerId` and, since Oct 23, 2026, `leadStatus` (`new`, `qualified`, `follow_up`, `customer`), `whatsapp`, `instagram`, `facebook`, `productService` and `aiNotes`, all optional except `name` on create; `null` clears a field. The Add company form also takes a first note: the web app saves it as a shared note linked to the new company (`POST /notes`), so it is not a company field.
+`POST /companies` and `PATCH /companies/:id` take `name`, `domain`, `industry`, `size`, `ownerId` and, since Oct 23, 2026, `leadStatus` (`new`, `qualified`, `follow_up`, `customer`), `whatsapp` (stored as `+<country code><number>`, e.g. `+4917641474606`; the form has a country picker), `instagram`, `facebook` and `productService`, all optional except `name` on create; `null` clears a field.
+
+**AI notes** (Dave, Oct 24, 2026) are written by the AI, never typed: `aiNotes` (a list of AI texts, one point each, `aiTextSchema`) and `aiNotesUpdatedAt` are read-only, and sending `aiNotes` on create or edit is ignored. `POST /companies/:id/ai-notes` (needs `companies: edit`) queues the job `ai.company_notes`, which gives the AI provider everything the CRM holds about the company (its details, linked contacts, deals, tasks, shared notes and the latest 50 activities; private notes never reach the AI) and saves what it writes. The web app asks for new notes after every save in the company form; the company page has a Refresh button. The simulated provider writes translation keys (`aiAnalysis.generated.company*`) so the notes read in every language.
+
+**Contacts at a company:** the company form lists existing contacts to pick; saving sets each picked contact's `companyId` (`PATCH /contacts/:id`) and clears it on contacts taken out. The Add company form also takes a first note: the web app saves it as a shared note linked to the new company (`POST /notes`), so it is not a company field.
 
 `GET /companies` filters: `ownerId`, `industry`, `health` (`strong`, `watch`, `new`). `q` searches name, domain and industry. `sort`: `name`, `contactCount`, `openDealValue` or `lastTouchAt`, default `-openDealValue`. Each item is the company plus numbers computed from its records (`summarizeCompany` in `packages/shared`):
 

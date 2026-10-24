@@ -86,6 +86,8 @@ export const realApi = {
     update: (id: string, input: CompanyUpdateInput) =>
       write(companyListItemSchema, "PATCH", `/companies/${id}`, input),
     remove: (id: string) => remove(`/companies/${id}`),
+    // Queues the AI to write the company's AI notes; poll get(id) for aiNotesUpdatedAt.
+    aiNotes: (id: string) => write(aiRunSchema, "POST", `/companies/${id}/ai-notes`, {}),
   },
 
   tasks: {

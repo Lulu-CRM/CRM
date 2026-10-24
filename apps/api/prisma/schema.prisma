@@ -208,7 +208,9 @@ model Company {
   instagram      String?
   facebook       String?
   productService String?
-  aiNotes        String?   @db.Text
+  // Written by the AI (a JSON list of AI texts), with when it last wrote them.
+  aiNotes          Json?
+  aiNotesUpdatedAt DateTime?
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
   deletedAt   DateTime?

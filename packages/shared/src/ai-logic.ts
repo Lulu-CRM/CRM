@@ -3,6 +3,8 @@ import type { Company } from "./company";
 import type { Contact } from "./contact";
 import type { Deal } from "./deal";
 import type { Stage } from "./pipeline";
+import type { Activity } from "./activity";
+import type { Note } from "./note";
 import type { Task } from "./task";
 import { dueKind } from "./task-logic";
 
@@ -20,9 +22,25 @@ export type AiContext = {
   language: string;
 };
 
+/** Everything a provider may look at for one company (its AI notes). */
+export type CompanyAiContext = {
+  company: Company;
+  contacts: Contact[];
+  deals: Deal[];
+  stages: Stage[];
+  tasks: Task[];
+  // Shared notes only: private notes never reach the AI.
+  notes: Note[];
+  activities: Activity[];
+  now: Date;
+  language: string;
+};
+
 /** The one interface every AI provider implements (AGENTS.md rule 7). */
 export interface AiProvider {
   analyze(context: AiContext): Promise<AiInsightContent>;
+  /** AI notes for a company: a few short lines about where the account stands and what to do next. */
+  companyNotes(context: CompanyAiContext): Promise<AiText[]>;
 }
 
 /** How complete a contact is: share of the checked fields that are filled, and which are missing. */
@@ -102,6 +120,59 @@ export function simulateInsight(context: AiContext): AiInsightContent {
   };
 }
 
+/**
+ * Rule-based company notes, the stand-in for a model: who the account is, its people, pipeline,
+ * activity and notes, what is missing, and the next step. Each line is a translation key (aiAnalysis.generated).
+ */
+export function simulateCompanyNotes(context: CompanyAiContext): AiText[] {
+  const { company, now } = context;
+  const lines: AiText[] = [key("companyOverview", { name: company.name })];
+  if (company.industry) lines.push(key("companyIndustry", { industry: company.industry }));
+  if (company.productService) lines.push(key("companyProduct", { product: company.productService }));
+
+  const people = context.contacts.filter((c) => !c.deletedAt && c.companyId === company.id);
+  lines.push(
+    people.length === 0
+      ? key("companyNoPeople")
+      : key("companyPeople", { count: people.length, names: people.slice(0, 3).map((c) => c.name).join(", ") }),
+  );
+
+  const openStages = new Set(context.stages.filter((s) => s.type === "open").map((s) => s.id));
+  const peopleIds = new Set(people.map((c) => c.id));
+  const deals = context.deals.filter(
+    (d) => !d.deletedAt && (d.companyId === company.id || (d.contactId !== null && peopleIds.has(d.contactId))),
+  );
+  const open = deals.filter((d) => openStages.has(d.stageId));
+  if (open.length === 0) lines.push(key("companyNoDeals"));
+  else {
+    const currency = open[0]!.currency;
+    const amount = open.filter((d) => d.currency === currency).reduce((sum, d) => sum + d.value, 0);
+    lines.push(key("companyDeals", { count: open.length, amount, currency }));
+  }
+
+  const touches = people.map((c) => c.lastTouchAt).filter((t): t is string => t !== null);
+  const lastTouch = touches.length === 0 ? null : Math.max(...touches.map((t) => Date.parse(t)));
+  const days = lastTouch === null ? null : Math.floor((now.getTime() - lastTouch) / DAY_MS);
+  lines.push(days === null ? key("companyNoActivity") : key("companyLastTouch", { days }));
+
+  const notes = context.notes.filter((n) => !n.deletedAt && n.visibility === "shared");
+  if (notes.length > 0) {
+    const latest = [...notes].sort((a, b) => (a.updatedAt < b.updatedAt ? 1 : -1))[0]!;
+    lines.push(key("companyNotes", { count: notes.length, title: latest.title }));
+  }
+
+  if (!company.whatsapp && !company.instagram && !company.facebook) lines.push(key("companyNoChannels"));
+
+  // Next step.
+  const firstOpen = open[0];
+  if (people.length === 0) lines.push(key("companyNextAddPeople"));
+  else if (firstOpen) lines.push(key("companyNextDeal", { deal: firstOpen.name }));
+  else if (days === null || days > 30) lines.push(key("companyNextReconnect"));
+  else lines.push(key("companyNextCheckIn"));
+  return lines;
+}
+
 export const simulatedProvider: AiProvider = {
   analyze: async (context) => simulateInsight(context),
+  companyNotes: async (context) => simulateCompanyNotes(context),
 };

@@ -8,9 +8,11 @@ import { useFormat } from "@/i18n/format";
 import { api } from "@/lib/api";
 import { useErrorMessage } from "@/lib/errors";
 import { avatarTone, initials } from "@/lib/initials";
+import { facebookUrl, instagramUrl, whatsappUrl } from "@/lib/socialLinks";
 import { useApi } from "@/lib/useApi";
 import { stageTone } from "@/features/contacts/options";
 import type { Lookups } from "@/features/contacts/useLookups";
+import { CompanyAiNotes } from "./CompanyAiNotes";
 import { companyMark, healthColour } from "./options";
 
 export function CompanyDrawer({
@@ -45,21 +47,23 @@ export function CompanyDrawer({
   if (!company) return null;
 
   const [full, pipelines] = detail.data ?? [null, []];
+  // The freshest copy: AI notes arrive after the drawer opens.
+  const current = full ?? company;
   const stages = new Map(pipelines.flatMap((p) => p.stages).map((s) => [s.id, s]));
 
   const details: [string, React.ReactNode][] = [
-    [t("domain"), company.domain ?? "–"],
-    [t("industry"), company.industry ?? "–"],
-    [t("size"), company.size ? tCompanies("sizeValue", { size: company.size }) : "–"],
-    [t("owner"), lookups.userName(company.ownerId) ?? "–"],
-    [t("lastTouch"), company.lastTouchAt ? format.recent(company.lastTouchAt) : "–"],
+    [t("domain"), current.domain ?? "–"],
+    [t("industry"), current.industry ?? "–"],
+    [t("size"), current.size ? tCompanies("sizeValue", { size: current.size }) : "–"],
+    [t("owner"), lookups.userName(current.ownerId) ?? "–"],
+    [t("lastTouch"), current.lastTouchAt ? format.recent(current.lastTouchAt) : "–"],
     // Added Oct 23, 2026 (labels shared with the company form).
-    [tForm("leadStatus"), company.leadStatus ? tStage(company.leadStatus) : "–"],
-    [tForm("whatsapp"), company.whatsapp ?? "–"],
-    [tForm("instagram"), company.instagram ?? "–"],
-    [tForm("facebook"), company.facebook ?? "–"],
-    [tForm("productService"), company.productService ?? "–"],
-    [tForm("aiNotes"), company.aiNotes ?? "–"],
+    [tForm("leadStatus"), current.leadStatus ? tStage(current.leadStatus) : "–"],
+    // Clicking opens the WhatsApp chat or the profile (Dave, Oct 24, 2026).
+    [tForm("whatsapp"), channel(current.whatsapp, whatsappUrl, t("openWhatsapp"))],
+    [tForm("instagram"), channel(current.instagram, instagramUrl, t("openInstagram"))],
+    [tForm("facebook"), channel(current.facebook, facebookUrl, t("openFacebook"))],
+    [tForm("productService"), current.productService ?? "–"],
   ];
 
   return (
@@ -115,6 +119,8 @@ export function CompanyDrawer({
           </div>
         ))}
       </dl>
+
+      <CompanyAiNotes company={current} onUpdated={detail.reload} />
 
       {detail.error ? (
         <EmptyState
@@ -180,6 +186,19 @@ export function CompanyDrawer({
         </button>
       </div>
     </Drawer>
+  );
+}
+
+/** A channel value as a link that opens in a new tab, or as text when it is not a usable link. */
+function channel(value: string | null, toUrl: (value: string) => string | null, label: string): React.ReactNode {
+  if (!value) return "–";
+  const url = toUrl(value);
+  return url ? (
+    <a href={url} target="_blank" rel="noopener noreferrer" title={label} className="text-primary underline-offset-2 hover:underline">
+      {value} ↗
+    </a>
+  ) : (
+    value
   );
 }
 

@@ -14,6 +14,7 @@ import { asyncHandler } from '../lib/asyncHandler';
 import { created, noContent, ok, paginated } from '../lib/response';
 import { requireContext } from '../middleware/requestContext';
 import { validate } from '../middleware/validate';
+import { runCompanyNotes } from '../services/companyNotes';
 import {
   createCompany,
   deleteCompany,
@@ -78,5 +79,15 @@ companiesRouter.delete(
   asyncHandler(async (req, res) => {
     await deleteCompany(requireContext(req), idOf(req));
     noContent(res);
+  }),
+);
+
+// AI notes are written by the AI (services/companyNotes.ts): this queues a new version.
+companiesRouter.post(
+  '/:id/ai-notes',
+  requirePermission('companies', 'edit'),
+  validate({ params }),
+  asyncHandler(async (req, res) => {
+    ok(res, await runCompanyNotes(requireContext(req), idOf(req)));
   }),
 );

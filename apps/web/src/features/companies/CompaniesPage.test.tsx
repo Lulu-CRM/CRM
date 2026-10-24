@@ -97,7 +97,6 @@ describe("Companies page", () => {
       instagram: null,
       facebook: null,
       productService: null,
-      aiNotes: null,
     });
     await waitForRows(6);
   });

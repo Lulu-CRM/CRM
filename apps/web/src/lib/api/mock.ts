@@ -24,6 +24,9 @@ import {
   guessMapping,
   importConfirmSchema,
   mergeIntoContact,
+  withCompanyLink,
+  withMainCompany,
+  belongsTo,
   parseCsv,
   planImport,
   MAX_IMPORT_ROWS,
@@ -39,6 +42,7 @@ import {
   summarizeDeals,
   type ActivityListQuery,
   type Company,
+  type CompanyContactsInput,
   type CompanyCreateInput,
   type CompanyListItem,
   type CompanyListQuery,
@@ -244,7 +248,7 @@ function addImportedContact(incoming: ImportedContact, ownerId: string, tag: str
     name: incoming.name,
     email: incoming.email,
     phone: incoming.phone,
-    companyId: companyIdFor(incoming.companyName, ownerId),
+    ...withMainCompany({ companyId: null, companyIds: [] }, companyIdFor(incoming.companyName, ownerId)),
     jobRole: incoming.jobRole,
     source: incoming.source ?? "import",
     lifecycleStage: incoming.lifecycleStage ?? "new",
@@ -260,7 +264,8 @@ function addImportedContact(incoming: ImportedContact, ownerId: string, tag: str
 function mergeImported(contactId: string, incoming: ImportedContact, mode: "fill" | "overwrite", tag: string | null) {
   const contact = findContact(contactId);
   const withTag = { ...incoming, tags: [...incoming.tags, ...(tag ? [tag] : [])] };
-  Object.assign(contact, mergeIntoContact(contact, withTag, mode, companyIdFor(incoming.companyName, contact.ownerId)), {
+  const { companyId, ...edit } = mergeIntoContact(contact, withTag, mode, companyIdFor(incoming.companyName, contact.ownerId));
+  Object.assign(contact, edit, companyId === undefined ? {} : withMainCompany(contact, companyId), {
     updatedAt: new Date().toISOString(),
   });
 }
@@ -368,7 +373,7 @@ export const mockApi = {
         }
         if (query.stage && c.lifecycleStage !== query.stage) return false;
         if (query.ownerId && c.ownerId !== query.ownerId) return false;
-        if (query.companyId && c.companyId !== query.companyId) return false;
+        if (query.companyId && !belongsTo(c, query.companyId)) return false;
         if (query.tag && !c.tags.includes(query.tag)) return false;
         if (query.needsFollowUp && c.lifecycleStage !== "follow_up") return false;
         if (query.createdSince && c.createdAt < query.createdSince) return false;
@@ -390,6 +395,7 @@ export const mockApi = {
         email: input.email ?? null,
         phone: input.phone ?? null,
         companyId: input.companyId ?? null,
+        companyIds: input.companyId ? [input.companyId] : [],
         jobRole: input.jobRole ?? null,
         source: input.source ?? null,
         lifecycleStage: input.lifecycleStage ?? "new",
@@ -404,7 +410,11 @@ export const mockApi = {
     },
     async update(id: string, input: ContactUpdateInput) {
       const contact = findContact(id);
-      Object.assign(contact, input, { updatedAt: new Date().toISOString() });
+      const { companyId, ...edit } = input;
+      // Same rules as the server: setting companyId makes it the main company and keeps the others.
+      Object.assign(contact, edit, companyId === undefined ? {} : withMainCompany(contact, companyId), {
+        updatedAt: new Date().toISOString(),
+      });
       return delay(contact);
     },
     async remove(id: string) {
@@ -470,16 +480,30 @@ export const mockApi = {
       findCompany(id).deletedAt = new Date().toISOString();
       return delay(undefined);
     },
+    // Same rules as the server: listed contacts are linked, the others unlinked (Dave, Oct 24, 2026).
+    async setContacts(id: string, input: CompanyContactsInput) {
+      const company = findCompany(id);
+      const wanted = new Set(input.contactIds);
+      if (input.contactIds.some((contactId) => !alive(db.contacts).some((c) => c.id === contactId))) {
+        throw new ApiError("VALIDATION_ERROR", 400);
+      }
+      for (const contact of alive(db.contacts)) {
+        if (wanted.has(contact.id) || belongsTo(contact, company.id)) {
+          Object.assign(contact, withCompanyLink(contact, company.id, wanted.has(contact.id)));
+        }
+      }
+      return delay(companyDetail(company, alive(db.contacts), alive(db.deals), liveStages(), CURRENCY));
+    },
     // Same rules as the server's ai.company_notes job, run after a short delay like a background job.
     async aiNotes(id: string): Promise<AiRun> {
       const company = findCompany(id);
       setTimeout(() => {
         const records = (r: { recordType: string | null; recordId: string | null }) =>
           (r.recordType === "company" && r.recordId === company.id) ||
-          (r.recordType === "contact" && alive(db.contacts).some((c) => c.id === r.recordId && c.companyId === company.id));
+          (r.recordType === "contact" && alive(db.contacts).some((c) => c.id === r.recordId && belongsTo(c, company.id)));
         company.aiNotes = simulateCompanyNotes({
           company,
-          contacts: alive(db.contacts).filter((c) => c.companyId === company.id),
+          contacts: alive(db.contacts).filter((c) => belongsTo(c, company.id)),
           deals: alive(db.deals),
           stages: liveStages(),
           tasks: alive(db.tasks).filter(records),

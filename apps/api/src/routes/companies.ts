@@ -1,8 +1,10 @@
 import {
+  companyContactsSchema,
   companyCreateSchema,
   companyListQuerySchema,
   companyUpdateSchema,
   idSchema,
+  type CompanyContactsInput,
   type CompanyCreateInput,
   type CompanyListQuery,
   type CompanyUpdateInput,
@@ -20,6 +22,7 @@ import {
   deleteCompany,
   getCompany,
   listCompanies,
+  setCompanyContacts,
   updateCompany,
 } from '../services/companies';
 
@@ -68,6 +71,19 @@ companiesRouter.patch(
   validate({ params, body: companyUpdateSchema }),
   asyncHandler(async (req, res) => {
     ok(res, await updateCompany(requireContext(req), idOf(req), req.body as CompanyUpdateInput));
+  }),
+);
+
+// The people who belong to the company; it links and unlinks contacts (Dave, Oct 24, 2026).
+companiesRouter.put(
+  '/:id/contacts',
+  requirePermission('companies', 'edit'),
+  validate({ params, body: companyContactsSchema }),
+  asyncHandler(async (req, res) => {
+    ok(
+      res,
+      await setCompanyContacts(requireContext(req), idOf(req), req.body as CompanyContactsInput),
+    );
   }),
 );
 

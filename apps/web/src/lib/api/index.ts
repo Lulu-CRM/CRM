@@ -58,6 +58,7 @@ function withContactNotifications(api: Api): Api {
       ...api.companies,
       create: notifyAfter(api.companies.create),
       remove: notifyAfter(api.companies.remove),
+      setContacts: notifyAfter(api.companies.setContacts),
     },
     imports: {
       ...api.imports,

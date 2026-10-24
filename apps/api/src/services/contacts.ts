@@ -5,6 +5,7 @@ import {
   type ContactListQuery,
   type ContactUpdateInput,
   type Company,
+  withMainCompany,
 } from '@lulu/shared';
 import { db } from '../db/prisma';
 import { scopedDb, type DbTx } from '../db/scoped';
@@ -120,12 +121,14 @@ async function buildWhere(
   }
   if (query.stage !== undefined) where.lifecycleStage = query.stage;
   if (query.ownerId !== undefined) where.ownerId = query.ownerId;
-  if (query.companyId !== undefined) where.companyId = query.companyId;
   if (query.tag !== undefined) where.tags = { has: query.tag };
   if (query.createdSince !== undefined) where.createdAt = { gte: new Date(query.createdSince) };
 
   const and: Prisma.ContactWhereInput[] = [];
   if (query.needsFollowUp === true) and.push({ lifecycleStage: 'follow_up' });
+  // Everyone who belongs to the company, as their main company or another one.
+  if (query.companyId !== undefined)
+    and.push({ OR: [{ companyId: query.companyId }, { companyIds: { has: query.companyId } }] });
   if (query.segmentId !== undefined)
     and.push({ id: { in: await segmentMemberIds(ctx, query.segmentId) } });
   if (and.length > 0) where.AND = and;
@@ -182,6 +185,7 @@ export async function createContact(
       email: input.email ?? null,
       phone: input.phone ?? null,
       companyId: input.companyId ?? null,
+      companyIds: input.companyId ? [input.companyId] : [],
       jobRole: input.jobRole ?? null,
       source: input.source ?? null,
       lifecycleStage: input.lifecycleStage ?? 'new',
@@ -217,7 +221,7 @@ export async function updateContact(
       ...(input.name === undefined ? {} : { name: input.name }),
       ...(input.email === undefined ? {} : { email: input.email }),
       ...(input.phone === undefined ? {} : { phone: input.phone }),
-      ...(input.companyId === undefined ? {} : { companyId: input.companyId }),
+      ...(input.companyId === undefined ? {} : withMainCompany(existing, input.companyId)),
       ...(input.jobRole === undefined ? {} : { jobRole: input.jobRole }),
       ...(input.source === undefined ? {} : { source: input.source }),
       ...(input.lifecycleStage === undefined ? {} : { lifecycleStage: input.lifecycleStage }),

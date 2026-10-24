@@ -34,7 +34,8 @@ Status values: `open`, `in progress`, `in review`, `done`.
 | W5 | Platform alignment (Dave's architecture PDFs): AI through canonical services, audit log, outbox events, correlation ids, deduplicated events, bundle manifest | Sudais | done | |
 | W6 | Dave's review (Oct 24): AI-written company notes, WhatsApp country picker, clickable WhatsApp/Instagram/Facebook, link existing contacts to a company | Sudais | done | |
 | W7 | Import Contacts as a pop-up on Contacts & Companies, out of the menu (Dave, Oct 24) | Sudais | done | |
-| W8 | Company assigned to a person by name; company and contact forms no longer share fields (Dave, Oct 24) | Sudais | in review | |
+| W8 | Company assigned to a person by name; company and contact forms no longer share fields (Dave, Oct 24) | Sudais | done (PR #49) | |
+| W9 | People linked from the company form, not the contact; a business can have several people and a person several businesses (`companyIds`, `PUT /companies/:id/contacts`) (Dave, Oct 24) | Sudais | in review | |
 
 Franklin replaced Tobi and theLady replaced Brobot. Sudais took 6 (segments), 7 (import) and 8 (AI) off theLady and 9 (settings) off Franklin. Every task above is merged. Pages move to the real API one area at a time with `NEXT_PUBLIC_REAL_API` (`apps/web/README.md`).
 

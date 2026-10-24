@@ -78,6 +78,13 @@ export const companyListQuerySchema = listQuerySchema.extend({
   health: companyHealthSchema.optional(),
 });
 
+// PUT /companies/:id/contacts: the people who belong to the company (Dave, Oct 24, 2026). Contacts not
+// listed are unlinked from it; a person can belong to several companies.
+export const companyContactsSchema = z.object({
+  contactIds: z.array(idSchema).max(500),
+});
+
+export type CompanyContactsInput = z.infer<typeof companyContactsSchema>;
 export type CompanySize = z.infer<typeof companySizeSchema>;
 export type CompanyHealth = z.infer<typeof companyHealthSchema>;
 export type Company = z.infer<typeof companySchema>;

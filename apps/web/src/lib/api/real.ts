@@ -12,6 +12,7 @@ import {
   taskSchema,
   userSchema,
   type ActivityListQuery,
+  type CompanyContactsInput,
   type CompanyCreateInput,
   type CompanyListQuery,
   type CompanyUpdateInput,
@@ -86,6 +87,8 @@ export const realApi = {
     update: (id: string, input: CompanyUpdateInput) =>
       write(companyListItemSchema, "PATCH", `/companies/${id}`, input),
     remove: (id: string) => remove(`/companies/${id}`),
+    setContacts: (id: string, input: CompanyContactsInput) =>
+      write(companyDetailSchema, "PUT", `/companies/${id}/contacts`, input),
     // Queues the AI to write the company's AI notes; poll get(id) for aiNotesUpdatedAt.
     aiNotes: (id: string) => write(aiRunSchema, "POST", `/companies/${id}/ai-notes`, {}),
   },

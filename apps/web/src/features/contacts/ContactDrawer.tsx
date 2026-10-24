@@ -88,7 +88,7 @@ export function ContactDrawer({
         <Avatar initials={initials(contact.name)} tone={avatarTone(contact.id)} />
         <div className="min-w-0 flex-1">
           <strong className="block truncate text-[13px] text-text-strong">{contact.jobRole ?? "–"}</strong>
-          <span className="mt-1 block text-[11px] text-text-subtle">{lookups.companyName(contact.companyId) ?? ""}</span>
+          <span className="mt-1 block text-[11px] text-text-subtle">{(contact.companyIds.length ? contact.companyIds : [contact.companyId]).map((id) => lookups.companyName(id)).filter(Boolean).join(", ")}</span>
           <span className="mt-2 inline-flex">
             <Pill tone={stageTone[contact.lifecycleStage]}>{tStage(contact.lifecycleStage)}</Pill>
           </span>

@@ -30,6 +30,8 @@ export const companyFormSchema = z.object({
   productService: z.string().max(200, "tooLong"),
   // A first note, saved as a shared note on the new company (only when adding).
   note: z.string().max(10000, "tooLong"),
+  // The people who belong to this company (Dave, Oct 24, 2026). One person can belong to several.
+  contactIds: z.array(z.string()),
 });
 
 export type CompanyFormValues = z.infer<typeof companyFormSchema>;
@@ -38,6 +40,7 @@ export function toFormValues(
   company: Company | null,
   defaultOwnerId: string,
   defaultCountry = "DE",
+  contactIds: string[] = [],
 ): CompanyFormValues {
   const whatsapp = splitPhone(company?.whatsapp, defaultCountry);
   return {
@@ -52,6 +55,7 @@ export function toFormValues(
     facebook: company?.facebook ?? "",
     productService: company?.productService ?? "",
     note: "",
+    contactIds,
   };
 }
 

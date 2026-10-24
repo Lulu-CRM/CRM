@@ -188,7 +188,6 @@
       "email": "Work email",
       "phone": "Phone",
       "company": "Company",
-      "noCompany": "No company",
       "jobRole": "Role",
       "stage": "Lifecycle stage",
       "source": "Source",
@@ -201,7 +200,8 @@
       "errors": {
         "nameRequired": "Enter a name",
         "emailInvalid": "Enter a valid email address",
-        "ownerRequired": "Choose an owner"
+        "ownerRequired": "Choose an owner",
+        "companyTooLong": "This name is too long"
       },
       "editEyebrow": "Contact",
       "namePlaceholder": "e.g. Jamie Morgan",
@@ -209,7 +209,9 @@
       "phonePlaceholder": "+49 ...",
       "jobRolePlaceholder": "Role or department",
       "requiredHint": "Fields marked * are required.",
-      "submit": "Create contact"
+      "submit": "Create contact",
+      "companyPlaceholder": "Type a company name",
+      "companyHint": "Pick an existing company, or type a new name to create it."
     },
     "drawer": {
       "eyebrow": "Contact profile",
@@ -572,8 +574,6 @@
         "tooLong": "This is too long",
         "countryInvalid": "Choose a country"
       },
-      "leadStatus": "Lead status",
-      "noLeadStatus": "Not set",
       "whatsapp": "WhatsApp number",
       "whatsappPlaceholder": "176 41474606",
       "instagram": "Instagram",
@@ -585,11 +585,6 @@
       "note": "Notes",
       "notePlaceholder": "Context for the team. Saved as a shared note on the company.",
       "whatsappCountry": "Country code",
-      "contacts": "Contacts at this company",
-      "contactsNone": "Pick existing contacts",
-      "contactsCount": "{count} contacts",
-      "contactsSearch": "Search contacts",
-      "contactsEmpty": "No contacts yet",
       "aiNotesHint": "✦ AI notes are written by the AI from everything the CRM knows about this company, after you save."
     },
     "drawer": {

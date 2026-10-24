@@ -58,7 +58,6 @@ export function CompanyDrawer({
     [t("owner"), lookups.userName(current.ownerId) ?? "–"],
     [t("lastTouch"), current.lastTouchAt ? format.recent(current.lastTouchAt) : "–"],
     // Added Oct 23, 2026 (labels shared with the company form).
-    [tForm("leadStatus"), current.leadStatus ? tStage(current.leadStatus) : "–"],
     // Clicking opens the WhatsApp chat or the profile (Dave, Oct 24, 2026).
     [tForm("whatsapp"), channel(current.whatsapp, whatsappUrl, t("openWhatsapp"))],
     [tForm("instagram"), channel(current.instagram, instagramUrl, t("openInstagram"))],

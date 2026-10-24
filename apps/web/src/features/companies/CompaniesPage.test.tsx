@@ -92,7 +92,6 @@ describe("Companies page", () => {
       industry: null,
       size: "11-50",
       ownerId: "user_jamie",
-      leadStatus: null,
       whatsapp: null,
       instagram: null,
       facebook: null,

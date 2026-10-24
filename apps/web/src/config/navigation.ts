@@ -20,8 +20,9 @@ export const crmPages = [
 
 export type CrmPageKey = (typeof crmPages)[number]["key"];
 
-// The CRM menu: Contacts & Companies, Leads & Deals, Notes, Import Contacts.
-export const crmMenu = ["directory", "pipeline", "notes", "import"] as const satisfies readonly CrmPageKey[];
+// The CRM menu: Contacts & Companies, Leads & Deals, Notes. Import Contacts is a pop-up on Contacts &
+// Companies (Dave, Oct 24, 2026); the /crm/import page stays reachable by link.
+export const crmMenu = ["directory", "pipeline", "notes"] as const satisfies readonly CrmPageKey[];
 
 export type CrmMenuKey = (typeof crmMenu)[number];
 
@@ -35,7 +36,7 @@ const menuOf: Partial<Record<CrmPageKey, CrmMenuKey>> = {
   leads: "pipeline",
   deals: "pipeline",
   notes: "notes",
-  import: "import",
+  import: "directory",
 };
 
 export const CRM_HOME = "/crm/directory";

@@ -37,13 +37,12 @@ const crmMenu = () => screen.getByRole("navigation", { name: "CRM" });
 const badge = () => within(crmMenu()).getByRole("link", { name: /Contacts & Companies/ }).querySelector("b")?.textContent;
 
 describe("Rail CRM menu", () => {
-  it("shows the four pages of the new design", async () => {
+  it("shows the menu pages; Import Contacts is a pop-up, not a menu item (Dave, Oct 24)", async () => {
     await renderRail();
     expect(within(crmMenu()).getAllByRole("link").map((link) => link.textContent?.replace(/\d+$/, ""))).toEqual([
       "♙Contacts & Companies",
       "◈Leads & Deals",
       "▤Notes",
-      "⇧Import Contacts",
     ]);
   });
 

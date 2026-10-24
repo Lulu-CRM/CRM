@@ -12,7 +12,8 @@ import { paths } from './openapi/paths';
 
 const VERSION = '0.1.0';
 
-// UI routes of apps/web (the four menu pages first; the others stay reachable by link).
+// UI routes of apps/web (the three menu pages first; import is a pop-up on /crm/directory, and the
+// other pages stay reachable by link).
 const UI_ROUTES = [
   '/crm/directory',
   '/crm/pipeline',

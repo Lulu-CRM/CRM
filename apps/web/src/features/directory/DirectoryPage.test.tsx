@@ -114,7 +114,7 @@ describe("Contacts & Companies page", () => {
     expect(screen.queryByRole("button", { name: /Generate AI analysis/ })).toBeNull();
   });
 
-  it("adds a company: WhatsApp with a country, existing contacts linked, notes saved, AI notes written", async () => {
+  it("adds a company: WhatsApp with a country, notes saved, AI notes written, no person fields", async () => {
     await waitFor(() => expect(names()).toContain("Sophie Laurent"), slow);
     fireEvent.click(screen.getByRole("button", { name: /Add company/ }));
     const dialog = await screen.findByRole("dialog");
@@ -122,7 +122,9 @@ describe("Contacts & Companies page", () => {
     const type = (label: string, value: string) =>
       fireEvent.change(within(dialog).getByLabelText(label), { target: { value } });
     fireEvent.change(within(dialog).getByLabelText(/Company name/), { target: { value: "Blue Harbor" } });
-    fireEvent.change(within(dialog).getByLabelText(form.leadStatus), { target: { value: "qualified" } });
+    // Dave, Oct 24: company and contact forms do not share fields; status and linking live on the contact.
+    expect(within(dialog).queryByLabelText(/Lead status/)).toBeNull();
+    expect(within(dialog).queryByLabelText(/Contacts at this company/)).toBeNull();
     // Dave, Oct 24: a country picker for the WhatsApp number.
     type(form.whatsappCountry, "NG");
     type(form.whatsapp, "0803 123 4567");
@@ -132,9 +134,6 @@ describe("Contacts & Companies page", () => {
     type(form.note, "Met at the expo\nWants a demo in May");
     // No AI notes box any more: the AI writes them.
     expect(within(dialog).queryByLabelText(/AI notes/)).toBeNull();
-    // Dave, Oct 24: pick existing contacts for the company.
-    fireEvent.click(within(dialog).getByLabelText(form.contacts));
-    fireEvent.click(await within(dialog).findByRole("checkbox", { name: /Sophie Laurent/ }));
     await act(async () => {
       fireEvent.click(within(dialog).getByRole("button", { name: form.submit }));
     });
@@ -142,7 +141,6 @@ describe("Contacts & Companies page", () => {
 
     const company = (await api.companies.list({ q: "Blue Harbor" })).data[0]!;
     expect(company).toMatchObject({
-      leadStatus: "qualified",
       whatsapp: "+2348031234567",
       instagram: "@blueharbor",
       facebook: "facebook.com/blueharbor",
@@ -150,13 +148,37 @@ describe("Contacts & Companies page", () => {
     });
     const notes = await api.notes.list({ recordType: "company", recordId: company.id });
     expect(notes.data.map((n) => [n.title, n.visibility])).toEqual([["Met at the expo", "shared"]]);
-    const sophie = (await api.contacts.list({ q: "Sophie Laurent" })).data[0]!;
-    expect(sophie.companyId).toBe(company.id);
-
     // The AI writes the notes in the background after the save.
     await waitFor(async () => expect((await api.companies.get(company.id)).aiNotes).not.toBeNull(), { timeout: 5000 });
     const written = (await api.companies.get(company.id)).aiNotes!;
-    expect(written.map((line) => ("key" in line ? line.key : "text"))).toContain("companyPeople");
+    expect(written.map((line) => ("key" in line ? line.key : "text"))).toContain("companyNoPeople");
+  });
+
+  it("assigns a company to a person by name: an existing one, or a new one created on save (Dave, Oct 24)", async () => {
+    await waitFor(() => expect(names()).toContain("Atlas Logistics"), slow);
+    const addPerson = async (name: string, company: string) => {
+      fireEvent.click(screen.getByRole("button", { name: /Add contact/ }));
+      const dialog = await screen.findByRole("dialog");
+      fireEvent.change(within(dialog).getByLabelText(/Full name/), { target: { value: name } });
+      fireEvent.change(within(dialog).getByLabelText(messages.contacts.form.company), { target: { value: company } });
+      await act(async () => {
+        fireEvent.click(within(dialog).getByRole("button", { name: /Create contact/ }));
+      });
+      await waitFor(() => expect(names()).toContain(name), slow);
+      return (await api.contacts.list({ q: name })).data[0]!;
+    };
+
+    // An existing company, typed in different case: linked, not duplicated.
+    const atlas = (await api.companies.list({ q: "Atlas Logistics" })).data[0]!;
+    const ada = await addPerson("Ada Lovelace", "atlas logistics");
+    expect(ada.companyId).toBe(atlas.id);
+    expect((await api.companies.list({ q: "Atlas" })).meta.total).toBe(1);
+
+    // A new name: the company is created and linked.
+    const grace = await addPerson("Grace Hopper", "Navy Labs");
+    const navy = (await api.companies.list({ q: "Navy Labs" })).data[0]!;
+    expect(navy.name).toBe("Navy Labs");
+    expect(grace.companyId).toBe(navy.id);
   });
 
   it("opens WhatsApp, Instagram and Facebook from the company, and shows its AI notes", async () => {

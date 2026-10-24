@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { DIAL_CODES, joinPhone, splitPhone } from "@/lib/phone";
-import { companySchema, companySizeSchema, lifecycleStageSchema, type Company, type CompanyCreateInput } from "@lulu/shared";
+import { companySchema, companySizeSchema, type Company, type CompanyCreateInput } from "@lulu/shared";
 
 // "https://www.Acme.com/about" -> "acme.com", so people can paste a link.
 export function cleanDomain(value: string) {
@@ -21,8 +21,7 @@ export const companyFormSchema = z.object({
   industry: z.string(),
   size: z.union([z.literal(""), companySizeSchema]),
   ownerId: z.string().min(1, "ownerRequired"),
-  // Added at Dave's request (Oct 23, 2026).
-  leadStatus: z.union([z.literal(""), lifecycleStageSchema]),
+  // Added at Dave's request (Oct 23, 2026). The lead status moved to the contact (its stage) on Oct 24.
   // WhatsApp as a country (its calling code) plus the number (Dave, Oct 24, 2026).
   whatsappCountry: z.string().refine((code) => code in DIAL_CODES, "countryInvalid"),
   whatsappNumber: z.string().refine((value) => value.replace(/\D/g, "").length <= 15, "tooLong"),
@@ -31,8 +30,6 @@ export const companyFormSchema = z.object({
   productService: z.string().max(200, "tooLong"),
   // A first note, saved as a shared note on the new company (only when adding).
   note: z.string().max(10000, "tooLong"),
-  // Existing contacts who work at this company (Dave, Oct 24, 2026). Saved as each contact's company.
-  contactIds: z.array(z.string()),
 });
 
 export type CompanyFormValues = z.infer<typeof companyFormSchema>;
@@ -41,7 +38,6 @@ export function toFormValues(
   company: Company | null,
   defaultOwnerId: string,
   defaultCountry = "DE",
-  contactIds: string[] = [],
 ): CompanyFormValues {
   const whatsapp = splitPhone(company?.whatsapp, defaultCountry);
   return {
@@ -50,14 +46,12 @@ export function toFormValues(
     industry: company?.industry ?? "",
     size: company?.size ?? "",
     ownerId: company?.ownerId ?? defaultOwnerId,
-    leadStatus: company?.leadStatus ?? "",
     whatsappCountry: whatsapp.country,
     whatsappNumber: whatsapp.number,
     instagram: company?.instagram ?? "",
     facebook: company?.facebook ?? "",
     productService: company?.productService ?? "",
     note: "",
-    contactIds,
   };
 }
 
@@ -70,7 +64,6 @@ export function toCompanyInput(values: CompanyFormValues): CompanyCreateInput {
     industry: orNull(values.industry),
     size: values.size === "" ? null : values.size,
     ownerId: values.ownerId,
-    leadStatus: values.leadStatus === "" ? null : values.leadStatus,
     whatsapp: orNull(joinPhone(values.whatsappCountry, values.whatsappNumber)),
     instagram: orNull(values.instagram),
     facebook: orNull(values.facebook),

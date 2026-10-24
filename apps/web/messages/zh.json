@@ -188,7 +188,6 @@
       "email": "工作邮箱",
       "phone": "电话",
       "company": "公司",
-      "noCompany": "无公司",
       "jobRole": "职位",
       "stage": "生命周期阶段",
       "source": "来源",
@@ -201,7 +200,8 @@
       "errors": {
         "nameRequired": "请输入姓名",
         "emailInvalid": "请输入有效的邮箱地址",
-        "ownerRequired": "请选择负责人"
+        "ownerRequired": "请选择负责人",
+        "companyTooLong": "名称太长"
       },
       "editEyebrow": "联系人",
       "namePlaceholder": "例如：Jamie Morgan",
@@ -209,7 +209,9 @@
       "phonePlaceholder": "+86 ...",
       "jobRolePlaceholder": "职位或部门",
       "requiredHint": "带 * 的字段为必填项。",
-      "submit": "创建联系人"
+      "submit": "创建联系人",
+      "companyPlaceholder": "输入公司名称",
+      "companyHint": "选择已有公司，或输入新名称来创建。"
     },
     "drawer": {
       "eyebrow": "联系人资料",
@@ -572,8 +574,6 @@
         "tooLong": "内容太长",
         "countryInvalid": "请选择国家"
       },
-      "leadStatus": "线索状态",
-      "noLeadStatus": "未设置",
       "whatsapp": "WhatsApp 号码",
       "whatsappPlaceholder": "176 41474606",
       "instagram": "Instagram",
@@ -585,11 +585,6 @@
       "note": "笔记",
       "notePlaceholder": "团队需要了解的背景。将作为共享笔记保存在该公司下。",
       "whatsappCountry": "国家区号",
-      "contacts": "该公司的联系人",
-      "contactsNone": "选择已有联系人",
-      "contactsCount": "{count} 位联系人",
-      "contactsSearch": "搜索联系人",
-      "contactsEmpty": "还没有联系人",
       "aiNotesHint": "✦ 保存后，AI 会根据 CRM 中关于该公司的全部信息撰写 AI 笔记。"
     },
     "drawer": {

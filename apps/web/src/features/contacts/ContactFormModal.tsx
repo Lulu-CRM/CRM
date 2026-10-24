@@ -8,7 +8,7 @@ import type { Contact, LifecycleStage } from "@lulu/shared";
 import { Button, Modal, useToast } from "@/components/ui";
 import { api } from "@/lib/api";
 import { useErrorMessage } from "@/lib/errors";
-import { contactFormSchema, toContactInput, toFormValues, type ContactFormValues } from "./contactForm";
+import { contactFormSchema, findCompanyByName, toContactInput, toFormValues, type ContactFormValues } from "./contactForm";
 import { knownSources, lifecycleStages } from "./options";
 import type { Lookups } from "./useLookups";
 
@@ -40,7 +40,7 @@ export function ContactFormModal({
   const errorMessage = useErrorMessage();
   const defaultOwner = lookups.me?.id ?? "";
   const startValues = () => {
-    const values = toFormValues(contact, defaultOwner);
+    const values = toFormValues(contact, defaultOwner, lookups.companyName(contact?.companyId ?? null) ?? "");
     return !contact && initialStage ? { ...values, lifecycleStage: initialStage } : values;
   };
 
@@ -48,6 +48,8 @@ export function ContactFormModal({
     register,
     handleSubmit,
     reset,
+    getValues,
+    setValue,
     formState: { errors, isSubmitting },
   } = useForm<ContactFormValues>({
     resolver: zodResolver(contactFormSchema),
@@ -59,9 +61,24 @@ export function ContactFormModal({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open, contact, defaultOwner, initialStage, reset]);
 
+  // The company names load after the form opens: fill in the contact's company if the field is still empty.
+  const loadedName = lookups.companyName(contact?.companyId ?? null);
+  useEffect(() => {
+    if (open && loadedName && getValues("companyName") === "") setValue("companyName", loadedName);
+  }, [open, loadedName, getValues, setValue]);
+
+  // A typed name picks the existing company with that name, or creates a new one.
+  const resolveCompany = async (name: string, ownerId: string): Promise<string | null> => {
+    if (name.trim() === "") return null;
+    const existing = findCompanyByName(lookups.companies, name);
+    if (existing) return existing.id;
+    const created = await api.companies.create({ name: name.trim(), ...(ownerId ? { ownerId } : {}) });
+    return created.id;
+  };
+
   const onSubmit = async (values: ContactFormValues) => {
     try {
-      const input = toContactInput(values);
+      const input = toContactInput(values, await resolveCompany(values.companyName, values.ownerId));
       const saved = contact ? await api.contacts.update(contact.id, input) : await api.contacts.create(input);
       toast(contact ? t("updated") : t("created"));
       onSaved(saved);
@@ -105,16 +122,24 @@ export function ContactFormModal({
         {field("email", t("email"), <input type="email" className={inputClass} placeholder={t("emailPlaceholder")} {...register("email")} {...aria("email")} />)}
         {field("phone", t("phone"), <input type="tel" className={inputClass} placeholder={t("phonePlaceholder")} {...register("phone")} {...aria("phone")} />)}
         {field(
-          "companyId",
+          "companyName",
           t("company"),
-          <select className={inputClass} {...register("companyId")} {...aria("companyId")}>
-            <option value="">{t("noCompany")}</option>
-            {lookups.companies.map((company) => (
-              <option key={company.id} value={company.id}>
-                {company.name}
-              </option>
-            ))}
-          </select>,
+          <>
+            <input
+              className={inputClass}
+              list="contact-companies"
+              autoComplete="off"
+              placeholder={t("companyPlaceholder")}
+              {...register("companyName")}
+              {...aria("companyName")}
+            />
+            <datalist id="contact-companies">
+              {lookups.companies.map((company) => (
+                <option key={company.id} value={company.name} />
+              ))}
+            </datalist>
+            <small className="text-[9px] text-text-subtle">{t("companyHint")}</small>
+          </>,
         )}
         {field("jobRole", t("jobRole"), <input className={inputClass} placeholder={t("jobRolePlaceholder")} {...register("jobRole")} {...aria("jobRole")} />)}
         {field(

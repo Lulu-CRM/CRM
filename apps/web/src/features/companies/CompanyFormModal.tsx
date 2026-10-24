@@ -9,11 +9,8 @@ import { Button, Modal, useToast } from "@/components/ui";
 import { api } from "@/lib/api";
 import { useErrorMessage } from "@/lib/errors";
 import { DIAL_CODES, defaultCountry } from "@/lib/phone";
-import { useApi } from "@/lib/useApi";
-import { lifecycleStages } from "@/features/contacts/options";
 import type { Lookups } from "@/features/contacts/useLookups";
 import { companyFormSchema, toCompanyInput, toFirstNote, toFormValues, type CompanyFormValues } from "./companyForm";
-import { ContactPicker } from "./ContactPicker";
 
 const inputClass =
   "w-full rounded-md border border-border-strong bg-surface px-[11px] py-2.5 text-[11px] text-text outline-none focus:border-[#8e83de] focus:shadow-[0_0_0_3px_#eeecff] aria-[invalid=true]:border-[#d9534f]";
@@ -37,20 +34,11 @@ export function CompanyFormModal({
   const t = useTranslations("companies.form");
   const tCompanies = useTranslations("companies");
   const tCommon = useTranslations("common");
-  const tStage = useTranslations("lifecycleStages");
   const toast = useToast();
   const errorMessage = useErrorMessage();
   const locale = useLocale();
   const defaultOwner = lookups.me?.id ?? "";
   const country = useMemo(() => defaultCountry(typeof navigator === "undefined" ? undefined : navigator.language), []);
-
-  // Contacts for the picker, and who works at this company now (edit).
-  const contacts = useApi(() => (open ? api.contacts.list({ pageSize: 100 }) : Promise.resolve(null)), [open]);
-  const contactList = useMemo(() => contacts.data?.data ?? [], [contacts.data]);
-  const linkedIds = useMemo(
-    () => (company ? contactList.filter((c) => c.companyId === company.id).map((c) => c.id) : []),
-    [company, contactList],
-  );
 
   // Countries for the WhatsApp number, named in the user's language, sorted by name.
   const countries = useMemo(() => {
@@ -64,8 +52,6 @@ export function CompanyFormModal({
     register,
     handleSubmit,
     reset,
-    watch,
-    setValue,
     formState: { errors, isSubmitting },
   } = useForm<CompanyFormValues>({
     resolver: zodResolver(companyFormSchema),
@@ -76,24 +62,10 @@ export function CompanyFormModal({
     if (open) reset(toFormValues(company, defaultOwner, country));
   }, [open, company, defaultOwner, country, reset]);
 
-  // The contacts list loads after the form opens: fill in who works here without touching the other
-  // fields, which the user may already be typing in.
-  useEffect(() => {
-    if (open && company) setValue("contactIds", linkedIds);
-  }, [open, company, linkedIds, setValue]);
-
   const onSubmit = async (values: CompanyFormValues) => {
     try {
       const input = toCompanyInput(values);
       const saved = company ? await api.companies.update(company.id, input) : await api.companies.create(input);
-      // Link the picked contacts to this company, and unlink the ones taken out (edit).
-      const linked = new Set(linkedIds);
-      for (const id of values.contactIds.filter((v) => !linked.has(v))) {
-        await api.contacts.update(id, { companyId: saved.id });
-      }
-      for (const id of linkedIds.filter((v) => !values.contactIds.includes(v))) {
-        await api.contacts.update(id, { companyId: null });
-      }
       const note = company ? null : toFirstNote(values, saved.id);
       if (note) await api.notes.create(note);
       // The AI rewrites the company's AI notes in the background from the data just saved.
@@ -173,18 +145,6 @@ export function CompanyFormModal({
         )}
 
         {field(
-          "leadStatus",
-          t("leadStatus"),
-          <select className={inputClass} {...register("leadStatus")} {...aria("leadStatus")}>
-            <option value="">{t("noLeadStatus")}</option>
-            {lifecycleStages.map((stage) => (
-              <option key={stage} value={stage}>
-                {tStage(stage)}
-              </option>
-            ))}
-          </select>,
-        )}
-        {field(
           "whatsappNumber",
           t("whatsapp"),
           <div className="flex gap-1.5">
@@ -215,18 +175,6 @@ export function CompanyFormModal({
         {field("productService", t("productService"), <input className={inputClass} autoComplete="off" placeholder={t("productServicePlaceholder")} {...register("productService")} {...aria("productService")} />, true)}
         {!company &&
           field("note", t("note"), <textarea className={inputClass} rows={3} placeholder={t("notePlaceholder")} {...register("note")} {...aria("note")} />, true)}
-        {field(
-          "contactIds",
-          t("contacts"),
-          <ContactPicker
-            id="company-contactIds"
-            contacts={contactList}
-            value={watch("contactIds")}
-            onChange={(ids) => setValue("contactIds", ids, { shouldDirty: true })}
-            companyName={(id) => (id && id !== company?.id ? lookups.companyName(id) : undefined)}
-          />,
-          true,
-        )}
         <p className="text-[10px] text-text-subtle sm:col-span-2">{t("aiNotesHint")}</p>
 
         <div className="mt-1.5 flex flex-col items-end justify-between gap-3 border-t border-[#efedf4] pt-4 sm:col-span-2 sm:flex-row sm:items-center">

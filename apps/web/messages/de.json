@@ -200,8 +200,7 @@
       "errors": {
         "nameRequired": "Bitte einen Namen eingeben",
         "emailInvalid": "Bitte eine gültige E-Mail-Adresse eingeben",
-        "ownerRequired": "Bitte einen Verantwortlichen wählen",
-        "companyTooLong": "Dieser Name ist zu lang"
+        "ownerRequired": "Bitte einen Verantwortlichen wählen"
       },
       "editEyebrow": "Kontakt",
       "namePlaceholder": "z. B. Jamie Morgan",
@@ -209,9 +208,7 @@
       "phonePlaceholder": "+49 ...",
       "jobRolePlaceholder": "Rolle oder Abteilung",
       "requiredHint": "Mit * markierte Felder sind Pflicht.",
-      "submit": "Kontakt anlegen",
-      "companyPlaceholder": "Firmennamen eingeben",
-      "companyHint": "Wähle ein vorhandenes Unternehmen oder gib einen neuen Namen ein, um es anzulegen."
+      "submit": "Kontakt anlegen"
     },
     "drawer": {
       "eyebrow": "Kontaktprofil",
@@ -585,7 +582,12 @@
       "note": "Notizen",
       "notePlaceholder": "Kontext für das Team. Wird als geteilte Notiz beim Unternehmen gespeichert.",
       "whatsappCountry": "Ländervorwahl",
-      "aiNotesHint": "✦ KI-Notizen schreibt die KI nach dem Speichern aus allem, was das CRM über dieses Unternehmen weiß."
+      "aiNotesHint": "✦ KI-Notizen schreibt die KI nach dem Speichern aus allem, was das CRM über dieses Unternehmen weiß.",
+      "contacts": "Kontakte in diesem Unternehmen",
+      "contactsNone": "Vorhandene Kontakte auswählen",
+      "contactsCount": "{count} Kontakte",
+      "contactsSearch": "Kontakte suchen",
+      "contactsEmpty": "Noch keine Kontakte"
     },
     "drawer": {
       "eyebrow": "Unternehmensprofil",

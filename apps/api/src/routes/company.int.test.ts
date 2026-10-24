@@ -560,6 +560,68 @@ describe('companies API (int)', () => {
     expect(contactRow.companyId).toBe(company.id);
   });
 
+  it('sets the people of a company; one person can belong to several (Dave, Oct 24, 2026)', async () => {
+    const t = await tenant('people');
+    const first = await newCompany(t, { name: 'First Biz' });
+    const second = await newCompany(t, { name: 'Second Biz' });
+    const owner = await newContact(t, { name: 'Owner One' });
+    const partner = await newContact(t, { name: 'Owner Two' });
+
+    as(t);
+    // Two owners for one business.
+    let res = await request(app)
+      .put(`/companies/${first.id}/contacts`)
+      .send({ contactIds: [owner.id, partner.id] });
+    expect(res.status).toBe(200);
+    expect(responseBody<ApiEnvelope<CompanyBody>>(res).data.contactCount).toBe(2);
+
+    // One owner with a second business: the first stays the main company.
+    res = await request(app)
+      .put(`/companies/${second.id}/contacts`)
+      .send({ contactIds: [owner.id] });
+    expect(res.status).toBe(200);
+    let row = await db.contact.findUniqueOrThrow({ where: { id: owner.id } });
+    expect(row).toMatchObject({ companyId: first.id, companyIds: [first.id, second.id] });
+
+    const people = await request(app).get(`/contacts?companyId=${second.id}`);
+    expect(responseBody<ApiEnvelope<Array<{ id: string }>>>(people).data.map((c) => c.id)).toEqual([
+      owner.id,
+    ]);
+
+    // Unlinking the main company promotes the other one; the partner loses their only company.
+    res = await request(app).put(`/companies/${first.id}/contacts`).send({ contactIds: [] });
+    expect(responseBody<ApiEnvelope<CompanyBody>>(res).data.contactCount).toBe(0);
+    row = await db.contact.findUniqueOrThrow({ where: { id: owner.id } });
+    expect(row).toMatchObject({ companyId: second.id, companyIds: [second.id] });
+    expect(await db.contact.findUniqueOrThrow({ where: { id: partner.id } })).toMatchObject({
+      companyId: null,
+      companyIds: [],
+    });
+  });
+
+  it('refuses unknown contacts and companies of another workspace when setting people', async () => {
+    const a = await tenant('people-a');
+    const b = await tenant('people-b');
+    const company = await newCompany(a, { name: 'Mine' });
+    const stranger = await newContact(b, { name: 'Stranger' });
+
+    as(a);
+    const bad = await request(app)
+      .put(`/companies/${company.id}/contacts`)
+      .send({ contactIds: [stranger.id] });
+    expect(bad.status).toBe(400);
+    expect(responseBody<ErrorEnvelope>(bad).error.code).toBe('VALIDATION_ERROR');
+
+    as(b);
+    const hidden = await request(app)
+      .put(`/companies/${company.id}/contacts`)
+      .send({ contactIds: [] });
+    expect(hidden.status).toBe(404);
+    expect((await db.contact.findUniqueOrThrow({ where: { id: stranger.id } })).companyIds).toEqual(
+      [],
+    );
+  });
+
   it("never shows or changes another workspace's company", async () => {
     const a = await tenant('iso-a');
     const b = await tenant('iso-b');

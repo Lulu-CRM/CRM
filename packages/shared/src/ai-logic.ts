@@ -1,6 +1,6 @@
 import type { AiInsightContent, AiText, QualityField } from "./ai";
 import type { Company } from "./company";
-import type { Contact } from "./contact";
+import { belongsTo, type Contact } from "./contact";
 import type { Deal } from "./deal";
 import type { Stage } from "./pipeline";
 import type { Activity } from "./activity";
@@ -130,7 +130,7 @@ export function simulateCompanyNotes(context: CompanyAiContext): AiText[] {
   if (company.industry) lines.push(key("companyIndustry", { industry: company.industry }));
   if (company.productService) lines.push(key("companyProduct", { product: company.productService }));
 
-  const people = context.contacts.filter((c) => !c.deletedAt && c.companyId === company.id);
+  const people = context.contacts.filter((c) => !c.deletedAt && belongsTo(c, company.id));
   lines.push(
     people.length === 0
       ? key("companyNoPeople")

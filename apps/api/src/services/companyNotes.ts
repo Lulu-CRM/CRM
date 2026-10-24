@@ -41,7 +41,9 @@ export async function processCompanyNotes(
 ): Promise<AiText[]> {
   const scoped = scopedDb(payload.workspaceId);
   const companyRow = await findCompany(payload.workspaceId, payload.companyId);
-  const contactRows = await scoped.contact.findMany({ where: { companyId: companyRow.id } });
+  const contactRows = await scoped.contact.findMany({
+    where: { OR: [{ companyId: companyRow.id }, { companyIds: { has: companyRow.id } }] },
+  });
   const contactIds = contactRows.map((c) => c.id);
   const records = [
     { recordType: 'company' as const, recordId: companyRow.id },

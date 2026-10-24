@@ -407,6 +407,25 @@ const companiesPaths: OpenApiPaths = {
       },
     },
   },
+  '/api/v1/companies/{id}/contacts': {
+    put: {
+      operationId: 'setCompanyContacts',
+      summary: 'Set the people of a company',
+      security: bearer,
+      description:
+        'Links the listed contacts to the company and unlinks the others. A person can belong to several companies (companyIds); a contact without a main company gets this one as companyId, and unlinking the main company promotes the next one. One transaction. Needs companies: edit.',
+      tags: ['Companies'],
+      parameters: [idParam],
+      requestBody: jsonBody('CompanyContacts'),
+      responses: {
+        '200': dataResponse('The company with its people.', 'CompanyDetail'),
+        '400': errorResponse('VALIDATION_ERROR: an unknown contact id.'),
+        '401': errorResponse('Not authenticated.'),
+        '403': errorResponse('FORBIDDEN.'),
+        '404': errorResponse('COMPANY_NOT_FOUND.'),
+      },
+    },
+  },
   '/api/v1/companies/{id}/ai-notes': {
     post: {
       operationId: 'runCompanyAiNotes',

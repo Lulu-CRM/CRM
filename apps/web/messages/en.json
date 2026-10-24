@@ -200,8 +200,7 @@
       "errors": {
         "nameRequired": "Enter a name",
         "emailInvalid": "Enter a valid email address",
-        "ownerRequired": "Choose an owner",
-        "companyTooLong": "This name is too long"
+        "ownerRequired": "Choose an owner"
       },
       "editEyebrow": "Contact",
       "namePlaceholder": "e.g. Jamie Morgan",
@@ -209,9 +208,7 @@
       "phonePlaceholder": "+49 ...",
       "jobRolePlaceholder": "Role or department",
       "requiredHint": "Fields marked * are required.",
-      "submit": "Create contact",
-      "companyPlaceholder": "Type a company name",
-      "companyHint": "Pick an existing company, or type a new name to create it."
+      "submit": "Create contact"
     },
     "drawer": {
       "eyebrow": "Contact profile",
@@ -585,7 +582,12 @@
       "note": "Notes",
       "notePlaceholder": "Context for the team. Saved as a shared note on the company.",
       "whatsappCountry": "Country code",
-      "aiNotesHint": "✦ AI notes are written by the AI from everything the CRM knows about this company, after you save."
+      "aiNotesHint": "✦ AI notes are written by the AI from everything the CRM knows about this company, after you save.",
+      "contacts": "Contacts at this company",
+      "contactsNone": "Pick existing contacts",
+      "contactsCount": "{count} contacts",
+      "contactsSearch": "Search contacts",
+      "contactsEmpty": "No contacts yet"
     },
     "drawer": {
       "eyebrow": "Company profile",

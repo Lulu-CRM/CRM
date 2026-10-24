@@ -9,6 +9,7 @@ export interface ContactRow {
   email: string | null;
   phone: string | null;
   companyId: string | null;
+  companyIds: string[];
   jobRole: string | null;
   source: string | null;
   lifecycleStage: Contact['lifecycleStage'];
@@ -30,6 +31,7 @@ export function toSharedContact(row: ContactRow): Contact {
     email: row.email,
     phone: row.phone,
     companyId: row.companyId,
+    companyIds: row.companyIds,
     jobRole: row.jobRole,
     source: row.source,
     lifecycleStage: row.lifecycleStage,

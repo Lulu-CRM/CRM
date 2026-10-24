@@ -1,5 +1,5 @@
 import type { Company, CompanyDetail, CompanyHealth, CompanyListItem } from "./company";
-import type { Contact } from "./contact";
+import { belongsTo, type Contact } from "./contact";
 import type { Deal } from "./deal";
 import type { Stage } from "./pipeline";
 
@@ -42,7 +42,7 @@ export function summarizeCompany(
   currency: string,
   now: Date = new Date(),
 ): CompanyListItem {
-  const people = contacts.filter((c) => c.companyId === company.id && c.deletedAt === null);
+  const people = contacts.filter((c) => belongsTo(c, company.id) && c.deletedAt === null);
   const own = deals.filter((d) => d.companyId === company.id && d.deletedAt === null);
   const openStageIds = new Set(stages.filter((s) => s.type === "open").map((s) => s.id));
   const open = own.filter((d) => openStageIds.has(d.stageId));
@@ -79,7 +79,7 @@ export function companyDetail(
   return {
     ...summarizeCompany(company, contacts, deals, stages, currency, now),
     contacts: contacts
-      .filter((c) => c.companyId === company.id && c.deletedAt === null)
+      .filter((c) => belongsTo(c, company.id) && c.deletedAt === null)
       .sort((a, b) => time(b.lastTouchAt) - time(a.lastTouchAt)),
     deals: deals.filter((d) => d.companyId === company.id && d.deletedAt === null),
   };

@@ -49,6 +49,7 @@ describe('OpenAPI document', () => {
       '/api/v1/companies',
       '/api/v1/companies/{id}',
       '/api/v1/companies/{id}/ai-notes',
+      '/api/v1/companies/{id}/contacts',
       '/api/v1/contacts',
       '/api/v1/contacts/{id}',
       '/api/v1/contacts/{id}/ai-analysis',

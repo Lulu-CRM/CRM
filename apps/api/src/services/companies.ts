@@ -2,6 +2,8 @@ import {
   ERROR_CODES,
   companyDetail,
   summarizeCompany,
+  withCompanyLink,
+  type CompanyContactsInput,
   type CompanyCreateInput,
   type CompanyDetail,
   type CompanyListItem,
@@ -71,7 +73,7 @@ async function loadCompanyRecords(
   const scoped = scopedDb(ctx.workspaceId);
   const [workspace, contactRows, dealRows, stageRows] = await Promise.all([
     db.workspace.findUniqueOrThrow({ where: { id: ctx.workspaceId } }),
-    scoped.contact.findMany({ where: { companyId } }),
+    scoped.contact.findMany({ where: { OR: [{ companyId }, { companyIds: { has: companyId } }] } }),
     scoped.deal.findMany({ where: { companyId } }),
     scoped.stage.findMany({ orderBy: { order: 'asc' } }),
   ]);
@@ -229,4 +231,41 @@ export async function deleteCompany(ctx: RequestContext, id: string): Promise<vo
   if (existing === null) throw notFound();
   // Soft delete only: the company's contacts and deals keep their link (docs/api.md).
   await scoped.company.delete({ where: { id } });
+}
+
+/**
+ * PUT /companies/:id/contacts: the people who belong to the company (Dave, Oct 24, 2026). Listed
+ * contacts are linked, the others unlinked; each keeps their other companies. One transaction.
+ */
+export async function setCompanyContacts(
+  ctx: RequestContext,
+  id: string,
+  input: CompanyContactsInput,
+): Promise<CompanyDetail> {
+  const scoped = scopedDb(ctx.workspaceId);
+  const existing = await scoped.company.findFirst({ where: { id } });
+  if (existing === null) throw notFound();
+  const wanted = new Set(input.contactIds);
+
+  await scoped.$transaction(async (tx) => {
+    const picked = await tx.contact.findMany({ where: { id: { in: [...wanted] } } });
+    if (picked.length !== wanted.size) {
+      throw AppError.validation([
+        { path: 'contactIds', code: 'custom', message: 'errors.validation.custom' },
+      ]);
+    }
+    const linked = await tx.contact.findMany({
+      where: { OR: [{ companyId: id }, { companyIds: { has: id } }] },
+    });
+    for (const contact of [...picked, ...linked.filter((c) => !wanted.has(c.id))]) {
+      const next = withCompanyLink(contact, id, wanted.has(contact.id));
+      if (
+        next.companyId !== contact.companyId ||
+        next.companyIds.join() !== contact.companyIds.join()
+      ) {
+        await tx.contact.update({ where: { id: contact.id }, data: next });
+      }
+    }
+  });
+  return getCompany(ctx, id);
 }

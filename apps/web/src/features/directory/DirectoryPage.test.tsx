@@ -114,7 +114,7 @@ describe("Contacts & Companies page", () => {
     expect(screen.queryByRole("button", { name: /Generate AI analysis/ })).toBeNull();
   });
 
-  it("adds a company: WhatsApp with a country, notes saved, AI notes written, no person fields", async () => {
+  it("adds a company: WhatsApp with a country, notes saved, AI notes written, no lead status", async () => {
     await waitFor(() => expect(names()).toContain("Sophie Laurent"), slow);
     fireEvent.click(screen.getByRole("button", { name: /Add company/ }));
     const dialog = await screen.findByRole("dialog");
@@ -122,9 +122,8 @@ describe("Contacts & Companies page", () => {
     const type = (label: string, value: string) =>
       fireEvent.change(within(dialog).getByLabelText(label), { target: { value } });
     fireEvent.change(within(dialog).getByLabelText(/Company name/), { target: { value: "Blue Harbor" } });
-    // Dave, Oct 24: company and contact forms do not share fields; status and linking live on the contact.
+    // Dave, Oct 24: company and contact forms do not share fields; the lead status lives on the contact.
     expect(within(dialog).queryByLabelText(/Lead status/)).toBeNull();
-    expect(within(dialog).queryByLabelText(/Contacts at this company/)).toBeNull();
     // Dave, Oct 24: a country picker for the WhatsApp number.
     type(form.whatsappCountry, "NG");
     type(form.whatsapp, "0803 123 4567");
@@ -154,31 +153,31 @@ describe("Contacts & Companies page", () => {
     expect(written.map((line) => ("key" in line ? line.key : "text"))).toContain("companyNoPeople");
   });
 
-  it("assigns a company to a person by name: an existing one, or a new one created on save (Dave, Oct 24)", async () => {
-    await waitFor(() => expect(names()).toContain("Atlas Logistics"), slow);
-    const addPerson = async (name: string, company: string) => {
-      fireEvent.click(screen.getByRole("button", { name: /Add contact/ }));
-      const dialog = await screen.findByRole("dialog");
-      fireEvent.change(within(dialog).getByLabelText(/Full name/), { target: { value: name } });
-      fireEvent.change(within(dialog).getByLabelText(messages.contacts.form.company), { target: { value: company } });
-      await act(async () => {
-        fireEvent.click(within(dialog).getByRole("button", { name: /Create contact/ }));
-      });
-      await waitFor(() => expect(names()).toContain(name), slow);
-      return (await api.contacts.list({ q: name })).data[0]!;
-    };
+  it("links people from the company: two people per business, one person in several businesses (Dave, Oct 24)", async () => {
+    await waitFor(() => expect(names()).toContain("Sophie Laurent"), slow);
+    // The contact form has no company field any more.
+    fireEvent.click(screen.getByRole("button", { name: /Add contact/ }));
+    let dialog = await screen.findByRole("dialog");
+    expect(within(dialog).queryByLabelText(messages.contacts.form.company)).toBeNull();
+    fireEvent.click(within(dialog).getByRole("button", { name: /Cancel/ }));
 
-    // An existing company, typed in different case: linked, not duplicated.
-    const atlas = (await api.companies.list({ q: "Atlas Logistics" })).data[0]!;
-    const ada = await addPerson("Ada Lovelace", "atlas logistics");
-    expect(ada.companyId).toBe(atlas.id);
-    expect((await api.companies.list({ q: "Atlas" })).meta.total).toBe(1);
+    fireEvent.click(screen.getByRole("button", { name: /Add company/ }));
+    dialog = await screen.findByRole("dialog");
+    fireEvent.change(within(dialog).getByLabelText(/Company name/), { target: { value: "Blue Harbor" } });
+    fireEvent.click(within(dialog).getByLabelText(messages.companies.form.contacts));
+    fireEvent.click(await within(dialog).findByRole("checkbox", { name: /Sophie Laurent/ }));
+    fireEvent.click(within(dialog).getByRole("checkbox", { name: /Daniel Chen/ }));
+    await act(async () => {
+      fireEvent.click(within(dialog).getByRole("button", { name: messages.companies.form.submit }));
+    });
+    await waitFor(() => expect(names()).toContain("Blue Harbor"), slow);
 
-    // A new name: the company is created and linked.
-    const grace = await addPerson("Grace Hopper", "Navy Labs");
-    const navy = (await api.companies.list({ q: "Navy Labs" })).data[0]!;
-    expect(navy.name).toBe("Navy Labs");
-    expect(grace.companyId).toBe(navy.id);
+    const harbor = (await api.companies.list({ q: "Blue Harbor" })).data[0]!;
+    expect(harbor.contactCount).toBe(2);
+    // Sophie keeps Northstar Studio as her main company and now also belongs to Blue Harbor.
+    const sophie = (await api.contacts.list({ q: "Sophie Laurent" })).data[0]!;
+    expect(sophie).toMatchObject({ companyId: "company_northstar", companyIds: ["company_northstar", harbor.id] });
+    expect((await api.companies.get("company_northstar")).contactCount).toBe(1);
   });
 
   it("opens WhatsApp, Instagram and Facebook from the company, and shows its AI notes", async () => {

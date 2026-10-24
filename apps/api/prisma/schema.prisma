@@ -167,6 +167,8 @@ model Contact {
   email            String?
   phone            String?
   companyId        String?
+  // Every company the person belongs to, main one (companyId) first (Dave, Oct 24, 2026).
+  companyIds       String[]       @default([])
   jobRole          String?
   source           String?
   lifecycleStage   LifecycleStage @default(new)
@@ -190,6 +192,7 @@ model Contact {
   @@index([workspaceId])
   @@index([workspaceId, email])
   @@index([workspaceId, companyId])
+  @@index([companyIds], type: Gin)
   @@index([workspaceId, lastTouchAt])
   @@map("contacts")
 }

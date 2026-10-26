@@ -5,7 +5,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useTranslations } from "next-intl";
 import type { Contact, LifecycleStage } from "@lulu/shared";
-import { Button, Modal, useToast } from "@/components/ui";
+import { Button, Modal, MultiPicker, useToast } from "@/components/ui";
 import { api } from "@/lib/api";
 import { useErrorMessage } from "@/lib/errors";
 import { contactFormSchema, toContactInput, toFormValues, type ContactFormValues } from "./contactForm";
@@ -48,6 +48,8 @@ export function ContactFormModal({
     register,
     handleSubmit,
     reset,
+    watch,
+    setValue,
     formState: { errors, isSubmitting },
   } = useForm<ContactFormValues>({
     resolver: zodResolver(contactFormSchema),
@@ -104,6 +106,23 @@ export function ContactFormModal({
         {field("name", <>{t("name")}{req}</>, <input className={inputClass} autoComplete="off" placeholder={t("namePlaceholder")} aria-required {...register("name")} {...aria("name")} />)}
         {field("email", t("email"), <input type="email" className={inputClass} placeholder={t("emailPlaceholder")} {...register("email")} {...aria("email")} />)}
         {field("phone", t("phone"), <input type="tel" className={inputClass} placeholder={t("phonePlaceholder")} {...register("phone")} {...aria("phone")} />)}
+        {field(
+          "companyIds",
+          t("company"),
+          <MultiPicker
+            id="contact-companyIds"
+            items={lookups.companies.map((company) => ({ id: company.id, name: company.name, searchText: company.domain }))}
+            value={watch("companyIds")}
+            onChange={(ids) => setValue("companyIds", ids, { shouldDirty: true })}
+            labels={{
+              list: t("company"),
+              none: t("companiesNone"),
+              count: (count) => t("companiesCount", { count }),
+              search: t("companiesSearch"),
+              empty: t("companiesEmpty"),
+            }}
+          />,
+        )}
         {field("jobRole", t("jobRole"), <input className={inputClass} placeholder={t("jobRolePlaceholder")} {...register("jobRole")} {...aria("jobRole")} />)}
         {field("language", t("language"), <input className={inputClass} placeholder={t("languagePlaceholder")} {...register("language")} {...aria("language")} />)}
         {field("country", t("country"), <input className={inputClass} placeholder={t("countryPlaceholder")} {...register("country")} {...aria("country")} />)}

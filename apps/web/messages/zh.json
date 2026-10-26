@@ -213,7 +213,11 @@
       "language": "语言",
       "languagePlaceholder": "例如：德语",
       "country": "国家",
-      "countryPlaceholder": "例如：德国"
+      "countryPlaceholder": "例如：德国",
+      "companiesNone": "选择公司",
+      "companiesCount": "{count} 家公司",
+      "companiesSearch": "搜索公司",
+      "companiesEmpty": "暂无公司"
     },
     "drawer": {
       "eyebrow": "联系人资料",
@@ -901,7 +905,8 @@
       },
       "again": "导入另一个文件",
       "viewContacts": "查看联系人",
-      "review": "审核 {count} 条暂存的重复项"
+      "review": "审核 {count} 条暂存的重复项",
+      "skippedHint": "被跳过的行没有姓名、邮箱或电话，或与现有联系人重复且您选择了跳过重复项。"
     },
     "held": {
       "title": "暂存的重复项",

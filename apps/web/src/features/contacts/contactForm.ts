@@ -7,6 +7,8 @@ export const contactFormSchema = z.object({
   email: z.union([z.literal(""), z.email("emailInvalid")]),
   phone: z.string().trim(),
   jobRole: z.string().trim(),
+  // The person's companies, picked from a dropdown with search (Dave, Oct 26, 2026). First is the main one.
+  companyIds: z.array(z.string()),
   language: z.string().trim().max(100, "tooLong"),
   country: z.string().trim().max(100, "tooLong"),
   lifecycleStage: lifecycleStageSchema,
@@ -23,6 +25,7 @@ export function toFormValues(contact: Contact | null, defaultOwnerId: string): C
     email: contact?.email ?? "",
     phone: contact?.phone ?? "",
     jobRole: contact?.jobRole ?? "",
+    companyIds: contact ? (contact.companyIds.length ? contact.companyIds : contact.companyId ? [contact.companyId] : []) : [],
     language: contact?.language ?? "",
     country: contact?.country ?? "",
     lifecycleStage: contact?.lifecycleStage ?? "new",
@@ -33,7 +36,7 @@ export function toFormValues(contact: Contact | null, defaultOwnerId: string): C
 }
 
 // Empty fields become null, so clearing a field in edit mode clears it on the server too.
-// No company: people are linked from the company form (Dave, Oct 24, 2026), so an edit keeps the links.
+// Companies can be picked here and from the company form; both edit the same links.
 export function toContactInput(values: ContactFormValues): ContactCreateInput {
   const orNull = (value: string) => (value.trim() === "" ? null : value.trim());
   return {
@@ -41,6 +44,7 @@ export function toContactInput(values: ContactFormValues): ContactCreateInput {
     email: orNull(values.email),
     phone: orNull(values.phone),
     jobRole: orNull(values.jobRole),
+    companyIds: values.companyIds,
     language: orNull(values.language),
     country: orNull(values.country),
     lifecycleStage: values.lifecycleStage,

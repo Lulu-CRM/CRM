@@ -26,6 +26,7 @@ import {
   mergeIntoContact,
   withCompanyLink,
   withMainCompany,
+  withCompanies,
   belongsTo,
   parseCsv,
   planImport,
@@ -396,8 +397,9 @@ export const mockApi = {
         name: input.name,
         email: input.email ?? null,
         phone: input.phone ?? null,
-        companyId: input.companyId ?? null,
-        companyIds: input.companyId ? [input.companyId] : [],
+        ...(input.companyIds !== undefined
+          ? withCompanies(input.companyIds)
+          : { companyId: input.companyId ?? null, companyIds: input.companyId ? [input.companyId] : [] }),
         jobRole: input.jobRole ?? null,
         language: input.language ?? null,
         country: input.country ?? null,
@@ -414,9 +416,11 @@ export const mockApi = {
     },
     async update(id: string, input: ContactUpdateInput) {
       const contact = findContact(id);
-      const { companyId, ...edit } = input;
-      // Same rules as the server: setting companyId makes it the main company and keeps the others.
-      Object.assign(contact, edit, companyId === undefined ? {} : withMainCompany(contact, companyId), {
+      const { companyId, companyIds, ...edit } = input;
+      // Same rules as the server: companyIds replaces the links; companyId alone replaces the main company.
+      const links =
+        companyIds !== undefined ? withCompanies(companyIds) : companyId === undefined ? {} : withMainCompany(contact, companyId);
+      Object.assign(contact, edit, links, {
         updatedAt: new Date().toISOString(),
       });
       return delay(contact);

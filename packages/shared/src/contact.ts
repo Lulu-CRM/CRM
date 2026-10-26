@@ -34,6 +34,9 @@ export const contactCreateSchema = z.object({
   email: contactSchema.shape.email.optional(),
   phone: contactSchema.shape.phone.optional(),
   companyId: idSchema.nullable().optional(),
+  // Every company of the person, main one first (the contact form's company picker, Dave Oct 26, 2026).
+  // When sent, it replaces the links and sets companyId to its first entry.
+  companyIds: z.array(idSchema).max(50).optional(),
   jobRole: contactSchema.shape.jobRole.optional(),
   language: contactSchema.shape.language.optional(),
   country: contactSchema.shape.country.optional(),
@@ -82,6 +85,12 @@ export function withCompanyLink(
     const companyIds = current.companyId === null ? [companyId, ...ids] : [...ids, companyId];
     return { companyId: companyIds[0]!, companyIds };
   }
+  return { companyId: ids[0] ?? null, companyIds: ids };
+}
+
+/** The links for a full list of companies (POST/PATCH /contacts with companyIds): no repeats, first is main. */
+export function withCompanies(companyIds: string[]): Pick<Contact, "companyId" | "companyIds"> {
+  const ids = [...new Set(companyIds)];
   return { companyId: ids[0] ?? null, companyIds: ids };
 }
 

@@ -37,12 +37,12 @@ afterEach(() => {
   vi.restoreAllMocks();
 });
 
-// One duplicate of Sophie (same email), one row without a name, two new people.
+// One duplicate of Sophie (same email), one row with no name, email or phone, two new people.
 const CSV = [
   "full_name,work_email,company,job_title",
   "Sophie Laurent,SOPHIE@northstar.studio,Northstar Studio,Creative Director",
   "Ada Lovelace,ada@example.com,Analytical Engines,Founder",
-  ",nobody@example.com,,",
+  ",,Nobody Ltd,",
   "Grace Hopper,grace@example.com,Navy,Admiral",
 ].join("\n");
 

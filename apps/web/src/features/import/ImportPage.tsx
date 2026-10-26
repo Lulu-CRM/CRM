@@ -457,6 +457,7 @@ function DoneStep({
           </div>
         ))}
       </dl>
+      {skipped > 0 && <p className="mt-2 text-[10px] text-text-subtle">{t("skippedHint")}</p>}
       <div className="mt-5 flex flex-wrap justify-end gap-2 border-t border-[#efedf4] pt-4">
         <Button variant="outline" onClick={onAgain}>{t("again")}</Button>
         <Link href="/crm/contacts" className="inline-flex items-center rounded-md border border-[#dad8ec] px-3.5 py-2.5 text-[11px] font-extrabold text-primary-hover hover:bg-[#f7f5ff]">

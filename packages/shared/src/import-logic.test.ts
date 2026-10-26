@@ -73,12 +73,18 @@ describe("mapRow", () => {
     expect(contact).toMatchObject({ name: "Ada Lovelace", email: "ada@example.com", lifecycleStage: "customer", tags: ["VIP", "Warm"], companyName: "Analytical" });
   });
 
-  it("reports a missing name, a bad email and an unknown stage", () => {
-    expect(mapRow({ first: "", last: "", email: "not-an-email", stage: "maybe" }, mapping).problems).toEqual([
-      "nameMissing",
-      "emailInvalid",
-      "stageUnknown",
-    ]);
+  it("skips only a row with no name, email or phone", () => {
+    expect(mapRow({ first: "", last: "", email: "not-an-email", stage: "maybe" }, mapping).problems).toEqual(["nameMissing"]);
+  });
+
+  it("keeps rows with a bad email or an unknown stage, and names a nameless row by its email (Dave, Oct 26)", () => {
+    const bad = mapRow({ first: "Ana", last: "", email: "not-an-email", stage: "maybe" }, mapping);
+    expect(bad.problems).toEqual([]);
+    expect(bad.contact).toMatchObject({ name: "Ana", email: null, lifecycleStage: null });
+    const noName = mapRow({ first: "", last: "", email: "Ana <ANA@x.de>; ana2@y.de", stage: "Prospect" }, mapping);
+    expect(noName.problems).toEqual([]);
+    expect(noName.contact).toMatchObject({ name: "ana@x.de", email: "ana@x.de", lifecycleStage: "new" });
+    expect(mapRow({ first: "Bo", last: "", email: "", stage: "Closed Won" }, mapping).contact.lifecycleStage).toBe("customer");
   });
 });
 
@@ -112,7 +118,7 @@ describe("planImport", () => {
     const lines = ["full_name,work_email,company"];
     for (let i = 1; i <= 1000; i++) {
       if (i % 100 === 0) lines.push(`Sophie Laurent ${i},sophie@northstar.studio,Northstar Studio`); // duplicate by email
-      else if (i % 250 === 1) lines.push(`,missing${i}@example.com,`); // no name
+      else if (i % 250 === 1) lines.push(`,,Company ${i}`); // no name, email or phone
       else lines.push(`Person ${i},person${i}@example.com,Company ${i % 7}`);
     }
     const { columns, rows } = parseCsv(lines.join("\n"));

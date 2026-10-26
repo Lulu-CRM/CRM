@@ -5,14 +5,13 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useLocale, useTranslations } from "next-intl";
 import { belongsTo, companySizes, type Company, type CompanyListItem } from "@lulu/shared";
-import { Button, Modal, useToast } from "@/components/ui";
+import { Button, Modal, MultiPicker, useToast } from "@/components/ui";
 import { api } from "@/lib/api";
 import { useErrorMessage } from "@/lib/errors";
 import { DIAL_CODES, defaultCountry } from "@/lib/phone";
 import { useApi } from "@/lib/useApi";
 import type { Lookups } from "@/features/contacts/useLookups";
 import { companyFormSchema, toCompanyInput, toFirstNote, toFormValues, type CompanyFormValues } from "./companyForm";
-import { ContactPicker } from "./ContactPicker";
 
 const inputClass =
   "w-full rounded-md border border-border-strong bg-surface px-[11px] py-2.5 text-[11px] text-text outline-none focus:border-[#8e83de] focus:shadow-[0_0_0_3px_#eeecff] aria-[invalid=true]:border-[#d9534f]";
@@ -201,12 +200,23 @@ export function CompanyFormModal({
         {field(
           "contactIds",
           t("contacts"),
-          <ContactPicker
+          <MultiPicker
             id="company-contactIds"
-            contacts={contactList}
+            items={contactList.map((c) => ({
+              id: c.id,
+              name: c.name,
+              searchText: c.email,
+              hint: c.companyId && c.companyId !== company?.id ? lookups.companyName(c.companyId) : undefined,
+            }))}
             value={watch("contactIds")}
             onChange={(ids) => setValue("contactIds", ids, { shouldDirty: true })}
-            companyName={(id) => (id && id !== company?.id ? lookups.companyName(id) : undefined)}
+            labels={{
+              list: t("contacts"),
+              none: t("contactsNone"),
+              count: (count) => t("contactsCount", { count }),
+              search: t("contactsSearch"),
+              empty: t("contactsEmpty"),
+            }}
           />,
           true,
         )}

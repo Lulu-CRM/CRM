@@ -88,15 +88,20 @@ describe("Contacts & Companies page", () => {
     expect(names()).not.toContain("Roam & Root");
   });
 
-  it("adds a contact and shows it in the table", async () => {
+  it("adds a contact with a language and country, and shows it in the table", async () => {
     await waitFor(() => expect(names()).toContain("Sophie Laurent"), slow);
     fireEvent.click(screen.getAllByRole("button", { name: /Add contact/ })[0]!);
     const dialog = await screen.findByRole("dialog");
     fireEvent.change(within(dialog).getByLabelText(/Full name/), { target: { value: "Ada Lovelace" } });
+    // Dave, Oct 26: language and country as text fields.
+    fireEvent.change(within(dialog).getByLabelText(messages.contacts.form.language), { target: { value: "English" } });
+    fireEvent.change(within(dialog).getByLabelText(messages.contacts.form.country), { target: { value: "United Kingdom" } });
     await act(async () => {
       fireEvent.click(within(dialog).getByRole("button", { name: /Create contact/ }));
     });
     await waitFor(() => expect(names()).toContain("Ada Lovelace"), slow);
+    const ada = (await api.contacts.list({ q: "Ada Lovelace" })).data[0]!;
+    expect(ada).toMatchObject({ language: "English", country: "United Kingdom" });
   });
 
   it("opens Import Contacts as a pop-up with the import steps (Dave, Oct 24)", async () => {

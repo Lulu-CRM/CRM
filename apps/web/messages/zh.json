@@ -200,7 +200,8 @@
       "errors": {
         "nameRequired": "请输入姓名",
         "emailInvalid": "请输入有效的邮箱地址",
-        "ownerRequired": "请选择负责人"
+        "ownerRequired": "请选择负责人",
+        "tooLong": "内容过长"
       },
       "editEyebrow": "联系人",
       "namePlaceholder": "例如：Jamie Morgan",
@@ -208,7 +209,11 @@
       "phonePlaceholder": "+86 ...",
       "jobRolePlaceholder": "职位或部门",
       "requiredHint": "带 * 的字段为必填项。",
-      "submit": "创建联系人"
+      "submit": "创建联系人",
+      "language": "语言",
+      "languagePlaceholder": "例如：德语",
+      "country": "国家",
+      "countryPlaceholder": "例如：德国"
     },
     "drawer": {
       "eyebrow": "联系人资料",
@@ -237,7 +242,9 @@
       "lastTouch": "最近联系",
       "timelineEyebrow": "动态",
       "tasksEyebrow": "跟进",
-      "notesEyebrow": "笔记"
+      "notesEyebrow": "笔记",
+      "language": "语言",
+      "country": "国家"
     },
     "importContacts": "导入联系人",
     "openProfile": "打开 {name}",

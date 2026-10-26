@@ -200,7 +200,8 @@
       "errors": {
         "nameRequired": "Enter a name",
         "emailInvalid": "Enter a valid email address",
-        "ownerRequired": "Choose an owner"
+        "ownerRequired": "Choose an owner",
+        "tooLong": "This is too long"
       },
       "editEyebrow": "Contact",
       "namePlaceholder": "e.g. Jamie Morgan",
@@ -208,7 +209,11 @@
       "phonePlaceholder": "+49 ...",
       "jobRolePlaceholder": "Role or department",
       "requiredHint": "Fields marked * are required.",
-      "submit": "Create contact"
+      "submit": "Create contact",
+      "language": "Language",
+      "languagePlaceholder": "e.g. German",
+      "country": "Country",
+      "countryPlaceholder": "e.g. Germany"
     },
     "drawer": {
       "eyebrow": "Contact profile",
@@ -237,7 +242,9 @@
       "lastTouch": "Last touch",
       "timelineEyebrow": "Timeline",
       "tasksEyebrow": "Follow-ups",
-      "notesEyebrow": "Notes"
+      "notesEyebrow": "Notes",
+      "language": "Language",
+      "country": "Country"
     },
     "importContacts": "Import contacts",
     "openProfile": "Open {name}",

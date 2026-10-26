@@ -16,6 +16,9 @@ export const contactSchema = baseRecordSchema.extend({
   companyId: idSchema.nullable(),
   companyIds: z.array(idSchema),
   jobRole: z.string().trim().min(1).nullable(),
+  // Typed as text (Dave, Oct 26, 2026), e.g. "German" and "Germany".
+  language: z.string().trim().min(1).max(100).nullable(),
+  country: z.string().trim().min(1).max(100).nullable(),
   source: contactSourceSchema.nullable(),
   lifecycleStage: lifecycleStageSchema,
   ownerId: idSchema,
@@ -32,6 +35,8 @@ export const contactCreateSchema = z.object({
   phone: contactSchema.shape.phone.optional(),
   companyId: idSchema.nullable().optional(),
   jobRole: contactSchema.shape.jobRole.optional(),
+  language: contactSchema.shape.language.optional(),
+  country: contactSchema.shape.country.optional(),
   source: contactSchema.shape.source.optional(),
   lifecycleStage: lifecycleStageSchema.optional(),
   ownerId: idSchema.optional(),

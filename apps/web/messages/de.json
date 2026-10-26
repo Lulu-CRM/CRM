@@ -200,7 +200,8 @@
       "errors": {
         "nameRequired": "Bitte einen Namen eingeben",
         "emailInvalid": "Bitte eine gültige E-Mail-Adresse eingeben",
-        "ownerRequired": "Bitte einen Verantwortlichen wählen"
+        "ownerRequired": "Bitte einen Verantwortlichen wählen",
+        "tooLong": "Das ist zu lang"
       },
       "editEyebrow": "Kontakt",
       "namePlaceholder": "z. B. Jamie Morgan",
@@ -208,7 +209,11 @@
       "phonePlaceholder": "+49 ...",
       "jobRolePlaceholder": "Rolle oder Abteilung",
       "requiredHint": "Mit * markierte Felder sind Pflicht.",
-      "submit": "Kontakt anlegen"
+      "submit": "Kontakt anlegen",
+      "language": "Sprache",
+      "languagePlaceholder": "z. B. Deutsch",
+      "country": "Land",
+      "countryPlaceholder": "z. B. Deutschland"
     },
     "drawer": {
       "eyebrow": "Kontaktprofil",
@@ -237,7 +242,9 @@
       "lastTouch": "Letzter Kontakt",
       "timelineEyebrow": "Verlauf",
       "tasksEyebrow": "Nachfassen",
-      "notesEyebrow": "Notizen"
+      "notesEyebrow": "Notizen",
+      "language": "Sprache",
+      "country": "Land"
     },
     "importContacts": "Kontakte importieren",
     "openProfile": "{name} öffnen",

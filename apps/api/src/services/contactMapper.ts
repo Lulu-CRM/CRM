@@ -11,6 +11,8 @@ export interface ContactRow {
   companyId: string | null;
   companyIds: string[];
   jobRole: string | null;
+  language: string | null;
+  country: string | null;
   source: string | null;
   lifecycleStage: Contact['lifecycleStage'];
   ownerId: string | null;
@@ -33,6 +35,8 @@ export function toSharedContact(row: ContactRow): Contact {
     companyId: row.companyId,
     companyIds: row.companyIds,
     jobRole: row.jobRole,
+    language: row.language,
+    country: row.country,
     source: row.source,
     lifecycleStage: row.lifecycleStage,
     // The database allows a null owner, the shared schema does not.

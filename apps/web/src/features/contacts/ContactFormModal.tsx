@@ -105,6 +105,8 @@ export function ContactFormModal({
         {field("email", t("email"), <input type="email" className={inputClass} placeholder={t("emailPlaceholder")} {...register("email")} {...aria("email")} />)}
         {field("phone", t("phone"), <input type="tel" className={inputClass} placeholder={t("phonePlaceholder")} {...register("phone")} {...aria("phone")} />)}
         {field("jobRole", t("jobRole"), <input className={inputClass} placeholder={t("jobRolePlaceholder")} {...register("jobRole")} {...aria("jobRole")} />)}
+        {field("language", t("language"), <input className={inputClass} placeholder={t("languagePlaceholder")} {...register("language")} {...aria("language")} />)}
+        {field("country", t("country"), <input className={inputClass} placeholder={t("countryPlaceholder")} {...register("country")} {...aria("country")} />)}
         {field(
           "source",
           t("source"),

@@ -30,10 +30,12 @@ export const demoCompanies: Company[] = [
   { ...base, ...companyExtras, id: "company_haus", name: "Haus am Fluss", domain: "hausamfluss.de", industry: "Hospitality", size: "11-50", ownerId: "user_alex" },
 ];
 
-const contact = (fields: Omit<Contact, keyof typeof base | "marketingConsent" | "consentUpdatedAt" | "companyIds">): Contact => ({
+const contact = (fields: Omit<Contact, keyof typeof base | "marketingConsent" | "consentUpdatedAt" | "companyIds" | "language" | "country">): Contact => ({
   ...base,
   marketingConsent: false,
   consentUpdatedAt: null,
+  language: null,
+  country: null,
   companyIds: fields.companyId ? [fields.companyId] : [],
   ...fields,
 });

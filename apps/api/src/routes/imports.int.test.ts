@@ -70,12 +70,12 @@ function as(t: Tenant) {
   current = { workspaceId: t.workspaceId, userId: t.userId, role: 'owner' };
 }
 
-// One duplicate of Sophie (same email), one row without a name, two new people (one at a new company).
+// One duplicate of Sophie (same email), one row with no name, email or phone, two new people (one at a new company).
 const CSV = [
   'full_name,work_email,company,job_title',
   'Sophie L.,SOPHIE@northstar.studio,Northstar Studio,CEO',
   'Ada Lovelace,ada@example.com,Analytical Engines,Founder',
-  ',nobody@example.com,,',
+  ',,Nobody Ltd,',
   'Grace Hopper,grace@example.com,Northstar Studio,Admiral',
 ].join('\n');
 
@@ -348,7 +348,7 @@ describe('Import API (int)', () => {
     const lines = ['full_name,work_email,company'];
     for (let i = 1; i <= 1000; i++) {
       if (i % 100 === 0) lines.push(`Sophie ${i},sophie@northstar.studio,Northstar Studio`);
-      else if (i % 250 === 1) lines.push(`,missing${i}@example.com,`);
+      else if (i % 250 === 1) lines.push(`,,Missing ${i}`);
       else lines.push(`Person ${i},person${i}@example.com,Company ${i % 7}`);
     }
     const job = await uploaded(t, lines.join('\n'), 'thousand.csv');

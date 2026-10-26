@@ -130,9 +130,40 @@ const stageWords: Record<string, LifecycleStage> = {
   customer: "customer",
   client: "customer",
   kunde: "customer",
+  // Common words from other CRMs and spreadsheets (Dave's import, Oct 26, 2026).
+  open: "new",
+  prospect: "new",
+  newlead: "new",
+  cold: "new",
+  unqualified: "new",
+  interessent: "new",
+  contacted: "follow_up",
+  inprogress: "follow_up",
+  attempted: "follow_up",
+  attemptedtocontact: "follow_up",
+  pending: "follow_up",
+  warm: "qualified",
+  hot: "qualified",
+  interested: "qualified",
+  opportunity: "qualified",
+  salesqualified: "qualified",
+  marketingqualified: "qualified",
+  sql: "qualified",
+  mql: "qualified",
+  active: "customer",
+  won: "customer",
+  closedwon: "customer",
+  converted: "customer",
 };
 
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+// A cell may hold several addresses ("a@x.de; b@y.de") or extra text ("Anna <anna@x.de>"): the first valid one.
+const firstEmail = (text: string) =>
+  text
+    .split(/[\s,;<>()]+/)
+    .map((part) => part.replace(/^mailto:/i, "").toLocaleLowerCase())
+    .find((part) => EMAIL.test(part)) ?? null;
 
 /** One source row as a contact, with what is wrong with it. */
 export function mapRow(raw: Record<string, string>, mapping: ImportMapping): { contact: ImportedContact; problems: ImportRowProblem[] } {
@@ -143,15 +174,16 @@ export function mapRow(raw: Record<string, string>, mapping: ImportMapping): { c
   };
   const problems: ImportRowProblem[] = [];
 
-  const name = value("name") ?? ([value("firstName"), value("lastName")].filter(Boolean).join(" ") || null);
+  // Only a row with nothing to know the person by is skipped (Dave, Oct 26, 2026): an unreadable email
+  // is left empty and an unknown stage becomes "new", so the rest of the row still comes in.
+  const emailText = value("email");
+  const email = emailText ? firstEmail(emailText) : null;
+  const name =
+    value("name") ?? ([value("firstName"), value("lastName")].filter(Boolean).join(" ") || null) ?? email ?? value("phone");
   if (!name) problems.push("nameMissing");
-
-  const email = value("email")?.toLocaleLowerCase() ?? null;
-  if (email && !EMAIL.test(email)) problems.push("emailInvalid");
 
   const stageText = value("lifecycleStage");
   const lifecycleStage = stageText ? (stageWords[normalise(stageText)] ?? null) : null;
-  if (stageText && !lifecycleStage) problems.push("stageUnknown");
 
   const tags = (value("tags") ?? "")
     .split(/[,;|]/)

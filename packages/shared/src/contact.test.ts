@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { companySchema } from "./company";
-import { belongsTo, contactCreateSchema, contactListQuerySchema, contactSchema, withCompanyLink, withMainCompany } from "./contact";
+import { belongsTo, contactCreateSchema, contactListQuerySchema, contactSchema, withCompanies, withCompanyLink, withMainCompany } from "./contact";
 import { demoCompanies, demoContacts, demoUsers } from "./fixtures/contacts";
 import { demoDeals } from "./fixtures/pipeline";
 import { userSchema } from "./user";
@@ -68,6 +68,11 @@ describe("company links (Dave, Oct 24, 2026)", () => {
     expect(withMainCompany(two, null)).toEqual({ companyId: "b", companyIds: ["b"] });
     // Older rows may have a main company without the list.
     expect(withMainCompany({ companyId: "a", companyIds: [] }, "c")).toEqual({ companyId: "c", companyIds: ["c"] });
+  });
+
+  it("takes a full list of companies: no repeats, the first is the main one", () => {
+    expect(withCompanies(["b", "a", "b"])).toEqual({ companyId: "b", companyIds: ["b", "a"] });
+    expect(withCompanies([])).toEqual({ companyId: null, companyIds: [] });
   });
 
   it("counts a person as belonging to their main and their other companies", () => {

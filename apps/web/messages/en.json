@@ -213,7 +213,11 @@
       "language": "Language",
       "languagePlaceholder": "e.g. German",
       "country": "Country",
-      "countryPlaceholder": "e.g. Germany"
+      "countryPlaceholder": "e.g. Germany",
+      "companiesNone": "Pick companies",
+      "companiesCount": "{count} companies",
+      "companiesSearch": "Search companies",
+      "companiesEmpty": "No companies yet"
     },
     "drawer": {
       "eyebrow": "Contact profile",
@@ -901,7 +905,8 @@
       },
       "again": "Import another file",
       "viewContacts": "View contacts",
-      "review": "Review {count, plural, one {# held duplicate} other {# held duplicates}}"
+      "review": "Review {count, plural, one {# held duplicate} other {# held duplicates}}",
+      "skippedHint": "Skipped rows have no name, email or phone, or match an existing contact and you chose to skip duplicates."
     },
     "held": {
       "title": "Held duplicates",

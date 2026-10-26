@@ -5,6 +5,7 @@ import {
   type ContactListQuery,
   type ContactUpdateInput,
   type Company,
+  withCompanies,
   withMainCompany,
 } from '@lulu/shared';
 import { db } from '../db/prisma';
@@ -49,13 +50,22 @@ async function assertExists(path: string, lookup: Promise<unknown>): Promise<voi
 
 async function assertReferences(
   scoped: DbTx,
-  input: { companyId?: string | null | undefined; ownerId?: string | undefined },
+  input: {
+    companyId?: string | null | undefined;
+    companyIds?: string[] | undefined;
+    ownerId?: string | undefined;
+  },
 ): Promise<void> {
   if (input.companyId) {
     await assertExists(
       'companyId',
       scoped.company.findFirst({ where: { id: input.companyId }, select: { id: true } }),
     );
+  }
+  if (input.companyIds && input.companyIds.length > 0) {
+    const ids = [...new Set(input.companyIds)];
+    const found = await scoped.company.count({ where: { id: { in: ids } } });
+    if (found !== ids.length) await assertExists('companyIds', Promise.resolve(null));
   }
   if (input.ownerId) {
     await assertExists(
@@ -184,8 +194,12 @@ export async function createContact(
       name: input.name,
       email: input.email ?? null,
       phone: input.phone ?? null,
-      companyId: input.companyId ?? null,
-      companyIds: input.companyId ? [input.companyId] : [],
+      ...(input.companyIds !== undefined
+        ? withCompanies(input.companyIds)
+        : {
+            companyId: input.companyId ?? null,
+            companyIds: input.companyId ? [input.companyId] : [],
+          }),
       jobRole: input.jobRole ?? null,
       language: input.language ?? null,
       country: input.country ?? null,
@@ -223,7 +237,11 @@ export async function updateContact(
       ...(input.name === undefined ? {} : { name: input.name }),
       ...(input.email === undefined ? {} : { email: input.email }),
       ...(input.phone === undefined ? {} : { phone: input.phone }),
-      ...(input.companyId === undefined ? {} : withMainCompany(existing, input.companyId)),
+      ...(input.companyIds !== undefined
+        ? withCompanies(input.companyIds)
+        : input.companyId === undefined
+          ? {}
+          : withMainCompany(existing, input.companyId)),
       ...(input.jobRole === undefined ? {} : { jobRole: input.jobRole }),
       ...(input.language === undefined ? {} : { language: input.language }),
       ...(input.country === undefined ? {} : { country: input.country }),

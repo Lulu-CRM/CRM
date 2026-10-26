@@ -192,6 +192,34 @@ describe('contacts API (int)', () => {
     expect(await newContact(t, { name: 'Plain' })).toMatchObject({ language: null, country: null });
   });
 
+  it('sets all companies of a contact from the contact form (Dave, Oct 26, 2026)', async () => {
+    const t = await tenant('companies');
+    const company = async (name: string) =>
+      (await db.company.create({ data: { workspaceId: t.workspaceId, name, ownerId: t.userId } }))
+        .id;
+    const first = await company('First');
+    const second = await company('Second');
+
+    const contact = await newContact(t, { name: 'Multi', companyIds: [first, second, first] });
+    expect(contact).toMatchObject({ companyId: first, companyIds: [first, second] });
+
+    as(t);
+    const res = await request(app)
+      .patch(`/contacts/${contact.id}`)
+      .send({ companyIds: [second] });
+    expect(responseBody<ApiEnvelope<ContactBody>>(res).data).toMatchObject({
+      companyId: second,
+      companyIds: [second],
+    });
+
+    const other = await tenant('companies-other');
+    as(other);
+    const foreign = await request(app)
+      .post('/contacts')
+      .send({ name: 'Nope', companyIds: [first] });
+    expect(foreign.status).toBe(400);
+  });
+
   it('rejects a duplicate email but allows two people with the same name', async () => {
     const t = await tenant('dupe');
     const company = await newCompany(t, 'Northstar Studio');

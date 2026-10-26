@@ -160,11 +160,26 @@ describe("Contacts & Companies page", () => {
 
   it("links people from the company: two people per business, one person in several businesses (Dave, Oct 24)", async () => {
     await waitFor(() => expect(names()).toContain("Sophie Laurent"), slow);
-    // The contact form has no company field any more.
+    // Dave, Oct 26: the contact form picks companies from a dropdown with a search box.
     fireEvent.click(screen.getByRole("button", { name: /Add contact/ }));
     let dialog = await screen.findByRole("dialog");
-    expect(within(dialog).queryByLabelText(messages.contacts.form.company)).toBeNull();
-    fireEvent.click(within(dialog).getByRole("button", { name: /Cancel/ }));
+    fireEvent.change(within(dialog).getByLabelText(/Full name/), { target: { value: "Ada Lovelace" } });
+    fireEvent.click(within(dialog).getByLabelText(messages.contacts.form.company));
+    fireEvent.change(within(dialog).getByRole("searchbox", { name: messages.contacts.form.companiesSearch }), {
+      target: { value: "atlas" },
+    });
+    expect(within(dialog).queryByRole("checkbox", { name: /Northstar Studio/ })).toBeNull();
+    fireEvent.click(within(dialog).getByRole("checkbox", { name: /Atlas Logistics/ }));
+    fireEvent.change(within(dialog).getByRole("searchbox", { name: messages.contacts.form.companiesSearch }), {
+      target: { value: "" },
+    });
+    fireEvent.click(within(dialog).getByRole("checkbox", { name: /Klarwerk GmbH/ }));
+    await act(async () => {
+      fireEvent.click(within(dialog).getByRole("button", { name: /Create contact/ }));
+    });
+    await waitFor(() => expect(names()).toContain("Ada Lovelace"), slow);
+    const ada = (await api.contacts.list({ q: "Ada Lovelace" })).data[0]!;
+    expect(ada).toMatchObject({ companyId: "company_atlas", companyIds: ["company_atlas", "company_klarwerk"] });
 
     fireEvent.click(screen.getByRole("button", { name: /Add company/ }));
     dialog = await screen.findByRole("dialog");

@@ -213,7 +213,11 @@
       "language": "Sprache",
       "languagePlaceholder": "z. B. Deutsch",
       "country": "Land",
-      "countryPlaceholder": "z. B. Deutschland"
+      "countryPlaceholder": "z. B. Deutschland",
+      "companiesNone": "Unternehmen wählen",
+      "companiesCount": "{count} Unternehmen",
+      "companiesSearch": "Unternehmen suchen",
+      "companiesEmpty": "Noch keine Unternehmen"
     },
     "drawer": {
       "eyebrow": "Kontaktprofil",
@@ -901,7 +905,8 @@
       },
       "again": "Weitere Datei importieren",
       "viewContacts": "Kontakte ansehen",
-      "review": "{count, plural, one {# zurückgehaltenes Duplikat prüfen} other {# zurückgehaltene Duplikate prüfen}}"
+      "review": "{count, plural, one {# zurückgehaltenes Duplikat prüfen} other {# zurückgehaltene Duplikate prüfen}}",
+      "skippedHint": "Übersprungene Zeilen haben weder Name, E-Mail noch Telefon oder entsprechen einem vorhandenen Kontakt, und Sie haben gewählt, Duplikate zu überspringen."
     },
     "held": {
       "title": "Zurückgehaltene Duplikate",

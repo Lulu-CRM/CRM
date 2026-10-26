@@ -55,7 +55,12 @@ export function MultiPicker({
   const shown = needle
     ? items.filter((item) => `${item.name} ${item.searchText ?? ""}`.toLocaleLowerCase().includes(needle))
     : items;
-  const toggle = (itemId: string) => onChange(value.includes(itemId) ? value.filter((v) => v !== itemId) : [...value, itemId]);
+  // Closes after each pick (Sudais, Oct 26, 2026); open it again to pick another.
+  const toggle = (itemId: string) => {
+    onChange(value.includes(itemId) ? value.filter((v) => v !== itemId) : [...value, itemId]);
+    setOpen(false);
+    setSearch("");
+  };
 
   return (
     <div ref={box} className="relative">

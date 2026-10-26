@@ -170,9 +170,9 @@ describe("Contacts & Companies page", () => {
     });
     expect(within(dialog).queryByRole("checkbox", { name: /Northstar Studio/ })).toBeNull();
     fireEvent.click(within(dialog).getByRole("checkbox", { name: /Atlas Logistics/ }));
-    fireEvent.change(within(dialog).getByRole("searchbox", { name: messages.contacts.form.companiesSearch }), {
-      target: { value: "" },
-    });
+    // The dropdown closes after a pick; open it again for a second company.
+    expect(within(dialog).queryByRole("searchbox", { name: messages.contacts.form.companiesSearch })).toBeNull();
+    fireEvent.click(within(dialog).getByLabelText(messages.contacts.form.company));
     fireEvent.click(within(dialog).getByRole("checkbox", { name: /Klarwerk GmbH/ }));
     await act(async () => {
       fireEvent.click(within(dialog).getByRole("button", { name: /Create contact/ }));
@@ -186,6 +186,7 @@ describe("Contacts & Companies page", () => {
     fireEvent.change(within(dialog).getByLabelText(/Company name/), { target: { value: "Blue Harbor" } });
     fireEvent.click(within(dialog).getByLabelText(messages.companies.form.contacts));
     fireEvent.click(await within(dialog).findByRole("checkbox", { name: /Sophie Laurent/ }));
+    fireEvent.click(within(dialog).getByLabelText(messages.companies.form.contacts));
     fireEvent.click(within(dialog).getByRole("checkbox", { name: /Daniel Chen/ }));
     await act(async () => {
       fireEvent.click(within(dialog).getByRole("button", { name: messages.companies.form.submit }));

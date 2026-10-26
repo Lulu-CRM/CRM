@@ -175,6 +175,23 @@ describe('contacts API (int)', () => {
     expect(withConsent.consentUpdatedAt).not.toBeNull();
   });
 
+  it('saves, edits and clears language and country (Dave, Oct 26, 2026)', async () => {
+    const t = await tenant('lang');
+    const contact = await newContact(t, { name: 'Lena', language: 'German', country: 'Germany' });
+    expect(contact).toMatchObject({ language: 'German', country: 'Germany' });
+
+    as(t);
+    const res = await request(app)
+      .patch(`/contacts/${contact.id}`)
+      .send({ language: 'English', country: null });
+    expect(res.status).toBe(200);
+    expect(responseBody<ApiEnvelope<ContactBody>>(res).data).toMatchObject({
+      language: 'English',
+      country: null,
+    });
+    expect(await newContact(t, { name: 'Plain' })).toMatchObject({ language: null, country: null });
+  });
+
   it('rejects a duplicate email but allows two people with the same name', async () => {
     const t = await tenant('dupe');
     const company = await newCompany(t, 'Northstar Studio');

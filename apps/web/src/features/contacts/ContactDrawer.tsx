@@ -74,6 +74,8 @@ export function ContactDrawer({
   const details: [string, React.ReactNode][] = [
     [t("email"), contact.email ? <a className="hover:underline" href={`mailto:${contact.email}`}>{contact.email}</a> : "–"],
     [t("phone"), contact.phone ? <a className="hover:underline" href={`tel:${contact.phone}`}>{contact.phone}</a> : "–"],
+    [t("language"), contact.language ?? "–"],
+    [t("country"), contact.country ?? "–"],
     [t("owner"), lookups.userName(contact.ownerId) ?? "–"],
     [t("source"), source],
     [t("lastTouch"), contact.lastTouchAt ? format.recent(contact.lastTouchAt) : "–"],

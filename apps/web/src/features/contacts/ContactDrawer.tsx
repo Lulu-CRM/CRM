@@ -12,6 +12,7 @@ import { ActivityItem } from "@/features/activities/ActivityItem";
 import { DueChip } from "@/features/activities/DueChip";
 import { knownSources, stageTone } from "./options";
 import { avatarTone, initials } from "@/lib/initials";
+import { ContactCompanies } from "./ContactCompanies";
 import type { Lookups } from "./useLookups";
 
 const textButton = "text-[11px] font-extrabold text-primary-hover hover:underline";
@@ -120,6 +121,8 @@ export function ContactDrawer({
           </div>
         ))}
       </dl>
+
+      <ContactCompanies contact={contact} lookups={lookups} />
 
       <TasksSection
         contactId={contact.id}

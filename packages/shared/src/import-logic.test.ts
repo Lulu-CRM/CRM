@@ -73,6 +73,13 @@ describe("mapRow", () => {
     expect(contact).toMatchObject({ name: "Ada Lovelace", email: "ada@example.com", lifecycleStage: "customer", tags: ["VIP", "Warm"], companyName: "Analytical" });
   });
 
+  it("maps language and a location column to the contact, not to the source (Dave, Oct 27)", () => {
+    const columns = ["Name", "Language", "Location", "Source"];
+    expect(guessMapping(columns)).toEqual({ Name: "name", Language: "language", Location: "country", Source: "source" });
+    const row = mapRow({ Name: "Ana", Language: "German", Location: "San Jose, California, United States", Source: "" }, guessMapping(columns));
+    expect(row.contact).toMatchObject({ language: "German", country: "San Jose, California, United States", source: null });
+  });
+
   it("skips only a row with no name, email or phone", () => {
     expect(mapRow({ first: "", last: "", email: "not-an-email", stage: "maybe" }, mapping).problems).toEqual(["nameMissing"]);
   });
@@ -89,7 +96,7 @@ describe("mapRow", () => {
 });
 
 describe("findDuplicate", () => {
-  const base = { name: "", email: null, phone: null, companyName: null, jobRole: null, source: null, lifecycleStage: null, tags: [] };
+  const base = { name: "", email: null, phone: null, companyName: null, jobRole: null, language: null, country: null, source: null, lifecycleStage: null, tags: [] };
 
   it("matches email first, ignoring case", () => {
     expect(findDuplicate({ ...base, name: "S. L.", email: "SOPHIE@northstar.studio" }, demoContacts, demoCompanies)).toEqual({
@@ -137,7 +144,7 @@ describe("planImport", () => {
 
 describe("mergeIntoContact", () => {
   const sophie = demoContacts.find((c) => c.id === "contact_sophie")!;
-  const incoming = { name: "Sophie L.", email: "sophie@northstar.studio", phone: "+49 000", companyName: null, jobRole: "CEO", source: null, lifecycleStage: "customer" as const, tags: ["Import", "Warm"] };
+  const incoming = { name: "Sophie L.", email: "sophie@northstar.studio", phone: "+49 000", companyName: null, jobRole: "CEO", language: null, country: null, source: null, lifecycleStage: "customer" as const, tags: ["Import", "Warm"] };
 
   it("fill keeps what the contact has and only adds tags", () => {
     expect(mergeIntoContact(sophie, incoming, "fill", null)).toMatchObject({

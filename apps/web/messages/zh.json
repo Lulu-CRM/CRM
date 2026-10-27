@@ -248,7 +248,12 @@
       "tasksEyebrow": "跟进",
       "notesEyebrow": "笔记",
       "language": "语言",
-      "country": "国家"
+      "country": "国家",
+      "companiesEyebrow": "公司",
+      "companies": "此人所属的公司",
+      "noCompanies": "尚未关联公司",
+      "mainCompany": "主要",
+      "aiNotes": "AI 笔记"
     },
     "importContacts": "导入联系人",
     "openProfile": "打开 {name}",
@@ -857,6 +862,8 @@
       "phone": "电话",
       "company": "公司",
       "jobRole": "职位",
+      "language": "语言",
+      "country": "国家 / 地区",
       "source": "来源",
       "lifecycleStage": "生命周期阶段",
       "tags": "标签",

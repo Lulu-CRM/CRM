@@ -16,6 +16,8 @@ export const importFieldSchema = z.enum([
   "phone",
   "company",
   "jobRole",
+  "language",
+  "country",
   "source",
   "lifecycleStage",
   "tags",
@@ -67,6 +69,9 @@ export const importedContactSchema = z.object({
   phone: z.string().nullable(),
   companyName: z.string().nullable(),
   jobRole: z.string().nullable(),
+  // Added Oct 27, 2026; rows held before then have neither.
+  language: z.string().nullable().default(null),
+  country: z.string().nullable().default(null),
   source: z.string().nullable(),
   lifecycleStage: contactSchema.shape.lifecycleStage.nullable(),
   tags: z.array(z.string()),

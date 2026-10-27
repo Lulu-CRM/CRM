@@ -248,7 +248,12 @@
       "tasksEyebrow": "Nachfassen",
       "notesEyebrow": "Notizen",
       "language": "Sprache",
-      "country": "Land"
+      "country": "Land",
+      "companiesEyebrow": "Unternehmen",
+      "companies": "Unternehmen dieser Person",
+      "noCompanies": "Noch kein Unternehmen verknüpft",
+      "mainCompany": "Haupt",
+      "aiNotes": "KI-Notizen"
     },
     "importContacts": "Kontakte importieren",
     "openProfile": "{name} öffnen",
@@ -857,6 +862,8 @@
       "phone": "Telefon",
       "company": "Unternehmen",
       "jobRole": "Rolle",
+      "language": "Sprache",
+      "country": "Land / Ort",
       "source": "Quelle",
       "lifecycleStage": "Lebenszyklus-Phase",
       "tags": "Tags",

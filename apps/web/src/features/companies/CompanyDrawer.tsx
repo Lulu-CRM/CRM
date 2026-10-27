@@ -9,6 +9,7 @@ import { api } from "@/lib/api";
 import { useErrorMessage } from "@/lib/errors";
 import { avatarTone, initials } from "@/lib/initials";
 import { facebookUrl, instagramUrl, whatsappUrl } from "@/lib/socialLinks";
+import { channel } from "./channel";
 import { useApi } from "@/lib/useApi";
 import { stageTone } from "@/features/contacts/options";
 import type { Lookups } from "@/features/contacts/useLookups";
@@ -185,19 +186,6 @@ export function CompanyDrawer({
         </button>
       </div>
     </Drawer>
-  );
-}
-
-/** A channel value as a link that opens in a new tab, or as text when it is not a usable link. */
-function channel(value: string | null, toUrl: (value: string) => string | null, label: string): React.ReactNode {
-  if (!value) return "–";
-  const url = toUrl(value);
-  return url ? (
-    <a href={url} target="_blank" rel="noopener noreferrer" title={label} className="text-primary underline-offset-2 hover:underline">
-      {value} ↗
-    </a>
-  ) : (
-    value
   );
 }
 

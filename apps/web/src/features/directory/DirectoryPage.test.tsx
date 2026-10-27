@@ -66,7 +66,12 @@ describe("Contacts & Companies page", () => {
   it("opens the contact drawer for a person and the company drawer for a company", async () => {
     await waitFor(() => expect(names()).toContain("Sophie Laurent"), slow);
     fireEvent.click(screen.getByRole("button", { name: "Open Sophie Laurent" }));
-    expect(await screen.findByRole("dialog", { name: "Sophie Laurent" })).toBeTruthy();
+    const profile = await screen.findByRole("dialog", { name: "Sophie Laurent" });
+    // Dave, Oct 27: the person's companies with all their details.
+    expect(within(profile).getByText(messages.contacts.drawer.companies)).toBeTruthy();
+    expect(within(profile).getByText("Northstar Studio", { selector: "summary span" })).toBeTruthy();
+    expect(within(profile).getByText("northstar.studio")).toBeTruthy();
+    expect(within(profile).getByText("Creative services")).toBeTruthy();
     fireEvent.keyDown(document, { key: "Escape" });
 
     fireEvent.click(screen.getByRole("button", { name: "Open Atlas Logistics" }));

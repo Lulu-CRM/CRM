@@ -248,7 +248,12 @@
       "tasksEyebrow": "Follow-ups",
       "notesEyebrow": "Notes",
       "language": "Language",
-      "country": "Country"
+      "country": "Country",
+      "companiesEyebrow": "Companies",
+      "companies": "Companies of this person",
+      "noCompanies": "No company linked yet",
+      "mainCompany": "Main",
+      "aiNotes": "AI notes"
     },
     "importContacts": "Import contacts",
     "openProfile": "Open {name}",
@@ -857,6 +862,8 @@
       "phone": "Phone",
       "company": "Company",
       "jobRole": "Role",
+      "language": "Language",
+      "country": "Country / location",
       "source": "Source",
       "lifecycleStage": "Lifecycle stage",
       "tags": "Tags",
